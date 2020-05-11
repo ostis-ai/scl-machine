@@ -5,21 +5,21 @@
 */
 
 #include "inferenceModule.hpp"
-#include "keynodes/keynodes.hpp"
+#include "keynodes/InferenceKeynodes.hpp"
 
-using namespace exampleModule;
+using namespace inference;
 
-SC_IMPLEMENT_MODULE(ExampleModule)
+SC_IMPLEMENT_MODULE(InferenceModule)
 
-sc_result ExampleModule::InitializeImpl()
+sc_result InferenceModule::InitializeImpl()
 {
-  if (!exampleModule::InferenceKeynodes::InitGlobal())
+  if (!InferenceKeynodes::InitGlobal())
     return SC_RESULT_ERROR;
 
   return SC_RESULT_OK;
 }
 
-sc_result ExampleModule::ShutdownImpl()
+sc_result InferenceModule::ShutdownImpl()
 {
 
   return SC_RESULT_OK;

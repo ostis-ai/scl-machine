@@ -6,12 +6,12 @@
 
 #pragma once
 
-#include "sc-memory/cpp/sc_addr.hpp"
-#include "sc-memory/cpp/sc_object.hpp"
+#include <sc-memory/cpp/sc_addr.hpp>
+#include <sc-memory/cpp/sc_object.hpp>
 
-#include "keynodes.generated.hpp"
+#include "InferenceKeynodes.generated.hpp"
 
-namespace exampleModule
+namespace inference
 {
 
 class InferenceKeynodes : public ScObject
@@ -21,8 +21,15 @@ class InferenceKeynodes : public ScObject
 
 public:
 
+  SC_PROPERTY(Keynode("question_use_logic_rule"), ForceCreate)
+  static ScAddr question_use_logic_rule;
+
+  SC_PROPERTY(Keynode("question_reverse_inference"), ForceCreate)
+  static ScAddr question_reverse_inference;
+
   SC_PROPERTY(Keynode("rrel_solver_key_sc_element"), ForceCreate)
   static ScAddr rrel_solver_key_sc_element;
+
 };
 
-} // namespace inferenceModule
+}

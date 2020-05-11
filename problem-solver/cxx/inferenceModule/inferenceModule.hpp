@@ -11,7 +11,7 @@
 
 #include "inferenceModule.generated.hpp"
 
-class ExampleModule : public ScModule
+class InferenceModule : public ScModule
 {
   SC_CLASS(LoadOrder(50))
   SC_GENERATED_BODY()

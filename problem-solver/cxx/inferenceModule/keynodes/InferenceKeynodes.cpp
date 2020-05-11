@@ -4,13 +4,15 @@
 * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
 */
 
-#include "keynodes.hpp"
-
 #include <sc-memory/cpp/sc_memory.hpp>
 
-namespace exampleModule
+#include "InferenceKeynodes.hpp"
+
+namespace inference
 {
 
+ScAddr InferenceKeynodes::question_use_logic_rule;
+ScAddr InferenceKeynodes::question_reverse_inference;
 ScAddr InferenceKeynodes::rrel_solver_key_sc_element;
 
 }
