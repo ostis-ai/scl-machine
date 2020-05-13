@@ -1,0 +1,15 @@
+question_direct_inference_test
+  -> rrel_1: test_direct_inference_target;
+  -> rrel_2:
+  	{
+  		statement_square_is_rhombus;
+  		statement_rhombus_is_quadrangle;
+  		statement_rhombus_all_sides;
+  		statement_square_is_rectangle;
+  		statement_rectangle_is_quadrangle;
+  		statement_rectangle_all_angles;
+  		statement_square_is_quadrangle;
+  		statement_quandrangle_4_angle;
+  		statement_quandrangle_4_side
+  	};
+  -> rrel_3: ABCD(*<-concept_square*);;
