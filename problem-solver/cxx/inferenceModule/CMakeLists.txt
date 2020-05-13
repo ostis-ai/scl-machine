@@ -17,7 +17,6 @@ set(HEADERS
 		"agent/ATemplateGeneration.hpp"
 		"manager/InferenceManager.hpp"
 		"manager/DirectInferenceManager.hpp"
-		"model/SolutionTreeNode.hpp"
 		)
 
 include_directories(${SC_INFERENCE_MODULE_SRC} ${SC_MEMORY_SRC} ${GLIB2_INCLUDE_DIRS})
