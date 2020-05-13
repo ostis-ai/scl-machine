@@ -6,9 +6,12 @@
 
 #pragma once
 
+#include <queue>
+#include <vector>
+
 #include <sc-memory/cpp/kpm/sc_agent.hpp>
 
-#include "model/SolutionTreeNode.hpp"
+using namespace std;
 
 namespace inference
 {
@@ -19,7 +22,7 @@ class DirectInferenceManager
 public:
   explicit DirectInferenceManager(ScMemoryContext * ms_context);
 
-  SolutionTreeNode & applyInference(
+  ScAddr & applyInference(
         const ScAddr & targetTemplate,
         const ScAddr & ruleSet,
         const ScAddr & argumentSet);
@@ -27,6 +30,13 @@ public:
   ~DirectInferenceManager() = default;
 
 private:
+  queue<ScAddr> createQueue(ScAddr const & set);
+
+  //TODO: Move to utils
+  void addToQueue(vector<ScAddr> const & elementList, queue<ScAddr> & queue);
+  ScAddr & useRule(ScAddr const & rule, vector<ScAddr> const & argumentList);
+  bool isTargetAchieved(ScAddr const & targetTemplate, vector<ScAddr> const & argumentList);
+
   ScMemoryContext * ms_context;
 };
 

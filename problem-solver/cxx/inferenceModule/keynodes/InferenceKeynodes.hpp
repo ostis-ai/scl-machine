@@ -30,6 +30,12 @@ public:
   SC_PROPERTY(Keynode("question_direct_inference"), ForceCreate)
   static ScAddr question_direct_inference;
 
+  SC_PROPERTY(Keynode("solution"), ForceCreate)
+  static ScAddr solution;
+
+  SC_PROPERTY(Keynode("success_solution"), ForceCreate)
+  static ScAddr success_solution;
+
   SC_PROPERTY(Keynode("rrel_solver_key_sc_element"), ForceCreate)
   static ScAddr rrel_solver_key_sc_element;
 

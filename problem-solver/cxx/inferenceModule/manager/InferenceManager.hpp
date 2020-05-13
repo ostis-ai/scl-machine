@@ -8,15 +8,13 @@
 
 #include <sc-memory/cpp/sc_addr.hpp>
 
-#include "model/SolutionTreeNode.hpp"
-
 namespace inference
 {
 
 class InferenceManager
 {
 public:
-  virtual SolutionTreeNode & applyInference(
+  virtual ScAddr & applyInference(
         const ScAddr & targetTemplate,
         const ScAddr & ruleSet,
         const ScAddr & argumentSet) = 0;
