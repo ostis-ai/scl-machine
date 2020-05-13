@@ -8,11 +8,12 @@
 
 using namespace inference;
 
-SolutionTreeNode DirectInferenceManager::applyInference(
+SolutionTreeNode & DirectInferenceManager::applyInference(
       const ScAddr & targetTemplate,
       const ScAddr & ruleSet,
       const ScAddr & argumentSet)
 {
 
-  return InferenceManager::applyInference(targetTemplate, ruleSet, argumentSet);
+  SolutionTreeNode treeNode;
+  return treeNode;
 }

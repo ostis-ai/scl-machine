@@ -14,7 +14,7 @@ namespace inference
 class DirectInferenceManager : public InferenceManager
 {
 public:
-  SolutionTreeNode applyInference(
+  SolutionTreeNode & applyInference(
         const ScAddr & targetTemplate,
         const ScAddr & ruleSet,
         const ScAddr & argumentSet) override;

@@ -18,7 +18,7 @@ namespace inference
 class InferenceManager
 {
 public:
-  virtual SolutionTreeNode applyInference(
+  virtual SolutionTreeNode & applyInference(
         const ScAddr & targetTemplate,
         const ScAddr & ruleSet,
         const ScAddr & argumentSet);
