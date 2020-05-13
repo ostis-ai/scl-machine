@@ -13,6 +13,7 @@ namespace inference
 
 ScAddr InferenceKeynodes::question_use_logic_rule;
 ScAddr InferenceKeynodes::question_reverse_inference;
+ScAddr InferenceKeynodes::question_direct_inference;
 ScAddr InferenceKeynodes::rrel_solver_key_sc_element;
 
 }

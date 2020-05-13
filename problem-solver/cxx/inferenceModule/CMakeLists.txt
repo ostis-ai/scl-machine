@@ -3,6 +3,7 @@ set(SC_INFERENCE_MODULE_SRC "${CXX_AGENTS_ROOT}/inferenceModule")
 set(SOURCES
 		"inferenceModule.cpp"
 		"keynodes/InferenceKeynodes.cpp"
+		"agent/DirectInferenceAgent.cpp"
 		"agent/AReverseInference.cpp"
 		"agent/ATemplateGeneration.cpp"
 		"manager/DirectInferenceManager.cpp"
@@ -11,6 +12,7 @@ set(SOURCES
 set(HEADERS
 		"inferenceModule.hpp"
 		"keynodes/InferenceKeynodes.hpp"
+		"agent/DirectInferenceAgent.hpp"
 		"agent/AReverseInference.hpp"
 		"agent/ATemplateGeneration.hpp"
 		"manager/InferenceManager.hpp"

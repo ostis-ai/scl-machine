@@ -11,7 +11,7 @@
 namespace inference
 {
 
-class DirectInferenceManager : InferenceManager
+class DirectInferenceManager : public InferenceManager
 {
 public:
   SolutionTreeNode applyInference(
