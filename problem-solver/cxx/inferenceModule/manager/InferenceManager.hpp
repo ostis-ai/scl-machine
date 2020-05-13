@@ -21,7 +21,7 @@ public:
   virtual SolutionTreeNode applyInference(
         const ScAddr & targetTemplate,
         const ScAddr & ruleSet,
-        const ScAddr & relatedNodeSet);
+        const ScAddr & argumentSet);
 };
 
 }

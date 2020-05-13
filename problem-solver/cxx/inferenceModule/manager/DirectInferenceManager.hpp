@@ -17,7 +17,7 @@ public:
   SolutionTreeNode applyInference(
         const ScAddr & targetTemplate,
         const ScAddr & ruleSet,
-        const ScAddr & relatedNodeSet) override;
+        const ScAddr & argumentSet) override;
 };
 
 }
