@@ -1,0 +1,9 @@
+lib_component_agent_direct_inference
+=> nrel_main_idtf:
+	[Компонент библиотеки. Агент осуществления прямого логического вывода]
+	(* <- lang_ru;; *);
+	[Library component. Agent of direct inference]
+	(* <- lang_en;; *);
+
+<- library_of_platform_dependent_reusable_components;
+<- library_of_atomic_reusable_components;;
