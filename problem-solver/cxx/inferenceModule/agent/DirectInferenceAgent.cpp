@@ -31,9 +31,13 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
   {
     return SC_RESULT_ERROR_INVALID_PARAMS;
   }
-
+  // TODO: Need to implement common logic of DI
+  this->inferenceManager = new DirectInferenceManager(ms_context.get());
   this->inferenceManager->applyInference(targetTemplate, ruleSet, argumentSet);
+
   AgentUtils::finishAgentWork((ScMemoryContext *) ms_context.get(), questionNode, targetTemplate);
+
+  delete this->inferenceManager;
   return SC_RESULT_OK;
 }
 }

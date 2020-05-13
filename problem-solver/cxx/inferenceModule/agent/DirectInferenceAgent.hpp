@@ -23,14 +23,9 @@ class DirectInferenceAgent : public ScAgent
   SC_CLASS(Agent, Event(InferenceKeynodes::question_direct_inference, ScEvent::Type::AddOutputEdge))
   SC_GENERATED_BODY()
 
-  ~DirectInferenceAgent() override
-  {
-    delete inferenceManager;
-  }
-
 private:
   // TODO: Need to implement common logic of DI
-  DirectInferenceManager * inferenceManager = new DirectInferenceManager();
+  DirectInferenceManager * inferenceManager;
 };
 
 }

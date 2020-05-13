@@ -14,14 +14,20 @@
 using namespace std;
 using namespace inference;
 
+DirectInferenceManager::DirectInferenceManager(ScMemoryContext * ms_context) : ms_context(ms_context)
+{
+}
+
 SolutionTreeNode & DirectInferenceManager::applyInference(
       const ScAddr & targetTemplate,
       const ScAddr & ruleSet,
       const ScAddr & argumentSet)
 {
 
-  SolutionTreeNode * treeNode = new SolutionTreeNode();
-  cout<<"DirectInferenceManager triggered"<<endl;
+  auto * treeNode = new SolutionTreeNode();
+  cout << this->ms_context->HelperGetSystemIdtf(targetTemplate) << endl;
 
   return *treeNode;
 }
+
+

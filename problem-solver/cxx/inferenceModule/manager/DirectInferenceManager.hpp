@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <sc-memory/cpp/sc_addr.hpp>
+#include <sc-memory/cpp/kpm/sc_agent.hpp>
 
 #include "model/SolutionTreeNode.hpp"
 
@@ -17,12 +17,19 @@ namespace inference
 class DirectInferenceManager
 {
 public:
+  explicit DirectInferenceManager(ScMemoryContext * ms_context);
+
   SolutionTreeNode & applyInference(
         const ScAddr & targetTemplate,
         const ScAddr & ruleSet,
         const ScAddr & argumentSet);
 
   ~DirectInferenceManager() = default;
+
+private:
+  ScMemoryContext * ms_context;
 };
+
+
 
 }
