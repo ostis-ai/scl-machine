@@ -9,7 +9,7 @@
 #include <sc-memory/cpp/kpm/sc_agent.hpp>
 
 #include "keynodes/InferenceKeynodes.hpp"
-#include "manager/InferenceManager.hpp"
+#include "manager/DirectInferenceManager.hpp"
 
 #include "DirectInferenceAgent.generated.hpp"
 
@@ -23,8 +23,14 @@ class DirectInferenceAgent : public ScAgent
   SC_CLASS(Agent, Event(InferenceKeynodes::question_direct_inference, ScEvent::Type::AddOutputEdge))
   SC_GENERATED_BODY()
 
-//private:
-//  InferenceManager * inferenceManager;
+  ~DirectInferenceAgent() override
+  {
+    delete inferenceManager;
+  }
+
+private:
+  // TODO: Need to implement common logic of DI
+  DirectInferenceManager * inferenceManager = new DirectInferenceManager();
 };
 
 }

@@ -6,11 +6,9 @@
 
 #pragma once
 
-#include <sc-memory/cpp/kpm/sc_agent.hpp>
+#include <sc-memory/cpp/sc_addr.hpp>
 
 #include "model/SolutionTreeNode.hpp"
-
-using namespace std;
 
 namespace inference
 {
@@ -21,7 +19,9 @@ public:
   virtual SolutionTreeNode & applyInference(
         const ScAddr & targetTemplate,
         const ScAddr & ruleSet,
-        const ScAddr & argumentSet);
+        const ScAddr & argumentSet) = 0;
+
+  virtual ~InferenceManager() = 0;
 };
 
 }

@@ -6,18 +6,23 @@
 
 #pragma once
 
-#include "manager/InferenceManager.hpp"
+#include <sc-memory/cpp/sc_addr.hpp>
+
+#include "model/SolutionTreeNode.hpp"
 
 namespace inference
 {
 
-class DirectInferenceManager : public InferenceManager
+// TODO: Fix issue with using interface InferenceManager
+class DirectInferenceManager
 {
 public:
   SolutionTreeNode & applyInference(
         const ScAddr & targetTemplate,
         const ScAddr & ruleSet,
-        const ScAddr & argumentSet) override;
+        const ScAddr & argumentSet);
+
+  ~DirectInferenceManager() = default;
 };
 
 }

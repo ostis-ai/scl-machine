@@ -3,13 +3,9 @@
 * Distributed under the MIT License
 * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
 */
-#include <map>
-
 #include <sc-kpm/sc-agents-common/keynodes/CoreKeynodes.hpp>
 #include <sc-kpm/sc-agents-common/utils/IteratorUtils.hpp>
 #include <sc-kpm/sc-agents-common/utils/AgentUtils.hpp>
-#include <sc-kpm/sc-agents-common/utils/LogicRuleUtils.hpp>
-#include <manager/DirectInferenceManager.hpp>
 
 #include "DirectInferenceAgent.hpp"
 #include "keynodes/InferenceKeynodes.hpp"
@@ -20,11 +16,6 @@ using namespace scAgentsCommon;
 
 namespace inference
 {
-
-//DirectInferenceAgent::DirectInferenceAgent(const char * name, sc_uint8 accessLvl) : ScAgent(name, accessLvl)
-//{
-//  this->inferenceManager = new DirectInferenceManager();
-//}
 
 SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
 {
@@ -41,7 +32,7 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
     return SC_RESULT_ERROR_INVALID_PARAMS;
   }
 
-
+  this->inferenceManager->applyInference(targetTemplate, ruleSet, argumentSet);
   AgentUtils::finishAgentWork((ScMemoryContext *) ms_context.get(), questionNode, targetTemplate);
   return SC_RESULT_OK;
 }
