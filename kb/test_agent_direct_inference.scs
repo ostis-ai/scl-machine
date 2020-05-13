@@ -1,3 +1,5 @@
+concept_square -> ABCD;;
+
 question_direct_inference_test
   -> rrel_1: test_direct_inference_target;
   -> rrel_2:
@@ -12,4 +14,4 @@ question_direct_inference_test
   		statement_quandrangle_4_angle;
   		statement_quandrangle_4_side
   	};
-  -> rrel_3: ABCD(*<-concept_square*);;
+  -> rrel_3: { ABCD };;
