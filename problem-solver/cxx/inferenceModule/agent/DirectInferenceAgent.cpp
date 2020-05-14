@@ -33,9 +33,9 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
   }
   // TODO: Need to implement common logic of DI
   this->inferenceManager = new DirectInferenceManager(ms_context.get());
-  this->inferenceManager->applyInference(targetTemplate, ruleSet, argumentSet);
+  ScAddr answer = this->inferenceManager->applyInference(targetTemplate, ruleSet, argumentSet);
 
-  AgentUtils::finishAgentWork((ScMemoryContext *) ms_context.get(), questionNode, targetTemplate);
+  AgentUtils::finishAgentWork((ScMemoryContext *) ms_context.get(), questionNode, answer);
 
   delete this->inferenceManager;
   return SC_RESULT_OK;

@@ -22,8 +22,8 @@ class DirectInferenceManager
 public:
   explicit DirectInferenceManager(ScMemoryContext * ms_context);
 
-  ScAddr & applyInference(
-        const ScAddr & targetTemplate,
+  ScAddr applyInference(
+        const ScAddr & targetStatement,
         const ScAddr & ruleSet,
         const ScAddr & argumentSet);
 
@@ -34,8 +34,18 @@ private:
 
   //TODO: Move to utils
   void addToQueue(vector<ScAddr> const & elementList, queue<ScAddr> & queue);
-  ScAddr & useRule(ScAddr const & rule, vector<ScAddr> const & argumentList);
-  bool isTargetAchieved(ScAddr const & targetTemplate, vector<ScAddr> const & argumentList);
+
+  ScAddr useRule(ScAddr const & rule, vector<ScAddr> const & argumentList);
+
+  bool isTargetAchieved(ScAddr const & target, vector<ScAddr> const & argumentList);
+
+  ScTemplateParams createTemplateParams(ScAddr const & scTemplate, const vector<ScAddr> & argumentList);
+
+  bool generateStatement(ScAddr const & statement, ScTemplateParams const & templateParams);
+
+  ScAddr createSolutionNode(ScAddr const & rule, ScTemplateParams const & templateParams);
+
+  void printSetElements(ScAddr const & set);
 
   ScMemoryContext * ms_context;
 };

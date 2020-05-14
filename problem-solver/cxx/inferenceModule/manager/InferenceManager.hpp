@@ -14,8 +14,8 @@ namespace inference
 class InferenceManager
 {
 public:
-  virtual ScAddr & applyInference(
-        const ScAddr & targetTemplate,
+  virtual ScAddr applyInference(
+        const ScAddr & targetStatement,
         const ScAddr & ruleSet,
         const ScAddr & argumentSet) = 0;
 
