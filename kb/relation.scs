@@ -1,0 +1,3 @@
+nrel_side <-sc_node_norole_relation;;
+nrel_angle <-sc_node_norole_relation;;
+
