@@ -10,8 +10,8 @@ question_direct_inference_test
   		statement_square_is_rectangle;
   		statement_rectangle_is_quadrangle;
   		statement_rectangle_all_angles;
-  		statement_square_is_quadrangle;
-  		statement_quandrangle_4_angle;
-  		statement_quandrangle_4_side
+  		statement_quadrangle_sides;
+  		statement_quadrangle_angles;
+  		statement_square_is_quadrangle
   	};
   -> rrel_3: { ABCD };;
