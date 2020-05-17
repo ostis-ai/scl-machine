@@ -8,6 +8,7 @@
 
 #include <sc-memory/cpp/sc_addr.hpp>
 #include <sc-memory/cpp/sc_stream.hpp>
+#include <sc-kpm/sc-agents-common/utils/GenerationUtils.hpp>
 #include <sc-kpm/sc-agents-common/utils/IteratorUtils.hpp>
 #include <sc-kpm/sc-agents-common/keynodes/CoreKeynodes.hpp>
 #include <sc-kpm/sc-agents-common/utils/LogicRuleUtils.hpp>
@@ -20,7 +21,14 @@ using namespace utils;
 using namespace scAgentsCommon;
 
 DirectInferenceManager::DirectInferenceManager(ScMemoryContext * ms_context) : ms_context(ms_context)
-{}
+{
+  this->solutionTreeManager = new SolutionTreeComposer(ms_context);
+}
+
+DirectInferenceManager::~DirectInferenceManager()
+{
+  delete this->solutionTreeManager;
+}
 
 
 ScAddr DirectInferenceManager::applyInference(
@@ -28,32 +36,23 @@ ScAddr DirectInferenceManager::applyInference(
       const ScAddr & ruleSet,
       const ScAddr & argumentSet)
 {
-
   queue<ScAddr> uncheckedRules = createQueue(ruleSet);
-  vector<ScAddr> checkedRuleList;
   vector<ScAddr> argumentList = IteratorUtils::getAllWithType(ms_context, argumentSet, ScType::Node);
+  vector<ScAddr> checkedRuleList;
 
-  ScAddr lastSolutionNode;
-  ScAddr currentRule, solutionNode;
+  ScAddr rule;
   bool targetAchieved = false;
   while (!uncheckedRules.empty())
   {
-    currentRule = uncheckedRules.front();
-    cout << ms_context->HelperGetSystemIdtf(currentRule) << endl;
-    solutionNode = useRule(currentRule, argumentList);
-    cout << solutionNode.IsValid() << endl;
-    if (solutionNode.IsValid())
+    rule = uncheckedRules.front();
+    cout<<ms_context->HelperGetSystemIdtf(rule)<<endl;
+    bool isUsed = useRule(rule, argumentList);
+    cout<<isUsed<<endl;
+    if (isUsed)
     {
-      ScAddr gotoArc = ms_context->CreateEdge(ScType::EdgeDCommonConst, lastSolutionNode, solutionNode);
-      ms_context->CreateEdge(ScType::EdgeAccessConstPosPerm, CoreKeynodes::nrel_basic_sequence, gotoArc);
-      lastSolutionNode = solutionNode;
       targetAchieved = isTargetAchieved(targetStatement, argumentList);
       if (targetAchieved)
       {
-        checkedRuleList.clear();
-        checkedRuleList.shrink_to_fit();
-        argumentList.clear();
-        argumentList.shrink_to_fit();
         break;
       }
       else
@@ -64,20 +63,12 @@ ScAddr DirectInferenceManager::applyInference(
     }
     else
     {
-      checkedRuleList.push_back(currentRule);
+      checkedRuleList.push_back(rule);
     }
     uncheckedRules.pop();
   }
 
-  ScAddr solution = ms_context->CreateNode(ScType::NodeConst);
-  if (lastSolutionNode.IsValid())
-  {
-    ms_context->CreateEdge(ScType::EdgeAccessConstPosPerm, solutionNode, solution);
-  }
-  ScType arcType = targetAchieved ? ScType::EdgeAccessConstPosPerm : ScType::EdgeAccessConstNegPerm;
-  ms_context->CreateEdge(arcType, InferenceKeynodes::concept_success_solution, solution);
-  ms_context->CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::concept_solution, solution);
-  return solution;
+  return this->solutionTreeManager->createSolution(targetAchieved);
 }
 
 queue<ScAddr> DirectInferenceManager::createQueue(ScAddr const & set)
@@ -98,9 +89,9 @@ void DirectInferenceManager::addToQueue(vector<ScAddr> const & elementList, queu
   }
 }
 
-ScAddr DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> const & argumentList)
+bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> const & argumentList)
 {
-  ScAddr solutionNode;
+  bool isUsed = false;
   ScAddr ifStatement = LogicRuleUtils::getIfStatement(ms_context, rule);
   ScTemplateParams ifStatementParams = createTemplateParams(ifStatement, argumentList);
   if (!ifStatementParams.IsEmpty())
@@ -123,10 +114,10 @@ ScAddr DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> const
             if (ms_context->HelperCheckEdge(ifStatement, var, ScType::EdgeAccessConstPosPerm))
             {
               string varName = ms_context->HelperGetSystemIdtf(var);
-              cout << varName << endl;
               ScAddr node;
               ifStatementParams.Get(varName, node);
-              if (!node.IsValid()){
+              if (!node.IsValid())
+              {
                 node = firstResult[varName];
               }
               elseStatementParams.Add(varName, node);
@@ -135,15 +126,15 @@ ScAddr DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> const
           }
         }
 
-        bool isGenerated = generateStatement(elseStatement, elseStatementParams);
-        if (isGenerated)
+        isUsed = generateStatement(elseStatement, elseStatementParams);
+        if (isUsed)
         {
-          solutionNode = createSolutionNode(rule, ifStatementParams);
+          this->solutionTreeManager->addNode(rule, ifStatementParams);
         }
       }
     }
   }
-  return solutionNode;
+  return isUsed;
 }
 
 ScTemplateParams
@@ -194,15 +185,6 @@ bool DirectInferenceManager::generateStatement(ScAddr const & statement, ScTempl
   return ms_context->HelperGenTemplate(statementTemplate, result, templateParams);
 }
 
-ScAddr DirectInferenceManager::createSolutionNode(ScAddr const & rule, ScTemplateParams const & templateParams)
-{
-  ScAddr solutionNode = ms_context->CreateNode(ScType::NodeConst);
-  //TODO: Add params to solution node
-  ScAddr arc = ms_context->CreateEdge(ScType::EdgeAccessConstPosPerm, solutionNode, rule);
-  ms_context->CreateEdge(ScType::EdgeAccessConstPosPerm, CoreKeynodes::rrel_1, arc);
-  return solutionNode;
-}
-
 bool DirectInferenceManager::isTargetAchieved(ScAddr const & targetStatement, vector<ScAddr> const & argumentList)
 {
   bool result = false;
@@ -214,13 +196,4 @@ bool DirectInferenceManager::isTargetAchieved(ScAddr const & targetStatement, ve
     result = ms_context->HelperSearchTemplate(targetStatementTemplate, searchResult);
   }
   return result;
-}
-
-void DirectInferenceManager::printSetElements(ScAddr const & set)
-{
-  vector<ScAddr> elementList = IteratorUtils::getAllWithType(ms_context, set, ScType::Unknown);
-  for (auto element : elementList)
-  {
-    cout << ms_context->HelperGetSystemIdtf(element) << endl;
-  }
 }
