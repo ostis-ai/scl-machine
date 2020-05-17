@@ -4,8 +4,6 @@
 * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
 */
 
-#include <iostream>
-
 #include <sc-memory/cpp/sc_addr.hpp>
 #include <sc-memory/cpp/sc_stream.hpp>
 #include <sc-kpm/sc-agents-common/utils/GenerationUtils.hpp>
@@ -13,7 +11,7 @@
 #include <sc-kpm/sc-agents-common/keynodes/CoreKeynodes.hpp>
 #include <sc-kpm/sc-agents-common/utils/LogicRuleUtils.hpp>
 
-#include "keynodes/InferenceKeynodes.hpp"
+#include "utils/ContainersUtils.hpp"
 #include "DirectInferenceManager.hpp"
 
 using namespace inference;
@@ -56,7 +54,7 @@ ScAddr DirectInferenceManager::applyInference(
       }
       else
       {
-        addToQueue(checkedRuleList, uncheckedRules);
+        ContainersUtils::addToQueue(checkedRuleList, uncheckedRules);
         checkedRuleList.clear();
       }
     }
@@ -74,18 +72,9 @@ queue<ScAddr> DirectInferenceManager::createQueue(ScAddr const & set)
 {
   queue<ScAddr> queue;
   vector<ScAddr> elementList = IteratorUtils::getAllWithType(ms_context, set, ScType::Node);
-  addToQueue(elementList, queue);
-  elementList.clear();
-  elementList.shrink_to_fit();
-  return queue;
-}
 
-void DirectInferenceManager::addToQueue(vector<ScAddr> const & elementList, queue<ScAddr> & queue)
-{
-  for (auto element : elementList)
-  {
-    queue.push(element);
-  }
+  ContainersUtils::addToQueue(elementList, queue);
+  return queue;
 }
 
 bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> const & argumentList)

@@ -34,9 +34,6 @@ public:
 private:
   queue<ScAddr> createQueue(ScAddr const & set);
 
-  //TODO: Move to utils
-  void addToQueue(vector<ScAddr> const & elementList, queue<ScAddr> & queue);
-
   bool useRule(ScAddr const & rule, vector<ScAddr> const & argumentList);
 
   bool isTargetAchieved(ScAddr const & target, vector<ScAddr> const & argumentList);

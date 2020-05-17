@@ -8,6 +8,7 @@ set(SOURCES
 		"agent/ATemplateGeneration.cpp"
 		"manager/DirectInferenceManager.cpp"
 		"composer/SolutionTreeComposer.cpp"
+		"utils/ContainersUtils.cpp"
 		)
 
 set(HEADERS
@@ -19,6 +20,7 @@ set(HEADERS
 		"manager/InferenceManager.hpp"
 		"manager/DirectInferenceManager.hpp"
 		"composer/SolutionTreeComposer.hpp"
+		"utils/ContainersUtils.hpp"
 		)
 
 include_directories(${SC_INFERENCE_MODULE_SRC} ${SC_MEMORY_SRC} ${GLIB2_INCLUDE_DIRS})
