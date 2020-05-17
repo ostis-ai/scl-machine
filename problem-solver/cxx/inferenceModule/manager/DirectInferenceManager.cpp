@@ -40,14 +40,13 @@ ScAddr DirectInferenceManager::applyInference(
   vector<ScAddr> argumentList = IteratorUtils::getAllWithType(ms_context, argumentSet, ScType::Node);
   vector<ScAddr> checkedRuleList;
 
-  ScAddr rule;
   bool targetAchieved = false;
+  ScAddr rule;
+  bool isUsed;
   while (!uncheckedRules.empty())
   {
     rule = uncheckedRules.front();
-    cout<<ms_context->HelperGetSystemIdtf(rule)<<endl;
-    bool isUsed = useRule(rule, argumentList);
-    cout<<isUsed<<endl;
+    isUsed = useRule(rule, argumentList);
     if (isUsed)
     {
       targetAchieved = isTargetAchieved(targetStatement, argumentList);
