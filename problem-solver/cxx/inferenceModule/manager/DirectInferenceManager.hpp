@@ -11,7 +11,7 @@
 
 #include <sc-memory/cpp/kpm/sc_agent.hpp>
 
-#include "composer/SolutionTreeComposer.hpp"
+#include "generator/SolutionTreeGenerator.hpp"
 
 using namespace std;
 
@@ -43,7 +43,7 @@ private:
   bool generateStatement(ScAddr const & statement, ScTemplateParams const & templateParams);
 
   ScMemoryContext * ms_context;
-  SolutionTreeComposer * solutionTreeManager;
+  SolutionTreeGenerator * solutionTreeManager;
 };
 
 

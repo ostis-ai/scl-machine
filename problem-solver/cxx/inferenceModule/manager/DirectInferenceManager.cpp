@@ -20,7 +20,7 @@ using namespace scAgentsCommon;
 
 DirectInferenceManager::DirectInferenceManager(ScMemoryContext * ms_context) : ms_context(ms_context)
 {
-  this->solutionTreeManager = new SolutionTreeComposer(ms_context);
+  this->solutionTreeManager = new SolutionTreeGenerator(ms_context);
 }
 
 DirectInferenceManager::~DirectInferenceManager()

@@ -7,7 +7,7 @@ set(SOURCES
 		"agent/AReverseInference.cpp"
 		"agent/ATemplateGeneration.cpp"
 		"manager/DirectInferenceManager.cpp"
-		"composer/SolutionTreeComposer.cpp"
+		"generator/SolutionTreeGenerator.cpp"
 		"utils/ContainersUtils.cpp"
 		)
 
@@ -19,7 +19,7 @@ set(HEADERS
 		"agent/ATemplateGeneration.hpp"
 		"manager/InferenceManager.hpp"
 		"manager/DirectInferenceManager.hpp"
-		"composer/SolutionTreeComposer.hpp"
+		"generator/SolutionTreeGenerator.hpp"
 		"utils/ContainersUtils.hpp"
 		)
 

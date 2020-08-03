@@ -14,18 +14,18 @@
 #include <sc-kpm/sc-agents-common/utils/LogicRuleUtils.hpp>
 
 #include "keynodes/InferenceKeynodes.hpp"
-#include "SolutionTreeComposer.hpp"
+#include "SolutionTreeGenerator.hpp"
 
 using namespace inference;
 using namespace utils;
 using namespace scAgentsCommon;
 
-SolutionTreeComposer::SolutionTreeComposer(ScMemoryContext * ms_context) : ms_context(ms_context)
+SolutionTreeGenerator::SolutionTreeGenerator(ScMemoryContext * ms_context) : ms_context(ms_context)
 {
   lastNode = ScAddr();
 }
 
-bool SolutionTreeComposer::addNode(ScAddr const & rule, ScTemplateParams const & templateParams)
+bool SolutionTreeGenerator::addNode(ScAddr const & rule, ScTemplateParams const & templateParams)
 {
   ScAddr newNode = createSolutionNode(rule, templateParams);
   bool result = newNode.IsValid();
@@ -41,7 +41,7 @@ bool SolutionTreeComposer::addNode(ScAddr const & rule, ScTemplateParams const &
   return result;
 }
 
-ScAddr SolutionTreeComposer::createSolution(const bool targetAchieved)
+ScAddr SolutionTreeGenerator::createSolution(const bool targetAchieved)
 {
   ScAddr solution = ms_context->CreateNode(ScType::NodeConst);
   if (lastNode.IsValid())
@@ -54,7 +54,7 @@ ScAddr SolutionTreeComposer::createSolution(const bool targetAchieved)
   return solution;
 }
 
-ScAddr SolutionTreeComposer::createSolutionNode(ScAddr const & rule, ScTemplateParams const & templateParams)
+ScAddr SolutionTreeGenerator::createSolutionNode(ScAddr const & rule, ScTemplateParams const & templateParams)
 {
   ScAddr solutionNode = ms_context->CreateNode(ScType::NodeConst);
   //TODO: Add params to solution node

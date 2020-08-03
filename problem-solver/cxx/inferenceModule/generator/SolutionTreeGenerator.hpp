@@ -17,12 +17,12 @@ namespace inference
 {
 
 // TODO: Fix issue with using interface InferenceManager
-class SolutionTreeComposer
+class SolutionTreeGenerator
 {
 public:
-  explicit SolutionTreeComposer(ScMemoryContext * ms_context);
+  explicit SolutionTreeGenerator(ScMemoryContext * ms_context);
 
-  ~SolutionTreeComposer() = default;
+  ~SolutionTreeGenerator() = default;
 
   bool addNode(ScAddr const & rule, ScTemplateParams const & templateParams);
 
