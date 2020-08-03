@@ -11,12 +11,11 @@ using namespace std;
 namespace inference
 {
 
-template<class T>
-void ContainersUtils::addToQueue(vector<T> const & elementList, queue<T> & queue)
+void ContainersUtils::addToQueue(vector<ScAddr> const & elementList, queue<ScAddr> & targetQueue)
 {
   for (auto element : elementList)
   {
-    queue.push(element);
+    targetQueue.push(element);
   }
 }
 }

@@ -6,9 +6,10 @@
 
 #pragma once
 
-#include <string>
 #include <vector>
 #include <queue>
+
+#include <sc-memory/cpp/sc_addr.hpp>
 
 using namespace std;
 
@@ -19,8 +20,7 @@ class ContainersUtils
 {
 public:
 
-  template<typename T>
-  static void addToQueue(vector<T> const & elementList, queue<T> & queue);
+  static void addToQueue(vector<ScAddr> const & elementList, queue<ScAddr> & targetQueue);
 };
 
 }
