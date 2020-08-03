@@ -11,6 +11,8 @@
 
 #include <sc-memory/cpp/kpm/sc_agent.hpp>
 
+#include "generator/SolutionTreeGenerator.hpp"
+
 using namespace std;
 
 namespace inference
@@ -27,15 +29,12 @@ public:
         const ScAddr & ruleSet,
         const ScAddr & argumentSet);
 
-  ~DirectInferenceManager() = default;
+  ~DirectInferenceManager();
 
 private:
   queue<ScAddr> createQueue(ScAddr const & set);
 
-  //TODO: Move to utils
-  void addToQueue(vector<ScAddr> const & elementList, queue<ScAddr> & queue);
-
-  ScAddr useRule(ScAddr const & rule, vector<ScAddr> const & argumentList);
+  bool useRule(ScAddr const & rule, vector<ScAddr> const & argumentList);
 
   bool isTargetAchieved(ScAddr const & target, vector<ScAddr> const & argumentList);
 
@@ -43,11 +42,8 @@ private:
 
   bool generateStatement(ScAddr const & statement, ScTemplateParams const & templateParams);
 
-  ScAddr createSolutionNode(ScAddr const & rule, ScTemplateParams const & templateParams);
-
-  void printSetElements(ScAddr const & set);
-
   ScMemoryContext * ms_context;
+  SolutionTreeGenerator * solutionTreeManager;
 };
 
 
