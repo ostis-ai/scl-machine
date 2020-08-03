@@ -8,7 +8,7 @@
 
 using namespace std;
 
-namespace utils
+namespace inference
 {
 
 template<class T>

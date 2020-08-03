@@ -7,7 +7,7 @@
 #pragma once
 
 #include <sc-memory/cpp/kpm/sc_agent.hpp>
-#include <sc-kpm/sc-agents-common/keynodes/CoreKeynodes.hpp>
+#include <sc-kpm/sc-agents-common/keynodes/coreKeynodes.hpp>
 
 #include "keynodes/InferenceKeynodes.hpp"
 

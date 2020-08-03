@@ -3,7 +3,7 @@
 * Distributed under the MIT License
 * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
 */
-#include <sc-kpm/sc-agents-common/keynodes/CoreKeynodes.hpp>
+#include <sc-kpm/sc-agents-common/keynodes/coreKeynodes.hpp>
 #include <sc-kpm/sc-agents-common/utils/IteratorUtils.hpp>
 #include <sc-kpm/sc-agents-common/utils/AgentUtils.hpp>
 

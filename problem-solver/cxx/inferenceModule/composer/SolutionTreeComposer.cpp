@@ -10,7 +10,7 @@
 #include <sc-memory/cpp/sc_stream.hpp>
 #include <sc-kpm/sc-agents-common/utils/GenerationUtils.hpp>
 #include <sc-kpm/sc-agents-common/utils/IteratorUtils.hpp>
-#include <sc-kpm/sc-agents-common/keynodes/CoreKeynodes.hpp>
+#include <sc-kpm/sc-agents-common/keynodes/coreKeynodes.hpp>
 #include <sc-kpm/sc-agents-common/utils/LogicRuleUtils.hpp>
 
 #include "keynodes/InferenceKeynodes.hpp"

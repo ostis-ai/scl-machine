@@ -12,7 +12,7 @@
 
 using namespace std;
 
-namespace utils
+namespace inference
 {
 
 class ContainersUtils
