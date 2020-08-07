@@ -114,6 +114,7 @@ bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> const &
           }
         }
 
+
         isUsed = generateStatement(elseStatement, elseStatementParams);
         if (isUsed)
         {
@@ -167,10 +168,18 @@ DirectInferenceManager::createTemplateParams(ScAddr const & scTemplate, const ve
 
 bool DirectInferenceManager::generateStatement(ScAddr const & statement, ScTemplateParams const & templateParams)
 {
-  ScTemplate statementTemplate;
-  ms_context->HelperBuildTemplate(statementTemplate, statement);
-  ScTemplateGenResult result;
-  return ms_context->HelperGenTemplate(statementTemplate, result, templateParams);
+  bool result = false;
+  ScTemplate searchTemplate;
+  ms_context->HelperBuildTemplate(searchTemplate, statement, templateParams);
+  ScTemplateSearchResult templateSearchResult;
+  if (!ms_context->HelperSearchTemplate(searchTemplate, templateSearchResult))
+  {
+    ScTemplate statementTemplate;
+    ms_context->HelperBuildTemplate(statementTemplate, statement);
+    ScTemplateGenResult templateGenResult;
+    result = ms_context->HelperGenTemplate(statementTemplate, templateGenResult, templateParams);
+  }
+  return result;
 }
 
 bool DirectInferenceManager::isTargetAchieved(ScAddr const & targetStatement, vector<ScAddr> const & argumentList)
