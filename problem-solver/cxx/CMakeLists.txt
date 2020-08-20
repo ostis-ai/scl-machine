@@ -11,3 +11,5 @@ foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
 endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
 
 add_subdirectory(inferenceModule)
+
+SET(CMAKE_BUILD_TYPE Debug)

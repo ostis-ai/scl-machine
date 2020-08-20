@@ -9,6 +9,7 @@ set(SOURCES
 		"manager/DirectInferenceManager.cpp"
 		"generator/SolutionTreeGenerator.cpp"
 		"utils/ContainersUtils.cpp"
+		"comparator/AddrComparator.cpp"
 		)
 
 set(HEADERS
@@ -21,6 +22,7 @@ set(HEADERS
 		"manager/DirectInferenceManager.hpp"
 		"generator/SolutionTreeGenerator.hpp"
 		"utils/ContainersUtils.hpp"
+		"comparator/AddrComparator.hpp"
 		)
 
 include_directories(${SC_INFERENCE_MODULE_SRC} ${SC_MEMORY_SRC} ${GLIB2_INCLUDE_DIRS})
@@ -31,3 +33,4 @@ target_link_libraries(inferenceModule sc-memory-cpp sc-kpm-common sc-agents-comm
 
 sc_codegen(inferenceModule ${SC_INFERENCE_MODULE_SRC})
 
+SET(CMAKE_BUILD_TYPE Debug)

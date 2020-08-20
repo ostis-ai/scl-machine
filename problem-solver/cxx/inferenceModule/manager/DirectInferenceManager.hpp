@@ -12,6 +12,7 @@
 #include <sc-memory/cpp/kpm/sc_agent.hpp>
 
 #include "generator/SolutionTreeGenerator.hpp"
+#include "comparator/AddrComparator.hpp"
 
 using namespace std;
 
@@ -39,6 +40,15 @@ private:
   bool isTargetAchieved(ScAddr const & target, vector<ScAddr> const & argumentList);
 
   ScTemplateParams createTemplateParams(ScAddr const & scTemplate, const vector<ScAddr> & argumentList);
+
+  std::vector<ScTemplateParams> createTemplateParamsList(ScAddr const & scTemplate, const vector<ScAddr> & argumentList);
+
+  void addVarToReplacementsList(
+        std::vector<std::map<ScAddr, string, AddrComparator>> & replacementsList,
+        string & varName,
+        std::vector<ScAddr> & argumentOfVarList);
+
+  std::vector<ScTemplateParams> createTemplateParamsList(std::vector<std::map<ScAddr, string, AddrComparator>> & replacementsList);
 
   bool generateStatement(ScAddr const & statement, ScTemplateParams const & templateParams);
 
