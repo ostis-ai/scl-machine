@@ -32,5 +32,3 @@ add_dependencies(inferenceModule sc-memory-cpp sc-kpm-common sc-agents-common)
 target_link_libraries(inferenceModule sc-memory-cpp sc-kpm-common sc-agents-common)
 
 sc_codegen(inferenceModule ${SC_INFERENCE_MODULE_SRC})
-
-SET(CMAKE_BUILD_TYPE Debug)
