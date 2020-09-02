@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include <sc-memory/cpp/sc_addr.hpp>
-#include <sc-memory/cpp/sc_object.hpp>
+#include <sc-memory/sc_addr.hpp>
+#include <sc-memory/sc_object.hpp>
 
 #include "InferenceKeynodes.generated.hpp"
 

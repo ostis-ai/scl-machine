@@ -17,17 +17,15 @@ set(HEADERS
 		"agent/DirectInferenceAgent.hpp"
 		"agent/AReverseInference.hpp"
 		"agent/ATemplateGeneration.hpp"
-		"manager/InferenceManager.hpp"
 		"manager/DirectInferenceManager.hpp"
 		"generator/SolutionTreeGenerator.hpp"
 		"utils/ContainersUtils.hpp"
 		)
 
-include_directories(${SC_INFERENCE_MODULE_SRC} ${SC_MEMORY_SRC} ${GLIB2_INCLUDE_DIRS})
+include_directories(${SC_INFERENCE_MODULE_SRC} ${SC_MEMORY_SRC} ${SC_KPM_SRC})
 
 add_library(inferenceModule SHARED ${SOURCES} ${HEADERS})
-add_dependencies(inferenceModule sc-memory-cpp sc-kpm-common sc-agents-common)
-target_link_libraries(inferenceModule sc-memory-cpp sc-kpm-common sc-agents-common)
+target_link_libraries(inferenceModule sc-memory sc-agents-common)
 
 sc_codegen(inferenceModule ${SC_INFERENCE_MODULE_SRC})
 

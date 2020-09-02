@@ -5,6 +5,7 @@
 */
 
 #include "inferenceModule.hpp"
+
 #include "agent/DirectInferenceAgent.hpp"
 #include "keynodes/InferenceKeynodes.hpp"
 

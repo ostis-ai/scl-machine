@@ -9,7 +9,7 @@
 #include <vector>
 #include <queue>
 
-#include <sc-memory/cpp/sc_addr.hpp>
+#include <sc-memory/sc_addr.hpp>
 
 using namespace std;
 

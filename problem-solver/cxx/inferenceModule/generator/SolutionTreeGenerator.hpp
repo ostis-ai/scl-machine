@@ -9,7 +9,7 @@
 #include <queue>
 #include <vector>
 
-#include <sc-memory/cpp/kpm/sc_agent.hpp>
+#include <sc-memory/kpm/sc_agent.hpp>
 
 using namespace std;
 

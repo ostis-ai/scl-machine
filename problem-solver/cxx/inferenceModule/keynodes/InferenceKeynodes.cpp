@@ -4,9 +4,9 @@
 * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
 */
 
-#include <sc-memory/cpp/sc_memory.hpp>
-
 #include "InferenceKeynodes.hpp"
+
+#include <sc-memory/sc_memory.hpp>
 
 namespace inference
 {
