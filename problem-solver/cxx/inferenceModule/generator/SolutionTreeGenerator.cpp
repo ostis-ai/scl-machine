@@ -4,17 +4,14 @@
 * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
 */
 
-#include <iostream>
+#include "SolutionTreeGenerator.hpp"
 
-#include <sc-memory/cpp/sc_addr.hpp>
-#include <sc-memory/cpp/sc_stream.hpp>
-#include <sc-kpm/sc-agents-common/utils/GenerationUtils.hpp>
-#include <sc-kpm/sc-agents-common/utils/IteratorUtils.hpp>
-#include <sc-kpm/sc-agents-common/keynodes/coreKeynodes.hpp>
-#include <sc-kpm/sc-agents-common/utils/LogicRuleUtils.hpp>
+#include <sc-memory/sc_addr.hpp>
+#include <sc-agents-common/utils/GenerationUtils.hpp>
+#include <sc-agents-common/utils/IteratorUtils.hpp>
+#include <sc-agents-common/keynodes/coreKeynodes.hpp>
 
 #include "keynodes/InferenceKeynodes.hpp"
-#include "SolutionTreeGenerator.hpp"
 
 using namespace inference;
 using namespace utils;

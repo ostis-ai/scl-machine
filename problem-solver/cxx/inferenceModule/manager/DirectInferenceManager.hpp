@@ -9,7 +9,8 @@
 #include <queue>
 #include <vector>
 
-#include <sc-memory/cpp/kpm/sc_agent.hpp>
+#include <sc-memory/sc_memory.hpp>
+#include <sc-memory/sc_addr.hpp>
 
 #include "generator/SolutionTreeGenerator.hpp"
 #include "comparator/AddrComparator.hpp"
