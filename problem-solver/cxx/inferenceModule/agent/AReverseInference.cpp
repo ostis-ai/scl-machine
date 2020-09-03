@@ -3,14 +3,16 @@
 * Distributed under the MIT License
 * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
 */
+
 #include <map>
 
-#include <sc-kpm/sc-agents-common/utils/IteratorUtils.hpp>
-#include <sc-kpm/sc-agents-common/utils/AgentUtils.hpp>
-#include <sc-kpm/sc-agents-common/utils/LogicRuleUtils.hpp>
+#include <sc-agents-common/utils/IteratorUtils.hpp>
+#include <sc-agents-common/utils/AgentUtils.hpp>
+#include <sc-agents-common/utils/LogicRuleUtils.hpp>
+
+#include "keynodes/InferenceKeynodes.hpp"
 
 #include "AReverseInference.hpp"
-#include "keynodes/InferenceKeynodes.hpp"
 
 using namespace std;
 using namespace utils;

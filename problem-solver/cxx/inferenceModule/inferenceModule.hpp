@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include <sc_memory.h>
-#include <sc-memory/cpp/sc_module.hpp>
+#include <sc-memory/sc_memory.hpp>
+#include <sc-memory/sc_module.hpp>
 
 #include "inferenceModule.generated.hpp"
 

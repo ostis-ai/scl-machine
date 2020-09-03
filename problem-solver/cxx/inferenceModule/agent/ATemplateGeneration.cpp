@@ -7,10 +7,10 @@
 #include <iostream>
 #include <thread>
 
-#include <sc-kpm/sc-agents-common/utils/IteratorUtils.hpp>
-#include <sc-kpm/sc-agents-common/utils/AgentUtils.hpp>
-#include <sc-kpm/sc-agents-common/utils/LogicRuleUtils.hpp>
-#include <sc-kpm/sc-agents-common/keynodes/coreKeynodes.hpp>
+#include <sc-agents-common/utils/IteratorUtils.hpp>
+#include <sc-agents-common/utils/AgentUtils.hpp>
+#include <sc-agents-common/utils/LogicRuleUtils.hpp>
+#include <sc-agents-common/keynodes/coreKeynodes.hpp>
 
 #include "ATemplateGeneration.hpp"
 
