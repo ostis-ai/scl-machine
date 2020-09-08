@@ -43,3 +43,48 @@ question_simple_direct_inference_test
 	{
  		quadrangle1
 	};;
+
+//scs tests
+
+concept_rhombus <-sc_node_not_relation;;
+concept_square <-sc_node_not_relation;;
+
+concept_square -> A2B2C2D2;;
+
+statement_square_is_rhombus_scs
+	<= ... (*
+		<- sc_node_tuple;;
+		-> [Все квадраты - ромбы] (* <- lang_ru;; *);;
+	*);
+	-> rrel_key_sc_element:
+		concept_square;
+		concept_rhombus;
+	-> rrel_main_key_sc_element: (if_statement => else_statement) (* <- nrel_implication;; *);;
+	
+if_statement = [*
+	concept_square _-> _x;;
+*];;
+
+else_statement = [*
+	concept_rhombus _-> _x;;
+*];;
+
+atomic_logical_formula
+	-> if_statement;
+	-> else_statement;;
+
+test_direct_inference_scs_target = [*
+	concept_rhombus _-> _x;;
+*];;
+
+question_direct_inference_scs_test
+  -> rrel_1: test_direct_inference_scs_target;
+  -> rrel_2:
+  	{
+  		statement_square_is_rhombus_scs
+  	};
+  -> rrel_3:
+	{
+ 		A2B2C2D2
+	};;
+

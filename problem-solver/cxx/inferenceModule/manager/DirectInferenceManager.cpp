@@ -136,7 +136,7 @@ DirectInferenceManager::createTemplateParamsList(ScAddr const & scTemplate, cons
         scTemplate,
         ScType::EdgeAccessConstPosPerm,
         ScType::NodeVar);
-  while (varIterator->Next())
+  while (varIterator->Next())//падает тут
   {
     ScAddr var = varIterator->Get(2);
     string varName = ms_context->HelperGetSystemIdtf(var);
