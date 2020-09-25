@@ -28,8 +28,8 @@ include_kb()
 include_kpm()
 {
 	cd sc-machine
-	sed -i '\|bin/cxx|d' ./CMakeLists.txt
-	sed -i '\|bin/py|d' ./CMakeLists.txt
+	sed -i '\|build/problem-solver/cxx|d' ./CMakeLists.txt
+	sed -i '\|build/problem-solver/py|d' ./CMakeLists.txt
 	cat ../../scripts/sc_machine_cmake_file_ext.txt >> ./CMakeLists.txt
 
 	cd config
