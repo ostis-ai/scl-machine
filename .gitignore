@@ -1,7 +1,9 @@
-*.*~
-
-.vscode
 .idea
+.vscode
+*.scs~
+ostis-web-platform
+
 __pycache__
 
-ostis
+cmake-build-debug
+cmake-build-release
