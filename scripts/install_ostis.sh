@@ -3,7 +3,6 @@
 APP_ROOT_PATH=$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && cd .. && pwd)
 PLATFORM_PATH="${APP_ROOT_PATH}/ostis-web-platform"
 WORKING_PATH=$(pwd)
-PYTHON_PATH="${APP_ROOT_PATH}"/problem-solver/py/services
 PLATFORM_REPO="https://github.com/ostis-dev/ostis-web-platform.git"
 
 prepare_platform()
@@ -34,12 +33,6 @@ include_kb()
 
 include_problem_solver()
 {
-	if ! grep -q "${PYTHON_PATH}" "${PLATFORM_PATH}/sc-machine/config/config.ini.in";
-	then
-		PYTHON_PATH_ESCAPED="$(echo "${PYTHON_PATH}" | sed -e 's/[/]/\\&/g')"
-		sed -i "/modules_path/ s/$/;${PYTHON_PATH_ESCAPED}/" "${PLATFORM_PATH}/sc-machine/config/config.ini.in"
-	fi
-
 	cd "${APP_ROOT_PATH}"/scripts
 	./build_problem_solver.sh
 	cat "${PLATFORM_PATH}"/sc-machine/bin/config.ini >> "${PLATFORM_PATH}"/config/sc-web.ini
