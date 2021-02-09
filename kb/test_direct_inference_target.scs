@@ -28,7 +28,7 @@ _x <- sc_node;;
 concept_quadrangle <- sc_node_class;;
 concept_square <- sc_node_class;;
 rrel_1 <- sc_node_role_relation;;
-question_direct_inference_test <- sc_node;;
+action_direct_inference_test <- sc_node;;
 @link0 <- sc_link;;
 @test_direct_inference_target = [*
 	@pair13 = (_x _=> _angle2);;
@@ -61,9 +61,9 @@ question_direct_inference_test <- sc_node;;
 
 concept_square -> ABCD;;
 
-question_direct_inference <- sc_node_class;;
+action_direct_inference <- sc_node_class;;
 
-question_direct_inference_test
+action_direct_inference_test
   -> rrel_1: @test_direct_inference_target;
   -> rrel_2:
   	{

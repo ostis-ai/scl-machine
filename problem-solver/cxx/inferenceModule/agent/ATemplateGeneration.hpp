@@ -18,7 +18,7 @@ namespace inference
 
 class ATemplateGeneration : public ScAgent
 {
-  SC_CLASS(Agent, Event(InferenceKeynodes::question_use_logic_rule, ScEvent::Type::AddOutputEdge))
+  SC_CLASS(Agent, Event(InferenceKeynodes::action_use_logic_rule, ScEvent::Type::AddOutputEdge))
   SC_GENERATED_BODY()
 
 private:

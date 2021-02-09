@@ -19,7 +19,7 @@ namespace inference
 
 class AReverseInference : public ScAgent
 {
-  SC_CLASS(Agent, Event(InferenceKeynodes::question_reverse_inference, ScEvent::Type::AddOutputEdge))
+  SC_CLASS(Agent, Event(InferenceKeynodes::action_reverse_inference, ScEvent::Type::AddOutputEdge))
   SC_GENERATED_BODY()
 
 private:
