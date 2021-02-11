@@ -20,7 +20,7 @@ namespace inference
 
 class DirectInferenceAgent : public ScAgent
 {
-  SC_CLASS(Agent, Event(InferenceKeynodes::question_direct_inference, ScEvent::Type::AddOutputEdge))
+  SC_CLASS(Agent, Event(InferenceKeynodes::action_direct_inference, ScEvent::Type::AddOutputEdge))
   SC_GENERATED_BODY()
 
 private:

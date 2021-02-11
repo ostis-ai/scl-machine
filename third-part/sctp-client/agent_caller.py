@@ -31,4 +31,4 @@ class AgentCaller:
 
 if __name__ == '__main__':
     runner = AgentCaller()
-    runner.call("question_direct_inference", "question_direct_inference_test")
+    runner.call("action_direct_inference", "action_direct_inference_test")

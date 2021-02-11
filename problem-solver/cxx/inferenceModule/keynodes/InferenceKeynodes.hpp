@@ -21,14 +21,14 @@ class InferenceKeynodes : public ScObject
 
 public:
 
-  SC_PROPERTY(Keynode("question_use_logic_rule"), ForceCreate)
-  static ScAddr question_use_logic_rule;
+  SC_PROPERTY(Keynode("action_use_logic_rule"), ForceCreate)
+  static ScAddr action_use_logic_rule;
 
-  SC_PROPERTY(Keynode("question_reverse_inference"), ForceCreate)
-  static ScAddr question_reverse_inference;
+  SC_PROPERTY(Keynode("action_reverse_inference"), ForceCreate)
+  static ScAddr action_reverse_inference;
 
-  SC_PROPERTY(Keynode("question_direct_inference"), ForceCreate)
-  static ScAddr question_direct_inference;
+  SC_PROPERTY(Keynode("action_direct_inference"), ForceCreate)
+  static ScAddr action_direct_inference;
 
   SC_PROPERTY(Keynode("concept_solution"), ForceCreate)
   static ScAddr concept_solution;
