@@ -1,2 +1,2 @@
 # ostis-inference
-Inference module for  OSTIS project(https://github.com/ShunkevichDV/ostis)
+Inference module for  OSTIS project(https://github.com/ostis-dev/ostis-web-platform)
