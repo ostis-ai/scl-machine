@@ -36,7 +36,8 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
   this->inferenceManager = new DirectInferenceManager(ms_context.get());
   ScAddr answer = this->inferenceManager->applyInference(targetTemplate, ruleSet, argumentSet);
 
-  AgentUtils::finishAgentWork((ScMemoryContext *) ms_context.get(), questionNode, answer);
+  bool success = ms_context->HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm);
+  AgentUtils::finishAgentWork((ScMemoryContext *) ms_context.get(), questionNode, answer, success);
 
   delete this->inferenceManager;
   return SC_RESULT_OK;
