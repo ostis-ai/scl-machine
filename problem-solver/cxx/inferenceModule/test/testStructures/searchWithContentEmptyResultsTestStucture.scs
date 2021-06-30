@@ -1,0 +1,12 @@
+@variable_link = _[text];;
+[search_link] <= nrel_system_identifier: @variable_link;;
+
+[search_template] <= nrel_system_identifier: [*
+	@pair0 = (_node _-> @variable_link);;
+	@pair1 = (test_class _-> _node);;
+*] (* <- concept_template_with_links;;*);;
+
+test_class <- sc_node_not_relation;;
+
+test_class -> constant_node;;
+constant_node -> [wrong text];;

@@ -20,11 +20,14 @@ DirectInferenceManager::DirectInferenceManager(ScMemoryContext * ms_context) : m
 {
   this->solutionTreeManager = new SolutionTreeGenerator(ms_context);
   this->templateManager = new TemplateManager(ms_context);
+  this->templateSearcher = new TemplateSearcher(ms_context);
 }
 
 DirectInferenceManager::~DirectInferenceManager()
 {
   delete this->solutionTreeManager;
+  delete this->templateManager;
+  delete this->templateSearcher;
 }
 
 ScAddr DirectInferenceManager::applyInference(
@@ -36,33 +39,38 @@ ScAddr DirectInferenceManager::applyInference(
   vector<ScAddr> argumentList = IteratorUtils::getAllWithType(ms_context, argumentSet, ScType::Node);
   vector<ScAddr> checkedRuleList;
 
-  bool targetAchieved = false;
+  bool targetAchieved = isTargetAchieved(targetStatement, argumentList);
   ScAddr rule;
   bool isUsed;
-  while (!uncheckedRules.empty())
+  if (!targetAchieved)
   {
-    rule = uncheckedRules.front();
-    isUsed = useRule(rule, argumentList);
-    if (isUsed)
+    while (!uncheckedRules.empty())
     {
-      targetAchieved = isTargetAchieved(targetStatement, argumentList);
-      if (targetAchieved)
+      rule = uncheckedRules.front();
+      isUsed = useRule(rule, argumentList);
+      if (isUsed)
       {
-        SC_LOG_DEBUG("Target achieved");
-        break;
+        targetAchieved = isTargetAchieved(targetStatement, argumentList);
+        if (targetAchieved)
+        {
+          SC_LOG_DEBUG("Target achieved");
+          break;
+        }
+        else
+        {
+          ContainersUtils::addToQueue(checkedRuleList, uncheckedRules);
+          checkedRuleList.clear();
+        }
       }
       else
       {
-        ContainersUtils::addToQueue(checkedRuleList, uncheckedRules);
-        checkedRuleList.clear();
+        checkedRuleList.push_back(rule);
       }
+      uncheckedRules.pop();
     }
-    else
-    {
-      checkedRuleList.push_back(rule);
-    }
-    uncheckedRules.pop();
   }
+  else
+  { SC_LOG_DEBUG("Target is already achieved") }
 
   return this->solutionTreeManager->createSolution(targetAchieved);
 }
@@ -85,41 +93,37 @@ bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> const &
   SC_LOG_DEBUG("Created " + to_string(ifStatementParamsList.size()) + " statement params variants");
   for (const auto& ifStatementParams : ifStatementParamsList)
   {
-    ScTemplate ifStatementTemplate;
-    if (ms_context->HelperBuildTemplate(ifStatementTemplate, ifStatement, ifStatementParams))
+    vector<ScTemplateSearchResultItem> searchResult =
+        templateSearcher->searchTemplate(ifStatement, ifStatementParams);
+    if (!searchResult.empty())
     {
-      ScTemplateSearchResult searchResult;
-      if (ms_context->HelperSearchTemplate(ifStatementTemplate, searchResult))
-      {
-        ScAddr elseStatement = LogicRuleUtils::getElseStatement(ms_context, rule);
+      ScAddr elseStatement = LogicRuleUtils::getElseStatement(ms_context, rule);
 
-        ScTemplateParams elseStatementParams;
-        ScTemplateSearchResultItem firstResult = searchResult[0];
-        if (firstResult.Size() > 0)
+      ScTemplateParams elseStatementParams;
+      ScTemplateSearchResultItem firstResult = searchResult[0];
+      if (firstResult.Size() > 0)
+      {
+        vector<ScAddr> varList = IteratorUtils::getAllWithType(ms_context, elseStatement, ScType::NodeVar);
+        for (auto var : varList)
         {
-          vector<ScAddr> varList = IteratorUtils::getAllWithType(ms_context, elseStatement, ScType::NodeVar);
-          for (auto var : varList)
+          if (ms_context->HelperCheckEdge(ifStatement, var, ScType::EdgeAccessConstPosPerm))
           {
-            if (ms_context->HelperCheckEdge(ifStatement, var, ScType::EdgeAccessConstPosPerm))
+            string varName = ms_context->HelperGetSystemIdtf(var);
+            ScAddr node;
+            ifStatementParams.Get(varName, node);
+            if (!node.IsValid())
             {
-              string varName = ms_context->HelperGetSystemIdtf(var);
-              ScAddr node;
-              ifStatementParams.Get(varName, node);
-              if (!node.IsValid())
-              {
-                node = firstResult[varName];
-              }
-              elseStatementParams.Add(varName, node);
+              node = firstResult[varName];
             }
+            elseStatementParams.Add(varName, node);
           }
         }
-
-        if(generateStatement(elseStatement, elseStatementParams))
-        {
-          this->solutionTreeManager->addNode(rule, ifStatementParams);
-          isUsed = true;
-          SC_LOG_DEBUG("Rule used");
-        }
+      }
+      if (generateStatement(elseStatement, elseStatementParams))
+      {
+        this->solutionTreeManager->addNode(rule, ifStatementParams);
+        isUsed = true;
+        SC_LOG_DEBUG("Rule used");
       }
     }
   }
@@ -146,11 +150,9 @@ bool DirectInferenceManager::isTargetAchieved(ScAddr const & targetStatement, ve
 {
   bool result = false;
   ScTemplateParams templateParams = templateManager->createTemplateParams(targetStatement, argumentList);
-  ScTemplate targetStatementTemplate;
-  if (ms_context->HelperBuildTemplate(targetStatementTemplate, targetStatement, templateParams))
-  {
-    ScTemplateSearchResult searchResult;
-    result = ms_context->HelperSearchTemplate(targetStatementTemplate, searchResult);
-  }
+  vector<ScTemplateSearchResultItem> searchResult =
+      templateSearcher->searchTemplate(targetStatement, templateParams);
+  if (!searchResult.empty())
+  { result = true; }
   return result;
 }

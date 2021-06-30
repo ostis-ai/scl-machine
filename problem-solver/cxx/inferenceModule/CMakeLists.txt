@@ -1,5 +1,5 @@
 set(SOURCES
-        "inferenceModule.cpp"
+        "InferenceModule.cpp"
         "keynodes/InferenceKeynodes.cpp"
         "agent/DirectInferenceAgent.cpp"
         "agent/AReverseInference.cpp"
@@ -9,10 +9,11 @@ set(SOURCES
         "generator/SolutionTreeGenerator.cpp"
         "utils/ContainersUtils.cpp"
         "comparator/AddrComparator.cpp"
+        "searcher/TemplateSearcher.cpp"
         )
 
 set(HEADERS
-        "inferenceModule.hpp"
+        "InferenceModule.hpp"
         "keynodes/InferenceKeynodes.hpp"
         "agent/DirectInferenceAgent.hpp"
         "agent/AReverseInference.hpp"
@@ -22,11 +23,17 @@ set(HEADERS
         "generator/SolutionTreeGenerator.hpp"
         "utils/ContainersUtils.hpp"
         "comparator/AddrComparator.hpp"
+        "searcher/TemplateSearcher.hpp"
         )
 
-include_directories(${CMAKE_CURRENT_LIST_DIR} ${SC_MEMORY_SRC} ${SC_KPM_SRC})
+set(INFERENCE_MODULE_GENERATED_DIR ${CMAKE_CURRENT_LIST_DIR}/generated)
+include_directories(${CMAKE_CURRENT_LIST_DIR} ${SC_MEMORY_SRC} ${SC_KPM_SRC} ${INFERENCE_MODULE_GENERATED_DIR})
 
 add_library(inferenceModule SHARED ${SOURCES} ${HEADERS})
 target_link_libraries(inferenceModule sc-memory sc-agents-common)
 
-sc_codegen(inferenceModule ${CMAKE_CURRENT_LIST_DIR})
+sc_codegen_ex(inferenceModule ${CMAKE_CURRENT_LIST_DIR} ${CMAKE_CURRENT_LIST_DIR}/generated)
+
+if (${SC_BUILD_TESTS})
+    add_subdirectory(test)
+endif ()

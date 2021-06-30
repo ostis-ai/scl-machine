@@ -39,6 +39,9 @@ public:
   SC_PROPERTY(Keynode("rrel_solver_key_sc_element"), ForceCreate)
   static ScAddr rrel_solver_key_sc_element;
 
+  SC_PROPERTY(Keynode("concept_template_with_links"), ForceCreate)
+  static ScAddr concept_template_with_links;
+
 };
 
 }
