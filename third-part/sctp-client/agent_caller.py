@@ -1,3 +1,6 @@
+import logging
+import sys
+
 from sctp.client import SctpClient
 from sctp.types import ScElementType
 
@@ -31,4 +34,10 @@ class AgentCaller:
 
 if __name__ == '__main__':
     runner = AgentCaller()
-    runner.call("action_direct_inference", "action_direct_inference_test")
+
+    args = sys.argv[1:]
+
+    if len(args) != 1:
+        logging.error('Invalid arguments number')
+    else:
+        runner.call("action_direct_inference", args[0])

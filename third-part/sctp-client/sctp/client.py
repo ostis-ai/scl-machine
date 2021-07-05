@@ -1,7 +1,5 @@
 import socket
 import struct
-import time
-import decorators
 
 from sctp.types import ScAddr, SctpIteratorType, ScStatItem, SctpCommandType, SctpResultCode
 

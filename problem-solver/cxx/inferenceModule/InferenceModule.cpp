@@ -4,7 +4,7 @@
 * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
 */
 
-#include "inferenceModule.hpp"
+#include "InferenceModule.hpp"
 
 #include "agent/DirectInferenceAgent.hpp"
 #include "keynodes/InferenceKeynodes.hpp"

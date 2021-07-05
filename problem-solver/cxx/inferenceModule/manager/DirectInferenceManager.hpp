@@ -14,6 +14,8 @@
 
 #include "generator/SolutionTreeGenerator.hpp"
 #include "manager/TemplateManager.hpp"
+#include "searcher/TemplateSearcher.hpp"
+
 
 using namespace std;
 
@@ -44,6 +46,7 @@ private:
 
   ScMemoryContext * ms_context;
   TemplateManager * templateManager;
+  TemplateSearcher * templateSearcher;
   SolutionTreeGenerator * solutionTreeManager;
 };
 }

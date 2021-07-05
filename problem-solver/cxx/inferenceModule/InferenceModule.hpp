@@ -9,7 +9,7 @@
 #include <sc-memory/sc_memory.hpp>
 #include <sc-memory/sc_module.hpp>
 
-#include "inferenceModule.generated.hpp"
+#include "InferenceModule.generated.hpp"
 
 class InferenceModule : public ScModule
 {
