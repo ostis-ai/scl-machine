@@ -10,6 +10,7 @@
 #include <sc-memory/sc_addr.hpp>
 #include <sc-agents-common/utils/GenerationUtils.hpp>
 #include <sc-agents-common/utils/CommonUtils.hpp>
+#include <sc-agents-common/keynodes/coreKeynodes.hpp>
 
 #include "keynodes/InferenceKeynodes.hpp"
 
@@ -55,7 +56,7 @@ std::vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplateWithCont
       const ScAddr &templateAddr)
 {
   context->HelperSearchTemplate(searchTemplate, *searchWithoutContentResult);
-  std::map<std::string, std::string> linksContentMap =  getTemplateLinksContent(templateAddr);
+  std::map<std::string, std::string> linksContentMap = getTemplateKeyLinksContent(templateAddr);
   vector<ScTemplateSearchResultItem> searchWithContentResult;
   for(size_t searchItemIndex = 0; searchItemIndex < searchWithoutContentResult->Size(); searchItemIndex++)
   {
@@ -64,9 +65,9 @@ std::vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplateWithCont
     ScTemplateSearchResultItem searchResultItem = (*searchWithoutContentResult)[searchItemIndex];
     for (auto const & linkIdContentPair: linksContentMap)
     {
-      ScAddr link = searchResultItem[linkIdContentPair.first];
+      ScAddr linkAddr = searchResultItem[linkIdContentPair.first];
       std::string stringContent;
-      ScStreamConverter::StreamToString(context->GetLinkContent(link), stringContent);
+      ScStreamConverter::StreamToString(context->GetLinkContent(linkAddr), stringContent);
       if (stringContent != linkIdContentPair.second)
       {
         contentIsIdentical = false;
@@ -82,23 +83,28 @@ std::vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplateWithCont
   return searchWithContentResult;
 }
 
-std::map<std::string, std::string> TemplateSearcher::getTemplateLinksContent(const ScAddr &templateAddr)
+std::map<std::string, std::string> TemplateSearcher::getTemplateKeyLinksContent(const ScAddr &templateAddr)
 {
   std::string link_alias = "_link";
 
   std::map<std::string, std::string> linksContent;
   ScTemplate scTemplate;
-  scTemplate.Triple(templateAddr, ScType::EdgeAccessVarPosPerm, ScType::Link >> link_alias);
+  scTemplate.TripleWithRelation(
+        templateAddr,
+        ScType::EdgeAccessVarPosPerm,
+        ScType::Link >> link_alias,
+        ScType::EdgeAccessVarPosPerm,
+        scAgentsCommon::CoreKeynodes::rrel_key_sc_element);
   ScTemplateSearchResult searchResult;
   context->HelperSearchTemplate(scTemplate, searchResult);
   for(size_t i = 0; i < searchResult.Size(); i++)
   {
-    ScAddr link = searchResult[i][link_alias];
-    if (utils::CommonUtils::checkType(context, link, ScType::LinkVar))
+    ScAddr linkAddr = searchResult[i][link_alias];
+    if (utils::CommonUtils::checkType(context, linkAddr, ScType::LinkVar))
     {
       std::string stringContent;
-      ScStreamConverter::StreamToString(context->GetLinkContent(link), stringContent);
-      linksContent.emplace(context->HelperGetSystemIdtf(link), stringContent);
+      ScStreamConverter::StreamToString(context->GetLinkContent(linkAddr), stringContent);
+      linksContent.emplace(context->HelperGetSystemIdtf(linkAddr), stringContent);
     }
   }
   return linksContent;
