@@ -21,6 +21,7 @@
 	@pair11 = (nrel_sc_text_translation _-> @pair10);;
 	@pair12 = (.._node1 _-> @link1);;
 *];;
+@contour1 -> rrel_key_sc_element: @link1;;
 
 @link2 = _[Hey];;
 [lr_2_text_link] <= nrel_system_identifier: @link2;;
@@ -30,6 +31,8 @@
 	@pair15 = (nrel_sc_text_translation _-> @pair14);;
 	@pair16 = (.._node2 _-> @link2);;
 *];;
+@contour2 -> rrel_key_sc_element: @link2;;
+
 @contour3 = [*
 	@link3 = [Hello];;
 	@pair17 = (.._node3 _=> _reply_message);;

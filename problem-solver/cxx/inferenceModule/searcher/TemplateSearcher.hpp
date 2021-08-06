@@ -29,7 +29,7 @@ private:
         const ScTemplate &searchTemplate,
         const ScAddr &templateAddr);
 
-  std::map<std::string, std::string> getTemplateLinksContent(const ScAddr &templateAddr);
+  std::map<std::string, std::string> getTemplateKeyLinksContent(const ScAddr &templateAddr);
 
   ScMemoryContext *context;
   std::unique_ptr<ScTemplateSearchResult> searchWithoutContentResult;

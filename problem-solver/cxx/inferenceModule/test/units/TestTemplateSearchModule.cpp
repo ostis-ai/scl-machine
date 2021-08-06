@@ -7,6 +7,8 @@
 #include "sc-test-framework/sc_test_unit.hpp"
 #include "catch2/catch.hpp"
 #include "builder/src/scs_loader.hpp"
+#include "sc-agents-common/keynodes/coreKeynodes.hpp"
+
 #include "searcher/TemplateSearcher.hpp"
 #include "keynodes/InferenceKeynodes.hpp"
 
@@ -20,6 +22,7 @@ const std::string TEST_SEARCH_TEMPLATE_ID = "search_template";
 void initialize()
 {
   inference::InferenceKeynodes::InitGlobal();
+  scAgentsCommon::CoreKeynodes::InitGlobal();
 }
 
 TEST_CASE("search with content - no structures test case", "[template search manager]")
@@ -173,6 +176,29 @@ TEST_CASE("search without content - multiple result test case", "[template searc
   REQUIRE(searchResults.size() == 2);
   REQUIRE(searchResults[1][searchLinkIdentifier] == context.HelperFindBySystemIdtf(firstCorrectResultLinkIdentifier));
   REQUIRE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(secondCorrectResultLinkIdentifier));
+
+  context.Destroy();
+  test::ScTestUnit::ShutdownMemory(false);
+}
+
+TEST_CASE("search without content - selective test case", "[template search manager]")
+{
+  std::string correctResultLinkIdentifier = "correct_result_link";
+  std::string searchLinkIdentifier = "search_link";
+
+  test::ScTestUnit::InitMemory(SC_MEMORY_INI, "");
+  ScMemoryContext context(sc_access_lvl_make_min, "checkDynamicArguments");
+
+  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "searchWithContentSelectiveSearchTestStucture.scs");
+  initialize();
+
+  ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
+  inference::TemplateSearcher templateSearcher = inference::TemplateSearcher(&context);
+  ScTemplateParams templateParams;
+  std::vector<ScTemplateSearchResultItem> searchResults = templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
+
+  REQUIRE(searchResults.size() == 1);
+  REQUIRE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
 
   context.Destroy();
   test::ScTestUnit::ShutdownMemory(false);
