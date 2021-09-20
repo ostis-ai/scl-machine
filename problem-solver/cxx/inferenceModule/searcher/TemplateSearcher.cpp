@@ -67,7 +67,15 @@ std::vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplateWithCont
     {
       ScAddr linkAddr = searchResultItem[linkIdContentPair.first];
       std::string stringContent;
-      ScStreamConverter::StreamToString(context->GetLinkContent(linkAddr), stringContent);
+      ScStreamPtr linkContentStream = context->GetLinkContent(linkAddr);
+      if (linkContentStream != nullptr)
+      {
+        ScStreamConverter::StreamToString(linkContentStream, stringContent);
+      }
+      else
+      {
+        stringContent = "";
+      }
       if (stringContent != linkIdContentPair.second)
       {
         contentIsIdentical = false;
@@ -103,7 +111,15 @@ std::map<std::string, std::string> TemplateSearcher::getTemplateKeyLinksContent(
     if (utils::CommonUtils::checkType(context, linkAddr, ScType::LinkVar))
     {
       std::string stringContent;
-      ScStreamConverter::StreamToString(context->GetLinkContent(linkAddr), stringContent);
+      ScStreamPtr linkContentStream = context->GetLinkContent(linkAddr);
+      if (linkContentStream != nullptr)
+      {
+        ScStreamConverter::StreamToString(linkContentStream, stringContent);
+      }
+      else
+      {
+        stringContent = "";
+      }
       linksContent.emplace(context->HelperGetSystemIdtf(linkAddr), stringContent);
     }
   }
