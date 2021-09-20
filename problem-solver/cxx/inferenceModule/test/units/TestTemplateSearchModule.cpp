@@ -203,4 +203,50 @@ TEST_CASE("search without content - selective test case", "[template search mana
   context.Destroy();
   test::ScTestUnit::ShutdownMemory(false);
 }
+
+TEST_CASE("search without content - empty link test case", "[template search manager]")
+{
+  std::string correctResultLinkIdentifier = "correct_result_link";
+  std::string searchLinkIdentifier = "search_link";
+
+  test::ScTestUnit::InitMemory(SC_MEMORY_INI, "");
+  ScMemoryContext context(sc_access_lvl_make_min, "checkDynamicArguments");
+
+  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "searchWithoutContentEmptyLinkTest.scs");
+  initialize();
+
+  ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
+  inference::TemplateSearcher templateSearcher = inference::TemplateSearcher(&context);
+  ScTemplateParams templateParams;
+  std::vector<ScTemplateSearchResultItem> searchResults = templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
+
+  REQUIRE(searchResults.size() == 1);
+  REQUIRE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
+
+  context.Destroy();
+  test::ScTestUnit::ShutdownMemory(false);
+}
+
+TEST_CASE("search with content - empty link test case", "[template search manager]")
+{
+  std::string correctResultLinkIdentifier = "correct_result_link";
+  std::string searchLinkIdentifier = "search_link";
+
+  test::ScTestUnit::InitMemory(SC_MEMORY_INI, "");
+  ScMemoryContext context(sc_access_lvl_make_min, "checkDynamicArguments");
+
+  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "searchWithContentEmptyLinkTest.scs");
+  initialize();
+
+  ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
+  inference::TemplateSearcher templateSearcher = inference::TemplateSearcher(&context);
+  ScTemplateParams templateParams;
+  std::vector<ScTemplateSearchResultItem> searchResults = templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
+
+  REQUIRE(searchResults.size() == 1);
+  REQUIRE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
+
+  context.Destroy();
+  test::ScTestUnit::ShutdownMemory(false);
+}
 }//namespace inferenceTest
