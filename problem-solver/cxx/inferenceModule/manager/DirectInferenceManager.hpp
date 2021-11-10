@@ -36,6 +36,8 @@ public:
   ~DirectInferenceManager();
 
 private:
+  vector<queue<ScAddr>> createRulesQueuesListByPriority(ScAddr const & rulesSet);
+
   queue<ScAddr> createQueue(ScAddr const & set);
 
   bool useRule(ScAddr const & rule, vector<ScAddr> const & argumentList);

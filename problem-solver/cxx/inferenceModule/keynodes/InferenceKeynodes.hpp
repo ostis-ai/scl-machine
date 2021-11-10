@@ -42,6 +42,9 @@ public:
   SC_PROPERTY(Keynode("concept_template_with_links"), ForceCreate)
   static ScAddr concept_template_with_links;
 
+  SC_PROPERTY(Keynode("nrel_basic_sequence"), ForceCreate)
+  static ScAddr nrel_basic_sequence;
+
 };
 
 }
