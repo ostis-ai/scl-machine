@@ -18,5 +18,6 @@ ScAddr InferenceKeynodes::concept_solution;
 ScAddr InferenceKeynodes::concept_success_solution;
 ScAddr InferenceKeynodes::rrel_solver_key_sc_element;
 ScAddr InferenceKeynodes::concept_template_with_links;
+ScAddr InferenceKeynodes::nrel_basic_sequence;
 
 }
