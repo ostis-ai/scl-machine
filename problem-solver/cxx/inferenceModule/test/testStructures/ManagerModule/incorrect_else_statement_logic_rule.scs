@@ -1,0 +1,86 @@
+concept_declarative_message
+  <- sc_node_class;;
+
+_message
+  <- sc_node;;
+
+nrel_reply
+  <- sc_node_norole_relation;;
+
+_reply_message
+  <- sc_node;;
+
+concept_atomic_message
+  <- sc_node_class;;
+
+_authors
+  <- sc_node;;
+
+_message
+  <- sc_node;;
+
+nrel_authors
+  <- sc_node_norole_relation;;
+
+concept_weather_request_message
+  <- sc_node_class;;
+
+concept_message
+  <- sc_node_class;;
+
+rrel_1
+  <- sc_node_role_relation;;
+
+lr_concept_weather_request_message_1
+  <- sc_node;;
+
+concept_lack_of_weather_information_phrase
+  <- sc_node_class;;
+
+nrel_answer_pattern
+  <- sc_node_norole_relation;;
+
+atomic_logical_formula
+  <- sc_node_class;;
+
+rrel_main_key_sc_element
+  <- sc_node_role_relation;;
+
+..el_94436553894208
+  <- sc_node_tuple;;
+
+concept_answer_on_standard_message_rule
+  <- sc_node_class;;
+
+nrel_implication
+  <- sc_node_norole_relation;;
+
+concept_answer_on_standard_message_rule_priority_3
+  <- sc_node_class;;
+
+@contour_94436553173456 = [*
+    @edge_94436553987408 = (concept_declarative_message _-> _reply_message);;
+    @edge_94436553988432 = (concept_atomic_message _-> _reply_message);;
+
+*];;
+
+@contour_94436553201200 = [*
+    @edge_94436551891456 = (concept_weather_request_message _-> _message);;
+    @edge_94436553986240 = (concept_message _-> _message);;
+    @edge_94436553985200 = (_message _=> _authors);;
+    @edge_94436552627136 = (nrel_authors _-> @edge_94436553985200);;
+
+*];;
+
+@edge_94436554000224 = (atomic_logical_formula -> @contour_94436553201200);;
+@edge_94436553998176 = (..el_94436553894208 -> concept_lack_of_weather_information_phrase);;
+@edge_94436553997152 = (atomic_logical_formula -> @contour_94436553173456);;
+@edge_94436553996064 = (concept_answer_on_standard_message_rule -> lr_concept_weather_request_message_1);;
+@edge_94436553994512 = (lr_concept_weather_request_message_1 => ..el_94436553894208);;
+@edge_94436553993552 = (@contour_94436553201200 => @contour_94436553173456);;
+@edge_94436553992528 = (nrel_answer_pattern -> @edge_94436553994512);;
+@edge_94436553991440 = (concept_answer_on_standard_message_rule_priority_3 -> lr_concept_weather_request_message_1);;
+@edge_94436549111952 = (rrel_1 -> @edge_94436553998176);;
+@edge_94436554002272 = (lr_concept_weather_request_message_1 -> @edge_94436553993552);;
+@edge_94436554001248 = (nrel_implication -> @edge_94436553993552);;
+@edge_94436553999200 = (rrel_main_key_sc_element -> @edge_94436554002272);;
