@@ -29,39 +29,66 @@ concept_quadrangle <- sc_node_class;;
 concept_square <- sc_node_class;;
 rrel_1 <- sc_node_role_relation;;
 action_direct_inference_test <- sc_node;;
+action_direct_inference -> action_direct_inference_test;;
+
 @link0 <- sc_link;;
 @test_direct_inference_target = [*
-	@pair13 = (_x _=> _angle2);;
-	@pair14 = (_x _=> _angle1);;
-	@pair15 = (_x _=> _angle3);;
-	@pair16 = (_x _=> _angle4);;
-	@pair17 = (_x _=> _c);;
-	@pair18 = (_x _=> _b);;
-	@pair19 = (_x _=> _d);;
-	@pair20 = (_x _=> _a);;
-	@pair21 = (concept_right_angle _-> _angle3);;
-	@pair22 = (concept_right_angle _-> _angle4);;
-	@pair23 = (nrel_angle _-> @pair14);;
-	@pair24 = (concept_right_angle _-> _angle1);;
-	@pair25 = (nrel_angle _-> @pair13);;
-	@pair26 = (concept_right_angle _-> _angle2);;
-	@pair27 = (nrel_angle _-> @pair15);;
-	@pair28 = (concept_square _-> _x);;
-	@pair29 = (.._node0 _-> _c);;
-	@pair30 = (nrel_side _-> @pair19);;
-	@pair31 = (nrel_side _-> @pair17);;
-	@pair32 = (nrel_side _-> @pair18);;
-	@pair33 = (nrel_side _-> @pair20);;
-	@pair34 = (.._node0 _-> _a);;
-	@pair35 = (concept_length _-> .._node0);;
-	@pair36 = (.._node0 _-> _b);;
-	@pair37 = (.._node0 _-> _d);;
-	@pair38 = (nrel_angle _-> @pair16);;
+	@pair28 = (current_node_class _-> _x);;
+	@pair29 = (target_node_class _-> _x);;
 *];;
+
+target_node_class <- sc_node_class;;
+current_node_class <- sc_node_class;;
+class_which_must_not_include_the_node <- sc_node_class;;
+class_1_which_may_not_include_the_node <- sc_node_class;;
+class_2_which_may_not_include_the_node <- sc_node_class;;
+
+not = [*
+    class_which_must_not_include_the_node _-> _res;;
+    current_node_class _-> _res;;
+*];;
+
+or_1 = [*
+    class_1_which_may_not_include_the_node _-> _res;;
+    current_node_class _-> _res;;
+*];;
+
+or_2 = [*
+    class_2_which_may_not_include_the_node _-> _res;;
+    current_node_class _-> _res;;
+*];;
+
+then = [*
+    current_node_class _-> _res;;
+    target_node_class _-> _res;;
+*];;
+@p1 = (conj_link => then);;
+@p1 <- nrel_implication;;
+@p2 = (statement_yp_6_test -> @p1);;
+@p2 <- rrel_main_key_sc_element;;
+statement_yp_6_test <- statement;;
+conj_link <- nrel_conjunction;;
+conj_link -> not_link;;
+nrel_negation -> not_link;;
+not_link -> not;;
+conj_link -> disj_link;;
+disj_link <- nrel_disjunction;;
+disj_link -> or_1;;
+disj_link -> or_2;;
+
+atomic_logical_formula
+ -> not;
+ -> or_1;
+ -> or_2;
+ -> then;;
+the_yp_6_node <- current_node_class;;
+the_yp_6_node <- class_1_which_may_not_include_the_node;;
 
 concept_square -> ABCD;;
 
 action_direct_inference <- sc_node_class;;
+
+rrel_success_solution <- sc_node_norole_relation;;
 
 action_direct_inference_test
   -> rrel_1: @test_direct_inference_target;
@@ -78,3 +105,12 @@ action_direct_inference_test
   		statement_square_is_quadrangle
   	};
   -> rrel_3: { ABCD };;
+
+yp_6_action_direct_inference_test
+    <- action_direct_inference;
+    -> rrel_1: @test_direct_inference_target;
+    -> rrel_2:
+        {
+            statement_yp_6_test
+        };
+    -> rrel_3: { the_yp_6_node };;
