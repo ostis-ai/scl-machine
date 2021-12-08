@@ -10,6 +10,7 @@
 #include <sc-agents-common/utils/GenerationUtils.hpp>
 #include <sc-agents-common/utils/IteratorUtils.hpp>
 #include <sc-agents-common/utils/LogicRuleUtils.hpp>
+#include <logic/LogicExpressionChecker.h>
 
 #include "utils/ContainersUtils.hpp"
 
@@ -38,16 +39,21 @@ ScAddr DirectInferenceManager::applyInference(
   queue<ScAddr> uncheckedRules = createQueue(ruleSet);
   vector<ScAddr> argumentList = IteratorUtils::getAllWithType(ms_context, argumentSet, ScType::Node);
   vector<ScAddr> checkedRuleList;
-
+SC_LOG_INFO("1")
   bool targetAchieved = isTargetAchieved(targetStatement, argumentList);
+    SC_LOG_INFO("2")
   ScAddr rule;
   bool isUsed;
   if (!targetAchieved)
   {
+      SC_LOG_INFO("4")
     while (!uncheckedRules.empty())
     {
+        SC_LOG_INFO("5")
       rule = uncheckedRules.front();
+        SC_LOG_INFO("6")
       isUsed = useRule(rule, argumentList);
+        SC_LOG_INFO("7")
       if (isUsed)
       {
         targetAchieved = isTargetAchieved(targetStatement, argumentList);
@@ -86,34 +92,58 @@ queue<ScAddr> DirectInferenceManager::createQueue(ScAddr const & set)
 
 bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> const & argumentList)
 {
-  SC_LOG_DEBUG("Trying to use rule: " + ms_context->HelperGetSystemIdtf(rule));
+  SC_LOG_INFO("Trying to use rule: " + ms_context->HelperGetSystemIdtf(rule));
   bool isUsed = false;
+    SC_LOG_INFO(ms_context->HelperGetSystemIdtf(rule))
   ScAddr ifStatement = LogicRuleUtils::getIfStatement(ms_context, rule);
-  vector<ScTemplateParams> ifStatementParamsList = templateManager->createTemplateParamsList(ifStatement, argumentList);
-  SC_LOG_DEBUG("Created " + to_string(ifStatementParamsList.size()) + " statement params variants");
-  for (const auto& ifStatementParams : ifStatementParamsList)
+
+SC_LOG_INFO(ms_context->HelperGetSystemIdtf(ifStatement))
+  //collect all the templates within if condition
+  //generate for them sets of ScTemplateParams
+  //choose the set when IsEmpty() is false, memorize the template the set was generated for
+  LogicExpression logicExpression(ifStatement, ms_context,
+          templateSearcher, templateManager, argumentList);
+  logicExpression.build();
+    SC_LOG_INFO("Expression is built");
+  SC_LOG_INFO(logicExpression.toString());
+
+  //vector<ScTemplateParams> ifStatementParamsList = templateManager->createTemplateParamsList(ifStatement, argumentList);
+  SC_LOG_INFO("Created " + to_string(logicExpression.GetParamsSet().size()) + " statement params variants");
+
+  //use that set
+  for (const auto& ifStatementParams : logicExpression.GetParamsSet())
   {
-    vector<ScTemplateSearchResultItem> searchResult =
-        templateSearcher->searchTemplate(ifStatement, ifStatementParams);
-    if (!searchResult.empty())
+    //replace on logic checker
+    //return search result of the memorized template
+/*    vector<ScTemplateSearchResultItem> searchResult =
+        templateSearcher->searchTemplate(ifStatement, ifStatementParams);*/
+    auto result = logicExpression.GetRoot().check(
+              logicExpression.GetReferenceTemplate(), ifStatementParams);
+    bool success = std::get<0>(result);
+    ScTemplateSearchResultItem resultItem = std::get<2>(result);
+    SC_LOG_INFO("Success?" + std::to_string(success));
+    if (success)
     {
       ScAddr elseStatement = LogicRuleUtils::getElseStatement(ms_context, rule);
-
+    SC_LOG_INFO(ms_context->HelperGetSystemIdtf(elseStatement));
+    SC_LOG_INFO(std::to_string(resultItem.Size()));
       ScTemplateParams elseStatementParams;
-      ScTemplateSearchResultItem firstResult = searchResult[0];
-      if (firstResult.Size() > 0)
+      if (resultItem.Size() > 0)
       {
+          SC_LOG_INFO("res_item");
         vector<ScAddr> varList = IteratorUtils::getAllWithType(ms_context, elseStatement, ScType::NodeVar);
         for (auto var : varList)
         {
-          if (ms_context->HelperCheckEdge(ifStatement, var, ScType::EdgeAccessConstPosPerm))
+            SC_LOG_INFO("var: " + ms_context->HelperGetSystemIdtf(var));
+          if (ms_context->HelperCheckEdge(std::get<3>(result), var, ScType::EdgeAccessConstPosPerm))
           {
+              SC_LOG_INFO("var_checked: " + ms_context->HelperGetSystemIdtf(var));
             string varName = ms_context->HelperGetSystemIdtf(var);
             ScAddr node;
             ifStatementParams.Get(varName, node);
             if (!node.IsValid())
             {
-              node = firstResult[varName];
+              node = resultItem[varName];
             }
             elseStatementParams.Add(varName, node);
           }
@@ -150,6 +180,7 @@ bool DirectInferenceManager::isTargetAchieved(ScAddr const & targetStatement, ve
 {
   bool result = false;
   ScTemplateParams templateParams = templateManager->createTemplateParams(targetStatement, argumentList);
+    SC_LOG_INFO("8")
   vector<ScTemplateSearchResultItem> searchResult =
       templateSearcher->searchTemplate(targetStatement, templateParams);
   if (!searchResult.empty())

@@ -10,7 +10,7 @@ set(SOURCES
         "utils/ContainersUtils.cpp"
         "comparator/AddrComparator.cpp"
         "searcher/TemplateSearcher.cpp"
-        )
+        logic/LogicExpressionChecker.cpp)
 
 set(HEADERS
         "InferenceModule.hpp"
@@ -24,7 +24,7 @@ set(HEADERS
         "utils/ContainersUtils.hpp"
         "comparator/AddrComparator.hpp"
         "searcher/TemplateSearcher.hpp"
-        )
+        logic/LogicExpressionChecker.h)
 
 set(INFERENCE_MODULE_GENERATED_DIR ${CMAKE_CURRENT_LIST_DIR}/generated)
 include_directories(${CMAKE_CURRENT_LIST_DIR} ${SC_MEMORY_SRC} ${SC_KPM_SRC} ${INFERENCE_MODULE_GENERATED_DIR})
