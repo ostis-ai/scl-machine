@@ -6,66 +6,77 @@
 
 #include "LogicExpressionChecker.hpp"
 
-AndExpressionNode::AndExpressionNode(std::unique_ptr<LogicExpressionNode> opA,
-                                     std::unique_ptr<LogicExpressionNode> opB)
-    : leftOp(std::move(opA)), rightOp(std::move(opB)) {}
+std::string OperatorLogicExpressionNode::toString(std::string operatorName) const
+{
+  std::string result;
+  for (const auto & operand : operands)
+  {
+    result += std::string(", " + operand->toString());
+  }
+
+  return std::move(operatorName) + "(" + (result.c_str() + 2) + ")";
+}
+
+void OperatorLogicExpressionNode::checkOperands(
+    bool & areThereTrue, bool & areThereFalse,
+    ScAddr& templateItself,
+    ScTemplateSearchResultItem& searchResult,
+    bool & isThereSearchResult,
+    const ScTemplateParams& params) const
+{
+  areThereTrue = false;
+  areThereFalse = false;
+
+  for (auto & operand : operands)
+  {
+    auto isOperandTrue = operand->check(params);
+    (isOperandTrue.result ? areThereTrue : areThereFalse) = true;
+    templateItself = isOperandTrue.templateItself;
+
+    if (isOperandTrue.hasTemplateSearchResult)
+    {
+      searchResult = isOperandTrue.templateSearchResult;
+      isThereSearchResult = true;
+    }
+  }
+}
+
+AndExpressionNode::AndExpressionNode(OperandsVectorType & operands)
+{
+  for (auto & operand : operands)
+  {
+    this->operands.emplace_back(std::move(operand));
+  }
+}
 
 LogicExpressionResult AndExpressionNode::check(ScTemplateParams params) const
 {
-  bool finalResult = false;
-
-  auto isLeftOperandTrue = leftOp->check(params);
-  LogicExpressionResult isRightOperandTrue;
-  if (isLeftOperandTrue.result)
-  {
-    isRightOperandTrue = rightOp->check(params);
-
-    if (isRightOperandTrue.result)
-      finalResult = true;
-  }
-
-  bool isThereSearchResultLeft = isLeftOperandTrue.hasTemplateSearchResult;
-  bool isThereSearchResultRight = isRightOperandTrue.hasTemplateSearchResult;
-
   LogicExpressionResult res;
-  res.result = finalResult;
-  res.hasTemplateSearchResult = finalResult ? isThereSearchResultLeft || isThereSearchResultRight : false;
-  res.templateSearchResult = isThereSearchResultLeft ? isLeftOperandTrue.templateSearchResult :
-                             (isThereSearchResultRight ? isRightOperandTrue.templateSearchResult :
-                              ScTemplateSearchResultItem(nullptr, nullptr));
-  res.templateItself = isLeftOperandTrue.templateItself;
+  bool areThereTrue, areThereFalse;
+
+  checkOperands(areThereTrue, areThereFalse, res.templateItself,
+      res.templateSearchResult, res.hasTemplateSearchResult, params);
+  res.result = !areThereFalse;
 
   return res;
 }
 
-OrExpressionNode::OrExpressionNode(std::unique_ptr<LogicExpressionNode> opA,
-                                   std::unique_ptr<LogicExpressionNode> opB)
-    : leftOp(std::move(opA)), rightOp(std::move(opB)) {}
+OrExpressionNode::OrExpressionNode(OperandsVectorType & operands)
+{
+  for (auto & operand : operands)
+  {
+    this->operands.emplace_back(std::move(operand));
+  }
+}
 
 LogicExpressionResult OrExpressionNode::check(ScTemplateParams params) const
 {
-  bool finalResult = true;
-
-  auto isLeftOperandTrue = leftOp->check(params);
-  LogicExpressionResult isRightOperandTrue;
-  if (!isLeftOperandTrue.result)
-  {
-    isRightOperandTrue = rightOp->check(params);
-
-    if (!isRightOperandTrue.result)
-      finalResult = false;
-  }
-
-  bool isThereSearchResultLeft = isLeftOperandTrue.hasTemplateSearchResult;
-  bool isThereSearchResultRight = isRightOperandTrue.hasTemplateSearchResult;
-
   LogicExpressionResult res;
-  res.result = finalResult;
-  res.hasTemplateSearchResult = finalResult ? isThereSearchResultLeft || isThereSearchResultRight : false;
-  res.templateSearchResult = isThereSearchResultLeft ? isLeftOperandTrue.templateSearchResult :
-                             (isThereSearchResultRight ? isRightOperandTrue.templateSearchResult :
-                              ScTemplateSearchResultItem(nullptr, nullptr));
-  res.templateItself = isLeftOperandTrue.templateItself;
+  bool areThereTrue, areThereFalse;
+
+  checkOperands(areThereTrue, areThereFalse, res.templateItself,
+                res.templateSearchResult, res.hasTemplateSearchResult, params);
+  res.result = areThereTrue;
 
   return res;
 }
@@ -158,10 +169,24 @@ std::unique_ptr<LogicExpressionNode> LogicExpression::build(ScAddr node)
       ScType::EdgeAccessConstPosPerm,
       node);
 
-  ScIterator3Ptr operands = context->Iterator3(
-      node,
-      ScType::EdgeAccessConstPosPerm,
-      ScType::Unknown);
+  auto findOperands = [this, &node]()
+  {
+    ScIterator3Ptr operands = context->Iterator3(
+        node,
+        ScType::EdgeAccessConstPosPerm,
+        ScType::Unknown);
+
+    OperatorLogicExpressionNode::OperandsVectorType operandsVector;
+
+    while (operands->Next())
+    {
+      std::unique_ptr<LogicExpressionNode> op =
+          build(operands->Get(2));
+      operandsVector.emplace_back(std::move(op));
+    }
+
+    return operandsVector;
+  };
 
   if (atomicFormula->Next())
   {
@@ -181,52 +206,32 @@ std::unique_ptr<LogicExpressionNode> LogicExpression::build(ScAddr node)
   {
     //and, make AndExpressionNode
     SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is a conjunction")
-    if (operands->Next())
-    {
-      std::unique_ptr<LogicExpressionNode> opA =
-          build(operands->Get(2));
 
-      if (operands->Next())
-      {
-        std::unique_ptr<LogicExpressionNode> opB =
-            build(operands->Get(2));
+    auto operands = findOperands();
 
-        return std::make_unique<AndExpressionNode>(std::move(opA),
-                                                   std::move(opB));
-      }
-    }
+    return std::make_unique<AndExpressionNode>(operands);
   }
   else if (disjunction->Next())
   {
     //or, make OrExpressionNode
     SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is a disjunction")
-    if (operands->Next())
-    {
-      std::unique_ptr<LogicExpressionNode> opA =
-          build(operands->Get(2));
 
-      if (operands->Next())
-      {
-        std::unique_ptr<LogicExpressionNode> opB =
-            build(operands->Get(2));
+    auto operands = findOperands();
 
-        return std::make_unique<OrExpressionNode>(std::move(opA),
-                                                  std::move(opB));
-      }
-    }
+    return std::make_unique<OrExpressionNode>(operands);
   }
   else if (negation->Next())
   {
     //not, make NotExpressionNode
     SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is a not")
-    if (operands->Next())
-    {
-      std::unique_ptr<LogicExpressionNode> op =
-          build(operands->Get(2));
 
-      return std::make_unique<NotExpressionNode>(std::move(op));
-    }
+    auto operands = findOperands();
+
+    if (operands.empty())
+      throw std::runtime_error("[INFERENCE_MODULE] Not operator doesn't have any arguments");
+
+    return std::make_unique<NotExpressionNode>(std::move(operands[0]));
   }
 
-  throw runtime_error("[INFERENCE_MODULE] Unrecognized element of condition tree");
+  throw std::runtime_error("[INFERENCE_MODULE] Unrecognized element of condition tree");
 }

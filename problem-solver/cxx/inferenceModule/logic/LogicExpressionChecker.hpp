@@ -17,7 +17,7 @@ struct LogicExpressionResult
   bool result;
   bool hasTemplateSearchResult;
   ScTemplateSearchResultItem templateSearchResult{nullptr, nullptr};
-  ScAddr templateItself;
+  ScAddr templateItself{};
 };
 
 class LogicExpressionNode
@@ -28,43 +28,50 @@ public:
   virtual std::string toString() const = 0;
 };
 
-class AndExpressionNode : public LogicExpressionNode
+class OperatorLogicExpressionNode : public LogicExpressionNode
 {
 public:
-  AndExpressionNode(std::unique_ptr<LogicExpressionNode> opA,
-                    std::unique_ptr<LogicExpressionNode> opB);
+  using OperandsVectorType = std::vector<std::unique_ptr<LogicExpressionNode>>;
+
+protected:
+  std::string toString(std::string operatorName) const;
+
+  void checkOperands(bool & areThereTrue, bool & areThereFalse,
+                     ScAddr& templateItself,
+                     ScTemplateSearchResultItem& searchResult,
+                     bool & isThereSearchResult,
+                     const ScTemplateParams& params) const;
+
+  OperandsVectorType operands;
+};
+
+class AndExpressionNode : public OperatorLogicExpressionNode
+{
+public:
+  explicit AndExpressionNode(OperandsVectorType & operands);
 
   LogicExpressionResult check(ScTemplateParams params) const override;
 
   std::string toString() const override
   {
-    return "AND(" + leftOp->toString() + ", " + rightOp->toString() + ")";
+    return OperatorLogicExpressionNode::toString("AND");
   }
-
-private:
-  std::unique_ptr<LogicExpressionNode> leftOp;
-  std::unique_ptr<LogicExpressionNode> rightOp;
 };
 
-class OrExpressionNode : public LogicExpressionNode
+class OrExpressionNode : public OperatorLogicExpressionNode
 {
 public:
-  OrExpressionNode(std::unique_ptr<LogicExpressionNode> opA,
-                   std::unique_ptr<LogicExpressionNode> opB);
+  explicit OrExpressionNode(OperandsVectorType & operands);
 
   LogicExpressionResult check(ScTemplateParams params) const override;
 
   std::string toString() const override
   {
-    return "OR(" + leftOp->toString() + ", " + rightOp->toString() + ")";
+    return OperatorLogicExpressionNode::toString("OR");
   }
-
-private:
-  std::unique_ptr<LogicExpressionNode> leftOp;
-  std::unique_ptr<LogicExpressionNode> rightOp;
 };
 
-class NotExpressionNode : public LogicExpressionNode
+class NotExpressionNode : public OperatorLogicExpressionNode
 {
 public:
   explicit NotExpressionNode(std::unique_ptr<LogicExpressionNode> op);
@@ -73,7 +80,7 @@ public:
 
   std::string toString() const override
   {
-    return "NOT( " + op->toString() + ")";
+    return OperatorLogicExpressionNode::toString("NOT");
   }
 
 private:
