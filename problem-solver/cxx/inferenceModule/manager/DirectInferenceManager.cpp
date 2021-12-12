@@ -10,6 +10,7 @@
 #include <sc-agents-common/utils/GenerationUtils.hpp>
 #include <sc-agents-common/utils/IteratorUtils.hpp>
 #include <sc-agents-common/utils/LogicRuleUtils.hpp>
+#include <logic/LogicExpressionChecker.hpp>
 
 #include "utils/ContainersUtils.hpp"
 
@@ -110,7 +111,7 @@ queue<ScAddr> DirectInferenceManager::createQueue(ScAddr const & set)
 
 bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> const & argumentList)
 {
-    SC_LOG_INFO("Trying to use rule: " + ms_context->HelperGetSystemIdtf(rule));
+    SC_LOG_DEBUG("Trying to use rule: " + ms_context->HelperGetSystemIdtf(rule));
     bool isUsed = false;
 
     ScAddr ifStatement = LogicRuleUtils::getIfStatement(ms_context, rule);
@@ -122,8 +123,8 @@ bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> const &
                                     templateSearcher, templateManager, argumentList);
     logicExpression.build();
 
-    SC_LOG_INFO("Expression is built: " + logicExpression.toString());
-    SC_LOG_INFO("Created " + to_string(logicExpression.GetParamsSet().size()) + " statement params variants");
+    SC_LOG_DEBUG("Expression is built: " + logicExpression.toString());
+    SC_LOG_DEBUG("Created " + to_string(logicExpression.GetParamsSet().size()) + " statement params variants");
 
     //use that set
     for (const auto& ifStatementParams : logicExpression.GetParamsSet())
@@ -133,7 +134,7 @@ bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> const &
         auto result = logicExpression.GetRoot().check(ifStatementParams);
         bool success = result.result;
         ScTemplateSearchResultItem resultItem = result.templateSearchResult;
-        SC_LOG_INFO("Success?: " + std::to_string(success));
+        SC_LOG_DEBUG(std::string("Success: ") + (success ? "true" : "false"));
 
         if (success)
         {
@@ -143,11 +144,11 @@ bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> const &
             if (resultItem.Size() > 0)
             {
                 vector<ScAddr> varList = IteratorUtils::getAllWithType(ms_context, elseStatement, ScType::NodeVar);
-                for (auto var : varList)
+                for (auto const & var : varList)
                 {
                     if (ms_context->HelperCheckEdge(result.templateItself, var, ScType::EdgeAccessConstPosPerm))
                     {
-                        string varName = ms_context->HelperGetSystemIdtf(var);
+                        std::string varName = ms_context->HelperGetSystemIdtf(var);
                         ScAddr node;
                         ifStatementParams.Get(varName, node);
                         if (!node.IsValid())
