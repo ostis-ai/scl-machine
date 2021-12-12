@@ -82,9 +82,6 @@ public:
   {
     return OperatorLogicExpressionNode::toString("NOT");
   }
-
-private:
-  std::unique_ptr<LogicExpressionNode> op;
 };
 
 class TemplateExpressionNode : public LogicExpressionNode
@@ -116,7 +113,7 @@ public:
   LogicExpression(ScAddr condition, ScMemoryContext * context,
                   inference::TemplateSearcher * templateSearcher,
                   inference::TemplateManager * templateManager,
-                  std::vector<ScAddr> argumentList);
+                  ScAddrVector argumentList);
 
   void build();
 

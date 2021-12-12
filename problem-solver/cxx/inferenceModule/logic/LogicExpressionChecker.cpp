@@ -82,11 +82,13 @@ LogicExpressionResult OrExpressionNode::check(ScTemplateParams params) const
 }
 
 NotExpressionNode::NotExpressionNode(std::unique_ptr<LogicExpressionNode> op)
-    : op(std::move(op)) {}
+{
+  operands.emplace_back(std::move(op));
+}
 
 LogicExpressionResult NotExpressionNode::check(ScTemplateParams params) const
 {
-  auto isOperandTrue = op->check(params);
+  auto isOperandTrue = operands[0]->check(params);
 
   isOperandTrue.result = !isOperandTrue.result;
 
