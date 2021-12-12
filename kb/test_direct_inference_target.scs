@@ -92,18 +92,19 @@ rrel_success_solution <- sc_node_norole_relation;;
 
 action_direct_inference_test
   -> rrel_1: @test_direct_inference_target;
-  -> rrel_2:
-  	{
-  		statement_square_is_rhombus;
-  		statement_rhombus_is_quadrangle;
-  		statement_rhombus_all_sides;
-  		statement_square_is_rectangle;
-  		statement_rectangle_is_quadrangle;
-  		statement_rectangle_all_angles;
-  		statement_quadrangle_sides;
-  		statement_quadrangle_angles;
-  		statement_square_is_quadrangle
-  	};
+  -> rrel_2: ... (*
+    -> rrel_1: {
+      statement_square_is_rhombus;
+      statement_rhombus_is_quadrangle;
+      statement_rhombus_all_sides;
+      statement_square_is_rectangle;
+      statement_rectangle_is_quadrangle;
+      statement_rectangle_all_angles;
+      statement_quadrangle_sides;
+      statement_quadrangle_angles;
+      statement_square_is_quadrangle
+    };;
+  *);
   -> rrel_3: { ABCD };;
 
 yp_6_action_direct_inference_test
