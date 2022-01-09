@@ -10,7 +10,7 @@ set(SOURCES
         "utils/ContainersUtils.cpp"
         "comparator/AddrComparator.cpp"
         "searcher/TemplateSearcher.cpp"
-        "logic/LogicExpressionChecker.cpp"
+        "logic/LogicExpression.cpp"
         )
 
 set(HEADERS
@@ -25,7 +25,7 @@ set(HEADERS
         "utils/ContainersUtils.hpp"
         "comparator/AddrComparator.hpp"
         "searcher/TemplateSearcher.hpp"
-        "logic/LogicExpressionChecker.hpp"
+        "logic/LogicExpression.hpp"
         )
 
 set(INFERENCE_MODULE_GENERATED_DIR ${CMAKE_CURRENT_LIST_DIR}/generated)
