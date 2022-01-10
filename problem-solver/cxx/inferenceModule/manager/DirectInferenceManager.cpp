@@ -10,7 +10,7 @@
 #include <sc-agents-common/utils/GenerationUtils.hpp>
 #include <sc-agents-common/utils/IteratorUtils.hpp>
 #include <sc-agents-common/utils/LogicRuleUtils.hpp>
-#include <logic/LogicExpressionChecker.hpp>
+#include <logic/LogicExpression.hpp>
 
 #include "utils/ContainersUtils.hpp"
 
@@ -111,64 +111,64 @@ queue<ScAddr> DirectInferenceManager::createQueue(ScAddr const & set)
 
 bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> const & argumentList)
 {
-    SC_LOG_DEBUG("Trying to use rule: " + ms_context->HelperGetSystemIdtf(rule));
-    bool isUsed = false;
+  SC_LOG_DEBUG("Trying to use rule: " + ms_context->HelperGetSystemIdtf(rule))
+  bool isUsed = false;
 
-    ScAddr ifStatement = LogicRuleUtils::getIfStatement(ms_context, rule);
+  ScAddr ifStatement = LogicRuleUtils::getIfStatement(ms_context, rule);
 
-    //collect all the templates within if condition
-    //generate for them sets of ScTemplateParams
-    //choose the set when IsEmpty() is false, memorize the template the set was generated for
-    LogicExpression logicExpression(ifStatement, ms_context,
-                                    templateSearcher, templateManager, argumentList);
-    logicExpression.build();
+  //collect all the templates within if condition
+  //generate for them sets of ScTemplateParams
+  //choose the set when IsEmpty() is false, memorize the template the set was generated for
+  LogicExpression logicExpression(
+        ms_context,
+        templateSearcher,
+        templateManager,
+        argumentList
+  );
+  auto root = logicExpression.build(ifStatement);
 
-    SC_LOG_DEBUG("Expression is built: " + logicExpression.toString());
-    SC_LOG_DEBUG("Created " + to_string(logicExpression.GetParamsSet().size()) + " statement params variants");
+  SC_LOG_DEBUG("Created " + to_string(logicExpression.GetParamsSet().size()) + " statement params variants")
 
-    //use that set
-    for (const auto& ifStatementParams : logicExpression.GetParamsSet())
+  for (const auto & ifStatementParams : logicExpression.GetParamsSet())
+  {
+    auto checkResult = (*root).check(ifStatementParams);
+    ScTemplateSearchResultItem resultItem = checkResult.templateSearchResult;
+    SC_LOG_DEBUG(std::string("Whole statement is ") + (checkResult.value ? "right" : "wrong"))
+
+    if (checkResult.value)
     {
-        //return search result of the memorized template
+      ScAddr elseStatement = LogicRuleUtils::getElseStatement(ms_context, rule);
 
-        auto result = logicExpression.GetRoot().check(ifStatementParams);
-        bool success = result.result;
-        ScTemplateSearchResultItem resultItem = result.templateSearchResult;
-        SC_LOG_DEBUG(std::string("Success: ") + (success ? "true" : "false"));
-
-        if (success)
+      ScTemplateParams elseStatementParams;
+      if (resultItem.Size() > 0)
+      {
+        vector<ScAddr> varList = IteratorUtils::getAllWithType(ms_context, elseStatement, ScType::NodeVar);
+        for (auto const & var : varList)
         {
-            ScAddr elseStatement = LogicRuleUtils::getElseStatement(ms_context, rule);
-
-            ScTemplateParams elseStatementParams;
-            if (resultItem.Size() > 0)
+          if (ms_context->HelperCheckEdge(checkResult.formulaTemplate, var, ScType::EdgeAccessConstPosPerm))
+          {
+            std::string varName = ms_context->HelperGetSystemIdtf(var);
+            ScAddr node;
+            ifStatementParams.Get(varName, node);
+            if (!node.IsValid())
             {
-                vector<ScAddr> varList = IteratorUtils::getAllWithType(ms_context, elseStatement, ScType::NodeVar);
-                for (auto const & var : varList)
-                {
-                    if (ms_context->HelperCheckEdge(result.templateItself, var, ScType::EdgeAccessConstPosPerm))
-                    {
-                        std::string varName = ms_context->HelperGetSystemIdtf(var);
-                        ScAddr node;
-                        ifStatementParams.Get(varName, node);
-                        if (!node.IsValid())
-                        {
-                            node = resultItem[varName];
-                        }
-                        elseStatementParams.Add(varName, node);
-                    }
-                }
+              node = resultItem[varName];
             }
-            if (generateStatement(elseStatement, elseStatementParams))
-            {
-                this->solutionTreeManager->addNode(rule, ifStatementParams);
-                isUsed = true;
-                SC_LOG_DEBUG("Rule used");
-            }
+            elseStatementParams.Add(varName, node);
+          }
         }
+      }
+      if (generateStatement(elseStatement, elseStatementParams))
+      {
+        this->solutionTreeManager->addNode(rule, ifStatementParams);
+        isUsed = true;
+        SC_LOG_DEBUG("Rule used")
+      }
     }
-    return isUsed;
+  }
+  return isUsed;
 }
+
 
 vector<queue<ScAddr>> DirectInferenceManager::createRulesQueuesListByPriority(ScAddr const & rulesSet)
 {

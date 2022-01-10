@@ -45,6 +45,17 @@ public:
   SC_PROPERTY(Keynode("nrel_basic_sequence"), ForceCreate)
   static ScAddr nrel_basic_sequence;
 
+  SC_PROPERTY(Keynode("atomic_logical_formula"), ForceCreate)
+  static ScAddr atomic_logical_formula;
+
+  SC_PROPERTY(Keynode("nrel_disjunction"), ForceCreate)
+  static ScAddr nrel_disjunction;
+
+  SC_PROPERTY(Keynode("nrel_conjunction"), ForceCreate)
+  static ScAddr nrel_conjunction;
+
+  SC_PROPERTY(Keynode("nrel_negation"), ForceCreate)
+  static ScAddr nrel_negation;
 };
 
 }
