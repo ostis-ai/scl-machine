@@ -4,8 +4,7 @@
 * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
 */
 
-#include "sc-test-framework/sc_test_unit.hpp"
-#include "catch2/catch.hpp"
+#include "sc_test.hpp"
 #include "builder/src/scs_loader.hpp"
 #include "sc-agents-common/keynodes/coreKeynodes.hpp"
 
@@ -16,8 +15,9 @@ namespace inferenceTest
 {
 ScsLoader loader;
 const std::string TEST_FILES_DIR_PATH = TEMPLATE_SEARCH_MODULE_TEST_SRC_PATH "/testStructures/TemplateSearchModule/";
-const std::string SC_MEMORY_INI = "sc-memory.ini";
 const std::string TEST_SEARCH_TEMPLATE_ID = "search_template";
+
+using TemplateSearchManagerTest = ScMemoryTest;
 
 void initialize()
 {
@@ -25,10 +25,9 @@ void initialize()
   scAgentsCommon::CoreKeynodes::InitGlobal();
 }
 
-TEST_CASE("search with content - no structures test case", "[template search manager]")
+TEST_F(TemplateSearchManagerTest, SearchWithContent_NoStructuresTestCase)
 {
-  test::ScTestUnit::InitMemory(SC_MEMORY_INI, "");
-  ScMemoryContext context(sc_access_lvl_make_min, "checkDynamicArguments");
+  ScMemoryContext& context = *m_ctx;
 
   loader.loadScsFile(context,TEST_FILES_DIR_PATH + "searchWithContentNoStructures.scs");
   initialize();
@@ -39,16 +38,12 @@ TEST_CASE("search with content - no structures test case", "[template search man
 
   std::vector<ScTemplateSearchResultItem> searchResults = templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
 
-  REQUIRE(searchResults.empty());
-
-  context.Destroy();
-  test::ScTestUnit::ShutdownMemory(false);
+  EXPECT_TRUE(searchResults.empty());
 }
 
-TEST_CASE("search with content - empty results test case", "[template search manager]")
+TEST_F(TemplateSearchManagerTest, SearchWithContent_EmptyResultsTestCase)
 {
-  test::ScTestUnit::InitMemory(SC_MEMORY_INI, "");
-  ScMemoryContext context(sc_access_lvl_make_min, "checkDynamicArguments");
+  ScMemoryContext& context = *m_ctx;
 
   loader.loadScsFile(context,TEST_FILES_DIR_PATH + "searchWithContentEmptyResultsTestStucture.scs");
   initialize();
@@ -59,19 +54,15 @@ TEST_CASE("search with content - empty results test case", "[template search man
 
   std::vector<ScTemplateSearchResultItem> searchResults = templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
 
-  REQUIRE(searchResults.empty());
-
-  context.Destroy();
-  test::ScTestUnit::ShutdownMemory(false);
+  EXPECT_TRUE(searchResults.empty());
 }
 
-TEST_CASE("search with content - single result test case", "[template search manager]")
+TEST_F(TemplateSearchManagerTest, SearchWithContent_SingleResultTestCase)
 {
   std::string correctResultLinkIdentifier = "correct_result_link";
   std::string searchLinkIdentifier = "search_link";
 
-  test::ScTestUnit::InitMemory(SC_MEMORY_INI, "");
-  ScMemoryContext context(sc_access_lvl_make_min, "checkDynamicArguments");
+  ScMemoryContext& context = *m_ctx;
 
   loader.loadScsFile(context,TEST_FILES_DIR_PATH + "searchWithContentSingleResultTestStucture.scs");
   initialize();
@@ -81,21 +72,17 @@ TEST_CASE("search with content - single result test case", "[template search man
   ScTemplateParams templateParams;
   std::vector<ScTemplateSearchResultItem> searchResults = templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
 
-  REQUIRE(searchResults.size() == 1);
-  REQUIRE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
-
-  context.Destroy();
-  test::ScTestUnit::ShutdownMemory(false);
+  EXPECT_TRUE(searchResults.size() == 1);
+  EXPECT_TRUE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
 }
 
-TEST_CASE("search with content - multiple result test case", "[template search manager]")
+TEST_F(TemplateSearchManagerTest, SearchWithContent_MultipleResultTestCase)
 {
   std::string firstCorrectResultLinkIdentifier = "first_correct_result_link";
   std::string secondCorrectResultLinkIdentifier = "second_correct_result_link";
   std::string searchLinkIdentifier = "search_link";
 
-  test::ScTestUnit::InitMemory(SC_MEMORY_INI, "");
-  ScMemoryContext context(sc_access_lvl_make_min, "checkDynamicArguments");
+  ScMemoryContext& context = *m_ctx;
 
   loader.loadScsFile(context,TEST_FILES_DIR_PATH + "searchWithContentMultipleResultTestStucture.scs");
   initialize();
@@ -105,18 +92,14 @@ TEST_CASE("search with content - multiple result test case", "[template search m
   ScTemplateParams templateParams;
   std::vector<ScTemplateSearchResultItem> searchResults = templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
 
-  REQUIRE(searchResults.size() == 2);
-  REQUIRE(searchResults[1][searchLinkIdentifier] == context.HelperFindBySystemIdtf(firstCorrectResultLinkIdentifier));
-  REQUIRE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(secondCorrectResultLinkIdentifier));
-
-  context.Destroy();
-  test::ScTestUnit::ShutdownMemory(false);
+  EXPECT_TRUE(searchResults.size() == 2);
+  EXPECT_TRUE(searchResults[1][searchLinkIdentifier] == context.HelperFindBySystemIdtf(firstCorrectResultLinkIdentifier));
+  EXPECT_TRUE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(secondCorrectResultLinkIdentifier));
 }
 
-TEST_CASE("search without content - no structures test case", "[template search manager]")
+TEST_F(TemplateSearchManagerTest, SearchWithoutContent_NoStructuresTestCase)
 {
-  test::ScTestUnit::InitMemory(SC_MEMORY_INI, "");
-  ScMemoryContext context(sc_access_lvl_make_min, "checkDynamicArguments");
+  ScMemoryContext& context = *m_ctx;
 
   loader.loadScsFile(context,TEST_FILES_DIR_PATH + "searchWithoutContentNoStructures.scs");
   initialize();
@@ -127,19 +110,15 @@ TEST_CASE("search without content - no structures test case", "[template search 
 
   std::vector<ScTemplateSearchResultItem> searchResults = templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
 
-  REQUIRE(searchResults.empty());
-
-  context.Destroy();
-  test::ScTestUnit::ShutdownMemory(false);
+  EXPECT_TRUE(searchResults.empty());
 }
 
-TEST_CASE("search without content - single result test case", "[template search manager]")
+TEST_F(TemplateSearchManagerTest, SearchWithoutContent_SingleResultTestCase)
 {
   std::string correctResultLinkIdentifier = "correct_result_link";
   std::string searchLinkIdentifier = "search_link";
 
-  test::ScTestUnit::InitMemory(SC_MEMORY_INI, "");
-  ScMemoryContext context(sc_access_lvl_make_min, "checkDynamicArguments");
+  ScMemoryContext& context = *m_ctx;
 
   loader.loadScsFile(context,TEST_FILES_DIR_PATH + "searchWithoutContentSingleResultTestStucture.scs");
   initialize();
@@ -149,21 +128,17 @@ TEST_CASE("search without content - single result test case", "[template search 
   ScTemplateParams templateParams;
   std::vector<ScTemplateSearchResultItem> searchResults = templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
 
-  REQUIRE(searchResults.size() == 1);
-  REQUIRE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
-
-  context.Destroy();
-  test::ScTestUnit::ShutdownMemory(false);
+  EXPECT_TRUE(searchResults.size() == 1);
+  EXPECT_TRUE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
 }
 
-TEST_CASE("search without content - multiple result test case", "[template search manager]")
+TEST_F(TemplateSearchManagerTest, SearchWithoutContent_MultipleResultTestCase)
 {
   std::string firstCorrectResultLinkIdentifier = "first_correct_result_link";
   std::string secondCorrectResultLinkIdentifier = "second_correct_result_link";
   std::string searchLinkIdentifier = "search_link";
 
-  test::ScTestUnit::InitMemory(SC_MEMORY_INI, "");
-  ScMemoryContext context(sc_access_lvl_make_min, "checkDynamicArguments");
+  ScMemoryContext& context = *m_ctx;
 
   loader.loadScsFile(context,TEST_FILES_DIR_PATH + "searchWithoutContentMultipleResultTestStucture.scs");
   initialize();
@@ -173,21 +148,17 @@ TEST_CASE("search without content - multiple result test case", "[template searc
   ScTemplateParams templateParams;
   std::vector<ScTemplateSearchResultItem> searchResults = templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
 
-  REQUIRE(searchResults.size() == 2);
-  REQUIRE(searchResults[1][searchLinkIdentifier] == context.HelperFindBySystemIdtf(firstCorrectResultLinkIdentifier));
-  REQUIRE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(secondCorrectResultLinkIdentifier));
-
-  context.Destroy();
-  test::ScTestUnit::ShutdownMemory(false);
+  EXPECT_TRUE(searchResults.size() == 2);
+  EXPECT_TRUE(searchResults[1][searchLinkIdentifier] == context.HelperFindBySystemIdtf(firstCorrectResultLinkIdentifier));
+  EXPECT_TRUE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(secondCorrectResultLinkIdentifier));
 }
 
-TEST_CASE("search without content - selective test case", "[template search manager]")
+TEST_F(TemplateSearchManagerTest, SearchWithoutContent_SelectiveTestCase)
 {
   std::string correctResultLinkIdentifier = "correct_result_link";
   std::string searchLinkIdentifier = "search_link";
 
-  test::ScTestUnit::InitMemory(SC_MEMORY_INI, "");
-  ScMemoryContext context(sc_access_lvl_make_min, "checkDynamicArguments");
+  ScMemoryContext& context = *m_ctx;
 
   loader.loadScsFile(context,TEST_FILES_DIR_PATH + "searchWithContentSelectiveSearchTestStucture.scs");
   initialize();
@@ -197,20 +168,16 @@ TEST_CASE("search without content - selective test case", "[template search mana
   ScTemplateParams templateParams;
   std::vector<ScTemplateSearchResultItem> searchResults = templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
 
-  REQUIRE(searchResults.size() == 1);
-  REQUIRE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
-
-  context.Destroy();
-  test::ScTestUnit::ShutdownMemory(false);
+  EXPECT_TRUE(searchResults.size() == 1);
+  EXPECT_TRUE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
 }
 
-TEST_CASE("search without content - empty link test case", "[template search manager]")
+TEST_F(TemplateSearchManagerTest, SearchWithoutContent_EmptyLinkTestCase)
 {
   std::string correctResultLinkIdentifier = "correct_result_link";
   std::string searchLinkIdentifier = "search_link";
 
-  test::ScTestUnit::InitMemory(SC_MEMORY_INI, "");
-  ScMemoryContext context(sc_access_lvl_make_min, "checkDynamicArguments");
+  ScMemoryContext& context = *m_ctx;
 
   loader.loadScsFile(context,TEST_FILES_DIR_PATH + "searchWithoutContentEmptyLinkTest.scs");
   initialize();
@@ -220,20 +187,16 @@ TEST_CASE("search without content - empty link test case", "[template search man
   ScTemplateParams templateParams;
   std::vector<ScTemplateSearchResultItem> searchResults = templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
 
-  REQUIRE(searchResults.size() == 1);
-  REQUIRE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
-
-  context.Destroy();
-  test::ScTestUnit::ShutdownMemory(false);
+  EXPECT_TRUE(searchResults.size() == 1);
+  EXPECT_TRUE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
 }
 
-TEST_CASE("search with content - empty link test case", "[template search manager]")
+TEST_F(TemplateSearchManagerTest, SearchWithContent_EmptyLinkTestCase)
 {
   std::string correctResultLinkIdentifier = "correct_result_link";
   std::string searchLinkIdentifier = "search_link";
 
-  test::ScTestUnit::InitMemory(SC_MEMORY_INI, "");
-  ScMemoryContext context(sc_access_lvl_make_min, "checkDynamicArguments");
+  ScMemoryContext& context = *m_ctx;
 
   loader.loadScsFile(context,TEST_FILES_DIR_PATH + "searchWithContentEmptyLinkTest.scs");
   initialize();
@@ -243,10 +206,7 @@ TEST_CASE("search with content - empty link test case", "[template search manage
   ScTemplateParams templateParams;
   std::vector<ScTemplateSearchResultItem> searchResults = templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
 
-  REQUIRE(searchResults.size() == 1);
-  REQUIRE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
-
-  context.Destroy();
-  test::ScTestUnit::ShutdownMemory(false);
+  EXPECT_TRUE(searchResults.size() == 1);
+  EXPECT_TRUE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
 }
 }//namespace inferenceTest

@@ -37,5 +37,5 @@ target_link_libraries(inferenceModule sc-memory sc-agents-common)
 sc_codegen_ex(inferenceModule ${CMAKE_CURRENT_LIST_DIR} ${CMAKE_CURRENT_LIST_DIR}/generated)
 
 if (${SC_BUILD_TESTS})
-    add_subdirectory(test)
+    include(${CMAKE_CURRENT_LIST_DIR}/test/tests.cmake)
 endif ()
