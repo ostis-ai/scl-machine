@@ -33,8 +33,8 @@ TEST_F(InferenceManagerTest, SuccessApplyInference)
 {
   ScMemoryContext& context = *m_ctx;
 
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "inferenceManagerRuleUsedTest.scs");
   loader.loadScsFile(context,TEST_FILES_DIR_PATH + "lr_concept_weather_request_message_1.scs");
+  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "inferenceManagerRuleUsedTest.scs");
   loader.loadScsFile(context,TEST_FILES_DIR_PATH
                                       + "concept_answer_on_standard_message_rule_class_by_priority.scs");
   initialize();

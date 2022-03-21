@@ -20,7 +20,7 @@ ScsLoader loader;
 const std::string TEST_FILES_DIR_PATH = TEMPLATE_SEARCH_MODULE_TEST_SRC_PATH "/testStructures/LogicModule/";
 const std::string QUESTION_IDENTIFIER = "inference_logic_test_question";
 
-using InferenceLogigTest = ScMemoryTest;
+using InferenceLogicTest = ScMemoryTest;
 
 void initialize()
 {
@@ -28,7 +28,7 @@ void initialize()
   scAgentsCommon::CoreKeynodes::InitGlobal();
 }
 
-TEST_F(InferenceLogigTest, TrueLogicRule)
+TEST_F(InferenceLogicTest, TrueLogicRule)
 {
   ScMemoryContext& context = *m_ctx;
 
@@ -53,11 +53,9 @@ TEST_F(InferenceLogigTest, TrueLogicRule)
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(context.HelperCheckEdge(InferenceKeynodes::concept_success_solution,
       answer, ScType::EdgeAccessConstPosPerm));
-
-
 }
 
-TEST_F(InferenceLogigTest, FalseLogicRule)
+TEST_F(InferenceLogicTest, FalseLogicRule)
 {
   ScMemoryContext& context = *m_ctx;
 

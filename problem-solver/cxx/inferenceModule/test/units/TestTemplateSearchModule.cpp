@@ -17,7 +17,7 @@ ScsLoader loader;
 const std::string TEST_FILES_DIR_PATH = TEMPLATE_SEARCH_MODULE_TEST_SRC_PATH "/testStructures/TemplateSearchModule/";
 const std::string TEST_SEARCH_TEMPLATE_ID = "search_template";
 
-using TemplateSearchManager = ScMemoryTest;
+using TemplateSearchManagerTest = ScMemoryTest;
 
 void initialize()
 {
@@ -25,7 +25,7 @@ void initialize()
   scAgentsCommon::CoreKeynodes::InitGlobal();
 }
 
-TEST_F(TemplateSearchManager, SearchWithContent_NoStructuresTestCase)
+TEST_F(TemplateSearchManagerTest, SearchWithContent_NoStructuresTestCase)
 {
   ScMemoryContext& context = *m_ctx;
 
@@ -41,7 +41,7 @@ TEST_F(TemplateSearchManager, SearchWithContent_NoStructuresTestCase)
   EXPECT_TRUE(searchResults.empty());
 }
 
-TEST_F(TemplateSearchManager, SearchWithContent_EmptyResultsTestCase)
+TEST_F(TemplateSearchManagerTest, SearchWithContent_EmptyResultsTestCase)
 {
   ScMemoryContext& context = *m_ctx;
 
@@ -57,7 +57,7 @@ TEST_F(TemplateSearchManager, SearchWithContent_EmptyResultsTestCase)
   EXPECT_TRUE(searchResults.empty());
 }
 
-TEST_F(TemplateSearchManager, SearchWithContent_SingleResultTestCase)
+TEST_F(TemplateSearchManagerTest, SearchWithContent_SingleResultTestCase)
 {
   std::string correctResultLinkIdentifier = "correct_result_link";
   std::string searchLinkIdentifier = "search_link";
@@ -76,7 +76,7 @@ TEST_F(TemplateSearchManager, SearchWithContent_SingleResultTestCase)
   EXPECT_TRUE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
 }
 
-TEST_F(TemplateSearchManager, SearchWithContent_MultipleResultTestCase)
+TEST_F(TemplateSearchManagerTest, SearchWithContent_MultipleResultTestCase)
 {
   std::string firstCorrectResultLinkIdentifier = "first_correct_result_link";
   std::string secondCorrectResultLinkIdentifier = "second_correct_result_link";
@@ -97,7 +97,7 @@ TEST_F(TemplateSearchManager, SearchWithContent_MultipleResultTestCase)
   EXPECT_TRUE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(secondCorrectResultLinkIdentifier));
 }
 
-TEST_F(TemplateSearchManager, SearchWithoutContent_NoStructuresTestCase)
+TEST_F(TemplateSearchManagerTest, SearchWithoutContent_NoStructuresTestCase)
 {
   ScMemoryContext& context = *m_ctx;
 
@@ -113,7 +113,7 @@ TEST_F(TemplateSearchManager, SearchWithoutContent_NoStructuresTestCase)
   EXPECT_TRUE(searchResults.empty());
 }
 
-TEST_F(TemplateSearchManager, SearchWithoutContent_SingleResultTestCase)
+TEST_F(TemplateSearchManagerTest, SearchWithoutContent_SingleResultTestCase)
 {
   std::string correctResultLinkIdentifier = "correct_result_link";
   std::string searchLinkIdentifier = "search_link";
@@ -132,7 +132,7 @@ TEST_F(TemplateSearchManager, SearchWithoutContent_SingleResultTestCase)
   EXPECT_TRUE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
 }
 
-TEST_F(TemplateSearchManager, SearchWithoutContent_MultipleResultTestCase)
+TEST_F(TemplateSearchManagerTest, SearchWithoutContent_MultipleResultTestCase)
 {
   std::string firstCorrectResultLinkIdentifier = "first_correct_result_link";
   std::string secondCorrectResultLinkIdentifier = "second_correct_result_link";
@@ -153,7 +153,7 @@ TEST_F(TemplateSearchManager, SearchWithoutContent_MultipleResultTestCase)
   EXPECT_TRUE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(secondCorrectResultLinkIdentifier));
 }
 
-TEST_F(TemplateSearchManager, SearchWithoutContent_SelectiveTestCase)
+TEST_F(TemplateSearchManagerTest, SearchWithoutContent_SelectiveTestCase)
 {
   std::string correctResultLinkIdentifier = "correct_result_link";
   std::string searchLinkIdentifier = "search_link";
@@ -172,7 +172,7 @@ TEST_F(TemplateSearchManager, SearchWithoutContent_SelectiveTestCase)
   EXPECT_TRUE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
 }
 
-TEST_F(TemplateSearchManager, SearchWithoutContent_EmptyLinkTestCase)
+TEST_F(TemplateSearchManagerTest, SearchWithoutContent_EmptyLinkTestCase)
 {
   std::string correctResultLinkIdentifier = "correct_result_link";
   std::string searchLinkIdentifier = "search_link";
@@ -191,7 +191,7 @@ TEST_F(TemplateSearchManager, SearchWithoutContent_EmptyLinkTestCase)
   EXPECT_TRUE(searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
 }
 
-TEST_F(TemplateSearchManager, SearchWithContent_EmptyLinkTestCase)
+TEST_F(TemplateSearchManagerTest, SearchWithContent_EmptyLinkTestCase)
 {
   std::string correctResultLinkIdentifier = "correct_result_link";
   std::string searchLinkIdentifier = "search_link";
