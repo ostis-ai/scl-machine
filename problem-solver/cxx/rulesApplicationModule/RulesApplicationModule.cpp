@@ -17,15 +17,7 @@ sc_result RulesApplicationModule::InitializeImpl()
   if (!Keynodes::InitGlobal())
     return SC_RESULT_ERROR;
 
-  ScMemoryContext ctx(sc_access_lvl_make_min, "RulesApplicationModule");
-  if (ActionUtils::isActionDeactivated(&ctx, Keynodes::action_apply_rules_on_the_model))
-  {
-    SC_LOG_ERROR("action_interpret_non_atomic_action is deactivated")
-  }
-  else
-  {
-    SC_AGENT_REGISTER(RulesApplicationAgent)
-  }
+  SC_AGENT_REGISTER(RulesApplicationAgent)
 
   return SC_RESULT_OK;
 }

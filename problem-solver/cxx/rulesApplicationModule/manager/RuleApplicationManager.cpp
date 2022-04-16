@@ -10,9 +10,9 @@
 #include <sc-agents-common/utils/GenerationUtils.hpp>
 #include <sc-agents-common/utils/IteratorUtils.hpp>
 #include <sc-agents-common/utils/CommonUtils.hpp>
+#include <sc-agents-common/utils/AgentUtils.hpp>
 #include <sc-agents-common/keynodes/coreKeynodes.hpp>
 #include <sc-memory/sc_link.hpp>
-#include <utils/ActionUtils.hpp>
 
 #include "searcher/RuleConstructionsSearcher.hpp"
 #include "keynodes/Keynodes.hpp"
@@ -450,7 +450,7 @@ void RuleApplicationManager::applyActionsOnStatement(
 
           SC_LOG_DEBUG("RuleApplicationManager: called action.")
           context->CreateEdge(ScType::EdgeAccessConstPosPerm, CoreKeynodes::question_initiated, action);
-          if (ActionUtils::waitAction(context, action, WAIT_TIME))
+          if (utils::AgentUtils::waitAgentResult(context, action, WAIT_TIME))
           {
             if (context->HelperCheckEdge(CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm))
             {

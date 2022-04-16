@@ -13,7 +13,6 @@
 #include "agent/RulesApplicationAgent.hpp"
 
 #include "RulesApplicationModule.generated.hpp"
-#include "utils/ActionUtils.hpp"
 
 namespace rulesApplicationModule
 {

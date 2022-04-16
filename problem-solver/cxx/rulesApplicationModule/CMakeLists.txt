@@ -25,7 +25,7 @@ set(HEADERS
 include_directories(${CMAKE_CURRENT_LIST_DIR} ${SC_MEMORY_SRC} ${SC_KPM_SRC} ${SC_TOOLS_SRC} ${SC_COMMON_MODULE_SRC})
 
 add_library(rules-application SHARED ${SOURCES} ${HEADERS})
-target_link_libraries(rules-application sc-memory sc-agents-common common boost_locale)
+target_link_libraries(rules-application sc-memory sc-agents-common boost_locale)
 
 sc_codegen_ex(rules-application ${CMAKE_CURRENT_LIST_DIR} ${CMAKE_CURRENT_LIST_DIR}/generated)
 

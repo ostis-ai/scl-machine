@@ -9,7 +9,6 @@
 #include "sc-memory/kpm/sc_agent.hpp"
 #include "sc-agents-common/keynodes/coreKeynodes.hpp"
 
-#include "interpreter/NonAtomicActionInterpreter.hpp"
 #include "RulesApplicationAgent.generated.hpp"
 
 namespace rulesApplicationModule
