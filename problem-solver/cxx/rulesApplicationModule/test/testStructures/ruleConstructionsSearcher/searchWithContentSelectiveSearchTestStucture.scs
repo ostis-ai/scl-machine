@@ -1,0 +1,22 @@
+@key_variable_link = _[text];;
+[search_link] <= nrel_system_identifier: @key_variable_link;;
+
+@template = [*
+    test_class _-> @key_variable_link;;
+    @key_variable_link _-> _[ignored text];;
+*];;
+@template
+    <- concept_template_with_links;
+    => nrel_system_identifier: [search_template];
+    -> rrel_key_sc_element: @key_variable_link;;
+
+test_class <- sc_node_not_relation;;
+
+@correct_result_link = [text];;
+@correct_result_link => nrel_system_identifier: [correct_result_link];;
+
+
+@template_to_search_in = [*
+    test_class -> @correct_result_link (* -> [another ignored text];; *);;
+*];;
+@template_to_search_in => nrel_system_identifier: [template_to_search_in];;

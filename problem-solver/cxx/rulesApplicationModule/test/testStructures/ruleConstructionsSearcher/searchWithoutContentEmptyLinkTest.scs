@@ -1,0 +1,18 @@
+@key_variable_link = _[];;
+[search_link] <= nrel_system_identifier: @key_variable_link;;
+
+@template = [*
+    test_class _-> @key_variable_link;;
+*];;
+@template
+    => nrel_system_identifier: [search_template];
+    -> rrel_key_sc_element: @key_variable_link;;
+
+test_class <- sc_node_not_relation;;
+
+@correct_result_link = [ignored text];;
+@correct_result_link => nrel_system_identifier: [correct_result_link];;
+@template_to_search_in = [*
+    test_class -> @correct_result_link;;
+*];;
+@template_to_search_in => nrel_system_identifier: [template_to_search_in];;

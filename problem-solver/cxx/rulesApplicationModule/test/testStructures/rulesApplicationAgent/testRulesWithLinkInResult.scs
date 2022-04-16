@@ -1,0 +1,56 @@
+//types
+sc_node_role_relation
+    -> rrel_main_key_sc_element;;
+sc_node_norole_relation
+    -> nrel_equipment_normaly_in_service;
+    -> nrel_is_power_supply;
+    -> equivalence;;
+sc_node_not_relation
+    -> action_apply_rules_on_the_model;;
+sc_node_structure
+    -> test_output_structure;;
+
+//initial model
+@test_input_structure = [*
+    equpment_piece_1 <- equipment_normaly_in_service;;
+    equpment_piece_2 <|- equipment_normaly_in_service;;
+    equpment_piece_2 <|- power_supply;;
+    equpment_piece_1 <|- power_supply;;
+*];;
+
+//action description
+test_action
+    <- action_apply_rules_on_the_model;
+    -> rrel_1: test_rule_set (* -> test_rule_1;; -> test_rule_2;; *);
+    -> rrel_2: @test_input_structure;
+    -> rrel_3: test_output_structure;;
+
+//first rule
+@first_link = _[true];;
+@first_link => nrel_system_identifier: [_first_link];;
+@rule_1_first_structure = [*
+    _equpment _=> nrel_equipment_normaly_in_service:: @first_link;;
+*];;
+@rule_1_first_structure -> rrel_key_sc_element: @first_link;;
+@rule_1_first_structure <- concept_template_with_links;;
+@rule_1_second_structure = [*
+    _equpment _<- equipment_normaly_in_service;;
+*];;
+@rule_1_equivalence_pair = (@rule_1_first_structure <=> @rule_1_second_structure);;
+@rule_1_equivalence_pair <- nrel_equivalence;;
+@rule_1_equivalence_pair <- rrel_main_key_sc_element: test_rule_1;;
+
+//second_rule
+@second_link = _[false];;
+@second_link => nrel_system_identifier: [_second_link];;
+@rule_2_first_structure = [*
+    _equpment _=> nrel_is_power_supply:: @second_link;;
+*];;
+@rule_2_first_structure -> rrel_key_sc_element: @second_link;;
+@rule_2_first_structure <- concept_template_with_links;;
+@rule_2_second_structure = [*
+    _equpment _<|- power_supply;;
+*];;
+@rule_2_equivalence_pair = (@rule_2_first_structure <=> @rule_2_second_structure);;
+@rule_2_equivalence_pair <- nrel_equivalence;;
+@rule_2_equivalence_pair <- rrel_main_key_sc_element: test_rule_2;;

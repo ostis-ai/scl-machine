@@ -1,0 +1,27 @@
+@variable_link = _[text];;
+[search_link] <= nrel_system_identifier: @variable_link;;
+
+@template = [*
+    @pair0 = (_node _-> @variable_link);;
+    @pair1 = (test_class _-> _node);;
+*];;
+@template
+    <- concept_template_with_links;
+    => nrel_system_identifier: [search_template];
+    -> rrel_key_sc_element: @variable_link;;
+
+test_class <- sc_node_not_relation;;
+
+@first_correct_result_link = [text];;
+@first_correct_result_link => nrel_system_identifier: [first_correct_result_link];;
+
+@second_correct_result_link = [text];;
+@second_correct_result_link => nrel_system_identifier: [second_correct_result_link];;
+
+@template_to_search_in = [*
+    test_class -> first_constant_node; second_constant_node; third_constant_node;;
+    first_constant_node -> @first_correct_result_link;;
+    second_constant_node -> @second_correct_result_link;;
+    third_constant_node -> [wrong text];;
+*];;
+@template_to_search_in => nrel_system_identifier: [template_to_search_in];;
