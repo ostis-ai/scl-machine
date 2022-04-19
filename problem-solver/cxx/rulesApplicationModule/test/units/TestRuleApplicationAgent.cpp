@@ -10,7 +10,7 @@
 #include "sc-agents-common/keynodes/coreKeynodes.hpp"
 #include "agent/RulesApplicationAgent.hpp"
 #include "keynodes/Keynodes.hpp"
-#include "utils/ActionUtils.hpp"
+#include "sc-agents-common/utils/AgentUtils.hpp"
 #include "test/searcher/TestResultConstructionSearcher.hpp"
 #include "test/keynodes/TestKeynodes.hpp"
 #include "test/agents/ConnectionCheckAgent.hpp"
@@ -53,7 +53,7 @@ TEST_F(RulesApplicationAgentTest, check_dynamic_arguments)
         scAgentsCommon::CoreKeynodes::question_initiated,
         test_question_node);
 
-  EXPECT_TRUE(ActionUtils::waitAction(&context, test_question_node, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::waitAgentResult(&context, test_question_node, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
         scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully,
         test_question_node,
@@ -77,7 +77,7 @@ TEST_F(RulesApplicationAgentTest, atomic_statement_is_not_template)
         scAgentsCommon::CoreKeynodes::question_initiated,
         test_question_node);
 
-  EXPECT_TRUE(ActionUtils::waitAction(&context, test_question_node, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::waitAgentResult(&context, test_question_node, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
         scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully,
         test_question_node,
@@ -101,7 +101,7 @@ TEST_F(RulesApplicationAgentTest, test_several_simple_equivalence_rules)
         scAgentsCommon::CoreKeynodes::question_initiated,
         test_question_node);
 
-  EXPECT_TRUE(ActionUtils::waitAction(&context, test_question_node, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::waitAgentResult(&context, test_question_node, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
         scAgentsCommon::CoreKeynodes::question_finished_successfully,
         test_question_node,
@@ -129,7 +129,7 @@ TEST_F(RulesApplicationAgentTest, test_several_nested_equivalence_rules_one_temp
         scAgentsCommon::CoreKeynodes::question_initiated,
         test_question_node);
 
-  EXPECT_TRUE(ActionUtils::waitAction(&context, test_question_node, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::waitAgentResult(&context, test_question_node, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
         scAgentsCommon::CoreKeynodes::question_finished_successfully,
         test_question_node,
@@ -159,7 +159,7 @@ TEST_F(RulesApplicationAgentTest, test_several_nested_equivalence_rules_two_temp
         scAgentsCommon::CoreKeynodes::question_initiated,
         test_question_node);
 
-  EXPECT_TRUE(ActionUtils::waitAction(&context, test_question_node, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::waitAgentResult(&context, test_question_node, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
         scAgentsCommon::CoreKeynodes::question_finished_successfully,
         test_question_node,
@@ -189,7 +189,7 @@ TEST_F(RulesApplicationAgentTest, not_apply_rule)
         scAgentsCommon::CoreKeynodes::question_initiated,
         test_question_node);
 
-  EXPECT_TRUE(ActionUtils::waitAction(&context, test_question_node, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::waitAgentResult(&context, test_question_node, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
         scAgentsCommon::CoreKeynodes::question_finished_successfully,
         test_question_node,
@@ -217,7 +217,7 @@ TEST_F(RulesApplicationAgentTest, rules_with_link_in_condition)
         scAgentsCommon::CoreKeynodes::question_initiated,
         test_question_node);
 
-  EXPECT_TRUE(ActionUtils::waitAction(&context, test_question_node, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::waitAgentResult(&context, test_question_node, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
         scAgentsCommon::CoreKeynodes::question_finished_successfully,
         test_question_node,
@@ -245,7 +245,7 @@ TEST_F(RulesApplicationAgentTest, rules_with_link_in_result)
         scAgentsCommon::CoreKeynodes::question_initiated,
         test_question_node);
 
-  EXPECT_TRUE(ActionUtils::waitAction(&context, test_question_node, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::waitAgentResult(&context, test_question_node, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
         scAgentsCommon::CoreKeynodes::question_finished_successfully,
         test_question_node,
@@ -273,7 +273,7 @@ TEST_F(RulesApplicationAgentTest, rules_with_same_result)
         scAgentsCommon::CoreKeynodes::question_initiated,
         test_question_node);
 
-  EXPECT_TRUE(ActionUtils::waitAction(&context, test_question_node, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::waitAgentResult(&context, test_question_node, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
         scAgentsCommon::CoreKeynodes::question_finished_successfully,
         test_question_node,
@@ -301,7 +301,7 @@ TEST_F(RulesApplicationAgentTest, rule_with_link)
         scAgentsCommon::CoreKeynodes::question_initiated,
         test_question_node);
 
-  EXPECT_TRUE(ActionUtils::waitAction(&context, test_question_node, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::waitAgentResult(&context, test_question_node, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
         scAgentsCommon::CoreKeynodes::question_finished_successfully,
         test_question_node,
@@ -330,7 +330,7 @@ TEST_F(RulesApplicationAgentTest, call_successful)
         scAgentsCommon::CoreKeynodes::question_initiated,
         test_question_node);
 
-  EXPECT_TRUE(ActionUtils::waitAction(&context, test_question_node, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::waitAgentResult(&context, test_question_node, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
         scAgentsCommon::CoreKeynodes::question_finished_successfully,
         test_question_node,
@@ -359,7 +359,7 @@ TEST_F(RulesApplicationAgentTest, call_unsuccessful)
         scAgentsCommon::CoreKeynodes::question_initiated,
         test_question_node);
 
-  EXPECT_TRUE(ActionUtils::waitAction(&context, test_question_node, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::waitAgentResult(&context, test_question_node, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
         scAgentsCommon::CoreKeynodes::question_finished_successfully,
         test_question_node,
