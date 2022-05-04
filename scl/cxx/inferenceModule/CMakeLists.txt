@@ -12,6 +12,8 @@ set(SOURCES
         "comparator/AddrComparator.cpp"
         "searcher/TemplateSearcher.cpp"
         "logic/LogicExpression.cpp"
+        "classifier/FormulaClassifier.cpp"
+        "utils/ReplacementsUtils.cpp"
         )
 
 set(HEADERS
@@ -28,6 +30,9 @@ set(HEADERS
         "comparator/AddrComparator.hpp"
         "searcher/TemplateSearcher.hpp"
         "logic/LogicExpression.hpp"
+        "classifier/FormulaClassifier.hpp"
+        "formulas/Formula.hpp"
+        "utils/ReplacementsUtils.hpp"
         )
 
 set(INFERENCE_MODULE_GENERATED_DIR ${CMAKE_CURRENT_LIST_DIR}/generated)

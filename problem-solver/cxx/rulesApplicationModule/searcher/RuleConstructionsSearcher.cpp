@@ -63,7 +63,10 @@ bool RuleConstructionsSearcher::isKeyElement(ScAddr const & structure, ScAddr co
 ScAddrVector RuleConstructionsSearcher::getNoroleRelations(ScAddr const & structure)
 {
   ScTemplate relationsTemplate;
-  relationsTemplate.Triple(structure, ScType::EdgeAccessVarPosPerm, ScType::NodeVarNoRole >> "_relation");
+  relationsTemplate.Triple(
+        structure,
+        ScType::EdgeAccessVarPosPerm,
+        ScType::NodeVarNoRole >> "_relation");
   ScTemplateSearchResult searchResult;
   context->HelperSearchTemplate(relationsTemplate, searchResult);
 

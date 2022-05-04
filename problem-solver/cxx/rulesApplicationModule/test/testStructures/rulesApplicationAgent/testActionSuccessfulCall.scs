@@ -23,13 +23,6 @@ sc_node_structure
         <- concept_equipment;;
 *];;
 
-//action description
-test_action
-    <- action_apply_rules_on_the_model;
-    -> rrel_1: test_rule_set (* -> test_rule_1;; *);
-    -> rrel_2: @test_input_structure;
-    -> rrel_3: test_output_structure;;
-
 //first rule
 @rule_1_first_structure = [*
     concept_equipment
@@ -38,7 +31,7 @@ test_action
 *];;
 
 @rule_1_second_structure = [*
-    _first_equipment_piece _<=> nrel_connected_elements:: _second_equipment_piece;;
+    _first_equipment_piece _=> nrel_connector:: _connector;;
 *];;
 @rule_1_second_structure <- concept_logic_statement_checking_by_action;;
 
@@ -48,6 +41,13 @@ test_action
         _-> _first_equipment_piece;
         _-> _second_equipment_piece;;
 *];;
+
+//action description
+test_action
+    <- action_apply_rules_on_the_model;
+    -> rrel_1: test_rule_set (* -> test_rule_1;; *);
+    -> rrel_2: @test_input_structure;
+    -> rrel_3: test_output_structure;;
 
 ..conjunction_node
     <- sc_node_tuple;

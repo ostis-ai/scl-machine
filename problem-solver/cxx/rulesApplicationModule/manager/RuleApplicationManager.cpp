@@ -343,6 +343,7 @@ void RuleApplicationManager::checkAtomicStatement(
   vector<string> structureVariablesIdentifiers =
         ruleConstructionsSearcher->getVariablesNodesSystemIdentifiers(statement);
   Replacements replacements = checkResult.getUniqueReplacements(structureVariablesIdentifiers);
+  checkResult.printReplacementsInDebug(context);
 
   if (replacements.empty())
     checkStatementForEmptyReplacements(statement, inputStructure, nestingLevel, checkResult);
@@ -449,7 +450,10 @@ void RuleApplicationManager::applyActionsOnStatement(
                 { firstVariableRepalcement, secondVariableRepalcement, inputStructure });
 
           SC_LOG_DEBUG("RuleApplicationManager: called action.")
-          context->CreateEdge(ScType::EdgeAccessConstPosPerm, CoreKeynodes::question_initiated, action);
+          context->CreateEdge(
+                ScType::EdgeAccessConstPosPerm,
+                CoreKeynodes::question_initiated,
+                action);
           if (utils::AgentUtils::waitAgentResult(context, action, WAIT_TIME))
           {
             if (context->HelperCheckEdge(CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm))
@@ -481,7 +485,10 @@ ScAddr RuleApplicationManager::formActionInstance(ScAddr const & actionClass, Sc
   size_t argumentRoleRelationIndex = 1;
   for (auto const & argument: arguments)
   {
-    ScAddr argumentAccessArc = context->CreateEdge(ScType::EdgeAccessConstPosPerm, action, argument);
+    ScAddr argumentAccessArc = context->CreateEdge(
+          ScType::EdgeAccessConstPosPerm,
+          action,
+          argument);
     context->CreateEdge(
           ScType::EdgeAccessConstPosPerm,
           utils::IteratorUtils::getRoleRelation(context, argumentRoleRelationIndex),
@@ -514,18 +521,14 @@ vector<ScTemplateParams> RuleApplicationManager::generateTemplateParams(
 
 bool RuleApplicationManager::allNotFoundStructuresCanBeGenerated(StatementsCheckResult const & checkResults)
 {
-  bool result = true;
   for (auto const & structureWithNestingPair: checkResults.notFoundStructures)
   {
     if (context->HelperCheckEdge(
           Keynodes::concept_logic_statement_checking_by_action,
           structureWithNestingPair.first,
           ScType::EdgeAccessConstPosPerm))
-    {
-      result = false;
-      break;
-    }
+      return false;
   }
 
-  return result;
+  return true;
 }

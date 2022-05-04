@@ -19,6 +19,8 @@ namespace rulesApplicationModule
 {
 
 using Replacements = std::map<std::string, ScAddrVector>;
+using ScAddrSet = std::set<ScAddr>;
+using ReplacementsWithSet = std::map<std::string, ScAddrSet>;
 using StructuresByNesting = std::set<std::pair<ScAddr, size_t>, ComparatorByNesting>;
 
 class StatementsCheckResult
@@ -49,6 +51,8 @@ public:
         ScTemplateParams const & params = ScTemplateParams());
 
   std::map<std::string, ScAddrVector> getUniqueReplacements(std::vector<std::string> const & identifiers) const;
+
+  void printReplacementsInDebug(ScMemoryContext * context) const;
 
   Replacements replacements;
   StructuresByNesting notFoundStructures;

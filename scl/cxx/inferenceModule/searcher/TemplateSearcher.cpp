@@ -23,7 +23,8 @@ TemplateSearcher::TemplateSearcher(ScMemoryContext * context)
 
 vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplate(
       const ScAddr & templateAddr,
-      const ScTemplateParams & templateParams)
+      const ScTemplateParams & templateParams,
+      const ScAddr & inputStructure)
 {
   searchWithoutContentResult = std::make_unique<ScTemplateSearchResult>();
   vector<ScTemplateSearchResultItem> searchResult;
@@ -39,7 +40,7 @@ vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplate(
     }
     else
     {
-      context->HelperSearchTemplate(searchTemplate, *searchWithoutContentResult);
+      context->HelperSearchTemplateInStruct(searchTemplate, inputStructure, *searchWithoutContentResult);
       for(size_t searchItemIndex = 0; searchItemIndex < searchWithoutContentResult->Size(); searchItemIndex++)
       {
         searchResult.push_back((*searchWithoutContentResult)[searchItemIndex]);
@@ -52,10 +53,11 @@ vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplate(
 }
 
 std::vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplateWithContent(
-      const ScTemplate &searchTemplate,
-      const ScAddr &templateAddr)
+      const ScTemplate & searchTemplate,
+      const ScAddr & templateAddr,
+      const ScAddr & inputStructure)
 {
-  context->HelperSearchTemplate(searchTemplate, *searchWithoutContentResult);
+  context->HelperSearchTemplateInStruct(searchTemplate, inputStructure, *searchWithoutContentResult);
   std::map<std::string, std::string> linksContentMap = getTemplateKeyLinksContent(templateAddr);
   vector<ScTemplateSearchResultItem> searchWithContentResult;
   for(size_t searchItemIndex = 0; searchItemIndex < searchWithoutContentResult->Size(); searchItemIndex++)

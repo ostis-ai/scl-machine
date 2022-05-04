@@ -42,8 +42,7 @@ void StatementsCheckResult::addByReplacements(Replacements const & otherReplacem
   if (!replacements.empty() && !replacementsKeysIsEqual(replacements, otherReplacements))
     throw runtime_error("StatementsCheckResult: cannot add gen result - different set of variables.");
   size_t replacementsCombinationNumber = RuleCheckResultUtils::getReplacementCombinationsNumber(replacements);
-  size_t otherReplacementsCombinationNumber = RuleCheckResultUtils::getReplacementCombinationsNumber(
-        otherReplacements);
+  size_t otherReplacementsCombinationNumber = RuleCheckResultUtils::getReplacementCombinationsNumber(otherReplacements);
   size_t sizeToReserve = replacementsCombinationNumber + otherReplacementsCombinationNumber;
   for (auto const & otherReplacement : otherReplacements)
   {
@@ -53,6 +52,17 @@ void StatementsCheckResult::addByReplacements(Replacements const & otherReplacem
           otherReplacement.second.begin(),
           otherReplacement.second.end());
   }
+}
+
+bool StatementsCheckResult::replacementsKeysIsEqual(
+      Replacements const & first,
+      Replacements const & second)
+{
+  auto pred = [](auto a, auto b)
+  { return a.first == b.first; };
+
+  return first.size() == second.size()
+         && equal(first.begin(), first.end(), second.begin(), pred);
 }
 
 bool StatementsCheckResult::extend(StatementsCheckResult const & other)
@@ -75,6 +85,19 @@ bool StatementsCheckResult::extend(
     notFoundStructures.insert({ atomicStatement, nestingLevel });
 
   return update(otherReplacements);
+}
+
+bool StatementsCheckResult::update(Replacements const & otherReplacements)
+{
+  bool result;
+  vector<string> commonKeys = getCommonVariablesIdtf(otherReplacements);
+
+  if (commonKeys.empty())
+    result = updateWithoutKeys(otherReplacements);
+  else
+    result = updateWithCommonKeys(commonKeys, otherReplacements);
+
+  return result;
 }
 
 Replacements StatementsCheckResult::getUniqueReplacements(vector<string> const & identifiers) const
@@ -112,36 +135,20 @@ Replacements StatementsCheckResult::getUniqueReplacements(vector<string> const &
   return replacementsSubset;
 }
 
+// returns false if in replacements for every key in keys value[first]==value[second]
+// returns true if there is key in keys that for this key value[first]!=value[second]
 bool StatementsCheckResult::replacementCombinationsForKeysAreDifferent(
       size_t const & firstCombinationIndex,
       size_t const & secondCombinationIndex,
       vector<string> const & keys) const
 {
-  bool replacementAreDifferent = false;
   for (auto const & key : keys)
   {
-    if (replacements.at(key)[firstCombinationIndex] != replacements.at(key)[secondCombinationIndex])
-    {
-      replacementAreDifferent = true;
-      break;
-    }
+    vector<ScAddr> value = replacements.at(key);
+    if (value[firstCombinationIndex] != value[secondCombinationIndex])
+      return true;
   }
-
-  return replacementAreDifferent;
-}
-
-vector<string> StatementsCheckResult::getCommonVariablesIdtf(Replacements const & otherReplacements)
-{
-  vector<string> commonKeys;
-  for (auto const & replacement : replacements)
-  {
-    auto other_it = otherReplacements.find(replacement.first);
-    if (other_it != otherReplacements.end())
-    {
-      commonKeys.push_back(replacement.first);
-    }
-  }
-  return commonKeys;
+  return false;
 }
 
 Replacements StatementsCheckResult::createReplacements(
@@ -186,15 +193,49 @@ Replacements StatementsCheckResult::createReplacements(
   return otherReplacements;
 }
 
-bool StatementsCheckResult::update(Replacements const & otherReplacements)
+vector<string> StatementsCheckResult::getCommonVariablesIdtf(Replacements const & otherReplacements)
 {
-  bool result;
-  vector<string> commonKeys = getCommonVariablesIdtf(otherReplacements);
+  vector<string> commonKeys;
+  for (auto const & replacement : replacements)
+  {
+    auto const & otherIt = otherReplacements.find(replacement.first);
+    if (otherIt != otherReplacements.end())
+    {
+      commonKeys.push_back(replacement.first);
+    }
+  }
+  return commonKeys;
+}
 
-  if (commonKeys.empty())
-    result = updateWithoutKeys(otherReplacements);
-  else
-    result = updateWithCommonKeys(commonKeys, otherReplacements);
+bool StatementsCheckResult::updateWithoutKeys(Replacements const & otherReplacements)
+{
+  bool result = false;
+
+  if (replacements.empty())
+  {
+    replacements = otherReplacements;
+    result = true;
+  }
+  else if (!otherReplacements.empty())
+  {
+    Replacements updatedReplacements;
+
+    size_t replacementsCombinationsNum = RuleCheckResultUtils::getReplacementCombinationsNumber(replacements);
+    size_t otherReplacementsCombinationsNum = RuleCheckResultUtils::getReplacementCombinationsNumber(otherReplacements);
+    for (size_t replacementIndex = 0; replacementIndex < replacementsCombinationsNum; replacementIndex++)
+    {
+      for (size_t otherReplacementIndex = 0;
+           otherReplacementIndex < otherReplacementsCombinationsNum; otherReplacementIndex++)
+      {
+        for (auto const & pair : replacements)
+          updatedReplacements[pair.first].push_back(pair.second[replacementIndex]);
+        for (auto const & pair : otherReplacements)
+          updatedReplacements[pair.first].push_back(pair.second[otherReplacementIndex]);
+      }
+    }
+    replacements = updatedReplacements;
+    result = true;
+  }
 
   return result;
 }
@@ -245,18 +286,14 @@ bool StatementsCheckResult::commonKeysInReplacementsCombinationAreEqual(
       size_t const & otherReplacementsCombinationIndex,
       size_t const & replacementsCombinationIndex)
 {
-  bool commonReplacementsAreEqual = true;
   for (auto & commonKey: commonKeys)
   {
     if (replacements[commonKey][replacementsCombinationIndex] !=
         otherReplacements.at(commonKey)[otherReplacementsCombinationIndex])
-    {
-      commonReplacementsAreEqual = false;
-      break;
-    }
+      return false;
   }
 
-  return commonReplacementsAreEqual;
+  return true;
 }
 
 vector<string> StatementsCheckResult::getAdditionalKeys(Replacements const & otherReplacements)
@@ -271,46 +308,15 @@ vector<string> StatementsCheckResult::getAdditionalKeys(Replacements const & oth
   return additionalKeys;
 }
 
-bool StatementsCheckResult::updateWithoutKeys(Replacements const & otherReplacements)
+void StatementsCheckResult::printReplacementsInDebug(ScMemoryContext * context) const
 {
-  bool result = false;
-
-  if (replacements.empty())
+  SC_LOG_DEBUG("              Replacements")
+  for (auto const & pair : replacements)
   {
-    replacements = otherReplacements;
-    result = true;
-  }
-  else if (!otherReplacements.empty())
-  {
-    Replacements updatedReplacements;
-
-    size_t replacementsCombinationsNum = RuleCheckResultUtils::getReplacementCombinationsNumber(replacements);
-    size_t otherReplacementsCombinationsNum = RuleCheckResultUtils::getReplacementCombinationsNumber(otherReplacements);
-    for (size_t replacementIndex = 0; replacementIndex < replacementsCombinationsNum; replacementIndex++)
+    SC_LOG_DEBUG("++++ for " + pair.first)
+    for (auto const & addr : pair.second)
     {
-      for (size_t otherReplacementIndex = 0;
-           otherReplacementIndex < otherReplacementsCombinationsNum; otherReplacementIndex++)
-      {
-        for (auto const & pair : replacements)
-          updatedReplacements[pair.first].push_back(pair.second[replacementIndex]);
-        for (auto const & pair : otherReplacements)
-          updatedReplacements[pair.first].push_back(pair.second[otherReplacementIndex]);
-      }
+      SC_LOG_DEBUG("------- " + context->HelperGetSystemIdtf(addr))
     }
-    replacements = updatedReplacements;
-    result = true;
   }
-
-  return result;
-}
-
-bool StatementsCheckResult::replacementsKeysIsEqual(
-      Replacements const & first,
-      Replacements const & second)
-{
-  auto pred = [](auto a, auto b)
-  { return a.first == b.first; };
-
-  return first.size() == second.size()
-         && equal(first.begin(), first.end(), second.begin(), pred);
 }

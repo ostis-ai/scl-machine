@@ -4,6 +4,7 @@
 * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
 */
 
+#include <algorithm>
 #include "TemplateManager.hpp"
 
 using namespace inference;
@@ -40,9 +41,7 @@ vector<ScTemplateParams> TemplateManager::createTemplateParamsList(
       for (auto & argument : argumentList)
       {
         if ((context->HelperCheckEdge(varClass, argument, ScType::EdgeAccessConstPosPerm)) && (argument.IsValid()))
-        {
           argumentOfVarList.push_back(argument);
-        }
       }
     }
     if (!argumentList.empty())
@@ -54,12 +53,14 @@ vector<ScTemplateParams> TemplateManager::createTemplateParamsList(
   return createTemplateParamsList(replacementsList);
 }
 
-ScTemplateParams TemplateManager::createTemplateParams(
+vector<ScTemplateParams> TemplateManager::createTemplateParams(
       ScAddr const & scTemplate,
       const vector<ScAddr> & argumentList)
 {
-  map<ScAddr, string, AddrComparator> replacementsMap;
-  SC_LOG_DEBUG("***\ncreating template params\ntemplate name: " + context->HelperGetSystemIdtf(scTemplate));
+  map<string, set<ScAddr, AddrComparator>> replacementsMultimap;
+  vector<ScTemplateParams> vectorOfTemplateParams;
+
+  SC_LOG_DEBUG("***\ncreating template params\ntemplate name: " + context->HelperGetSystemIdtf(scTemplate))
 
   ScIterator3Ptr varIterator = context->Iterator3(
         scTemplate,
@@ -68,7 +69,8 @@ ScTemplateParams TemplateManager::createTemplateParams(
   while (varIterator->Next())
   {
     ScAddr var = varIterator->Get(2);
-    SC_LOG_DEBUG("found variable: " + context->HelperGetSystemIdtf(var));
+    string varName = context->HelperGetSystemIdtf(var);
+    SC_LOG_DEBUG("found variable---> " + context->HelperGetSystemIdtf(var));
     ScAddr argumentOfVar;
     ScIterator5Ptr classesIterator = context->Iterator5(
           ScType::NodeConstClass,
@@ -83,32 +85,53 @@ ScTemplateParams TemplateManager::createTemplateParams(
       {
         if (context->HelperCheckEdge(varClass, argument, ScType::EdgeAccessConstPosPerm))
         {
-          if (!replacementsMap.count(argument))
-          {
-            argumentOfVar = argument;
-            break;
-          }
+          SC_LOG_DEBUG("adding " + context->HelperGetSystemIdtf(argument) + " into " + varName)
+          replacementsMultimap[varName].insert(argument);
         }
       }
-      if (argumentOfVar.IsValid())
+    }
+    if (vectorOfTemplateParams.empty())
+    {
+      auto addresses = replacementsMultimap[varName];
+      vectorOfTemplateParams.reserve(replacementsMultimap[varName].size());
+      for (auto const & address : addresses)
       {
-        string varName = context->HelperGetSystemIdtf(var);
-        replacementsMap.insert(make_pair(argumentOfVar, varName));
-        SC_LOG_DEBUG("variable class: " + context->HelperGetSystemIdtf(varClass));
-        SC_LOG_DEBUG(varName + " is " + to_string(argumentOfVar.GetRealAddr().seg) + "/" +
-                     to_string(argumentOfVar.GetRealAddr().offset));
-        break;
+        ScTemplateParams params;
+        params.Add(varName, address);
+        vectorOfTemplateParams.push_back(params);
       }
     }
-  }
-  SC_LOG_DEBUG("***");
+    else
+    {
+      auto addresses = replacementsMultimap[varName];
+      auto amountOfAddressesForVar = addresses.size();
+      auto oldParamsSize = vectorOfTemplateParams.size();
+      auto amountOfNewElements = oldParamsSize * (amountOfAddressesForVar - 1);
+      vectorOfTemplateParams.reserve(amountOfNewElements);
+      int beginOfCopy = 0;
+      int endOfCopy = oldParamsSize;
+      for (auto const & address : addresses)
+      {
+        copy_n(
+              vectorOfTemplateParams.begin() + beginOfCopy,
+               oldParamsSize,
+               back_inserter(vectorOfTemplateParams));
+        for (int i = 0; i < oldParamsSize; ++i)
+        {
+          SC_LOG_DEBUG("adding <" + varName + ", " + context->HelperGetSystemIdtf(address) + "> at index " + to_string(beginOfCopy + i))
+          vectorOfTemplateParams[beginOfCopy + i].Add(varName, address);
+        }
+        beginOfCopy = endOfCopy;
+        endOfCopy += oldParamsSize;
+      }
 
-  ScTemplateParams templateParams;
-  for (const auto & replacement : replacementsMap)
-  {
-    templateParams.Add(replacement.second, replacement.first);
+    }
+
   }
-  return templateParams;
+  SC_LOG_DEBUG("***")
+
+  SC_LOG_DEBUG("before exit size of vector with params is " + to_string(vectorOfTemplateParams.size()))
+  return vectorOfTemplateParams;
 }
 
 void TemplateManager::addVarToReplacementsList(

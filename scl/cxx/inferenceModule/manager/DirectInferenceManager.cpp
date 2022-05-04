@@ -36,9 +36,10 @@ ScAddr DirectInferenceManager::applyInference(
       const ScAddr & ruleSet,
       const ScAddr & argumentSet)
 {
+  // returns all <ScType::Node>s from argumentSet
   vector<ScAddr> argumentList = IteratorUtils::getAllWithType(ms_context, argumentSet, ScType::Node);
-  vector<ScAddr> checkedRuleList;
 
+  //
   bool targetAchieved = isTargetAchieved(targetStatement, argumentList);
 
   vector<queue<ScAddr>> rulesQueuesByPriority;
@@ -58,6 +59,7 @@ ScAddr DirectInferenceManager::applyInference(
     return this->solutionTreeManager->createSolution(targetAchieved);
   }
 
+  vector<ScAddr> checkedRuleList;
   queue<ScAddr> uncheckedRules = rulesQueuesByPriority[0];
 
   ScAddr rule;
@@ -96,6 +98,91 @@ ScAddr DirectInferenceManager::applyInference(
   }
   else
   { SC_LOG_DEBUG("Target is already achieved"); }
+
+  return this->solutionTreeManager->createSolution(targetAchieved);
+}
+
+
+ScAddr DirectInferenceManager::applyInference(
+      const ScAddr & ruleSet,
+      const ScAddr & argumentSet,
+      const ScAddr & outputStructure,
+      const ScAddr & targetStatement)
+{
+  this->argumentSet = argumentSet;
+  this->outputStructure = outputStructure;
+  this->targetStatement = targetStatement;
+  // returns all <ScType::Node>s from argumentSet
+  vector<ScAddr> argumentList = IteratorUtils::getAllWithType(ms_context, argumentSet, ScType::Node);
+
+  bool targetAchieved = isTargetAchieved(targetStatement, argumentList);
+
+  if (!targetStatement.IsValid())
+  {
+    SC_LOG_DEBUG("Target is not valid")
+    return this->solutionTreeManager->createSolution(targetAchieved);
+  }
+
+  if (targetAchieved)
+    SC_LOG_DEBUG("Target is already achieved")
+  else
+  {
+    if(!ruleSet.IsValid())
+    {
+      SC_LOG_DEBUG("rules set is not valid")
+      return this->solutionTreeManager->createSolution(targetAchieved);
+    }
+    vector<queue<ScAddr>> rulesQueuesByPriority;
+    try
+    {
+      rulesQueuesByPriority = createRulesQueuesListByPriority(ruleSet);
+    }
+    catch (std::runtime_error & ex)
+    {
+      SC_LOG_ERROR(ex.what())
+      return this->solutionTreeManager->createSolution(targetAchieved);
+    }
+
+    if (rulesQueuesByPriority.empty())
+    {
+      SC_LOG_DEBUG("No rule sets found.")
+      return this->solutionTreeManager->createSolution(targetAchieved);
+    }
+
+    vector<ScAddr> checkedRuleList;
+    queue<ScAddr> uncheckedRules;
+
+    ScAddr rule;
+    bool isUsed;
+    for (size_t ruleQueueIndex = 0; ruleQueueIndex < rulesQueuesByPriority.size() && !targetAchieved; ruleQueueIndex++)
+    {
+      uncheckedRules = rulesQueuesByPriority[ruleQueueIndex];
+      while (!uncheckedRules.empty())
+      {
+        rule = uncheckedRules.front();
+        isUsed = useRule(rule, argumentList);
+        if (isUsed)
+        {
+          targetAchieved = isTargetAchieved(targetStatement, argumentList);
+          if (targetAchieved)
+          {
+            SC_LOG_DEBUG("Target achieved in applyInterference([4])")
+            break;
+          }
+          else
+          {
+            ContainersUtils::addToQueue(checkedRuleList, uncheckedRules);
+            ruleQueueIndex = 0;
+            checkedRuleList.clear();
+          }
+        }
+        else
+          checkedRuleList.push_back(rule);
+
+        uncheckedRules.pop();
+      }
+    }
+  }
 
   return this->solutionTreeManager->createSolution(targetAchieved);
 }
@@ -202,11 +289,13 @@ bool DirectInferenceManager::generateStatement(ScAddr const & statement, ScTempl
 
 bool DirectInferenceManager::isTargetAchieved(ScAddr const & targetStatement, vector<ScAddr> const & argumentList)
 {
-  bool result = false;
-  ScTemplateParams templateParams = templateManager->createTemplateParams(targetStatement, argumentList);
-  vector<ScTemplateSearchResultItem> searchResult =
-      templateSearcher->searchTemplate(targetStatement, templateParams);
-  if (!searchResult.empty())
-  { result = true; }
-  return result;
+  vector<ScTemplateParams> vectorOfTemplateParams = templateManager->createTemplateParams(targetStatement, argumentList);
+  for (auto const & templateParams : vectorOfTemplateParams)
+  {
+    vector<ScTemplateSearchResultItem> searchResult =
+          templateSearcher->searchTemplate(targetStatement, templateParams);
+    if(!searchResult.empty())
+      return true;
+  }
+  return false;
 }

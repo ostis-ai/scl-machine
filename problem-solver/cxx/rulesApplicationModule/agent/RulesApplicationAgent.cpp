@@ -33,16 +33,18 @@ SC_AGENT_IMPLEMENTATION(RulesApplicationAgent)
       throw std::runtime_error("RulesApplicationAgent: one or more action arguments not found.");
     RuleApplicationManager manager = RuleApplicationManager(&m_memoryCtx);
     manager.applyRules(rulesSet, inputStructure, resultStructure);
+
+    SC_LOG_DEBUG("RulesApplicationAgent finished")
+    utils::AgentUtils::finishAgentWork(&m_memoryCtx, actionAddr, resultStructure, true);
   }
   catch (std::exception & ex)
   {
+    ScAddr answer = m_memoryCtx.CreateNode(ScType::NodeConstStruct);
     SC_LOG_ERROR(ex.what())
-    utils::AgentUtils::finishAgentWork(&m_memoryCtx, actionAddr, false);
+    utils::AgentUtils::finishAgentWork(&m_memoryCtx, actionAddr, answer, false);
     return SC_RESULT_ERROR;
   }
 
-  SC_LOG_DEBUG("RulesApplicationAgent finished")
-  utils::AgentUtils::finishAgentWork(&m_memoryCtx, actionAddr, true);
   return SC_RESULT_OK;
 }
 

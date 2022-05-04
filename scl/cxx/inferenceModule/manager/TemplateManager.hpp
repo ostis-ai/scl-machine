@@ -24,7 +24,7 @@ public:
         ScAddr const & scTemplate,
         const vector<ScAddr> & argumentList);
 
-  ScTemplateParams createTemplateParams(
+vector<ScTemplateParams> createTemplateParams(
         ScAddr const & scTemplate,
         const vector<ScAddr> & argumentList);
 
@@ -40,5 +40,6 @@ private:
 
   static vector<ScTemplateParams> createTemplateParamsList(
         vector<map<ScAddr, string, AddrComparator>> & replacementsList);
+
 };
 }

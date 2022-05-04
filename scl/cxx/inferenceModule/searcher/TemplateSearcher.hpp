@@ -22,12 +22,14 @@ public:
 
   std::vector<ScTemplateSearchResultItem> searchTemplate(
         const ScAddr & templateAddr,
-        const ScTemplateParams & templateParams);
+        const ScTemplateParams & templateParams,
+        const ScAddr & inputStructure = ScAddr());
 
 private:
   std::vector<ScTemplateSearchResultItem> searchTemplateWithContent(
         const ScTemplate &searchTemplate,
-        const ScAddr &templateAddr);
+        const ScAddr &templateAddr,
+        const ScAddr & inputStructure = ScAddr());
 
   std::map<std::string, std::string> getTemplateKeyLinksContent(const ScAddr &templateAddr);
 

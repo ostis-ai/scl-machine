@@ -21,26 +21,36 @@ namespace inference
 
 SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
 {
+  SC_LOG_DEBUG("Starting DirectInferenceAgent")
   if (!edgeAddr.IsValid())
     return SC_RESULT_ERROR;
 
   ScAddr questionNode = ms_context->GetEdgeTarget(edgeAddr);
-  ScAddr targetTemplate = IteratorUtils::getFirstByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_1);
-  ScAddr ruleSet = IteratorUtils::getFirstByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_2);
-  ScAddr argumentSet = IteratorUtils::getFirstByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_3);
+  ScAddr rrel_4 = ms_context->HelperResolveSystemIdtf("rrel_4");
+// 1 - setOfRules. if (empty or invalid) and (target is achieved -> success, target is not achieved -> unuccess).
+// 2 - inputStructure. if invalid -> search everywhere.
+// 3 - outputStructure. if invalid -> don't add to answer
+// 4 - targetTemplate. if empty or invalid -> maybe SC_RESULT_ERROR_INVALID_PARAMS
+  ScAddr ruleSet = IteratorUtils::getAnyByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_1);
+  ScAddr inputStructure = IteratorUtils::getAnyByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_2);
+  ScAddr outputStructure = IteratorUtils::getAnyByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_3);
+  ScAddr targetTemplate = IteratorUtils::getAnyByOutRelation(ms_context.get(), questionNode, rrel_4);
 
-  if (!targetTemplate.IsValid() || !ruleSet.IsValid() || !argumentSet.IsValid())
+  if (!targetTemplate.IsValid() || !ruleSet.IsValid() || !inputStructure.IsValid())
   {
     return SC_RESULT_ERROR_INVALID_PARAMS;
   }
   // TODO: Need to implement common logic of DI
   this->inferenceManager = new DirectInferenceManager(ms_context.get());
-  ScAddr answer = this->inferenceManager->applyInference(targetTemplate, ruleSet, argumentSet);
+  ScAddrVector answers;
+  ScAddr answer = this->inferenceManager->applyInference(ruleSet, inputStructure, outputStructure, targetTemplate);
+  answers.push_back(answer);
 
   bool success = ms_context->HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm);
-  AgentUtils::finishAgentWork((ScMemoryContext *) ms_context.get(), questionNode, answer, success);
+  AgentUtils::finishAgentWork((ScMemoryContext *) ms_context.get(), questionNode, answers, success);
 
   delete this->inferenceManager;
   return SC_RESULT_OK;
 }
+
 }
