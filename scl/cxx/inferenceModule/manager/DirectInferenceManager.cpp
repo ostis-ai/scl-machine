@@ -105,15 +105,28 @@ ScAddr DirectInferenceManager::applyInference(
 
 ScAddr DirectInferenceManager::applyInference(
       const ScAddr & ruleSet,
-      const ScAddr & argumentSet,
+      const ScAddr & inputStructure,
       const ScAddr & outputStructure,
       const ScAddr & targetStatement)
 {
-  this->argumentSet = argumentSet;
+  this->inputStructure = inputStructure;
   this->outputStructure = outputStructure;
   this->targetStatement = targetStatement;
-  // returns all <ScType::Node>s from argumentSet
-  vector<ScAddr> argumentList = IteratorUtils::getAllWithType(ms_context, argumentSet, ScType::Node);
+
+  vector<ScAddr> argumentList;
+  if (inputStructure.IsValid())
+  {
+    ScIterator3Ptr iterator3 = ms_context->Iterator3(inputStructure, ScType::EdgeAccessConstPosPerm, ScType::Node);
+    while (iterator3->Next())
+      templateSearcher->addParam(iterator3->Get(2));
+    argumentList = IteratorUtils::getAllWithType(ms_context, inputStructure, ScType::Node);
+    if (argumentList.empty())
+      return this->solutionTreeManager->createSolution(false);
+  }
+
+  templateSearcher->setInputStructure(inputStructure);
+
+
 
   bool targetAchieved = isTargetAchieved(targetStatement, argumentList);
 
@@ -160,8 +173,10 @@ ScAddr DirectInferenceManager::applyInference(
       while (!uncheckedRules.empty())
       {
         rule = uncheckedRules.front();
+        auto sizeBefore = templateSearcher->getParams().size();
         isUsed = useRule(rule, argumentList);
-        if (isUsed)
+        auto sizeAfter = templateSearcher->getParams().size();
+        if (sizeBefore != sizeAfter || isUsed)
         {
           targetAchieved = isTargetAchieved(targetStatement, argumentList);
           if (targetAchieved)
@@ -196,11 +211,13 @@ queue<ScAddr> DirectInferenceManager::createQueue(ScAddr const & set)
   return queue;
 }
 
-bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> const & argumentList)
+bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> /*const*/ & argumentList)
 {
   SC_LOG_DEBUG("Trying to use rule: " + ms_context->HelperGetSystemIdtf(rule));
   bool isUsed = false;
-
+  ScAddr keyScElement = IteratorUtils::getAnyByOutRelation(ms_context, rule, InferenceKeynodes::rrel_main_key_sc_element);
+  if (!keyScElement.IsValid())
+    return false;
   ScAddr ifStatement = LogicRuleUtils::getIfStatement(ms_context, rule);
 
   //collect all the templates within if condition
@@ -210,10 +227,17 @@ bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> const &
         ms_context,
         templateSearcher,
         templateManager,
-        argumentList
+        argumentList,
+        outputStructure
   );
-  auto root = logicExpression.build(ifStatement);
+//  auto root = logicExpression.build(ifStatement);
+  ////////  above was later, in future it'll be statement below    /////////////////////////////////////
+  auto root = logicExpression.build(keyScElement);
+  auto result = root->compute();
+  SC_LOG_DEBUG(std::string("Whole statement is ") + (result.value ? "right" : "wrong"))
+  isUsed = result.value;
 
+  /*
   SC_LOG_DEBUG("Created " + to_string(logicExpression.GetParamsSet().size()) + " statement params variants");
 
   for (const auto & ifStatementParams : logicExpression.GetParamsSet())
@@ -253,6 +277,7 @@ bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> const &
       }
     }
   }
+  */
   return isUsed;
 }
 
@@ -289,11 +314,10 @@ bool DirectInferenceManager::generateStatement(ScAddr const & statement, ScTempl
 
 bool DirectInferenceManager::isTargetAchieved(ScAddr const & targetStatement, vector<ScAddr> const & argumentList)
 {
-  vector<ScTemplateParams> vectorOfTemplateParams = templateManager->createTemplateParams(targetStatement, argumentList);
+  auto vectorOfTemplateParams = templateManager->createTemplateParams(targetStatement, argumentList);
   for (auto const & templateParams : vectorOfTemplateParams)
   {
-    vector<ScTemplateSearchResultItem> searchResult =
-          templateSearcher->searchTemplate(targetStatement, templateParams);
+    auto searchResult = templateSearcher->searchTemplate(targetStatement, templateParams);
     if(!searchResult.empty())
       return true;
   }

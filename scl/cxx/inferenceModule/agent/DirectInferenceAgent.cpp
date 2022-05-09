@@ -36,10 +36,19 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
   ScAddr outputStructure = IteratorUtils::getAnyByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_3);
   ScAddr targetTemplate = IteratorUtils::getAnyByOutRelation(ms_context.get(), questionNode, rrel_4);
 
-  if (!targetTemplate.IsValid() || !ruleSet.IsValid() || !inputStructure.IsValid())
-  {
-    return SC_RESULT_ERROR_INVALID_PARAMS;
-  }
+  if (!ruleSet.IsValid())
+    SC_LOG_WARNING("Rule set is not valid")
+  if (!inputStructure.IsValid())
+    SC_LOG_WARNING("Input structure is not valid")
+  if (!outputStructure.IsValid())
+    SC_LOG_WARNING("Output structure is not valid")
+  if (!targetTemplate.IsValid())
+    SC_LOG_WARNING("Target template is not valid")
+  /*  probably this checking is unnecessary    */
+//  if (!targetTemplate.IsValid() || !ruleSet.IsValid() || !inputStructure.IsValid())
+//  {
+//    return SC_RESULT_ERROR_INVALID_PARAMS;
+//  }
   // TODO: Need to implement common logic of DI
   this->inferenceManager = new DirectInferenceManager(ms_context.get());
   ScAddrVector answers;

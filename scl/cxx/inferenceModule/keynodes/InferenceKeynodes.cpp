@@ -26,5 +26,6 @@ ScAddr InferenceKeynodes::nrel_conjunction;
 ScAddr InferenceKeynodes::nrel_negation;
 ScAddr InferenceKeynodes::nrel_implication;
 ScAddr InferenceKeynodes::nrel_equivalence;
+ScAddr InferenceKeynodes::rrel_main_key_sc_element;
 
 }

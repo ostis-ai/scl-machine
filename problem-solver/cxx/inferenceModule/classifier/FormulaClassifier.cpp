@@ -88,7 +88,7 @@ int FormulaClassifier::typeOfFormula(ScAddr formula)
         ScType::EdgeAccessConstPosPerm);
   if (isEquivalence)
   {
-    bool isEdge = (utils::CommonUtils::checkType(ms_context, formula, ScType::EdgeUCommon));
+    bool isEdge = (utils::CommonUtils::checkType(ms_context, formula, ScType::EdgeUCommonConst));
     if (isEdge)
       return EQUIVALENCE_EDGE;
     bool isTuple = (utils::CommonUtils::checkType(ms_context, formula, ScType::NodeTuple));

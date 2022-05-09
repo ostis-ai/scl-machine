@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include "TemplateManager.hpp"
+#include <sc-agents-common/utils/IteratorUtils.hpp>
 
 using namespace inference;
 
@@ -18,39 +19,7 @@ vector<ScTemplateParams> TemplateManager::createTemplateParamsList(
       const ScAddr & scTemplate,
       const vector<ScAddr> & argumentList)
 {
-  std::vector<std::map<ScAddr, string, AddrComparator>> replacementsList;
-  ScIterator3Ptr varIterator = context->Iterator3(
-        scTemplate,
-        ScType::EdgeAccessConstPosPerm,
-        ScType::NodeVar);
-  //Program can crash here
-  while (varIterator->Next())
-  {
-    ScAddr var = varIterator->Get(2);
-    string varName = context->HelperGetSystemIdtf(var);
-    std::vector<ScAddr> argumentOfVarList;
-    ScIterator5Ptr classesIterator = context->Iterator5(
-          ScType::NodeConstClass,
-          ScType::EdgeAccessVarPosPerm,
-          var,
-          ScType::EdgeAccessConstPosPerm,
-          scTemplate);
-    while (classesIterator->Next())
-    {
-      ScAddr varClass = classesIterator->Get(0);
-      for (auto & argument : argumentList)
-      {
-        if ((context->HelperCheckEdge(varClass, argument, ScType::EdgeAccessConstPosPerm)) && (argument.IsValid()))
-          argumentOfVarList.push_back(argument);
-      }
-    }
-    if (!argumentList.empty())
-    {
-      addVarToReplacementsList(replacementsList, varName, argumentOfVarList);
-    }
-  }
-
-  return createTemplateParamsList(replacementsList);
+  return createTemplateParams(scTemplate, argumentList);
 }
 
 vector<ScTemplateParams> TemplateManager::createTemplateParams(
@@ -81,10 +50,20 @@ vector<ScTemplateParams> TemplateManager::createTemplateParams(
     while (classesIterator->Next())
     {
       ScAddr varClass = classesIterator->Get(0);
-      for (auto & argument : argumentList)
+      for (auto & argument : argumentList) // this block is executed if inputStructure is valid
       {
         if (context->HelperCheckEdge(varClass, argument, ScType::EdgeAccessConstPosPerm))
         {
+          SC_LOG_DEBUG("adding " + context->HelperGetSystemIdtf(argument) + " into " + varName)
+          replacementsMultimap[varName].insert(argument);
+        }
+      }
+      if (argumentList.empty()) // this block is executed if inputStructure is not valid
+      {
+        ScIterator3Ptr iterator3 = context->Iterator3(varClass, ScType::EdgeAccessConstPosPerm, ScType::Unknown);
+        while (iterator3->Next())
+        {
+          auto argument = iterator3->Get(2);
           SC_LOG_DEBUG("adding " + context->HelperGetSystemIdtf(argument) + " into " + varName)
           replacementsMultimap[varName].insert(argument);
         }

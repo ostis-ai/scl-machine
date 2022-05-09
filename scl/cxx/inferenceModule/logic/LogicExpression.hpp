@@ -37,7 +37,9 @@ class LogicExpressionNode
 {
 public:
   virtual LogicExpressionResult check(ScTemplateParams params) const = 0;
-  virtual LogicFormulaResult compute(ScTemplateParams params) const = 0;
+  virtual LogicFormulaResult compute() const = 0;
+
+  virtual ScAddr getFormulaTemplate() const = 0;
 };
 
 class OperatorLogicExpressionNode : public LogicExpressionNode
@@ -56,7 +58,9 @@ public:
   explicit AndExpressionNode(ScMemoryContext * context, OperandsVectorType & operands);
 
   LogicExpressionResult check(ScTemplateParams params) const override;
-  LogicFormulaResult compute(ScTemplateParams params) const override;
+  LogicFormulaResult compute() const override;
+
+  ScAddr getFormulaTemplate() const override { return ScAddr();}
 private:
   ScMemoryContext * context;
 };
@@ -68,7 +72,9 @@ public:
   explicit OrExpressionNode(ScMemoryContext * context, OperandsVectorType & operands);
 
   LogicExpressionResult check(ScTemplateParams params) const override;
-  LogicFormulaResult compute(ScTemplateParams params) const override;
+  LogicFormulaResult compute() const override;
+
+  ScAddr getFormulaTemplate() const override { return ScAddr();}
 private:
   ScMemoryContext * context;
 };
@@ -80,7 +86,9 @@ public:
   explicit NotExpressionNode(ScMemoryContext * context, std::unique_ptr<LogicExpressionNode> op);
 
   LogicExpressionResult check(ScTemplateParams params) const override;
-  LogicFormulaResult compute(ScTemplateParams params) const override;
+  LogicFormulaResult compute() const override;
+
+  ScAddr getFormulaTemplate() const override { return ScAddr();}
 private:
   ScMemoryContext * context;
 };
@@ -92,7 +100,9 @@ public:
   explicit ImplicationExpressionNode(ScMemoryContext * context, OperandsVectorType & operands);
 
   LogicExpressionResult check(ScTemplateParams params) const override;
-  LogicFormulaResult compute(ScTemplateParams params) const override;
+  LogicFormulaResult compute() const override;
+
+  ScAddr getFormulaTemplate() const override { return ScAddr();}
 private:
   ScMemoryContext * context;
 };
@@ -104,7 +114,9 @@ public:
   explicit EquivalenceExpressionNode(ScMemoryContext * context, OperandsVectorType & operands);
 
   LogicExpressionResult check(ScTemplateParams params) const override;
-  LogicFormulaResult compute(ScTemplateParams params) const override;
+  LogicFormulaResult compute() const override;
+
+  ScAddr getFormulaTemplate() const override { return ScAddr();}
 private:
   ScMemoryContext * context;
 };
@@ -113,18 +125,22 @@ class TemplateExpressionNode : public LogicExpressionNode
 {
 public:
   TemplateExpressionNode(ScMemoryContext * context, ScAddr formulaTemplate, TemplateSearcher * templateSearcher);
+  TemplateExpressionNode(ScMemoryContext * context, ScAddr formulaTemplate, TemplateSearcher * templateSearcher, TemplateManager * templateManager, ScAddr outputStructure);
 
   LogicExpressionResult check(ScTemplateParams params) const override;
-  LogicFormulaResult compute(ScTemplateParams params) const override;
+  LogicFormulaResult compute() const override;
 
-  LogicFormulaResult find(map<string, vector<ScAddr>> replacements) const;
+  LogicFormulaResult find(map<string, vector<ScAddr>> & replacements) const;
+  LogicFormulaResult generate(map<string, vector<ScAddr>> & replacements) const;
 
-  ScAddr getFormulaTemplate(){ return formulaTemplate;}
+  ScAddr getFormulaTemplate() const override { return formulaTemplate;}
 
 private:
   ScMemoryContext * context;
   ScAddr formulaTemplate;
   inference::TemplateSearcher * templateSearcher;
+  inference::TemplateManager * templateManager;
+  ScAddr outputStructure;
 };
 
 class LogicExpression

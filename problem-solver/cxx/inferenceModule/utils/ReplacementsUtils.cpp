@@ -6,8 +6,9 @@
 #include "sc-memory/kpm/sc_agent.hpp"
 
 map<string, vector<ScAddr>>
-inference::ReplacementsUtils::intersectionOfReplacements(const map<string, vector<ScAddr>> & first,
-                                                         const map<string, vector<ScAddr>> & second)
+inference::ReplacementsUtils::intersectionOfReplacements(
+      const map<string, vector<ScAddr>> & first,
+      const map<string, vector<ScAddr>> & second)
 {
   map<string, vector<ScAddr>> result;
   int resultSize = 0;
@@ -17,9 +18,19 @@ inference::ReplacementsUtils::intersectionOfReplacements(const map<string, vecto
   auto firstKeysSize = firstKeys.size();
   auto secondKeysSize = secondKeys.size();
   SC_LOG_DEBUG("keys: " + to_string(firstKeysSize) + ", " + to_string(secondKeysSize))
-  auto firstAmountOfColumns = (firstKeysSize == 0 || first.begin()->second.empty() ? 0 : first.begin()->second.size());
-  auto secondAmountOfColumns = (secondKeysSize == 0 || second.begin()->second.empty() ? 0 : second.begin()->second.size());
+  auto firstAmountOfColumns = getColumnsAmount(first);
+  auto secondAmountOfColumns = getColumnsAmount(second);
   SC_LOG_DEBUG("columns: " + to_string(firstAmountOfColumns) + ", " + to_string(secondAmountOfColumns))
+
+  if (firstAmountOfColumns == 0)
+  {
+    return copyReplacements(second);
+  }
+  if (secondAmountOfColumns == 0)
+  {
+    return copyReplacements(first);
+  }
+
   for (size_t columnIndexInFirst = 0; columnIndexInFirst < firstAmountOfColumns; ++columnIndexInFirst)
   {
     for (size_t columnIndexInSecond = 0; columnIndexInSecond < secondAmountOfColumns; ++columnIndexInSecond)
@@ -49,8 +60,9 @@ inference::ReplacementsUtils::intersectionOfReplacements(const map<string, vecto
   return result;
 }
 
-map<string, vector<ScAddr>> inference::ReplacementsUtils::unionOfReplacements(const map<string, vector<ScAddr>> & first,
-                                                                              const map<string, vector<ScAddr>> & second)
+map<string, vector<ScAddr>> inference::ReplacementsUtils::unionOfReplacements(
+      const map<string, vector<ScAddr>> & first,
+      const map<string, vector<ScAddr>> & second)
 {
   map<string, vector<ScAddr>> result;
   int resultSize = 0;
@@ -59,12 +71,14 @@ map<string, vector<ScAddr>> inference::ReplacementsUtils::unionOfReplacements(co
   auto commonKeysSet = commonKeys(firstKeys, secondKeys);
   auto firstKeysSize = firstKeys.size();
   auto secondKeysSize = secondKeys.size();
-  auto firstAmountOfColumns = (firstKeysSize == 0 || first.begin()->second.empty() ? 0 : first.begin()->second.size());
-  auto secondAmountOfColumns = (secondKeysSize == 0 || second.begin()->second.empty() ? 0 : second.begin()->second.size());
-  if (!firstKeysSize || !firstAmountOfColumns)
+  auto firstAmountOfColumns = getColumnsAmount(first);
+  auto secondAmountOfColumns = getColumnsAmount(second);
+
+  if (firstAmountOfColumns == 0)
     return copyReplacements(second);
-  if (!secondKeysSize || !secondAmountOfColumns)
+  if (secondAmountOfColumns == 0)
     return copyReplacements(first);
+
   for (size_t columnIndexInFirst = 0; columnIndexInFirst < firstAmountOfColumns; ++columnIndexInFirst)
   {
     for (size_t columnIndexInSecond = 0; columnIndexInSecond < secondAmountOfColumns; ++columnIndexInSecond)
@@ -121,26 +135,32 @@ map<string, vector<ScAddr>> inference::ReplacementsUtils::copyReplacements(map<s
   return result;
 }
 
-/*
-
- vector<ScTemplateParams> TemplateManager::createTemplateParamsList(
-      vector<map<ScAddr, string, AddrComparator>> & replacementsList)
+vector<ScTemplateParams>
+inference::ReplacementsUtils::replacementsToScTemplateParams(const map<string, vector<ScAddr>> & replacements)
 {
-  SC_LOG_DEBUG("Creating template params for rule usage")
-  std::vector<ScTemplateParams> templateParamsList;
-  for (auto & replacementsMap : replacementsList)
+  vector<ScTemplateParams> result;
+  auto keys = keySet(replacements);
+  if (keys.empty())
+    return result;
+
+  auto columnsAmount = replacements.begin()->second.size();
+  for (int columnIndex = 0; columnIndex < columnsAmount; ++columnIndex)
   {
-    ScTemplateParams scTemplateParams;
-    for (std::pair<ScAddr, string> replacement : replacementsMap)
-    {
-      SC_LOG_DEBUG(replacement.second + " is " + std::to_string(replacement.first.GetRealAddr().seg) + "/" +
-                   std::to_string(replacement.first.GetRealAddr().offset));
-      scTemplateParams.Add(replacement.second, replacement.first);
-    }
-    templateParamsList.push_back(scTemplateParams);
-    SC_LOG_DEBUG("***")
+    ScTemplateParams params;
+    for (auto const & key : keys)
+      params.Add(key, replacements.find(key)->second[columnIndex]);
+    result.push_back(params);
   }
-  SC_LOG_DEBUG("Created template params for rule usage")
-  return templateParamsList;
+  return result;
 }
- */
+
+size_t inference::ReplacementsUtils::getColumnsAmount(map<string, vector<ScAddr>> const & replacements)
+{
+  return (replacements.empty() ? 0 : replacements.begin()->second.size());
+}
+
+size_t inference::ReplacementsUtils::getRowsAmount(map<string, vector<ScAddr>> const & replacements)
+{
+  return replacements.size();
+}
+

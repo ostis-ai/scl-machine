@@ -89,12 +89,37 @@ TEST_F(InferenceLogicTest, FalseLogicRule)
   context.Destroy();
 }
 
+TEST_F(InferenceLogicTest, EquivalencesNested)
+{
+  ScMemoryContext context(sc_access_lvl_make_min, "testSeveralNestedEquivalences");
+
+  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "testSeveralNestedEquivalenceRulesOneTemplateToGenerate.scs");
+  initialize();
+
+  ScAddr test = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
+
+
+  context.CreateEdge(
+        ScType::EdgeAccessConstPosPerm,
+        InferenceKeynodes::action_direct_inference,
+        test);
+  EXPECT_TRUE(utils::AgentUtils::waitAgentResult(&context, test, WAIT_TIME));
+  EXPECT_TRUE(context.HelperCheckEdge(
+        scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully,
+        test,
+        ScType::EdgeAccessConstPosPerm));
+
+  shutdown();
+  context.Destroy();
+}
+
 TEST_F(InferenceLogicTest, RuleIsImplication)
 {
   ScMemoryContext context(sc_access_lvl_make_min, "implication_detected");
   FormulaClassifier fc(&context);
 
   loader.loadScsFile(context,TEST_FILES_DIR_PATH + "inferenceLogicTrueComplexRuleTest.scs");
+  initialize();
 
   ScAddr testRule = context.HelperResolveSystemIdtf("inference_logic_test_rule");
   ScAddr rrel_main_key_sc_element = context.HelperResolveSystemIdtf("rrel_main_key_sc_element");
@@ -102,7 +127,7 @@ TEST_F(InferenceLogicTest, RuleIsImplication)
   if(iter5->Next())
   {
     ScAddr formula = iter5->Get(2);
-    EXPECT_EQ(fc.typeOfFormula(formula), FormulaClassifier::IMPLICATION_EDGE);
+    EXPECT_EQ(fc.typeOfFormula(formula), FormulaClassifier::EQUIVALENCE_EDGE);
     ScAddr begin;
     ScAddr end;
     context.GetEdgeInfo(formula, begin, end);
@@ -111,6 +136,7 @@ TEST_F(InferenceLogicTest, RuleIsImplication)
   }
   else SC_LOG_DEBUG("Cannot find main key sc element");
 
+  shutdown();
   context.Destroy();
 }
 
@@ -174,8 +200,6 @@ TEST_F(InferenceLogicTest, FirstIntersectionTest)
   ScTemplateParams templateParams;
   templateParams.Add("rrel_1", rrel_1);
   context.HelperBuildTemplate(searchTemplate, smth, templateParams);
-
-
 
 //  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "inferenceLogicTrueComplexRuleTest.scs");
 

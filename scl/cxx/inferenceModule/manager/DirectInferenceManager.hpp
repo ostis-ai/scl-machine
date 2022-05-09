@@ -36,7 +36,7 @@ public:
 
   ScAddr applyInference(
         const ScAddr & ruleSet,
-        const ScAddr & argumentSet,
+        const ScAddr & inputStructure,
         const ScAddr & outputStructure,
         const ScAddr & targetStatement);
 ~DirectInferenceManager();
@@ -46,7 +46,7 @@ private:
 
   queue<ScAddr> createQueue(ScAddr const & set);
 
-  bool useRule(ScAddr const & rule, vector<ScAddr> const & argumentList);
+  bool useRule(ScAddr const & rule, vector<ScAddr> /*const*/ & argumentList);
 
   bool isTargetAchieved(ScAddr const & target, vector<ScAddr> const & argumentList);
 
@@ -57,7 +57,7 @@ private:
   TemplateSearcher * templateSearcher;
   SolutionTreeGenerator * solutionTreeManager;
   FormulaClassifier * formulaClassifier;
-  ScAddr argumentSet;
+  ScAddr inputStructure;
   ScAddr outputStructure;
   ScAddr targetStatement;
 };
