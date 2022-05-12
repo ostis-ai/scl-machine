@@ -195,7 +195,8 @@ map<string, vector<ScAddr>> TemplateSearcher::searchTemplate(
       for (auto const & varName : varNames)
       {
         SC_LOG_DEBUG("For var " + varName + " contains returned " + to_string(searchResult.Has(varName)))
-        result[varName].push_back(searchResult[varName]);
+        if (searchResult.Has(varName))
+          result[varName].push_back(searchResult[varName]);
       }
     }
   }

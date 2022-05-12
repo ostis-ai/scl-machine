@@ -93,7 +93,11 @@ TEST_F(InferenceLogicTest, EquivalencesNested)
 {
   ScMemoryContext context(sc_access_lvl_make_min, "testSeveralNestedEquivalences");
 
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "testSeveralNestedEquivalenceRulesOneTemplateToGenerate.scs");
+  auto const & name = TEST_FILES_DIR_PATH + "inferenceTestEquivalences.scs";
+  struct stat buffer;
+  SC_LOG_DEBUG("exists = " + to_string(stat (name.c_str(), &buffer) == 0))
+
+  loader.loadScsFile(context, name);
   initialize();
 
   ScAddr test = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);

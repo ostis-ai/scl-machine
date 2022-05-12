@@ -43,6 +43,9 @@ public:
   SC_PROPERTY(Keynode("concept_template_for_generation"), ForceCreate)
   static ScAddr concept_template_for_generation;
 
+  SC_PROPERTY(Keynode("concept_satisfiable_formula"), ForceCreate)
+  static ScAddr concept_satisfiable_formula;
+
   SC_PROPERTY(Keynode("nrel_basic_sequence"), ForceCreate)
   static ScAddr nrel_basic_sequence;
 
