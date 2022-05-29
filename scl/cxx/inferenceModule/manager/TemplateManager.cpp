@@ -29,7 +29,7 @@ vector<ScTemplateParams> TemplateManager::createTemplateParams(
   map<string, set<ScAddr, AddrComparator>> replacementsMultimap;
   vector<ScTemplateParams> vectorOfTemplateParams;
 
-  SC_LOG_DEBUG("***\ncreating template params\ntemplate name: " + context->HelperGetSystemIdtf(scTemplate))
+  SC_LOG_DEBUG("***\ncreating template params\ntemplate name: " + context->HelperGetSystemIdtf(scTemplate));
 
   ScIterator3Ptr varIterator = context->Iterator3(
         scTemplate,
@@ -39,7 +39,11 @@ vector<ScTemplateParams> TemplateManager::createTemplateParams(
   {
     ScAddr var = varIterator->Get(2);
     string varName = context->HelperGetSystemIdtf(var);
-    SC_LOG_DEBUG("found variable---> " + context->HelperGetSystemIdtf(var));
+    if (!replacementsMultimap[varName].empty())
+    {
+      SC_LOG_DEBUG("var " + varName + " has been processed already");
+      continue;
+    }
     ScAddr argumentOfVar;
     ScIterator5Ptr classesIterator = context->Iterator5(
           ScType::NodeConstClass,
@@ -53,20 +57,13 @@ vector<ScTemplateParams> TemplateManager::createTemplateParams(
       for (auto & argument : argumentList) // this block is executed if inputStructure is valid
       {
         if (context->HelperCheckEdge(varClass, argument, ScType::EdgeAccessConstPosPerm))
-        {
-          SC_LOG_DEBUG("adding " + context->HelperGetSystemIdtf(argument) + " into " + varName)
           replacementsMultimap[varName].insert(argument);
-        }
       }
       if (argumentList.empty()) // this block is executed if inputStructure is not valid
       {
         ScIterator3Ptr iterator3 = context->Iterator3(varClass, ScType::EdgeAccessConstPosPerm, ScType::Unknown);
         while (iterator3->Next())
-        {
-          auto argument = iterator3->Get(2);
-          SC_LOG_DEBUG("adding " + context->HelperGetSystemIdtf(argument) + " into " + varName)
-          replacementsMultimap[varName].insert(argument);
-        }
+          replacementsMultimap[varName].insert(iterator3->Get(2));
       }
     }
     if (vectorOfTemplateParams.empty())
@@ -96,20 +93,13 @@ vector<ScTemplateParams> TemplateManager::createTemplateParams(
                oldParamsSize,
                back_inserter(vectorOfTemplateParams));
         for (int i = 0; i < oldParamsSize; ++i)
-        {
-          SC_LOG_DEBUG("adding <" + varName + ", " + context->HelperGetSystemIdtf(address) + "> at index " + to_string(beginOfCopy + i))
           vectorOfTemplateParams[beginOfCopy + i].Add(varName, address);
-        }
         beginOfCopy = endOfCopy;
         endOfCopy += oldParamsSize;
       }
-
     }
-
   }
-  SC_LOG_DEBUG("***")
-
-  SC_LOG_DEBUG("before exit size of vector with params is " + to_string(vectorOfTemplateParams.size()))
+  SC_LOG_DEBUG("***");
   return vectorOfTemplateParams;
 }
 

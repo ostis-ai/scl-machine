@@ -33,13 +33,5 @@ vector<ScTemplateParams> createTemplateParams(
 private:
   ScMemoryContext * context;
 
-  static void addVarToReplacementsList(
-        std::vector<std::map<ScAddr, string, AddrComparator>> & replacementsList,
-        string & varName,
-        std::vector<ScAddr> & argumentOfVarList);
-
-  static vector<ScTemplateParams> createTemplateParamsList(
-        vector<map<ScAddr, string, AddrComparator>> & replacementsList);
-
 };
 }

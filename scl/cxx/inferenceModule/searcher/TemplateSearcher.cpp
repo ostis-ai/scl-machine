@@ -38,16 +38,12 @@ vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplate(
           InferenceKeynodes::concept_template_with_links,
           templateAddr,
           ScType::EdgeAccessConstPosPerm))
-    {
       searchResult = searchTemplateWithContent(searchTemplate, templateAddr);
-    }
     else
     {
       context->HelperSearchTemplateInStruct(searchTemplate, inputStructure, *searchWithoutContentResult);
       for (size_t searchItemIndex = 0; searchItemIndex < searchWithoutContentResult->Size(); searchItemIndex++)
-      {
         searchResult.push_back((*searchWithoutContentResult)[searchItemIndex]);
-      }
     }
   }
   else { throw runtime_error("Template is not built."); }
@@ -73,13 +69,9 @@ std::vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplateWithCont
       std::string stringContent;
       ScStreamPtr linkContentStream = context->GetLinkContent(linkAddr);
       if (linkContentStream != nullptr)
-      {
         ScStreamConverter::StreamToString(linkContentStream, stringContent);
-      }
       else
-      {
         stringContent = "";
-      }
       if (stringContent != linkIdContentPair.second)
       {
         contentIsIdentical = false;
@@ -87,9 +79,7 @@ std::vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplateWithCont
       }
     }
     if (contentIsIdentical)
-    {
       searchWithContentResult.push_back(searchResultItem);
-    }
   }
 
   return searchWithContentResult;
@@ -117,13 +107,9 @@ std::map<std::string, std::string> TemplateSearcher::getTemplateKeyLinksContent(
       std::string stringContent;
       ScStreamPtr linkContentStream = context->GetLinkContent(linkAddr);
       if (linkContentStream != nullptr)
-      {
         ScStreamConverter::StreamToString(linkContentStream, stringContent);
-      }
       else
-      {
         stringContent = "";
-      }
       linksContent.emplace(context->HelperGetSystemIdtf(linkAddr), stringContent);
     }
   }
@@ -165,6 +151,8 @@ bool TemplateSearcher::addParamIfNotPresent(ScAddr param)
   if (std::find(params.begin(), params.end(), param) == std::end(params))
   {
     params.push_back(param);
+    if (inputStructure.IsValid())
+      context->CreateEdge(ScType::EdgeAccessConstPosPerm, inputStructure, param);
     return true;
   }
   return false;
@@ -179,22 +167,11 @@ map<string, vector<ScAddr>> TemplateSearcher::searchTemplate(
   for (auto const & scTemplateParams : scTemplateParamsVector)
   {
     auto searchResults = searchTemplate(templateAddr, scTemplateParams);
-    SC_LOG_DEBUG("In searchResults " + to_string(searchResults.size()) + " element(s)")
     for (auto const & searchResult : searchResults)
     {
-      SC_LOG_DEBUG("In searchResult " + to_string(searchResult.Size()) + " element(s)")
-      for (int i = 0; i < searchResult.Size(); ++i)
-      {
-        if (utils::CommonUtils::checkType(context, searchResult[i], ScType::Node))
-          SC_LOG_DEBUG("Node " + context->HelperGetSystemIdtf(searchResult[i]))
-        else
-          SC_LOG_DEBUG("Edge")
-      }
-      if (searchResult.Has("test_argument"))
-        SC_LOG_DEBUG("searchResult has test_argument")
+
       for (auto const & varName : varNames)
       {
-        SC_LOG_DEBUG("For var " + varName + " contains returned " + to_string(searchResult.Has(varName)))
         if (searchResult.Has(varName))
           result[varName].push_back(searchResult[varName]);
       }
@@ -216,24 +193,11 @@ std::map<std::string, std::vector<ScAddr>> TemplateSearcher::searchTemplate(cons
   auto varNames = getVarNames(templateAddr);
   ScTemplateParams blankParams;
   auto searchResults = searchTemplate(templateAddr, blankParams);
-  SC_LOG_DEBUG("In searchResults " + to_string(searchResults.size()) + " element(s)")
   for (auto const & searchResult : searchResults)
   {
-    SC_LOG_DEBUG("In searchResult " + to_string(searchResult.Size()) + " element(s)")
-    for (int i = 0; i < searchResult.Size(); ++i)
-    {
-      if (utils::CommonUtils::checkType(context, searchResult[i], ScType::Node))
-      SC_LOG_DEBUG("Node " + context->HelperGetSystemIdtf(searchResult[i]))
-      else
-      SC_LOG_DEBUG("Edge")
-    }
-    if (searchResult.Has("test_argument"))
-    SC_LOG_DEBUG("searchResult has test_argument")
+
     for (auto const & varName : varNames)
-    {
-      SC_LOG_DEBUG("For var " + varName + " contains returned " + to_string(searchResult.Has(varName)))
       result[varName].push_back(searchResult[varName]);
-    }
   }
 
   return result;

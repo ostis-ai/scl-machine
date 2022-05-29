@@ -1,51 +1,37 @@
-//
-// Created by vital on 03.05.2022.
-//
 
 #include "ReplacementsUtils.hpp"
 #include "sc-memory/kpm/sc_agent.hpp"
 
 map<string, vector<ScAddr>>
-inference::ReplacementsUtils::intersectionOfReplacements(
+inference::ReplacementsUtils::intersectReplacements(
       const map<string, vector<ScAddr>> & first,
       const map<string, vector<ScAddr>> & second)
 {
   map<string, vector<ScAddr>> result;
   int resultSize = 0;
-  auto firstKeys = keySet(first);
-  auto secondKeys = keySet(second);
-  auto commonKeysSet = commonKeys(firstKeys, secondKeys);
-  auto firstKeysSize = firstKeys.size();
-  auto secondKeysSize = secondKeys.size();
-  SC_LOG_DEBUG("keys: " + to_string(firstKeysSize) + ", " + to_string(secondKeysSize))
+  auto firstKeys = getKeySet(first);
+  auto secondKeys = getKeySet(second);
+  auto commonKeysSet = getCommonKeys(firstKeys, secondKeys);
   auto firstAmountOfColumns = getColumnsAmount(first);
   auto secondAmountOfColumns = getColumnsAmount(second);
-  SC_LOG_DEBUG("columns: " + to_string(firstAmountOfColumns) + ", " + to_string(secondAmountOfColumns))
 
   if (firstAmountOfColumns == 0)
-  {
     return copyReplacements(second);
-  }
   if (secondAmountOfColumns == 0)
-  {
     return copyReplacements(first);
-  }
 
   for (size_t columnIndexInFirst = 0; columnIndexInFirst < firstAmountOfColumns; ++columnIndexInFirst)
   {
     for (size_t columnIndexInSecond = 0; columnIndexInSecond < secondAmountOfColumns; ++columnIndexInSecond)
     {
       bool commonPartsAreIdentical = true;
-      SC_LOG_DEBUG("------------\n")
       for (auto const & commonKey : commonKeysSet)
       {
-        SC_LOG_DEBUG("Comparing " + to_string(first.find(commonKey)->second[columnIndexInFirst].Hash()) + " and " + to_string(second.find(commonKey)->second[columnIndexInSecond].Hash()))
         if (first.find(commonKey)->second[columnIndexInFirst] != second.find(commonKey)->second[columnIndexInSecond])
           commonPartsAreIdentical = false;
       }
       if (commonPartsAreIdentical)
       {
-        SC_LOG_DEBUG("identical for columns " + to_string(columnIndexInFirst) + " and " + to_string(columnIndexInSecond))
         for (auto const & firstKey : firstKeys)
           result[firstKey].push_back(first.find(firstKey)->second[columnIndexInFirst]);
         for (auto const & secondKey : secondKeys)
@@ -60,17 +46,15 @@ inference::ReplacementsUtils::intersectionOfReplacements(
   return result;
 }
 
-map<string, vector<ScAddr>> inference::ReplacementsUtils::unionOfReplacements(
+map<string, vector<ScAddr>> inference::ReplacementsUtils::uniteReplacements(
       const map<string, vector<ScAddr>> & first,
       const map<string, vector<ScAddr>> & second)
 {
   map<string, vector<ScAddr>> result;
   int resultSize = 0;
-  auto firstKeys = keySet(first);
-  auto secondKeys = keySet(second);
-  auto commonKeysSet = commonKeys(firstKeys, secondKeys);
-  auto firstKeysSize = firstKeys.size();
-  auto secondKeysSize = secondKeys.size();
+  auto firstKeys = getKeySet(first);
+  auto secondKeys = getKeySet(second);
+  auto commonKeysSet = getCommonKeys(firstKeys, secondKeys);
   auto firstAmountOfColumns = getColumnsAmount(first);
   auto secondAmountOfColumns = getColumnsAmount(second);
 
@@ -104,7 +88,7 @@ map<string, vector<ScAddr>> inference::ReplacementsUtils::unionOfReplacements(
   return result;
 }
 
-set<string> inference::ReplacementsUtils::keySet(const map<string, vector<ScAddr>> & map)
+set<string> inference::ReplacementsUtils::getKeySet(const map<string, vector<ScAddr>> & map)
 {
   set<string> keySet;
   for (auto const & pair : map)
@@ -112,7 +96,7 @@ set<string> inference::ReplacementsUtils::keySet(const map<string, vector<ScAddr
   return keySet;
 }
 
-set<string> inference::ReplacementsUtils::commonKeys(const set<string> & first, const set<string> & second)
+set<string> inference::ReplacementsUtils::getCommonKeys(const set<string> & first, const set<string> & second)
 {
   set<string> result;
   for (auto const & key : first)
@@ -136,10 +120,10 @@ map<string, vector<ScAddr>> inference::ReplacementsUtils::copyReplacements(map<s
 }
 
 vector<ScTemplateParams>
-inference::ReplacementsUtils::replacementsToScTemplateParams(const map<string, vector<ScAddr>> & replacements)
+inference::ReplacementsUtils::getReplacementsToScTemplateParams(const map<string, vector<ScAddr>> & replacements)
 {
   vector<ScTemplateParams> result;
-  auto keys = keySet(replacements);
+  auto keys = getKeySet(replacements);
   if (keys.empty())
     return result;
 

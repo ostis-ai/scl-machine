@@ -40,8 +40,8 @@ then = [*
     current_node_class _-> _res;;
     target_node_class _-> _res;;
 *];;
-@p1 = (conj_link <=> then);;
-@p1 <- nrel_equivalence;;
+@p1 = (conj_link => then);;
+@p1 <- nrel_implication;;
 @p2 = (inference_logic_test_rule -> @p1);;
 @p2 <- rrel_main_key_sc_element;;
 inference_logic_test_rule <- statement;;
@@ -70,10 +70,16 @@ concept_square -> ABCD;;
 
 action_direct_inference <- sc_node_class;;
 
+input_structure = [*
+  test_argument <- current_node_class;;
+  test_argument <- class_1_which_may_not_include_the_node;;
+  fake_test_argument <- current_node_class;;
+*];;
+
 inference_logic_test_question
     <- action_direct_inference;
     -> rrel_1: rule_set;
-    //-> rrel_2: { test_argument; fake_test_argument };
+    -> rrel_2: input_structure;
     -> rrel_3: output_structure;
     -> rrel_4: @test_direct_inference_target;;
 

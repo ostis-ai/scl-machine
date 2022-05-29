@@ -46,8 +46,8 @@ private:
 
   queue<ScAddr> createQueue(ScAddr const & set);
 
-  void clearSatisfiabilityInformation(ScAddr const & rule);
-  void addSatisfiabilityInformation(ScAddr const & rule, bool isSatisfiable);
+  void clearSatisfiabilityInformation(ScAddr const & rule, ScAddr const & model);
+  void addSatisfiabilityInformation(ScAddr const & rule, ScAddr const & model, bool isSatisfiable);
 
   bool useRule(ScAddr const & rule, vector<ScAddr> /*const*/ & argumentList);
 

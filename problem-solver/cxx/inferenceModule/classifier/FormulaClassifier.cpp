@@ -1,7 +1,3 @@
-//
-// Created by vital on 02.05.2022.
-//
-
 #include <sc-agents-common/utils/CommonUtils.hpp>
 #include "sc-agents-common/utils/IteratorUtils.hpp"
 #include "FormulaClassifier.hpp"
@@ -24,6 +20,7 @@ FormulaClassifier::FormulaClassifier(ScMemoryContext * ms_context) : ms_context(
 {
   /*  empty   */
 }
+
 /*  This method is never used except for tests      */
 int FormulaClassifier::typeOfFormula(ScAddr formula)
 {
