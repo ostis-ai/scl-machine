@@ -23,5 +23,6 @@ ScAddr InferenceKeynodes::atomic_logical_formula;
 ScAddr InferenceKeynodes::nrel_disjunction;
 ScAddr InferenceKeynodes::nrel_conjunction;
 ScAddr InferenceKeynodes::nrel_negation;
+ScAddr InferenceKeynodes::nrel_implication;
 
 }
