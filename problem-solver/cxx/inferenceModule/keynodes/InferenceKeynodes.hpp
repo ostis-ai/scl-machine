@@ -56,6 +56,9 @@ public:
 
   SC_PROPERTY(Keynode("nrel_negation"), ForceCreate)
   static ScAddr nrel_negation;
+
+  SC_PROPERTY(Keynode("nrel_implication"), ForceCreate)
+  static ScAddr nrel_implication;
 };
 
 }

@@ -8,7 +8,7 @@
 
 #include <sc-agents-common/utils/IteratorUtils.hpp>
 #include <sc-agents-common/utils/AgentUtils.hpp>
-#include <sc-agents-common/utils/LogicRuleUtils.hpp>
+#include <utils/LogicRuleUtils.hpp>
 
 #include "keynodes/InferenceKeynodes.hpp"
 
