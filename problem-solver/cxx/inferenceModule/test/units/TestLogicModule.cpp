@@ -7,7 +7,7 @@
 #include "sc-agents-common/keynodes/coreKeynodes.hpp"
 #include "sc-agents-common/utils/IteratorUtils.hpp"
 #include "sc_test.hpp"
-#include "builder/src/scs_loader.hpp"
+#include "scs_loader.hpp"
 
 #include "manager/DirectInferenceManager.hpp"
 #include "keynodes/InferenceKeynodes.hpp"

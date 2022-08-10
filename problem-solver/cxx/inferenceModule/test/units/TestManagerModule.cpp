@@ -5,7 +5,7 @@
 */
 
 #include "sc_test.hpp"
-#include "builder/src/scs_loader.hpp"
+#include "scs_loader.hpp"
 #include "sc-agents-common/keynodes/coreKeynodes.hpp"
 
 #include "manager/DirectInferenceManager.hpp"
