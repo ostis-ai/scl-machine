@@ -127,7 +127,7 @@ bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> const &
   );
   auto root = logicExpression.build(ifStatement);
 
-  SC_LOG_DEBUG("Created " + to_string(logicExpression.GetParamsSet().size()); + " statement params variants");
+  SC_LOG_DEBUG("Created " + to_string(logicExpression.GetParamsSet().size()) + " statement params variants");
 
   for (const auto & ifStatementParams : logicExpression.GetParamsSet())
   {
