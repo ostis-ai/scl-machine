@@ -48,13 +48,13 @@ ScAddr DirectInferenceManager::applyInference(
   }
   catch (std::runtime_error & ex)
   {
-    SC_LOG_ERROR(ex.what())
+    SC_LOG_ERROR(ex.what());
     return this->solutionTreeManager->createSolution(targetAchieved);
   }
 
   if (rulesQueuesByPriority.empty())
   {
-    SC_LOG_DEBUG("No rule sets found.")
+    SC_LOG_DEBUG("No rule sets found.");
     return this->solutionTreeManager->createSolution(targetAchieved);
   }
 
@@ -76,7 +76,7 @@ ScAddr DirectInferenceManager::applyInference(
           targetAchieved = isTargetAchieved(targetStatement, argumentList);
           if (targetAchieved)
           {
-            SC_LOG_DEBUG("Target achieved")
+            SC_LOG_DEBUG("Target achieved");
             break;
           }
           else
@@ -95,7 +95,7 @@ ScAddr DirectInferenceManager::applyInference(
     }
   }
   else
-  { SC_LOG_DEBUG("Target is already achieved") }
+  { SC_LOG_DEBUG("Target is already achieved"); }
 
   return this->solutionTreeManager->createSolution(targetAchieved);
 }
@@ -111,7 +111,7 @@ queue<ScAddr> DirectInferenceManager::createQueue(ScAddr const & set)
 
 bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> const & argumentList)
 {
-  SC_LOG_DEBUG("Trying to use rule: " + ms_context->HelperGetSystemIdtf(rule))
+  SC_LOG_DEBUG("Trying to use rule: " + ms_context->HelperGetSystemIdtf(rule));
   bool isUsed = false;
 
   ScAddr ifStatement = LogicRuleUtils::getIfStatement(ms_context, rule);
@@ -127,13 +127,13 @@ bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> const &
   );
   auto root = logicExpression.build(ifStatement);
 
-  SC_LOG_DEBUG("Created " + to_string(logicExpression.GetParamsSet().size()) + " statement params variants")
+  SC_LOG_DEBUG("Created " + to_string(logicExpression.GetParamsSet().size()) + " statement params variants");
 
   for (const auto & ifStatementParams : logicExpression.GetParamsSet())
   {
     auto checkResult = (*root).check(ifStatementParams);
     ScTemplateSearchResultItem resultItem = checkResult.templateSearchResult;
-    SC_LOG_DEBUG(std::string("Whole statement is ") + (checkResult.value ? "right" : "wrong"))
+    SC_LOG_DEBUG(std::string("Whole statement is ") + (checkResult.value ? "right" : "wrong"));
 
     if (checkResult.value)
     {
@@ -162,7 +162,7 @@ bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> const &
       {
         this->solutionTreeManager->addNode(rule, ifStatementParams);
         isUsed = true;
-        SC_LOG_DEBUG("Rule used")
+        SC_LOG_DEBUG("Rule used");
       }
     }
   }

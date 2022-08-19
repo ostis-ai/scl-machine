@@ -96,7 +96,7 @@ LogicExpressionResult TemplateExpressionNode::check(ScTemplateParams params) con
 {
   auto searchResult = templateSearcher->searchTemplate(formulaTemplate, params);
   std::string result = (!searchResult.empty() ? "right" : "wrong");
-  SC_LOG_DEBUG("Statement " + context->HelperGetSystemIdtf(formulaTemplate) + " " + result)
+  SC_LOG_DEBUG("Statement " + context->HelperGetSystemIdtf(formulaTemplate) + " " + result);
 
   if (!searchResult.empty())
   {
@@ -158,7 +158,7 @@ std::unique_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & node)
 
   if (atomicFormulaIter3->Next())
   {
-    SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is a template")
+    SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is a template");
     std::vector<ScTemplateParams> params = templateManager->createTemplateParamsList(node, argumentList);
 
     if (!params.empty() && paramsSet.empty())
@@ -177,7 +177,7 @@ std::unique_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & node)
 
   if (conjunctionIter3->Next())
   {
-    SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is a conjunction tuple")
+    SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is a conjunction tuple");
     auto operands = resolveOperands(node);
 
     return std::make_unique<AndExpressionNode>(operands);
@@ -191,7 +191,7 @@ std::unique_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & node)
 
   if (disjunctionIter3->Next())
   {
-    SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is a disjunction tuple")
+    SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is a disjunction tuple");
     auto operands = resolveOperands(node);
 
     return std::make_unique<OrExpressionNode>(operands);
@@ -205,12 +205,12 @@ std::unique_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & node)
 
   if (negationIter3->Next())
   {
-    SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is a negation tuple")
+    SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is a negation tuple");
     auto operands = resolveOperands(node);
 
     return std::make_unique<NotExpressionNode>(std::move(operands[0]));
   }
 
-  SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is not defined tuple")
+  SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is not defined tuple");
   return {};
 }
