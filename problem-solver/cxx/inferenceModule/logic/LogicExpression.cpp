@@ -17,6 +17,7 @@ AndExpressionNode::AndExpressionNode(OperandsVectorType & operands)
 LogicExpressionResult AndExpressionNode::check(ScTemplateParams params) const
 {
   LogicExpressionResult operatorResult;
+  operatorResult.value = true;
 
   for (auto & operand : operands)
   {
