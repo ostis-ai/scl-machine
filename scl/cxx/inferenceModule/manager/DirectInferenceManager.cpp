@@ -62,12 +62,10 @@ ScAddr DirectInferenceManager::applyInference(
          ruleQueueIndex++)
     {
       queue<ScAddr> uncheckedRules = rulesQueuesByPriority.at(ruleQueueIndex);
-      SC_LOG_INFO(uncheckedRules.size());
       while (uncheckedRules.empty() == false)
       {
         rule = uncheckedRules.front();
         isUsed = useRule(rule, argumentList);
-        SC_LOG_INFO("Use rule");
         if (isUsed)
         {
           targetAchieved = isTargetAchieved(targetStatement, argumentList);
@@ -240,7 +238,6 @@ vector<queue<ScAddr>> DirectInferenceManager::createRulesQueuesListByPriority(Sc
   // ScAddr setOfRules = utils::IteratorUtils::getRoleRelation(ms_context, 1);
   ScAddr setOfRules =
       utils::IteratorUtils::getAnyByOutRelation(ms_context, rulesSet, scAgentsCommon::CoreKeynodes::rrel_1);
-  SC_LOG_INFO(setOfRules.IsValid());
   while (setOfRules.IsValid())
   {
     rulesQueuesList.push_back(createQueue(setOfRules));

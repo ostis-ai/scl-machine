@@ -171,8 +171,8 @@ private:
   ScMemoryContext * context;
   std::vector<ScTemplateParams> paramsSet;
 
-  std::unique_ptr<TemplateSearcher> templateSearcher;
-  std::unique_ptr<TemplateManager> templateManager;
+  TemplateSearcher * templateSearcher;
+  TemplateManager * templateManager;
   ScAddrVector argumentList;
 
   ScAddr inputStructure;
