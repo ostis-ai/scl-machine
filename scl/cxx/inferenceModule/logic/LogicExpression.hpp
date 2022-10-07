@@ -1,8 +1,8 @@
 /*
-* This source file is part of an OSTIS project. For the latest info, see http://ostis.net
-* Distributed under the MIT License
-* (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
-*/
+ * This source file is part of an OSTIS project. For the latest info, see http://ostis.net
+ * Distributed under the MIT License
+ * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
+ */
 
 #pragma once
 
@@ -171,8 +171,8 @@ private:
   ScMemoryContext * context;
   std::vector<ScTemplateParams> paramsSet;
 
-  TemplateSearcher * templateSearcher;
-  TemplateManager  * templateManager;
+  std::unique_ptr<TemplateSearcher> templateSearcher;
+  std::unique_ptr<TemplateManager> templateManager;
   ScAddrVector argumentList;
 
   ScAddr inputStructure;

@@ -1,8 +1,8 @@
 /*
-* This source file is part of an OSTIS project. For the latest info, see http://ostis.net
-* Distributed under the MIT License
-* (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
-*/
+ * This source file is part of an OSTIS project. For the latest info, see http://ostis.net
+ * Distributed under the MIT License
+ * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
+ */
 
 #include <algorithm>
 #include "TemplateManager.hpp"
@@ -16,8 +16,8 @@ TemplateManager::TemplateManager(ScMemoryContext * ms_context)
 }
 
 vector<ScTemplateParams> TemplateManager::createTemplateParamsList(
-      const ScAddr & scTemplate,
-      const vector<ScAddr> & argumentList)
+    ScAddr const & scTemplate,
+    vector<ScAddr> const & argumentList)
 {
   return createTemplateParams(scTemplate, argumentList);
 }
@@ -31,10 +31,7 @@ vector<ScTemplateParams> TemplateManager::createTemplateParams(
 
   SC_LOG_DEBUG("***\ncreating template params\ntemplate name: " + context->HelperGetSystemIdtf(scTemplate));
 
-  ScIterator3Ptr varIterator = context->Iterator3(
-        scTemplate,
-        ScType::EdgeAccessConstPosPerm,
-        ScType::NodeVar);
+  ScIterator3Ptr varIterator = context->Iterator3(scTemplate, ScType::EdgeAccessConstPosPerm, ScType::NodeVar);
   while (varIterator->Next())
   {
     ScAddr var = varIterator->Get(2);
@@ -46,11 +43,7 @@ vector<ScTemplateParams> TemplateManager::createTemplateParams(
     }
     ScAddr argumentOfVar;
     ScIterator5Ptr classesIterator = context->Iterator5(
-          ScType::NodeConstClass,
-          ScType::EdgeAccessVarPosPerm,
-          var,
-          ScType::EdgeAccessConstPosPerm,
-          scTemplate);
+        ScType::NodeConstClass, ScType::EdgeAccessVarPosPerm, var, ScType::EdgeAccessConstPosPerm, scTemplate);
     while (classesIterator->Next())
     {
       ScAddr varClass = classesIterator->Get(0);

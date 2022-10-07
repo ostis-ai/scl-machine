@@ -7,7 +7,7 @@
 #include <sc-agents-common/utils/AgentUtils.hpp>
 #include "sc-agents-common/utils/IteratorUtils.hpp"
 
-#include "keynodes/TestKeynodes.hpp"
+#include "test/keynodes/TestKeynodes.hpp"
 
 #include "ConnectionCheckAgent.hpp"
 
@@ -20,7 +20,7 @@ SC_AGENT_IMPLEMENTATION(ConnectionCheckAgent)
   {
     return SC_RESULT_OK;
   }
-  SC_LOG_DEBUG("ConnectionCheckAgent started")
+  SC_LOG_DEBUG("ConnectionCheckAgent started");
 
   ScAddr firstEquipmentPiece = utils::IteratorUtils::getFirstByOutRelation(
         &m_memoryCtx,
@@ -41,10 +41,10 @@ SC_AGENT_IMPLEMENTATION(ConnectionCheckAgent)
   if (isNodesConnected(firstEquipmentPiece, secondEquipmentPiece, structure))
   {
     markAsConnected(firstEquipmentPiece, secondEquipmentPiece, structure);
-    SC_LOG_DEBUG("ConnectionCheckAgent: nodes are marked as connected")
+    SC_LOG_DEBUG("ConnectionCheckAgent: nodes are marked as connected");
   }
 
-  SC_LOG_DEBUG("ConnectionCheckAgent finished")
+  SC_LOG_DEBUG("ConnectionCheckAgent finished");
   utils::AgentUtils::finishAgentWork(&m_memoryCtx, actionAddr, true);
   return SC_RESULT_OK;
 }

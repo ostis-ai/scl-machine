@@ -22,7 +22,7 @@ SC_AGENT_IMPLEMENTATION(RulesApplicationAgent)
   ScAddr actionAddr = otherAddr;
   if (!checkActionClass(actionAddr))
     return SC_RESULT_OK;
-  SC_LOG_DEBUG("RulesApplicationAgent started")
+  SC_LOG_DEBUG("RulesApplicationAgent started");
 
   try
   {
@@ -34,13 +34,13 @@ SC_AGENT_IMPLEMENTATION(RulesApplicationAgent)
     RuleApplicationManager manager = RuleApplicationManager(&m_memoryCtx);
     manager.applyRules(rulesSet, inputStructure, resultStructure);
 
-    SC_LOG_DEBUG("RulesApplicationAgent finished")
+    SC_LOG_DEBUG("RulesApplicationAgent finished");
     utils::AgentUtils::finishAgentWork(&m_memoryCtx, actionAddr, resultStructure, true);
   }
   catch (std::exception & ex)
   {
     ScAddr answer = m_memoryCtx.CreateNode(ScType::NodeConstStruct);
-    SC_LOG_ERROR(ex.what())
+    SC_LOG_ERROR(ex.what());
     utils::AgentUtils::finishAgentWork(&m_memoryCtx, actionAddr, answer, false);
     return SC_RESULT_ERROR;
   }

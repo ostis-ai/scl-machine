@@ -4,8 +4,8 @@
 * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
 */
 
-#include <sc_test.hpp>
-#include "builder/src/scs_loader.hpp"
+#include "sc_test.hpp"
+#include "scs_loader.hpp"
 #include "sc-memory/kpm/sc_agent.hpp"
 #include "sc-agents-common/keynodes/coreKeynodes.hpp"
 #include "agent/RulesApplicationAgent.hpp"

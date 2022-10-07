@@ -25,7 +25,7 @@ class DirectInferenceAgent : public ScAgent
 
 private:
   // TODO: Need to implement common logic of DI
-  DirectInferenceManager * inferenceManager;
+  std::unique_ptr<DirectInferenceManager> inferenceManager;
 };
 
 }

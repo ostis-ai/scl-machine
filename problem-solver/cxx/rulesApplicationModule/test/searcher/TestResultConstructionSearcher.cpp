@@ -10,7 +10,7 @@
 #include <sc-agents-common/utils/GenerationUtils.hpp>
 #include <sc-memory/sc_link.hpp>
 
-#include "keynodes/TestKeynodes.hpp"
+#include "test/keynodes/TestKeynodes.hpp"
 
 using namespace rulesApplicationModule;
 using namespace utils;

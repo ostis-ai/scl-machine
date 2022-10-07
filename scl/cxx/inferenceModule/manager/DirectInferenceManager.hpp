@@ -1,8 +1,8 @@
 /*
-* This source file is part of an OSTIS project. For the latest info, see http://ostis.net
-* Distributed under the MIT License
-* (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
-*/
+ * This source file is part of an OSTIS project. For the latest info, see http://ostis.net
+ * Distributed under the MIT License
+ * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
+ */
 
 #pragma once
 
@@ -17,12 +17,10 @@
 #include "searcher/TemplateSearcher.hpp"
 #include "classifier/FormulaClassifier.hpp"
 
-
 using namespace std;
 
 namespace inference
 {
-
 // TODO: Fix issue with using interface InferenceManager
 class DirectInferenceManager
 {
@@ -56,12 +54,12 @@ private:
   bool generateStatement(ScAddr const & statement, ScTemplateParams const & templateParams);
 
   ScMemoryContext * ms_context;
-  TemplateManager * templateManager;
-  TemplateSearcher * templateSearcher;
-  SolutionTreeGenerator * solutionTreeManager;
+  std::unique_ptr<TemplateManager> templateManager;
+  std::unique_ptr<TemplateSearcher> templateSearcher;
+  std::unique_ptr<SolutionTreeGenerator> solutionTreeGenerator;
   FormulaClassifier * formulaClassifier;
   ScAddr inputStructure;
   ScAddr outputStructure;
   ScAddr targetStatement;
 };
-}
+}  // namespace inference

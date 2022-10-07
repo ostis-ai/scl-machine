@@ -66,8 +66,6 @@ test_argument <- class_1_which_may_not_include_the_node;;
 
 fake_test_argument <- current_node_class;;
 
-concept_square -> ABCD;;
-
 action_direct_inference <- sc_node_class;;
 
 input_structure = [*
@@ -84,4 +82,4 @@ inference_logic_test_question
     -> rrel_4: @test_direct_inference_target;;
 
 rule_set
-    -> rrel_1: {inference_logic_test_rule};;
+    -> rrel_1: { inference_logic_test_rule };;
