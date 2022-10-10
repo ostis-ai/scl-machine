@@ -37,7 +37,6 @@ public:
         const ScAddr & inputStructure,
         const ScAddr & outputStructure,
         const ScAddr & targetStatement);
-~DirectInferenceManager();
 
 private:
   vector<queue<ScAddr>> createRulesQueuesListByPriority(ScAddr const & rulesSet);

@@ -24,10 +24,10 @@ FormulaClassifier::FormulaClassifier(ScMemoryContext * ms_context) : ms_context(
 /*  This method is never used except for tests      */
 int FormulaClassifier::typeOfFormula(ScAddr formula)
 {
-  SC_LOG_DEBUG("Checking type of formula ")
+  SC_LOG_DEBUG("Checking type of formula ");
   if (!formula.IsValid())
   {
-    SC_LOG_DEBUG("Formula is not valid")
+    SC_LOG_DEBUG("Formula is not valid");
     return NONE;
   }
 
@@ -37,7 +37,7 @@ int FormulaClassifier::typeOfFormula(ScAddr formula)
         ScType::EdgeAccessConstPosPerm);
   if (isAtom)
     return ATOM;
-  SC_LOG_DEBUG("Formula is not atom")
+  SC_LOG_DEBUG("Formula is not atom");
 
   bool isNegation = ms_context->HelperCheckEdge(
         InferenceKeynodes::nrel_negation,
@@ -45,7 +45,7 @@ int FormulaClassifier::typeOfFormula(ScAddr formula)
         ScType::EdgeAccessConstPosPerm);
   if (isNegation)
     return NEGATION;
-  SC_LOG_DEBUG("Formula is not negation")
+  SC_LOG_DEBUG("Formula is not negation");
 
   bool isConjunction = ms_context->HelperCheckEdge(
         InferenceKeynodes::nrel_conjunction,
@@ -53,7 +53,7 @@ int FormulaClassifier::typeOfFormula(ScAddr formula)
         ScType::EdgeAccessConstPosPerm);
   if (isConjunction)
     return CONJUNCTION;
-  SC_LOG_DEBUG("Formula is not conjunction")
+  SC_LOG_DEBUG("Formula is not conjunction");
 
   bool isDisjunction = ms_context->HelperCheckEdge(
         InferenceKeynodes::nrel_disjunction,
@@ -61,7 +61,7 @@ int FormulaClassifier::typeOfFormula(ScAddr formula)
         ScType::EdgeAccessConstPosPerm);
   if (isDisjunction)
     return DISJUNCTION;
-  SC_LOG_DEBUG("Formula is not disjunction")
+  SC_LOG_DEBUG("Formula is not disjunction");
 
   bool isImplication = ms_context->HelperCheckEdge(
         InferenceKeynodes::nrel_implication,
@@ -77,7 +77,7 @@ int FormulaClassifier::typeOfFormula(ScAddr formula)
       return IMPLICATION_TUPLE;
     return NONE;
   }
-  SC_LOG_DEBUG("Formula is not implication")
+  SC_LOG_DEBUG("Formula is not implication");
 
   bool isEquivalence = ms_context->HelperCheckEdge(
         InferenceKeynodes::nrel_equivalence,
@@ -93,7 +93,7 @@ int FormulaClassifier::typeOfFormula(ScAddr formula)
       return EQUIVALENCE_TUPLE;
     return NONE;
   }
-  SC_LOG_DEBUG("Formula is not equivalence")
+  SC_LOG_DEBUG("Formula is not equivalence");
   return NONE;
 }
 

@@ -31,7 +31,6 @@ ScAddr DirectInferenceManager::applyInference(
 {
   // returns all <ScType::Node>s from argumentSet
   vector<ScAddr> argumentList = utils::IteratorUtils::getAllWithType(ms_context, argumentSet, ScType::Node);
-
   //
   bool targetAchieved = isTargetAchieved(targetStatement, argumentList);
   vector<queue<ScAddr>> rulesQueuesByPriority;
@@ -207,9 +206,6 @@ queue<ScAddr> DirectInferenceManager::createQueue(ScAddr const & set)
   queue<ScAddr> queue;
   vector<ScAddr> elementList = utils::IteratorUtils::getAllWithType(ms_context, set, ScType::Node);
 
-  SC_LOG_INFO("Element list size");
-  SC_LOG_INFO(elementList.size());
-
   ContainersUtils::addToQueue(elementList, queue);
   return queue;
 }
@@ -222,7 +218,8 @@ bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> /*const
   if (!keyScElement.IsValid())
     return false;
 
-  LogicExpression logicExpression(ms_context, templateSearcher.get(), templateManager.get(), argumentList, outputStructure);
+  LogicExpression logicExpression(
+      ms_context, templateSearcher.get(), templateManager.get(), argumentList, outputStructure);
 
   auto root = logicExpression.build(keyScElement);
   auto result = root->compute();

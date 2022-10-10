@@ -310,13 +310,13 @@ vector<string> StatementsCheckResult::getAdditionalKeys(Replacements const & oth
 
 void StatementsCheckResult::printReplacementsInDebug(ScMemoryContext * context) const
 {
-  SC_LOG_DEBUG("              Replacements")
+  SC_LOG_DEBUG("              Replacements");
   for (auto const & pair : replacements)
   {
-    SC_LOG_DEBUG("++++ for " + pair.first)
+    SC_LOG_DEBUG("++++ for " + pair.first);
     for (auto const & addr : pair.second)
     {
-      SC_LOG_DEBUG("------- " + context->HelperGetSystemIdtf(addr))
+      SC_LOG_DEBUG("------- " + context->HelperGetSystemIdtf(addr));
     }
   }
 }

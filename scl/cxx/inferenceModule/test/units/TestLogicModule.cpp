@@ -95,7 +95,7 @@ TEST_F(InferenceLogicTest, EquivalencesNested)
 
   auto const & name = TEST_FILES_DIR_PATH + "inferenceTestEquivalences.scs";
   struct stat buffer;
-  SC_LOG_DEBUG("exists = " + to_string(stat (name.c_str(), &buffer) == 0))
+  SC_LOG_DEBUG("exists = " + to_string(stat (name.c_str(), &buffer) == 0));
 
   loader.loadScsFile(context, name);
   initialize();
@@ -195,7 +195,7 @@ TEST_F(InferenceLogicTest, FirstIntersectionTest)
   {
     SC_LOG_DEBUG("key is " + pair.first);
     for (auto const & addr : pair.second)
-      SC_LOG_DEBUG("    value is " + context.HelperGetSystemIdtf(addr))
+      SC_LOG_DEBUG("    value is " + context.HelperGetSystemIdtf(addr));
   }
 
   auto smth = context.HelperResolveSystemIdtf("does not exist 122 211 long live the queen");
