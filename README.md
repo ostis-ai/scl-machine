@@ -3,7 +3,7 @@ Inference module for [OSTIS project](https://github.com/ostis-ai/ostis-project)
 
 # Installation
 ```sh
-git clone https://github.com/ostis-apps/scl-machine.git
+git clone https://github.com/ostis-ai/scl-machine.git
 cd scl-machine/
 git submodule update --init --recursive
 ```
@@ -56,7 +56,7 @@ After the compilation, the `main.pdf` file should appear at `scl-machine/docs/`.
 ## Feedback
 
 Contributions, bug reports and feature requests are welcome! Feel free to check our 
-[issues page](https://github.com/ostis-apps/scl-machine/issues) and file a new issue (or comment in existing ones).
+[issues page](https://github.com/ostis-ai/scl-machine/issues) and file a new issue (or comment in existing ones).
 
 ## License
 
