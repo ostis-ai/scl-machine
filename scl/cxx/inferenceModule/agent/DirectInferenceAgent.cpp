@@ -3,7 +3,7 @@
 * Distributed under the MIT License
 * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
 */
-#include <sc-agents-common/keynodes/coreKeynodes.hpp>
+
 #include <sc-agents-common/utils/IteratorUtils.hpp>
 #include <sc-agents-common/utils/AgentUtils.hpp>
 
@@ -24,9 +24,9 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
     return SC_RESULT_ERROR;
 
   ScAddr questionNode = ms_context->GetEdgeTarget(edgeAddr);
-  ScAddr targetTemplate = IteratorUtils::getFirstByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_1);
-  ScAddr ruleSet = IteratorUtils::getFirstByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_2);
-  ScAddr argumentSet = IteratorUtils::getFirstByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_3);
+  ScAddr targetTemplate = IteratorUtils::getFirstByOutRelation(ms_context.get(), questionNode, InferenceKeynodes::rrel_1);
+  ScAddr ruleSet = IteratorUtils::getFirstByOutRelation(ms_context.get(), questionNode, InferenceKeynodes::rrel_2);
+  ScAddr argumentSet = IteratorUtils::getFirstByOutRelation(ms_context.get(), questionNode, InferenceKeynodes::rrel_3);
 
   if (!targetTemplate.IsValid() || !ruleSet.IsValid() || !argumentSet.IsValid())
   {
