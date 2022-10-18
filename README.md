@@ -61,3 +61,5 @@ Contributions, bug reports and feature requests are welcome! Feel free to check 
 ## License
 
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
+
+##### _This repository continues the development of [ostis-apps/ostis-inference](https://github.com/ostis-apps/ostis-inference)_
