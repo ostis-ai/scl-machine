@@ -1,8 +1,8 @@
 /*
-* This source file is part of an OSTIS project. For the latest info, see http://ostis.net
-* Distributed under the MIT License
-* (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
-*/
+ * This source file is part of an OSTIS project. For the latest info, see
+ * http://ostis.net Distributed under the MIT License (See accompanying file
+ * COPYING.MIT or copy at http://opensource.org/licenses/MIT)
+ */
 
 #pragma once
 
@@ -11,15 +11,21 @@
 
 #include "InferenceKeynodes.generated.hpp"
 
-namespace inference
-{
+namespace inference {
 
-class InferenceKeynodes : public ScObject
-{
+class InferenceKeynodes : public ScObject {
   SC_CLASS()
   SC_GENERATED_BODY()
 
 public:
+  SC_PROPERTY(Keynode("rrel_1"), ForceCreate)
+  static ScAddr rrel_1;
+
+  SC_PROPERTY(Keynode("rrel_2"), ForceCreate)
+  static ScAddr rrel_2;
+
+  SC_PROPERTY(Keynode("rrel_3"), ForceCreate)
+  static ScAddr rrel_3;
 
   SC_PROPERTY(Keynode("action_use_logic_rule"), ForceCreate)
   static ScAddr action_use_logic_rule;
@@ -61,4 +67,4 @@ public:
   static ScAddr nrel_implication;
 };
 
-}
+} // namespace inference

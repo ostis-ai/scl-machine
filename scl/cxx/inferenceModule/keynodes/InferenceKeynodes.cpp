@@ -11,6 +11,9 @@
 namespace inference
 {
 
+ScAddr InferenceKeynodes::rrel_1;
+ScAddr InferenceKeynodes::rrel_2;
+ScAddr InferenceKeynodes::rrel_3;
 ScAddr InferenceKeynodes::action_use_logic_rule;
 ScAddr InferenceKeynodes::action_reverse_inference;
 ScAddr InferenceKeynodes::action_direct_inference;
