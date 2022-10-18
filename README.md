@@ -8,8 +8,8 @@ cd scl-machine/
 git submodule update --init --recursive
 ```
 
-## Build scp-machine
-Before build scp-machine make sure that sc-machine is assembled. Sc-machine and scp-machine must be allocated in the same folder.
+## Build scl-machine
+Before build scl-machine make sure that sc-machine is assembled. Sc-machine and scl-machine must be allocated in the same folder.
 
 ```sh
 cd scl-machine/scripts
@@ -56,7 +56,7 @@ After the compilation, the `main.pdf` file should appear at `scl-machine/docs/`.
 ## Feedback
 
 Contributions, bug reports and feature requests are welcome! Feel free to check our 
-[issues page](https://github.com/ostis-apps/oscl-machine/issues) and file a new issue (or comment in existing ones).
+[issues page](https://github.com/ostis-apps/scl-machine/issues) and file a new issue (or comment in existing ones).
 
 ## License
 
