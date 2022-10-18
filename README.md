@@ -23,7 +23,7 @@ cmake -B build -DCMAKE_BUILD_TYPE=Release # or Debug type for development
 cmake --build build -j$(nproc) # -j flag for paralleled build process
 ```
 
-To include scl-machine knowledge base add `scl-machine/kb` to repo.path file.
+To include scl-machine knowledge base add `<path to >/scl-machine/kb` to repo.path file.
 
 ## Documentation
 
@@ -42,7 +42,7 @@ Alternatively, we provide a Docker image to build the documentation in case you 
 
     ```sh
     cd scl-machine/docs
-    latexmk -pdf -bibtex main.tex
+    TEXINPUTS=./scn: latexmk -pdf -bibtex main.tex
     ```
 - ### Build steps (using Docker)
 
