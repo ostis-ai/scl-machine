@@ -1,4 +1,4 @@
-project (ostis-inference)
+project (scl-machine)
 cmake_minimum_required (VERSION 2.8)
 
 set(SC_MACHINE_PATH "${CMAKE_CURRENT_LIST_DIR}/ostis-web-platform/sc-machine")

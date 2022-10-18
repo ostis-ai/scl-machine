@@ -1,37 +1,29 @@
-# ostis-inference
+# SCL-machine
 Inference module for [OSTIS project](https://github.com/ostis-ai/ostis-project)
-
-# This repository is deprecated! Use https://github.com/ostis-ai/scl-machine
 
 # Installation
 ```sh
-- git clone https://github.com/ostis-apps/ostis-inference.git
-- cd ostis-inference/
-- git submodule update --init --recursive
-- cd ostis-inference/scripts
-- ./install_ostis.sh
+git clone https://github.com/ostis-ai/scl-machine.git
+cd scl-machine/
+git submodule update --init --recursive
 ```
 
-## Using as subsystem
+## Build scl-machine
+Before build scl-machine make sure that sc-machine is assembled. Sc-machine and scl-machine must be allocated in the same folder.
 
-You can use this project as subsystem of any ostis-system using gitmodules like that
-```
-[submodule "subsystems/ostis-inference"]
-path = subsystems/ostis-inference
-url = https://github.com/ostis-apps/ostis-inference
-```
-
-Remember to add subdirectory in CMakeLists.txt of root project
-```cmake
-set(SUBSYSTEMS_PATH "${CMAKE_CURRENT_LIST_DIR}/subsystems")
-subdir_list(SUBDIRS ${SUBSYSTEMS_PATH})
-
-foreach(SUBDIR ${SUBDIRS})
-  add_subdirectory(${SUBSYSTEMS_PATH}/${SUBDIR}/problem-solver)
-endforeach()
+```sh
+cd scl-machine/scripts
+./make_all.sh #You can also pass all CMake generation arguments there
 ```
 
-To include ostis-inference knowledge base add `subsystems/ostis-inference/kb` to repo.path file.
+Or, alternatively (requires CMake 3.13+)
+```sh
+cd scl-machine
+cmake -B build -DCMAKE_BUILD_TYPE=Release # or Debug type for development
+cmake --build build -j$(nproc) # -j flag for paralleled build process
+```
+
+To include scl-machine knowledge base add `<path to >/scl-machine/kb` to repo.path file.
 
 ## Documentation
 
@@ -49,23 +41,25 @@ Alternatively, we provide a Docker image to build the documentation in case you 
 - ### Build steps (using LaTeX)
 
     ```sh
-    cd ostis-inference/docs
-    latexmk -pdf -bibtex main.tex
+    cd scl-machine/docs
+    TEXINPUTS=./scn: latexmk -pdf -bibtex main.tex
     ```
 - ### Build steps (using Docker)
 
   ```sh
-  cd ostis-inference
+  cd scl-machine
   docker run -v ${PWD}:/workdir --rm -it ostis/scn-latex-plugin:latest "docs/main.tex"
   ```
 
-After the compilation, the `main.pdf` file should appear at `ostis-inference/docs/`.
+After the compilation, the `main.pdf` file should appear at `scl-machine/docs/`.
 
 ## Feedback
 
 Contributions, bug reports and feature requests are welcome! Feel free to check our 
-[issues page](https://github.com/ostis-apps/ostis-inference/issues) and file a new issue (or comment in existing ones).
+[issues page](https://github.com/ostis-ai/scl-machine/issues) and file a new issue (or comment in existing ones).
 
 ## License
 
-Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
+Distributed under the Apache License. See [LICENSE](LICENSE) for more information.
+
+##### _This repository continues the development of [ostis-apps/ostis-inference](https://github.com/ostis-apps/ostis-inference)_
