@@ -1,0 +1,96 @@
+\scnheader{Программный вариант реализации логической машины интерпретации логических sc-моделей компьютерных систем}
+\scnidtf{SCL-machine}
+\scnidtf{ostis-inference}
+\begin{scnrelfromset}{декомпозиция программной системы}
+    \scnitem{База знаний SCL-machine}
+    \scnitem{Решатель задач SCL-machine}
+    \scnitem{Интерфейс SCL-machine}
+\end{scnrelfromset}
+
+\begin{scnrelfromset}{реализованные логические связки}
+    \scnitem{импликация*}
+    \scnitem{дизъюнкция*}
+    \scnitem{конъюнкция*}
+    \scnitem{отрицание*}
+\end{scnrelfromset}
+
+\begin{scnrelfromset}{не реализованные логические связки}
+    \scnitem{эквиваленция*}
+    \scnitem{строгая дизъюнкция*}
+\end{scnrelfromset}
+
+\scnheader{Решатель задач SCL-machine}
+\begin{scnrelfromset}{обобщённая декомпозиция}
+    \scnitem{Агент прямого логического вывода}
+    \scnitem{Агент обратного логического вывода}
+    \begin{scnindent}
+        \scntext{примечание}{Не реализовано.}
+    \end{scnindent}
+\end{scnrelfromset}
+
+\scnheader{Агент прямого логического вывода}
+\begin{scnindent}
+    \scnrelfrom{пример входной конструкции}{\scnfileimage[40em]{images/direct_inference_input.png}}
+    \begin{scnrelfromvector}{аргументы агента}
+        \scnitem{\_target\_template}
+        \begin{scnindent}
+            \scnidtf{targetTemplate}
+            \scnidtf{targetStatement}
+            \scntext{пояснение}{Шаблон, успешный поиск которого показывает, что цель логического вывода достигнута и применение правил можно прекратить.}
+            \scnrelfrom{описание примера}{\scnfileimage[28em]{images/target_template.png}}
+        \end{scnindent}
+        \scnitem{\_rule\_set}
+        \begin{scnindent}
+            \scnidtf{ruleSet}
+            \scntext{пояснение}{Ориентированное множество, первым элементом которого является множество правил, которые применяются в первую очередь,
+                а каждое следующее множество правил применяется после предыдущего. Таким образом указываются приоритеты множеств правил.}
+            \scnrelfrom{описание примера}{\scnfileimage[27em]{images/rules_set.png}}
+            \begin{scnindent}
+                \scnrelfrom{описание примера}{\scnfileimage[37em]{images/rule_example.png}}
+            \end{scnindent}
+        \end{scnindent}
+        \scnitem{\_argument\_set}
+        \begin{scnindent}
+            \scnidtf{argumentSet}
+            \scntext{пояснение}{Множество тех элементов, которые должны быть подставлены как значение переменных шаблона цели.}
+            \begin{scnindent}
+                \scntext{пояснение}{В данном примере значением переменной \_x в шаблоне цели может быть sc-узел
+                argument\_1, тогда значением \_y будет argument\_2. Также значением переменной \_x может быть
+                sc-узел argument\_2, а значением \_y -- argument\_1.}
+            \end{scnindent}
+            \scnrelfrom{описание примера}{\scnfileimage[30em]{images/argument_set.png}}
+        \end{scnindent}
+    \end{scnrelfromvector}
+    \scnrelfrom{пример выходной конструкции}{\scnfileimage[30em]{images/direct_inference_output.png}}
+    \begin{scnrelfromvector}{обобщённый алгоритм}
+        \scnfileitem{Получение параметров агента, проверка их валидности. Вызов агента;}
+        \scnfileitem{Проверка, достигнута ли уже цель в базе знаний;}
+        \begin{scnindent}
+            \scntext{примечание}{Выполняется поиск по шаблону target template с параметрами шаблона arguments set.}
+        \end{scnindent}
+        \scnfileitem{Построение вектора очереди правил на основе множества правил. Цикл по всем правилам и пока не достигнута цель;}
+        \begin{scnindent}
+            \begin{scnrelfromset}{циклические операции}
+                \scnfileitem{Получение посылки логического правила;}
+                \scnfileitem{Определение типа посылки (связка конъюнкци, дизъюнкции, отрицания или атомарная логическая формула);}
+                \scnfileitem{Проверка истинности посылки в зависимости от её типа;}
+                \begin{scnindent}
+                    \scntext{замечание}{Конъюнкция, дизъюнкция, отрицание работают нестабильно.}
+                \end{scnindent}
+                \scnfileitem{Генерация по шаблону следствия;}
+                \scnfileitem{Добавление в дерево решений узла правила.}
+                \begin{scnindent}
+                    \scntext{примечание}{Смотрите пример выходной конструкции.}
+                \end{scnindent}
+            \end{scnrelfromset}
+        \end{scnindent}
+        \scnfileitem{Возврат дерева применённых правил.}
+    \end{scnrelfromvector}
+\end{scnindent}
+
+\begin{scnrelfromset}{недостатки текущего состояния}
+    \scnfileitem{Импликация в текущем состоянии интерпретируется не как логическая связка, а как отношение \scnkeyword{выводимости*},
+    то есть импликация не возвращает логическую константу, а генерирует новые знания. Вместо этого должны использоваться правила вывода,
+    например, Modus ponens и другие правила, в процессе логического вывода.}
+    \scnfileitem{В структуру ответа агента входит только узел solution, а не вся структура решения.}
+\end{scnrelfromset}
