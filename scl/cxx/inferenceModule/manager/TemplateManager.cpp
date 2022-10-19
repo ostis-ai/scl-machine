@@ -130,27 +130,7 @@ void TemplateManager::addVarToReplacementsList(
       }
     }
 
-    replacementsList = newReplacementsList;
   }
-}
 
-vector<ScTemplateParams> TemplateManager::createTemplateParamsList(
-      vector<map<ScAddr, string, AddrComparator>> & replacementsList)
-{
-  SC_LOG_DEBUG("Creating template params for rule usage");
-  std::vector<ScTemplateParams> templateParamsList;
-  for (auto & replacementsMap : replacementsList)
-  {
-    ScTemplateParams scTemplateParams;
-    for (std::pair<ScAddr, string> replacement : replacementsMap)
-    {
-      SC_LOG_DEBUG(replacement.second + " is " + std::to_string(replacement.first.GetRealAddr().seg) + "/" +
-                   std::to_string(replacement.first.GetRealAddr().offset));
-      scTemplateParams.Add(replacement.second, replacement.first);
-    }
-    templateParamsList.push_back(scTemplateParams);
-    SC_LOG_DEBUG("***");
-  }
-  SC_LOG_DEBUG("Created template params for rule usage");
-  return templateParamsList;
+  return vectorOfTemplateParams;
 }
