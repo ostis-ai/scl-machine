@@ -1,2 +1,1 @@
 add_subdirectory(inferenceModule)
-add_subdirectory(rulesApplicationModule)
