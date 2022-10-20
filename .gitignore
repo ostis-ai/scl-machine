@@ -2,6 +2,9 @@
 .vscode
 *.scs~
 ostis-web-platform
+bin
+build
+.cache
 
 __pycache__
 
