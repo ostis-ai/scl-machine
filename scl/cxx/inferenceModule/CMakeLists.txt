@@ -31,10 +31,11 @@ set(HEADERS
         )
 
 
-include_directories(${CMAKE_CURRENT_LIST_DIR} ${SC_MEMORY_SRC} ${SC_KPM_SRC})
+set(INFERENCE_MODULE_GENERATED_DIR ${CMAKE_CURRENT_LIST_DIR}/generated)
+include_directories(${CMAKE_CURRENT_LIST_DIR} ${SC_MEMORY_SRC} ${SC_KPM_SRC} ${INFERENCE_MODULE_GENERATED_DIR})
 
 add_library(inferenceModule SHARED ${SOURCES} ${HEADERS})
-target_link_libraries(inferenceModule sc-memory sc-kpm-common)
+target_link_libraries(inferenceModule sc-memory sc-agents-common)
 
 sc_codegen_ex(inferenceModule ${CMAKE_CURRENT_LIST_DIR} ${CMAKE_CURRENT_LIST_DIR}/generated)
 
