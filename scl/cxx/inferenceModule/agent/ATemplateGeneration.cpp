@@ -10,7 +10,7 @@
 #include <sc-agents-common/utils/IteratorUtils.hpp>
 #include <sc-agents-common/utils/AgentUtils.hpp>
 #include <utils/LogicRuleUtils.hpp>
-#include "sc-agents-common/keynodes/coreKeynodes.hpp"
+#include <sc-agents-common/keynodes/coreKeynodes.hpp>
 
 #include "ATemplateGeneration.hpp"
 
