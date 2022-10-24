@@ -1,5 +1,5 @@
 project (scl-machine)
-cmake_minimum_required (VERSION 2.8.12)
+cmake_minimum_required(VERSION 2.8.12)
 cmake_policy(SET CMP0048 NEW)
 
 set(SCL_MACHINE_ROOT ${CMAKE_CURRENT_LIST_DIR})
