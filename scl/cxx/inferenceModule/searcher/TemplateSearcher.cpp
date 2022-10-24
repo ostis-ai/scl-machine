@@ -11,6 +11,8 @@
 #include <sc-agents-common/utils/GenerationUtils.hpp>
 #include <sc-agents-common/utils/CommonUtils.hpp>
 #include <sc-agents-common/keynodes/coreKeynodes.hpp>
+#include <utility>
+#include <algorithm>
 
 #include "keynodes/InferenceKeynodes.hpp"
 
@@ -19,6 +21,8 @@ using namespace inference;
 TemplateSearcher::TemplateSearcher(ScMemoryContext * context)
 {
   this->context = context;
+  params = {};
+  inputStructure = {};
 }
 
 vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplate(
@@ -34,16 +38,12 @@ vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplate(
           InferenceKeynodes::concept_template_with_links,
           templateAddr,
           ScType::EdgeAccessConstPosPerm))
-    {
       searchResult = searchTemplateWithContent(searchTemplate, templateAddr);
-    }
     else
     {
-      context->HelperSearchTemplate(searchTemplate, *searchWithoutContentResult);
-      for(size_t searchItemIndex = 0; searchItemIndex < searchWithoutContentResult->Size(); searchItemIndex++)
-      {
+      context->HelperSearchTemplateInStruct(searchTemplate, inputStructure, *searchWithoutContentResult);
+      for (size_t searchItemIndex = 0; searchItemIndex < searchWithoutContentResult->Size(); searchItemIndex++)
         searchResult.push_back((*searchWithoutContentResult)[searchItemIndex]);
-      }
     }
   }
   else { throw runtime_error("Template is not built."); }
@@ -52,10 +52,10 @@ vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplate(
 }
 
 std::vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplateWithContent(
-      const ScTemplate &searchTemplate,
-      const ScAddr &templateAddr)
+      const ScTemplate & searchTemplate,
+      const ScAddr & templateAddr)
 {
-  context->HelperSearchTemplate(searchTemplate, *searchWithoutContentResult);
+  context->HelperSearchTemplateInStruct(searchTemplate, inputStructure, *searchWithoutContentResult);
   std::map<std::string, std::string> linksContentMap = getTemplateKeyLinksContent(templateAddr);
   vector<ScTemplateSearchResultItem> searchWithContentResult;
   for(size_t searchItemIndex = 0; searchItemIndex < searchWithoutContentResult->Size(); searchItemIndex++)
@@ -69,13 +69,9 @@ std::vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplateWithCont
       std::string stringContent;
       ScStreamPtr linkContentStream = context->GetLinkContent(linkAddr);
       if (linkContentStream != nullptr)
-      {
         ScStreamConverter::StreamToString(linkContentStream, stringContent);
-      }
       else
-      {
         stringContent = "";
-      }
       if (stringContent != linkIdContentPair.second)
       {
         contentIsIdentical = false;
@@ -83,9 +79,7 @@ std::vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplateWithCont
       }
     }
     if (contentIsIdentical)
-    {
       searchWithContentResult.push_back(searchResultItem);
-    }
   }
 
   return searchWithContentResult;
@@ -104,7 +98,7 @@ std::map<std::string, std::string> TemplateSearcher::getTemplateKeyLinksContent(
         ScType::EdgeAccessVarPosPerm,
         scAgentsCommon::CoreKeynodes::rrel_key_sc_element);
   ScTemplateSearchResult searchResult;
-  context->HelperSearchTemplate(scTemplate, searchResult);
+  context->HelperSearchTemplateInStruct(scTemplate, inputStructure, searchResult);
   for(size_t i = 0; i < searchResult.Size(); i++)
   {
     ScAddr linkAddr = searchResult[i][link_alias];
@@ -113,15 +107,98 @@ std::map<std::string, std::string> TemplateSearcher::getTemplateKeyLinksContent(
       std::string stringContent;
       ScStreamPtr linkContentStream = context->GetLinkContent(linkAddr);
       if (linkContentStream != nullptr)
-      {
         ScStreamConverter::StreamToString(linkContentStream, stringContent);
-      }
       else
-      {
         stringContent = "";
-      }
       linksContent.emplace(context->HelperGetSystemIdtf(linkAddr), stringContent);
     }
   }
   return linksContent;
+}
+
+std::set<std::string> TemplateSearcher::getVarNames(ScAddr const & structure)
+{
+  std::set<std::string> identifiers;
+  auto const & collectVarIdtfs = [this, structure] (
+        ScType const & varType,
+        set<std::string> & identifiers)
+  {
+      ScIterator3Ptr variablesIter3 = context->Iterator3(structure, ScType::EdgeAccessConstPosPerm, varType);
+      while (variablesIter3->Next())
+      {
+        auto const variableSystemIdtf = context->HelperGetSystemIdtf(variablesIter3->Get(2));
+        if (!variableSystemIdtf.empty())
+          identifiers.insert(variableSystemIdtf);
+      }
+  };
+  collectVarIdtfs(ScType::NodeVar, identifiers);
+  collectVarIdtfs(ScType::LinkVar, identifiers);
+  return identifiers;
+}
+
+const ScAddrVector & TemplateSearcher::getParams() const
+{
+  return params;
+}
+
+void TemplateSearcher::addParam(ScAddr param)
+{
+  params.push_back(param);
+}
+
+bool TemplateSearcher::addParamIfNotPresent(ScAddr param)
+{
+  if (std::find(params.begin(), params.end(), param) == std::end(params))
+  {
+    params.push_back(param);
+    if (inputStructure.IsValid())
+      context->CreateEdge(ScType::EdgeAccessConstPosPerm, inputStructure, param);
+    return true;
+  }
+  return false;
+}
+
+map<string, vector<ScAddr>> TemplateSearcher::searchTemplate(
+      const ScAddr & templateAddr,
+      const vector<ScTemplateParams> & scTemplateParamsVector)
+{
+  map<string, vector<ScAddr>> result;
+  auto varNames = getVarNames(templateAddr);
+  for (auto const & scTemplateParams : scTemplateParamsVector)
+  {
+    auto searchResults = searchTemplate(templateAddr, scTemplateParams);
+    for (auto const & searchResult : searchResults)
+    {
+
+      for (auto const & varName : varNames)
+      {
+        if (searchResult.Has(varName))
+          result[varName].push_back(searchResult[varName]);
+      }
+    }
+  }
+
+  return result;
+}
+
+void TemplateSearcher::setInputStructure(const ScAddr & inputStructure)
+{
+  TemplateSearcher::inputStructure = inputStructure;
+}
+
+std::map<std::string, std::vector<ScAddr>> TemplateSearcher::searchTemplate(const ScAddr & templateAddr)
+{
+
+  map<string, vector<ScAddr>> result;
+  auto varNames = getVarNames(templateAddr);
+  ScTemplateParams blankParams;
+  auto searchResults = searchTemplate(templateAddr, blankParams);
+  for (auto const & searchResult : searchResults)
+  {
+
+    for (auto const & varName : varNames)
+      result[varName].push_back(searchResult[varName]);
+  }
+
+  return result;
 }

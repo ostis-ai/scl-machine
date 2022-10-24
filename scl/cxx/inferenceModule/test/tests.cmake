@@ -1,3 +1,5 @@
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${SC_BIN_PATH}/inference-tests)
+
 include_directories(${CMAKE_CURRENT_LIST_DIR} ${SC_MEMORY_SRC} ${SC_KPM_SRC} ${SC_MACHINE_ROOT}/tools)
 
 make_tests_from_folder(${CMAKE_CURRENT_LIST_DIR}/units

@@ -13,7 +13,6 @@
 #include "DirectInferenceAgent.hpp"
 
 using namespace std;
-using namespace utils;
 using namespace scAgentsCommon;
 
 namespace inference
@@ -21,26 +20,34 @@ namespace inference
 
 SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
 {
+  SC_LOG_DEBUG("Starting DirectInferenceAgent");
   if (!edgeAddr.IsValid())
     return SC_RESULT_ERROR;
 
   ScAddr questionNode = ms_context->GetEdgeTarget(edgeAddr);
-  ScAddr targetTemplate = IteratorUtils::getFirstByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_1);
-  ScAddr ruleSet = IteratorUtils::getFirstByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_2);
-  ScAddr argumentSet = IteratorUtils::getFirstByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_3);
+  ScAddr rrel_4 = ms_context->HelperResolveSystemIdtf("rrel_4");
+  ScAddr ruleSet = utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_1);
+  ScAddr inputStructure = utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_2);
+  ScAddr outputStructure = utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_3);
+  ScAddr targetTemplate = utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), questionNode, rrel_4);
 
-  if (!targetTemplate.IsValid() || !ruleSet.IsValid() || !argumentSet.IsValid())
-  {
-    return SC_RESULT_ERROR_INVALID_PARAMS;
-  }
-  // TODO: Need to implement common logic of DI
-  this->inferenceManager = new DirectInferenceManager(ms_context.get());
-  ScAddr answer = this->inferenceManager->applyInference(targetTemplate, ruleSet, argumentSet);
+  if (!ruleSet.IsValid())
+    SC_LOG_WARNING("Rule set is not valid");
+  if (!inputStructure.IsValid())
+    SC_LOG_WARNING("Input structure is not valid");
+  if (!outputStructure.IsValid())
+    SC_LOG_WARNING("Output structure is not valid");
+  if (!targetTemplate.IsValid())
+    SC_LOG_WARNING("Target template is not valid");
+
+  this->inferenceManager = std::make_unique<DirectInferenceManager>(ms_context.get());
+  ScAddrVector answers;
+  ScAddr answer = this->inferenceManager->applyInference(ruleSet, inputStructure, outputStructure, targetTemplate);
+  answers.push_back(answer);
 
   bool success = ms_context->HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm);
-  AgentUtils::finishAgentWork((ScMemoryContext *) ms_context.get(), questionNode, answer, success);
+  utils::AgentUtils::finishAgentWork((ScMemoryContext *) ms_context.get(), questionNode, answers, success);
 
-  delete this->inferenceManager;
   return SC_RESULT_OK;
 }
 }

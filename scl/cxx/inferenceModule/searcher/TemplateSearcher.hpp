@@ -24,6 +24,21 @@ public:
         const ScAddr & templateAddr,
         const ScTemplateParams & templateParams);
 
+std::map<std::string, std::vector<ScAddr>> searchTemplate(
+      const ScAddr & templateAddr,
+      const std::vector<ScTemplateParams> & scTemplateParamsVector);
+
+std::map<std::string, std::vector<ScAddr>> searchTemplate(
+      const ScAddr & templateAddr);
+
+  std::set<std::string> getVarNames(ScAddr const & structure);
+
+  const ScAddrVector & getParams() const;
+  void addParam(ScAddr param);
+  bool addParamIfNotPresent(ScAddr param);
+
+void setInputStructure(const ScAddr & inputStructure);
+
 private:
   std::vector<ScTemplateSearchResultItem> searchTemplateWithContent(
         const ScTemplate &searchTemplate,
@@ -33,5 +48,7 @@ private:
 
   ScMemoryContext *context;
   std::unique_ptr<ScTemplateSearchResult> searchWithoutContentResult;
+  ScAddrVector params;
+  ScAddr inputStructure;
 };
 }

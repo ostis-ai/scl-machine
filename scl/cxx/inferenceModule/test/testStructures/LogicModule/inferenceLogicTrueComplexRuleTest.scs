@@ -59,18 +59,27 @@ atomic_logical_formula
  -> or_1;
  -> or_2;
  -> then;;
+concept_template_for_generation
+ -> then;;
 test_argument <- current_node_class;;
 test_argument <- class_1_which_may_not_include_the_node;;
 
-concept_square -> ABCD;;
+fake_test_argument <- current_node_class;;
 
 action_direct_inference <- sc_node_class;;
 
+input_structure = [*
+  test_argument <- current_node_class;;
+  test_argument <- class_1_which_may_not_include_the_node;;
+  fake_test_argument <- current_node_class;;
+*];;
+
 inference_logic_test_question
     <- action_direct_inference;
-    -> rrel_1: @test_direct_inference_target;
-    -> rrel_2: rule_set;
-    -> rrel_3: { test_argument };;
+    -> rrel_1: rule_set;
+    -> rrel_2: input_structure;
+    -> rrel_3: output_structure;
+    -> rrel_4: @test_direct_inference_target;;
 
 rule_set
-    -> rrel_1: {inference_logic_test_rule};;
+    -> rrel_1: { inference_logic_test_rule };;

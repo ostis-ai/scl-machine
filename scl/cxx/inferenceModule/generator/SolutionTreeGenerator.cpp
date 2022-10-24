@@ -38,6 +38,14 @@ bool SolutionTreeGenerator::addNode(ScAddr const & rule, ScTemplateParams const 
   return result;
 }
 
+ScAddr SolutionTreeGenerator::createSolutionNode(ScAddr const & rule, ScTemplateParams const & templateParams)
+{
+  ScAddr solutionNode = ms_context->CreateNode(ScType::NodeConst);
+  //TODO: Add params to solution node
+  GenerationUtils::generateRelationBetween(ms_context, solutionNode, rule, CoreKeynodes::rrel_1);
+  return solutionNode;
+}
+
 ScAddr SolutionTreeGenerator::createSolution(const bool targetAchieved)
 {
   ScAddr solution = ms_context->CreateNode(ScType::NodeConst);
@@ -49,12 +57,4 @@ ScAddr SolutionTreeGenerator::createSolution(const bool targetAchieved)
   ms_context->CreateEdge(arcType, InferenceKeynodes::concept_success_solution, solution);
   ms_context->CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::concept_solution, solution);
   return solution;
-}
-
-ScAddr SolutionTreeGenerator::createSolutionNode(ScAddr const & rule, ScTemplateParams const & templateParams)
-{
-  ScAddr solutionNode = ms_context->CreateNode(ScType::NodeConst);
-  //TODO: Add params to solution node
-  GenerationUtils::generateRelationBetween(ms_context, solutionNode, rule, CoreKeynodes::rrel_1);
-  return solutionNode;
 }
