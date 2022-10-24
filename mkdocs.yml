@@ -1,0 +1,30 @@
+site_name: SCL-machine
+
+extra_css:
+  - _assets/main.css
+extra_javascript:
+  - _assets/scg.min.js
+  - _assets/main.js
+
+nav:
+  - Home: index.md
+  - Build:
+      - Build on Linux: build/linux-build.md
+      - CMake Flags: build/cmake-flags.md
+  - Development:
+      - Git-workflow: dev/git-workflow.md
+      - Codestyle: dev/codestyle.md
+  - License: license.md
+  - Changelog: changelog.md
+
+theme: material
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.details
+  - pymdownx.superfences
+
