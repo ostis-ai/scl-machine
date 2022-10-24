@@ -1,4 +1,3 @@
-
 #include "ReplacementsUtils.hpp"
 #include "sc-memory/kpm/sc_agent.hpp"
 
@@ -147,4 +146,3 @@ size_t inference::ReplacementsUtils::getRowsAmount(map<string, vector<ScAddr>> c
 {
   return replacements.size();
 }
-

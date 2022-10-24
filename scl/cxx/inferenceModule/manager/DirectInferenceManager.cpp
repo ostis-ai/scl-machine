@@ -119,25 +119,18 @@ ScAddr DirectInferenceManager::applyInference(
 
   templateSearcher->setInputStructure(inputStructure);
 
-
-
   bool targetAchieved = isTargetAchieved(targetStatement, argumentList);
-
-  if (!targetStatement.IsValid())
-  {
-    SC_LOG_DEBUG("Target is not valid");
-    return this->solutionTreeManager->createSolution(targetAchieved);
-  }
 
   if (targetAchieved)
     SC_LOG_DEBUG("Target is already achieved");
   else
   {
-    if(!ruleSet.IsValid())
+    if (!ruleSet.IsValid())
     {
       SC_LOG_DEBUG("rules set is not valid");
-      return this->solutionTreeManager->createSolution(targetAchieved);
+      return this->solutionTreeGenerator->createSolution(targetAchieved);
     }
+
     vector<queue<ScAddr>> rulesQueuesByPriority;
     try
     {
@@ -168,7 +161,7 @@ ScAddr DirectInferenceManager::applyInference(
       while (!uncheckedRules.empty())
       {
         rule = uncheckedRules.front();
-        clearSatisfiabilityInformation(rule);
+        clearSatisfiabilityInformation(rule, model);
         SC_LOG_DEBUG("Using rule " + ms_context->HelperGetSystemIdtf(rule));
         isUsed = useRule(rule, argumentList);
         if (isUsed)
@@ -213,8 +206,8 @@ queue<ScAddr> DirectInferenceManager::createQueue(ScAddr const & set)
 bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> /*const*/ & argumentList)
 {
   SC_LOG_DEBUG("Trying to use rule: " + ms_context->HelperGetSystemIdtf(rule));
-  bool isUsed = false;
-  ScAddr keyScElement = IteratorUtils::getAnyByOutRelation(ms_context, rule, InferenceKeynodes::rrel_main_key_sc_element);
+  ScAddr keyScElement =
+        utils::IteratorUtils::getAnyByOutRelation(ms_context, rule, InferenceKeynodes::rrel_main_key_sc_element);
   if (!keyScElement.IsValid())
     return false;
 

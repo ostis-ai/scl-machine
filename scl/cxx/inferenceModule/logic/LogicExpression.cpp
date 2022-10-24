@@ -71,9 +71,8 @@ LogicFormulaResult AndExpressionNode::compute() const
       }
     }
     LogicFormulaResult lastResult = operand->compute();
-    SC_LOG_DEBUG("One of operands in conjunction returned " + to_string(lastResult.value));
-    if (!lastResult.value /*|| lastResult.replacements.empty()*/)
-      return {false, {}};
+    if (!lastResult.value)
+      return fail;
     if (!result.value) // this is true only when processing the first operand
       result = lastResult;
     else
@@ -264,24 +263,10 @@ LogicFormulaResult ImplicationExpressionNode::compute() const
   {
     SC_LOG_DEBUG("*** Left part shouldn't be generated");
     leftResult = operands[0]->compute();
-    SC_LOG_DEBUG("--- value from left is " + to_string(leftResult.value));
-    SC_LOG_DEBUG("--- Replacements from left are " + to_string(ReplacementsUtils::getRowsAmount(leftResult.replacements)) + " x " + to_string(ReplacementsUtils::getColumnsAmount(leftResult.replacements)));
-    if (!isRightGenerated)
-    {
-      SC_LOG_DEBUG("*** Right part shouldn't be generated");
-      rightResult = operands[1]->compute();
-      SC_LOG_DEBUG("--- value from right is " + to_string(rightResult.value));
-      SC_LOG_DEBUG("--- Replacements from right are " + to_string(ReplacementsUtils::getRowsAmount(rightResult.replacements)) + " x " + to_string(ReplacementsUtils::getColumnsAmount(rightResult.replacements)));
-    }
-    else
-    {
-      SC_LOG_DEBUG("*** Right part should be generated");
-      rightResult = rightAtom->generate(leftResult.replacements);
-    }
+    rightResult = (isRightGenerated ? rightAtom->generate(leftResult.replacements) : operands[1]->compute());
   }
   else
   {
-    SC_LOG_DEBUG("*** Left part should be generated");
     if (isRightGenerated)
     {
       SC_LOG_DEBUG("*** Right part should be generated");
@@ -395,24 +380,10 @@ LogicFormulaResult EquivalenceExpressionNode::compute() const
   {
     SC_LOG_DEBUG("*** Left part of equivalence shouldn't be generated");
     leftResult = operands[0]->compute();
-    SC_LOG_DEBUG("--- value from left is " + to_string(leftResult.value));
-    SC_LOG_DEBUG("--- Replacements from left are " + to_string(ReplacementsUtils::getRowsAmount(leftResult.replacements)) + " x " + to_string(ReplacementsUtils::getColumnsAmount(leftResult.replacements)));
-    if (!isRightGenerated)
-    {
-      SC_LOG_DEBUG("*** Right part of equivalence shouldn't be generated");
-      rightResult = operands[1]->compute();
-      SC_LOG_DEBUG("--- value from right is " + to_string(rightResult.value));
-      SC_LOG_DEBUG("--- Replacements from right are " + to_string(ReplacementsUtils::getRowsAmount(rightResult.replacements)) + " x " + to_string(ReplacementsUtils::getColumnsAmount(rightResult.replacements)));
-    }
-    else
-    {
-      SC_LOG_DEBUG("*** Right part of equivalence should be generated");
-      rightResult = rightAtom->generate(leftResult.replacements);
-    }
+    rightResult = (isRightGenerated ? rightAtom->generate(leftResult.replacements) : operands[1]->compute());
   }
   else
   {
-    SC_LOG_DEBUG("*** Left part should be generated");
     if (isRightGenerated)
     {
       SC_LOG_DEBUG("*** Right part should be generated");
@@ -489,13 +460,13 @@ LogicFormulaResult TemplateExpressionNode::compute() const
 {
   LogicFormulaResult result;
   auto const & idtf = context->HelperGetSystemIdtf(formulaTemplate);
-  auto scTemplateParamsVector = templateManager->createTemplateParamsList(formulaTemplate, templateSearcher->getParams());
-  SC_LOG_DEBUG("before search in " + idtf);
+  SC_LOG_DEBUG("Checking atom " + idtf);
+
   result.replacements = templateSearcher->searchTemplate(formulaTemplate);
   SC_LOG_DEBUG("after  search in " + idtf);
   result.value = !result.replacements.empty();
   std::string ending = (result.value ? " right" : " wrong");
-  SC_LOG_DEBUG("New Statement " + idtf + ending);
+  SC_LOG_DEBUG("Compute Statement " + idtf + ending);
 
   return result;
 }
@@ -524,10 +495,7 @@ LogicFormulaResult TemplateExpressionNode::generate(map<string, vector<ScAddr>> 
     {
       SC_LOG_DEBUG("SearchResult is empty");
       ScTemplate generatedTemplate;
-      if (context->HelperBuildTemplate(generatedTemplate, formulaTemplate, scTemplateParams))
-        SC_LOG_DEBUG("Template was built");
-      else
-        SC_LOG_DEBUG("Template was not built");
+      context->HelperBuildTemplate(generatedTemplate, formulaTemplate, scTemplateParams);
 
       ScTemplateGenResult generationResult;
       const ScTemplate::Result & genTemplate = context->HelperGenTemplate(generatedTemplate, generationResult);
@@ -717,18 +685,7 @@ std::unique_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & node)
       if (operands.size() == 2)
         return std::make_unique<ImplicationExpressionNode>(context, operands);
       else
-      {
-        SC_LOG_ERROR("There is " + to_string(operands.size()) + " operands in implication edge, but should be two");
-        for (auto const & operand : operands)
-        {
-          const ScAddr & addr = operand->getFormulaTemplate();
-          if (addr.IsValid())
-            SC_LOG_ERROR("-> " + context->HelperGetSystemIdtf(addr));
-          else
-            SC_LOG_ERROR("-> ?complex operand?");
-        }
-        throw std::exception();
-      }
+        SC_THROW_EXCEPTION(utils::ScException, "There is " + to_string(operands.size()) + " operands in implication edge, but should be two");
     }
     if (utils::CommonUtils::checkType(context, node, ScType::NodeTuple))
     {

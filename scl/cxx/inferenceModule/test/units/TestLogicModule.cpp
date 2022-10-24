@@ -4,13 +4,14 @@
 * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
 */
 
-#include <sc_test.hpp>
-#include "builder/src/scs_loader.hpp"
 #include "sc-memory/kpm/sc_agent.hpp"
 #include "sc-agents-common/keynodes/coreKeynodes.hpp"
 #include "agent/DirectInferenceAgent.hpp"
 #include <sc-agents-common/utils/AgentUtils.hpp>
 #include "sc-agents-common/utils/IteratorUtils.hpp"
+
+#include "sc_test.hpp"
+#include "scs_loader.hpp"
 
 #include "manager/DirectInferenceManager.hpp"
 #include "keynodes/InferenceKeynodes.hpp"
@@ -56,7 +57,7 @@ TEST_F(InferenceLogicTest, TrueLogicRule)
         InferenceKeynodes::action_direct_inference,
         test);
 
-  EXPECT_TRUE(utils::AgentUtils::waitAgentResult(&context, test, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, test, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
         scAgentsCommon::CoreKeynodes::question_finished_successfully,
         test,
@@ -79,7 +80,7 @@ TEST_F(InferenceLogicTest, FalseLogicRule)
         ScType::EdgeAccessConstPosPerm,
         InferenceKeynodes::action_direct_inference,
         test);
-  EXPECT_TRUE(utils::AgentUtils::waitAgentResult(&context, test, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, test, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
         scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully,
         test,
@@ -107,7 +108,7 @@ TEST_F(InferenceLogicTest, EquivalencesNested)
         ScType::EdgeAccessConstPosPerm,
         InferenceKeynodes::action_direct_inference,
         test);
-  EXPECT_TRUE(utils::AgentUtils::waitAgentResult(&context, test, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, test, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
         scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully,
         test,
