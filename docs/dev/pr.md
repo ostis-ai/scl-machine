@@ -4,8 +4,7 @@ This page describes rules to contribute changes and features by Pull Requests cr
 
 Each commit message should be formed as: `[tag1]...[tagN] Message text (#issue)`.
 
-Message text should start from an upper case letter. If commit doesn't fix or implement any #issue, then it shouldn't 
-be pointed in commit message.
+Message text should start from an upper case letter. If commit doesn't fix or implement any #issue, then it shouldn't be pointed in commit message.
 
 Examples:
 <pre>
@@ -16,23 +15,16 @@ Examples:
 
 Possible tags:
 
-  * `[memory]` - changes in `sc-memory` module;
-  * `[kpm]` - changes in `sc-kpm` module;
-  * `[tests]` or `[test]` - changes in tests;
-  * `[tools]` - changes in `sc-tools`;
-  * `[server]` - changes in `sc-server` module;
-  * `[builder]` - changes in `sc-builder` module;
-  * `[codegen]` - changes in `code generator`;
-  * `[config]` - commits with changes in configuration;
+  * `[test]` - changes in tests;
   * `[review]` - commits with review fixes;
   * `[refactor]` - commits with some code refactoring;
   * `[changelog]` - use when you update changelog;
-  * `[docs]` or `[doc]` - use when you update documentation;
+  * `[doc]` - use when you update documentation;
   * `[docker]` - changes in Dockerfile, .dockerignore or Docker image build pipeline
   * `[scripts]` - updates in the `sc-machine/scripts` files
   * `[ci]` - changes in `ci` configuration or scripts;
   * `[git]` - changes in `git` configuration;
-  * `[cmake]` - changes in `cmake` build system.
+  * `[cmake]` - changes in `cmake` build system. 
 
 Each commit in Pull request should be an atomic. Another word implement or fix one feature. For example:
 <pre>
@@ -77,7 +69,7 @@ _**All commit, that not applies to this rules, should be split by this rules. An
  - Update changelog;
  - Update documentation;
  - Cover new functionality by tests;
- - Your code should be written according to a [codestyle](docs/dev/codestyle.md).
+ - Your code should be written according to a [codestyle](codestyle.md).
 
 ### Pull Request creation
 

@@ -10,11 +10,9 @@ nav:
   - Home: index.md
   - Build:
       - Build on Linux: build/linux-build.md
-      - CMake Flags: build/cmake-flags.md
   - Development:
-      - Git-workflow: dev/git-workflow.md
       - Codestyle: dev/codestyle.md
-  - License: license.md
+      - PR: dev/pr.md
   - Changelog: changelog.md
 
 theme: material
