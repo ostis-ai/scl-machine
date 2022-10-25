@@ -6,17 +6,18 @@
 
 namespace inference
 {
-int FormulaClassifier::NONE               = 0;
-int FormulaClassifier::ATOM               = 1;
-int FormulaClassifier::NEGATION           = 2;
-int FormulaClassifier::CONJUNCTION        = 3;
-int FormulaClassifier::DISJUNCTION        = 4;
-int FormulaClassifier::IMPLICATION_EDGE   = 5;
-int FormulaClassifier::IMPLICATION_TUPLE  = 6;
-int FormulaClassifier::EQUIVALENCE_EDGE   = 7;
-int FormulaClassifier::EQUIVALENCE_TUPLE  = 8;
+int FormulaClassifier::NONE = 0;
+int FormulaClassifier::ATOM = 1;
+int FormulaClassifier::NEGATION = 2;
+int FormulaClassifier::CONJUNCTION = 3;
+int FormulaClassifier::DISJUNCTION = 4;
+int FormulaClassifier::IMPLICATION_EDGE = 5;
+int FormulaClassifier::IMPLICATION_TUPLE = 6;
+int FormulaClassifier::EQUIVALENCE_EDGE = 7;
+int FormulaClassifier::EQUIVALENCE_TUPLE = 8;
 
-FormulaClassifier::FormulaClassifier(ScMemoryContext * ms_context) : ms_context(ms_context)
+FormulaClassifier::FormulaClassifier(ScMemoryContext * ms_context)
+  : ms_context(ms_context)
 {
   /*  empty   */
 }
@@ -31,42 +32,32 @@ int FormulaClassifier::typeOfFormula(ScAddr formula)
     return NONE;
   }
 
-  bool isAtom = ms_context->HelperCheckEdge(
-        InferenceKeynodes::atomic_logical_formula,
-        formula,
-        ScType::EdgeAccessConstPosPerm);
+  bool isAtom =
+      ms_context->HelperCheckEdge(InferenceKeynodes::atomic_logical_formula, formula, ScType::EdgeAccessConstPosPerm);
   if (isAtom)
     return ATOM;
   SC_LOG_DEBUG("Formula is not atom");
 
-  bool isNegation = ms_context->HelperCheckEdge(
-        InferenceKeynodes::nrel_negation,
-        formula,
-        ScType::EdgeAccessConstPosPerm);
+  bool isNegation =
+      ms_context->HelperCheckEdge(InferenceKeynodes::nrel_negation, formula, ScType::EdgeAccessConstPosPerm);
   if (isNegation)
     return NEGATION;
   SC_LOG_DEBUG("Formula is not negation");
 
-  bool isConjunction = ms_context->HelperCheckEdge(
-        InferenceKeynodes::nrel_conjunction,
-        formula,
-        ScType::EdgeAccessConstPosPerm);
+  bool isConjunction =
+      ms_context->HelperCheckEdge(InferenceKeynodes::nrel_conjunction, formula, ScType::EdgeAccessConstPosPerm);
   if (isConjunction)
     return CONJUNCTION;
   SC_LOG_DEBUG("Formula is not conjunction");
 
-  bool isDisjunction = ms_context->HelperCheckEdge(
-        InferenceKeynodes::nrel_disjunction,
-        formula,
-        ScType::EdgeAccessConstPosPerm);
+  bool isDisjunction =
+      ms_context->HelperCheckEdge(InferenceKeynodes::nrel_disjunction, formula, ScType::EdgeAccessConstPosPerm);
   if (isDisjunction)
     return DISJUNCTION;
   SC_LOG_DEBUG("Formula is not disjunction");
 
-  bool isImplication = ms_context->HelperCheckEdge(
-        InferenceKeynodes::nrel_implication,
-        formula,
-        ScType::EdgeAccessConstPosPerm);
+  bool isImplication =
+      ms_context->HelperCheckEdge(InferenceKeynodes::nrel_implication, formula, ScType::EdgeAccessConstPosPerm);
   if (isImplication)
   {
     bool isEdge = (utils::CommonUtils::checkType(ms_context, formula, ScType::EdgeDCommon));
@@ -79,10 +70,8 @@ int FormulaClassifier::typeOfFormula(ScAddr formula)
   }
   SC_LOG_DEBUG("Formula is not implication");
 
-  bool isEquivalence = ms_context->HelperCheckEdge(
-        InferenceKeynodes::nrel_equivalence,
-        formula,
-        ScType::EdgeAccessConstPosPerm);
+  bool isEquivalence =
+      ms_context->HelperCheckEdge(InferenceKeynodes::nrel_equivalence, formula, ScType::EdgeAccessConstPosPerm);
   if (isEquivalence)
   {
     bool isEdge = (utils::CommonUtils::checkType(ms_context, formula, ScType::EdgeUCommonConst));
@@ -109,9 +98,7 @@ bool FormulaClassifier::isFormulaWithConst(ScAddr formula)
 bool FormulaClassifier::isFormulaToGenerate(ScAddr formula)
 {
   return ms_context->HelperCheckEdge(
-        InferenceKeynodes::concept_template_for_generation,
-        formula,
-        ScType::EdgeAccessConstPosPerm);
+      InferenceKeynodes::concept_template_for_generation, formula, ScType::EdgeAccessConstPosPerm);
 }
 
-}
+}  // namespace inference

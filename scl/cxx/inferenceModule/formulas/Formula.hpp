@@ -12,9 +12,8 @@ using Replacements std::map<string, std::vector<ScAddr>>;
 
 class Formula
 {
-
 };
 
-}
+}  // namespace inference
 
-#endif //SC_MACHINE_FORMULA_HPP
+#endif  // SC_MACHINE_FORMULA_HPP

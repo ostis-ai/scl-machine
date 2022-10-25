@@ -1,8 +1,8 @@
 /*
-* This source file is part of an OSTIS project. For the latest info, see http://ostis.net
-* Distributed under the MIT License
-* (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
-*/
+ * This source file is part of an OSTIS project. For the latest info, see http://ostis.net
+ * Distributed under the MIT License
+ * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
+ */
 
 #include "sc_test.hpp"
 #include "scs_loader.hpp"
@@ -31,12 +31,11 @@ void initialize()
 
 TEST_F(InferenceManagerTest, SuccessApplyInference)
 {
-  ScMemoryContext& context = *m_ctx;
+  ScMemoryContext & context = *m_ctx;
 
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "lr_concept_weather_request_message_1.scs");
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "inferenceManagerRuleUsedTest.scs");
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH
-                                      + "concept_answer_on_standard_message_rule_class_by_priority.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "lr_concept_weather_request_message_1.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "inferenceManagerRuleUsedTest.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "concept_answer_on_standard_message_rule_class_by_priority.scs");
   initialize();
 
   ScAddr targetTemplate = context.HelperResolveSystemIdtf(TEMPLATE_REPLY_TARGET);
@@ -51,17 +50,17 @@ TEST_F(InferenceManagerTest, SuccessApplyInference)
   DirectInferenceManager inferenceManager(&context);
   ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet);
   EXPECT_TRUE(answer.IsValid());
-  EXPECT_TRUE(context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm));
+  EXPECT_TRUE(
+      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm));
 }
 
 TEST_F(InferenceManagerTest, RuleNotFound)
 {
-  ScMemoryContext& context = *m_ctx;
+  ScMemoryContext & context = *m_ctx;
 
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "inferenceManagerRuleUsedTest.scs");
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "incorrect_rule_class_logic_rule.scs");
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH
-                             + "concept_answer_on_standard_message_rule_class_by_priority.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "inferenceManagerRuleUsedTest.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "incorrect_rule_class_logic_rule.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "concept_answer_on_standard_message_rule_class_by_priority.scs");
   initialize();
 
   ScAddr targetTemplate = context.HelperResolveSystemIdtf(TEMPLATE_REPLY_TARGET);
@@ -77,17 +76,17 @@ TEST_F(InferenceManagerTest, RuleNotFound)
   ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet);
 
   EXPECT_TRUE(answer.IsValid());
-  EXPECT_TRUE(context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
+  EXPECT_TRUE(
+      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
 }
 
 TEST_F(InferenceManagerTest, RuleNotUsed)
 {
-  ScMemoryContext& context = *m_ctx;
+  ScMemoryContext & context = *m_ctx;
 
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "inferenceManagerRuleNotUsedTest.scs");
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "lr_concept_weather_request_message_1.scs");
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH
-                                        + "concept_answer_on_standard_message_rule_class_by_priority.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "inferenceManagerRuleNotUsedTest.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "lr_concept_weather_request_message_1.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "concept_answer_on_standard_message_rule_class_by_priority.scs");
   initialize();
 
   ScAddr targetTemplate = context.HelperResolveSystemIdtf(TEMPLATE_REPLY_TARGET);
@@ -103,17 +102,17 @@ TEST_F(InferenceManagerTest, RuleNotUsed)
   ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet);
 
   EXPECT_TRUE(answer.IsValid());
-  EXPECT_TRUE(context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
+  EXPECT_TRUE(
+      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
 }
 
 TEST_F(InferenceManagerTest, IncorrectElseStatementStructure)
 {
-  ScMemoryContext& context = *m_ctx;
+  ScMemoryContext & context = *m_ctx;
 
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "inferenceManagerRuleUsedTest.scs");
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "incorrect_else_statement_logic_rule.scs");
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH
-                                      + "concept_answer_on_standard_message_rule_class_by_priority.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "inferenceManagerRuleUsedTest.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "incorrect_else_statement_logic_rule.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "concept_answer_on_standard_message_rule_class_by_priority.scs");
   initialize();
 
   ScAddr targetTemplate = context.HelperResolveSystemIdtf(TEMPLATE_REPLY_TARGET);
@@ -129,17 +128,17 @@ TEST_F(InferenceManagerTest, IncorrectElseStatementStructure)
   ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet);
 
   EXPECT_TRUE(answer.IsValid());
-  EXPECT_TRUE(context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
+  EXPECT_TRUE(
+      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
 }
 
 TEST_F(InferenceManagerTest, IncorrectIfStatementStructure)
 {
-  ScMemoryContext& context = *m_ctx;
+  ScMemoryContext & context = *m_ctx;
 
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "inferenceManagerRuleUsedTest.scs");
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "incorrect_if_statement_logic_rule.scs");
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH
-                             + "concept_answer_on_standard_message_rule_class_by_priority.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "inferenceManagerRuleUsedTest.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "incorrect_if_statement_logic_rule.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "concept_answer_on_standard_message_rule_class_by_priority.scs");
   initialize();
 
   ScAddr targetTemplate = context.HelperResolveSystemIdtf(TEMPLATE_REPLY_TARGET);
@@ -155,17 +154,17 @@ TEST_F(InferenceManagerTest, IncorrectIfStatementStructure)
   ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet);
 
   EXPECT_TRUE(answer.IsValid());
-  EXPECT_TRUE(context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
+  EXPECT_TRUE(
+      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
 }
 
 TEST_F(InferenceManagerTest, IncorrectTargetTemplate)
 {
-  ScMemoryContext& context = *m_ctx;
+  ScMemoryContext & context = *m_ctx;
 
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "inferenceManagerIncorrectTemplateTest.scs");
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "lr_concept_weather_request_message_1.scs");
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH
-                                      + "concept_answer_on_standard_message_rule_class_by_priority.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "inferenceManagerIncorrectTemplateTest.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "lr_concept_weather_request_message_1.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "concept_answer_on_standard_message_rule_class_by_priority.scs");
   initialize();
 
   ScAddr targetTemplate = context.HelperResolveSystemIdtf(TEMPLATE_REPLY_TARGET);
@@ -181,17 +180,17 @@ TEST_F(InferenceManagerTest, IncorrectTargetTemplate)
   ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet);
 
   EXPECT_TRUE(answer.IsValid());
-  EXPECT_TRUE(context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
+  EXPECT_TRUE(
+      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
 }
 
 TEST_F(InferenceManagerTest, IncorrectArgumentSet)
 {
-  ScMemoryContext& context = *m_ctx;
+  ScMemoryContext & context = *m_ctx;
 
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "inferenceManagerIncorrectArgumentSetTest.scs");
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "lr_concept_weather_request_message_1.scs");
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH
-                                      + "concept_answer_on_standard_message_rule_class_by_priority.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "inferenceManagerIncorrectArgumentSetTest.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "lr_concept_weather_request_message_1.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "concept_answer_on_standard_message_rule_class_by_priority.scs");
   initialize();
 
   ScAddr targetTemplate = context.HelperResolveSystemIdtf(TEMPLATE_REPLY_TARGET);
@@ -207,6 +206,7 @@ TEST_F(InferenceManagerTest, IncorrectArgumentSet)
   ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet);
 
   EXPECT_TRUE(answer.IsValid());
-  EXPECT_TRUE(context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
+  EXPECT_TRUE(
+      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
 }
-} //namespace directInferenceAgentTest
+}  // namespace directInferenceManagerTest

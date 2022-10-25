@@ -23,8 +23,8 @@ vector<ScTemplateParams> TemplateManager::createTemplateParamsList(
 }
 
 vector<ScTemplateParams> TemplateManager::createTemplateParams(
-      ScAddr const & scTemplate,
-      const vector<ScAddr> & argumentList)
+    ScAddr const & scTemplate,
+    const vector<ScAddr> & argumentList)
 {
   map<string, set<ScAddr, AddrComparator>> replacementsMultimap;
   vector<ScTemplateParams> vectorOfTemplateParams;
@@ -47,12 +47,12 @@ vector<ScTemplateParams> TemplateManager::createTemplateParams(
     while (classesIterator->Next())
     {
       ScAddr varClass = classesIterator->Get(0);
-      for (auto & argument : argumentList) // this block is executed if inputStructure is valid
+      for (auto & argument : argumentList)  // this block is executed if inputStructure is valid
       {
         if (context->HelperCheckEdge(varClass, argument, ScType::EdgeAccessConstPosPerm))
           replacementsMultimap[varName].insert(argument);
       }
-      if (argumentList.empty()) // this block is executed if inputStructure is not valid
+      if (argumentList.empty())  // this block is executed if inputStructure is not valid
       {
         ScIterator3Ptr iterator3 = context->Iterator3(varClass, ScType::EdgeAccessConstPosPerm, ScType::Unknown);
         while (iterator3->Next())
@@ -81,10 +81,7 @@ vector<ScTemplateParams> TemplateManager::createTemplateParams(
       int endOfCopy = oldParamsSize;
       for (auto const & address : addresses)
       {
-        copy_n(
-              vectorOfTemplateParams.begin() + beginOfCopy,
-               oldParamsSize,
-               back_inserter(vectorOfTemplateParams));
+        copy_n(vectorOfTemplateParams.begin() + beginOfCopy, oldParamsSize, back_inserter(vectorOfTemplateParams));
         for (int i = 0; i < oldParamsSize; ++i)
           vectorOfTemplateParams[beginOfCopy + i].Add(varName, address);
         beginOfCopy = endOfCopy;
