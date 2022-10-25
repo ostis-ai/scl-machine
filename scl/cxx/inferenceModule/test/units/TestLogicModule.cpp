@@ -27,7 +27,7 @@ const std::string TEST_FILES_DIR_PATH = TEMPLATE_SEARCH_MODULE_TEST_SRC_PATH "/t
 const std::string QUESTION_IDENTIFIER = "inference_logic_test_question";
 
 using InferenceLogicTest = ScMemoryTest;
-const int WAIT_TIME = 3000;
+const int WAIT_TIME = 1500;
 
 void initialize()
 {
@@ -43,11 +43,329 @@ void shutdown()
   SC_AGENT_UNREGISTER(inference::DirectInferenceAgent);
 }
 
+// Simple test with only one implication that must generates one class to the argument
+TEST_F(InferenceLogicTest, TrueSimpleLogicRule)
+{
+  ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
+
+  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "trueSimpleRuleTest.scs");
+  initialize();
+
+  ScAddr action = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
+  EXPECT_TRUE(action.IsValid());
+
+  ScAddr argument = context.HelperFindBySystemIdtf("argument");
+  EXPECT_TRUE(argument.IsValid());
+
+  ScIterator3Ptr argumentClassIteratorBefore = context.Iterator3(
+        ScType::NodeConstClass,
+        ScType::EdgeAccessConstPosPerm,
+        argument);
+
+  // There is only two classes of argument before agent run
+  EXPECT_TRUE(argumentClassIteratorBefore->Next());
+  EXPECT_TRUE(argumentClassIteratorBefore->Next());
+
+  // And there is no more classes
+  EXPECT_FALSE(argumentClassIteratorBefore->Next());
+
+  context.CreateEdge(
+        ScType::EdgeAccessConstPosPerm,
+        InferenceKeynodes::action_direct_inference,
+        action);
+
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
+  EXPECT_TRUE(context.HelperCheckEdge(
+        scAgentsCommon::CoreKeynodes::question_finished_successfully,
+        action,
+        ScType::EdgeAccessConstPosPerm));
+
+  ScIterator3Ptr argumentClassIteratorAfter = context.Iterator3(
+        ScType::NodeConstClass,
+        ScType::EdgeAccessConstPosPerm,
+        argument);
+
+  // There is only 3 classes of argument: two was before agent run and one is generated
+  EXPECT_TRUE(argumentClassIteratorAfter->Next());
+  EXPECT_TRUE(argumentClassIteratorAfter->Next());
+  EXPECT_TRUE(argumentClassIteratorAfter->Next());
+
+  // And there is no more classes
+  EXPECT_FALSE(argumentClassIteratorAfter->Next());
+
+  shutdown();
+  context.Destroy();
+}
+
+// Two implications with equal 'if' and different 'then'. Should apply both of them to achieve target
+// TODO (MksmOrlov): Can't apply the rule for the second time
+TEST_F(InferenceLogicTest, TrueDoubleApplyLogicRule)
+{
+  ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
+
+  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "trueDoubleApplyRuleTest.scs");
+  initialize();
+
+  ScAddr action = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
+  EXPECT_TRUE(action.IsValid());
+
+  ScAddr argument = context.HelperFindBySystemIdtf("argument");
+  EXPECT_TRUE(argument.IsValid());
+
+  ScIterator3Ptr argumentClassIteratorBefore = context.Iterator3(
+        ScType::NodeConstClass,
+        ScType::EdgeAccessConstPosPerm,
+        argument);
+
+  // There is only one class of argument before agent run
+  EXPECT_TRUE(argumentClassIteratorBefore->Next());
+
+  // And there is no more classes
+  EXPECT_FALSE(argumentClassIteratorBefore->Next());
+
+  context.CreateEdge(
+        ScType::EdgeAccessConstPosPerm,
+        InferenceKeynodes::action_direct_inference,
+        action);
+
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
+  EXPECT_TRUE(context.HelperCheckEdge(
+        scAgentsCommon::CoreKeynodes::question_finished_successfully,
+        action,
+        ScType::EdgeAccessConstPosPerm));
+
+  ScIterator3Ptr argumentClassIteratorAfter = context.Iterator3(
+        ScType::NodeConstClass,
+        ScType::EdgeAccessConstPosPerm,
+        argument);
+
+  // There is only two classes of argument: one was before agent run and one is generated
+  EXPECT_TRUE(argumentClassIteratorAfter->Next());
+  EXPECT_TRUE(argumentClassIteratorAfter->Next());
+
+  // And there is no more classes
+  EXPECT_FALSE(argumentClassIteratorAfter->Next());
+
+  shutdown();
+  context.Destroy();
+}
+
+// Input structure is invalid, knowledge_base_IMS is used by default
+TEST_F(InferenceLogicTest, InvalidInputStructure)
+{
+  ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
+
+  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "invalidInputStructureLogicRule.scs");
+  initialize();
+
+  ScAddr action = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
+  EXPECT_TRUE(action.IsValid());
+
+  ScAddr argument = context.HelperFindBySystemIdtf("argument");
+  EXPECT_TRUE(argument.IsValid());
+
+  ScIterator3Ptr argumentClassIteratorBefore = context.Iterator3(
+        ScType::NodeConstClass,
+        ScType::EdgeAccessConstPosPerm,
+        argument);
+
+  // There is only two classes of argument before agent run
+  EXPECT_TRUE(argumentClassIteratorBefore->Next());
+  EXPECT_TRUE(argumentClassIteratorBefore->Next());
+
+  // And there is no more classes
+  EXPECT_FALSE(argumentClassIteratorBefore->Next());
+
+  context.CreateEdge(
+        ScType::EdgeAccessConstPosPerm,
+        InferenceKeynodes::action_direct_inference,
+        action);
+
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
+  EXPECT_TRUE(context.HelperCheckEdge(
+        scAgentsCommon::CoreKeynodes::question_finished_successfully,
+        action,
+        ScType::EdgeAccessConstPosPerm));
+
+  ScIterator3Ptr argumentClassIteratorAfter = context.Iterator3(
+        ScType::NodeConstClass,
+        ScType::EdgeAccessConstPosPerm,
+        argument);
+
+  // There is only 3 classes of argument: two was before agent run and one is generated
+  EXPECT_TRUE(argumentClassIteratorAfter->Next());
+  EXPECT_TRUE(argumentClassIteratorAfter->Next());
+  EXPECT_TRUE(argumentClassIteratorAfter->Next());
+
+  // And there is no more classes
+  EXPECT_FALSE(argumentClassIteratorAfter->Next());
+
+  shutdown();
+  context.Destroy();
+}
+
+// Input structure is an empty set, knowledge_base_IMS SHOULD be used by default
+// TODO (MksmOrlov): implement checking input structure that it is not empty set, use knowledge_base_IMS
+TEST_F(InferenceLogicTest, EmptyInputStructure)
+{
+  ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
+
+  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "emptyInputStructureLogicRule.scs");
+  initialize();
+
+  ScAddr action = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
+  EXPECT_TRUE(action.IsValid());
+
+  ScAddr argument = context.HelperFindBySystemIdtf("argument");
+  EXPECT_TRUE(argument.IsValid());
+
+  ScIterator3Ptr argumentClassIteratorBefore = context.Iterator3(
+        ScType::NodeConstClass,
+        ScType::EdgeAccessConstPosPerm,
+        argument);
+
+  // There is only two classes of argument before agent run
+  EXPECT_TRUE(argumentClassIteratorBefore->Next());
+  EXPECT_TRUE(argumentClassIteratorBefore->Next());
+
+  // And there is no more classes
+  EXPECT_FALSE(argumentClassIteratorBefore->Next());
+
+  context.CreateEdge(
+        ScType::EdgeAccessConstPosPerm,
+        InferenceKeynodes::action_direct_inference,
+        action);
+
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
+  EXPECT_TRUE(context.HelperCheckEdge(
+        scAgentsCommon::CoreKeynodes::question_finished_successfully,
+        action,
+        ScType::EdgeAccessConstPosPerm));
+
+  ScIterator3Ptr argumentClassIteratorAfter = context.Iterator3(
+        ScType::NodeConstClass,
+        ScType::EdgeAccessConstPosPerm,
+        argument);
+
+  // There is only 3 classes of argument: two was before agent run and one is generated
+  EXPECT_TRUE(argumentClassIteratorAfter->Next());
+  EXPECT_TRUE(argumentClassIteratorAfter->Next());
+  EXPECT_TRUE(argumentClassIteratorAfter->Next());
+
+  // And there is no more classes
+  EXPECT_FALSE(argumentClassIteratorAfter->Next());
+
+  shutdown();
+  context.Destroy();
+}
+
+// Rule set is an empty set, target is not achieved
+TEST_F(InferenceLogicTest, EmptyRuleSet)
+{
+  ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
+
+  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "emptyRulesSetTest.scs");
+  initialize();
+
+  ScAddr action = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
+  EXPECT_TRUE(action.IsValid());
+
+  context.CreateEdge(
+        ScType::EdgeAccessConstPosPerm,
+        InferenceKeynodes::action_direct_inference,
+        action);
+
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
+  EXPECT_TRUE(context.HelperCheckEdge(
+        scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully,
+        action,
+        ScType::EdgeAccessConstPosPerm));
+
+  ScAddr argument = context.HelperFindBySystemIdtf("argument");
+  EXPECT_TRUE(argument.IsValid());
+
+  ScIterator3Ptr argumentClassIteratorBefore = context.Iterator3(
+        ScType::NodeConstClass,
+        ScType::EdgeAccessConstPosPerm,
+        argument);
+
+  // There is only two classes of argument after agent run, nothing added
+  EXPECT_TRUE(argumentClassIteratorBefore->Next());
+  EXPECT_TRUE(argumentClassIteratorBefore->Next());
+
+  shutdown();
+  context.Destroy();
+}
+
+// Rule set queue is an empty set, target is not achieved
+// TODO (MksmOrlov): check if rules queue is empty, add debug
+TEST_F(InferenceLogicTest, EmptyRuleSetQueue)
+{
+  ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
+
+  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "emptyRulesSetQueueTest.scs");
+  initialize();
+
+  ScAddr action = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
+  EXPECT_TRUE(action.IsValid());
+
+  context.CreateEdge(
+        ScType::EdgeAccessConstPosPerm,
+        InferenceKeynodes::action_direct_inference,
+        action);
+
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
+  EXPECT_TRUE(context.HelperCheckEdge(
+        scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully,
+        action,
+        ScType::EdgeAccessConstPosPerm));
+
+  ScAddr argument = context.HelperFindBySystemIdtf("argument");
+  EXPECT_TRUE(argument.IsValid());
+
+  ScIterator3Ptr argumentClassIteratorBefore = context.Iterator3(
+        ScType::NodeConstClass,
+        ScType::EdgeAccessConstPosPerm,
+        argument);
+
+  // There is only two classes of argument after agent run, nothing added
+  EXPECT_TRUE(argumentClassIteratorBefore->Next());
+  EXPECT_TRUE(argumentClassIteratorBefore->Next());
+
+  shutdown();
+  context.Destroy();
+}
+
 TEST_F(InferenceLogicTest, TrueLogicRule)
 {
   ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
 
   loader.loadScsFile(context,TEST_FILES_DIR_PATH + "inferenceLogicTrueComplexRuleTest.scs");
+  initialize();
+
+  ScAddr test = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
+
+  context.CreateEdge(
+        ScType::EdgeAccessConstPosPerm,
+        InferenceKeynodes::action_direct_inference,
+        test);
+
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, test, WAIT_TIME));
+  EXPECT_TRUE(context.HelperCheckEdge(
+        scAgentsCommon::CoreKeynodes::question_finished_successfully,
+        test,
+        ScType::EdgeAccessConstPosPerm));
+
+  shutdown();
+  context.Destroy();
+}
+
+// TODO (MksmOrlov): !a -> B doesn't work
+TEST_F(InferenceLogicTest, TrueComplexLogicRule)
+{
+  ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
+
+  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "trueComplexRuleTest.scs");
   initialize();
 
   ScAddr test = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
@@ -132,7 +450,7 @@ TEST_F(InferenceLogicTest, RuleIsImplication)
   if(iter5->Next())
   {
     ScAddr formula = iter5->Get(2);
-    EXPECT_EQ(fc.typeOfFormula(formula), FormulaClassifier::EQUIVALENCE_EDGE);
+    EXPECT_EQ(fc.typeOfFormula(formula), FormulaClassifier::IMPLICATION_EDGE);
     ScAddr begin;
     ScAddr end;
     context.GetEdgeInfo(formula, begin, end);
@@ -145,6 +463,7 @@ TEST_F(InferenceLogicTest, RuleIsImplication)
   context.Destroy();
 }
 
+// TODO (MksmOrlov): test without EXPECTs
 TEST_F(InferenceLogicTest, FirstIntersectionTest)
 {
   ScMemoryContext context(sc_access_lvl_make_min, "try_intersect_maps");
@@ -189,7 +508,7 @@ TEST_F(InferenceLogicTest, FirstIntersectionTest)
   secondMap[fourth].push_back(rrel_5);
   secondMap[fourth].push_back(rrel_3);
 
-  auto answer = ReplacementsUtils::unionOfReplacements(firstMap, secondMap);
+  auto answer = ReplacementsUtils::uniteReplacements(firstMap, secondMap);
 
   SC_LOG_DEBUG("printing keys");
   for (auto const & pair : answer)
@@ -204,7 +523,7 @@ TEST_F(InferenceLogicTest, FirstIntersectionTest)
   ScTemplate searchTemplate;
   ScTemplateParams templateParams;
   templateParams.Add("rrel_1", rrel_1);
-  context.HelperBuildTemplate(searchTemplate, smth, templateParams);
+  //context.HelperBuildTemplate(searchTemplate, smth, templateParams);
 
 //  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "inferenceLogicTrueComplexRuleTest.scs");
 
