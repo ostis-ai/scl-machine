@@ -1,0 +1,14 @@
+repos:
+  - repo: local
+    hooks:
+      - id: clang_format
+        name: clang_format
+        entry: ./scripts/clang/check-formatting.sh
+        language: script
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.2.0
+    hooks:
+      - id: fix-byte-order-marker
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
