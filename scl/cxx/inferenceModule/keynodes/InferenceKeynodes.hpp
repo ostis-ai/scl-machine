@@ -2,7 +2,7 @@
  * This source file is part of an OSTIS project. For the latest info, see http://ostis.net
  * Distributed under the MIT License
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
-*/
+ */
 
 #pragma once
 
@@ -11,14 +11,15 @@
 
 #include "InferenceKeynodes.generated.hpp"
 
-namespace inference {
+namespace inference
+{
 
-class InferenceKeynodes : public ScObject {
+class InferenceKeynodes : public ScObject
+{
   SC_CLASS()
   SC_GENERATED_BODY()
 
 public:
-
   SC_PROPERTY(Keynode("knowledge_base_IMS"), ForceCreate)
   static ScAddr knowledge_base_IMS;
 
@@ -74,4 +75,4 @@ public:
   static ScAddr rrel_main_key_sc_element;
 };
 
-} // namespace inference
+}  // namespace inference

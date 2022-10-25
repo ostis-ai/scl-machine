@@ -1,10 +1,9 @@
 #include "ReplacementsUtils.hpp"
 #include "sc-memory/kpm/sc_agent.hpp"
 
-map<string, vector<ScAddr>>
-inference::ReplacementsUtils::intersectReplacements(
-      const map<string, vector<ScAddr>> & first,
-      const map<string, vector<ScAddr>> & second)
+map<string, vector<ScAddr>> inference::ReplacementsUtils::intersectReplacements(
+    const map<string, vector<ScAddr>> & first,
+    const map<string, vector<ScAddr>> & second)
 {
   map<string, vector<ScAddr>> result;
   int resultSize = 0;
@@ -46,8 +45,8 @@ inference::ReplacementsUtils::intersectReplacements(
 }
 
 map<string, vector<ScAddr>> inference::ReplacementsUtils::uniteReplacements(
-      const map<string, vector<ScAddr>> & first,
-      const map<string, vector<ScAddr>> & second)
+    const map<string, vector<ScAddr>> & first,
+    const map<string, vector<ScAddr>> & second)
 {
   map<string, vector<ScAddr>> result;
   int resultSize = 0;
@@ -106,7 +105,8 @@ set<string> inference::ReplacementsUtils::getCommonKeys(const set<string> & firs
   return result;
 }
 
-map<string, vector<ScAddr>> inference::ReplacementsUtils::copyReplacements(map<string, vector<ScAddr>> const & replacements)
+map<string, vector<ScAddr>> inference::ReplacementsUtils::copyReplacements(
+    map<string, vector<ScAddr>> const & replacements)
 {
   map<string, vector<ScAddr>> result;
   for (auto const & pair : replacements)
@@ -118,8 +118,8 @@ map<string, vector<ScAddr>> inference::ReplacementsUtils::copyReplacements(map<s
   return result;
 }
 
-vector<ScTemplateParams>
-inference::ReplacementsUtils::getReplacementsToScTemplateParams(const map<string, vector<ScAddr>> & replacements)
+vector<ScTemplateParams> inference::ReplacementsUtils::getReplacementsToScTemplateParams(
+    const map<string, vector<ScAddr>> & replacements)
 {
   vector<ScTemplateParams> result;
   auto keys = getKeySet(replacements);

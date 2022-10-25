@@ -1,8 +1,8 @@
 /*
-* This source file is part of an OSTIS project. For the latest info, see http://ostis.net
-* Distributed under the MIT License
-* (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
-*/
+ * This source file is part of an OSTIS project. For the latest info, see http://ostis.net
+ * Distributed under the MIT License
+ * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
+ */
 
 #include <iostream>
 #include <thread>
@@ -32,9 +32,8 @@ void ATemplateGeneration::fillGenParams(ScAddr & paramsSet, ScTemplateParams & g
     if (argumentNode.IsValid() && templateNode.IsValid())
     {
       genParams.Add(ms_context->HelperGetSystemIdtf(templateNode), argumentNode);
-      cout << "[param, arg]: " <<
-           ms_context->HelperGetSystemIdtf(templateNode)
-           << ", " << ms_context->HelperGetSystemIdtf(argumentNode) << endl;
+      cout << "[param, arg]: " << ms_context->HelperGetSystemIdtf(templateNode) << ", "
+           << ms_context->HelperGetSystemIdtf(argumentNode) << endl;
     }
   }
 }
@@ -77,4 +76,4 @@ SC_AGENT_IMPLEMENTATION(ATemplateGeneration)
   return SC_RESULT_OK;
 }
 
-}
+}  // namespace inference

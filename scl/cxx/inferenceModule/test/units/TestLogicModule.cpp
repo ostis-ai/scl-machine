@@ -1,8 +1,8 @@
 /*
-* This source file is part of an OSTIS project. For the latest info, see http://ostis.net
-* Distributed under the MIT License
-* (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
-*/
+ * This source file is part of an OSTIS project. For the latest info, see http://ostis.net
+ * Distributed under the MIT License
+ * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
+ */
 
 #include "sc-memory/kpm/sc_agent.hpp"
 #include "sc-agents-common/keynodes/coreKeynodes.hpp"
@@ -47,21 +47,16 @@ TEST_F(InferenceLogicTest, TrueLogicRule)
 {
   ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
 
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "inferenceLogicTrueComplexRuleTest.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "inferenceLogicTrueComplexRuleTest.scs");
   initialize();
 
   ScAddr test = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
 
-  context.CreateEdge(
-        ScType::EdgeAccessConstPosPerm,
-        InferenceKeynodes::action_direct_inference,
-        test);
+  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, test);
 
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, test, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
-        scAgentsCommon::CoreKeynodes::question_finished_successfully,
-        test,
-        ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::question_finished_successfully, test, ScType::EdgeAccessConstPosPerm));
 
   shutdown();
   context.Destroy();
@@ -71,20 +66,15 @@ TEST_F(InferenceLogicTest, FalseLogicRule)
 {
   ScMemoryContext context(sc_access_lvl_make_min, "unsuccessful_inference");
 
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "inferenceLogicFalseComplexRuleTest.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "inferenceLogicFalseComplexRuleTest.scs");
   initialize();
 
   ScAddr test = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
 
-  context.CreateEdge(
-        ScType::EdgeAccessConstPosPerm,
-        InferenceKeynodes::action_direct_inference,
-        test);
+  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, test);
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, test, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
-        scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully,
-        test,
-        ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully, test, ScType::EdgeAccessConstPosPerm));
 
   shutdown();
   context.Destroy();
@@ -96,23 +86,17 @@ TEST_F(InferenceLogicTest, EquivalencesNested)
 
   auto const & name = TEST_FILES_DIR_PATH + "inferenceTestEquivalences.scs";
   struct stat buffer;
-  SC_LOG_DEBUG("exists = " + to_string(stat (name.c_str(), &buffer) == 0));
+  SC_LOG_DEBUG("exists = " + to_string(stat(name.c_str(), &buffer) == 0));
 
   loader.loadScsFile(context, name);
   initialize();
 
   ScAddr test = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
 
-
-  context.CreateEdge(
-        ScType::EdgeAccessConstPosPerm,
-        InferenceKeynodes::action_direct_inference,
-        test);
+  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, test);
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, test, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
-        scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully,
-        test,
-        ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully, test, ScType::EdgeAccessConstPosPerm));
 
   shutdown();
   context.Destroy();
@@ -123,13 +107,18 @@ TEST_F(InferenceLogicTest, RuleIsImplication)
   ScMemoryContext context(sc_access_lvl_make_min, "implication_detected");
   FormulaClassifier fc(&context);
 
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "inferenceLogicTrueComplexRuleTest.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "inferenceLogicTrueComplexRuleTest.scs");
   initialize();
 
   ScAddr testRule = context.HelperResolveSystemIdtf("inference_logic_test_rule");
   ScAddr rrel_main_key_sc_element = context.HelperResolveSystemIdtf("rrel_main_key_sc_element");
-  ScIterator5Ptr iter5 = context.Iterator5(testRule, ScType::EdgeAccessConstPosPerm, ScType::Unknown, ScType::EdgeAccessConstPosPerm, rrel_main_key_sc_element);
-  if(iter5->Next())
+  ScIterator5Ptr iter5 = context.Iterator5(
+      testRule,
+      ScType::EdgeAccessConstPosPerm,
+      ScType::Unknown,
+      ScType::EdgeAccessConstPosPerm,
+      rrel_main_key_sc_element);
+  if (iter5->Next())
   {
     ScAddr formula = iter5->Get(2);
     EXPECT_EQ(fc.typeOfFormula(formula), FormulaClassifier::EQUIVALENCE_EDGE);
@@ -139,7 +128,8 @@ TEST_F(InferenceLogicTest, RuleIsImplication)
     EXPECT_EQ(fc.typeOfFormula(begin), FormulaClassifier::CONJUNCTION);
     EXPECT_EQ(fc.typeOfFormula(end), FormulaClassifier::ATOM);
   }
-  else SC_LOG_DEBUG("Cannot find main key sc element");
+  else
+    SC_LOG_DEBUG("Cannot find main key sc element");
 
   shutdown();
   context.Destroy();
@@ -206,25 +196,24 @@ TEST_F(InferenceLogicTest, FirstIntersectionTest)
   templateParams.Add("rrel_1", rrel_1);
   context.HelperBuildTemplate(searchTemplate, smth, templateParams);
 
-//  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "inferenceLogicTrueComplexRuleTest.scs");
+  //  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "inferenceLogicTrueComplexRuleTest.scs");
 
-//  ScAddr testRule = context.HelperResolveSystemIdtf("inference_logic_test_rule");
-//  ScAddr rrel_main_key_sc_element = context.HelperResolveSystemIdtf("rrel_main_key_sc_element");
-//  ScIterator5Ptr iter5 = context.Iterator5(testRule, ScType::EdgeAccessConstPosPerm, ScType::Unknown, ScType::EdgeAccessConstPosPerm, rrel_main_key_sc_element);
-//  if(iter5->Next())
-//  {
-//    ScAddr formula = iter5->Get(2);
-//    EXPECT_EQ(fc.typeOfFormula(formula), FormulaClassifier::IMPLICATION_EDGE);
-//    ScAddr begin;
-//    ScAddr end;
-//    context.GetEdgeInfo(formula, begin, end);
-//    EXPECT_EQ(fc.typeOfFormula(begin), FormulaClassifier::CONJUNCTION);
-//    EXPECT_EQ(fc.typeOfFormula(end), FormulaClassifier::ATOM);
-//  }
-//  else SC_LOG_DEBUG("Cannot find main key sc element");
+  //  ScAddr testRule = context.HelperResolveSystemIdtf("inference_logic_test_rule");
+  //  ScAddr rrel_main_key_sc_element = context.HelperResolveSystemIdtf("rrel_main_key_sc_element");
+  //  ScIterator5Ptr iter5 = context.Iterator5(testRule, ScType::EdgeAccessConstPosPerm, ScType::Unknown,
+  //  ScType::EdgeAccessConstPosPerm, rrel_main_key_sc_element); if(iter5->Next())
+  //  {
+  //    ScAddr formula = iter5->Get(2);
+  //    EXPECT_EQ(fc.typeOfFormula(formula), FormulaClassifier::IMPLICATION_EDGE);
+  //    ScAddr begin;
+  //    ScAddr end;
+  //    context.GetEdgeInfo(formula, begin, end);
+  //    EXPECT_EQ(fc.typeOfFormula(begin), FormulaClassifier::CONJUNCTION);
+  //    EXPECT_EQ(fc.typeOfFormula(end), FormulaClassifier::ATOM);
+  //  }
+  //  else SC_LOG_DEBUG("Cannot find main key sc element");
 
   context.Destroy();
 }
 
-
-} //namespace directInferenceLogicTest
+}  // namespace directInferenceLogicTest

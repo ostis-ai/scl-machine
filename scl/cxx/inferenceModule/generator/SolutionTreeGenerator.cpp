@@ -1,8 +1,8 @@
 /*
-* This source file is part of an OSTIS project. For the latest info, see http://ostis.net
-* Distributed under the MIT License
-* (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
-*/
+ * This source file is part of an OSTIS project. For the latest info, see http://ostis.net
+ * Distributed under the MIT License
+ * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
+ */
 
 #include "SolutionTreeGenerator.hpp"
 
@@ -17,7 +17,8 @@ using namespace inference;
 using namespace utils;
 using namespace scAgentsCommon;
 
-SolutionTreeGenerator::SolutionTreeGenerator(ScMemoryContext * ms_context) : ms_context(ms_context)
+SolutionTreeGenerator::SolutionTreeGenerator(ScMemoryContext * ms_context)
+  : ms_context(ms_context)
 {
   lastNode = ScAddr();
 }
@@ -28,11 +29,7 @@ bool SolutionTreeGenerator::addNode(ScAddr const & rule, ScTemplateParams const 
   bool result = newNode.IsValid();
   if (result)
   {
-    result = GenerationUtils::generateRelationBetween(
-          ms_context,
-          lastNode,
-          newNode,
-          CoreKeynodes::nrel_basic_sequence);
+    result = GenerationUtils::generateRelationBetween(ms_context, lastNode, newNode, CoreKeynodes::nrel_basic_sequence);
     lastNode = newNode;
   }
   return result;
@@ -41,7 +38,7 @@ bool SolutionTreeGenerator::addNode(ScAddr const & rule, ScTemplateParams const 
 ScAddr SolutionTreeGenerator::createSolutionNode(ScAddr const & rule, ScTemplateParams const & templateParams)
 {
   ScAddr solutionNode = ms_context->CreateNode(ScType::NodeConst);
-  //TODO: Add params to solution node
+  // TODO: Add params to solution node
   GenerationUtils::generateRelationBetween(ms_context, solutionNode, rule, CoreKeynodes::rrel_1);
   return solutionNode;
 }

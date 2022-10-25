@@ -9,7 +9,6 @@
 namespace inference
 {
 
-
 class FormulaClassifier
 {
 public:
@@ -30,8 +29,6 @@ public:
 
 private:
   ScMemoryContext * ms_context;
-
 };
 
-}
-
+}  // namespace inference

@@ -1,8 +1,8 @@
 /*
-* This source file is part of an OSTIS project. For the latest info, see http://ostis.net
-* Distributed under the MIT License
-* (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
-*/
+ * This source file is part of an OSTIS project. For the latest info, see http://ostis.net
+ * Distributed under the MIT License
+ * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
+ */
 
 #include <map>
 
@@ -27,23 +27,18 @@ bool AReverseInference::generateStatement(ScAddr & statement, const ScTemplatePa
   return ms_context->HelperGenTemplate(statementTemplate, result, templateParams);
 }
 
-void AReverseInference::createTemplateParams(ScAddr & statement, vector<ScAddr> argumentList,
-                                             ScTemplateParams & templateParam)
+void AReverseInference::createTemplateParams(
+    ScAddr & statement,
+    vector<ScAddr> argumentList,
+    ScTemplateParams & templateParam)
 {
-  ScIterator3Ptr varIterator = ms_context->Iterator3(
-        statement,
-        ScType::EdgeAccessConstPosPerm,
-        ScType::NodeVar);
+  ScIterator3Ptr varIterator = ms_context->Iterator3(statement, ScType::EdgeAccessConstPosPerm, ScType::NodeVar);
   while (varIterator->Next())
   {
     ScAddr var = varIterator->Get(2);
     ScAddr argumentOfVar;
     ScIterator5Ptr classesIterator = ms_context->Iterator5(
-          ScType::NodeConstClass,
-          ScType::EdgeAccessVarPosPerm,
-          var,
-          ScType::EdgeAccessConstPosPerm,
-          statement);
+        ScType::NodeConstClass, ScType::EdgeAccessVarPosPerm, var, ScType::EdgeAccessConstPosPerm, statement);
     while (classesIterator->Next())
     {
       ScAddr varClass = classesIterator->Get(0);
@@ -125,7 +120,7 @@ SC_AGENT_IMPLEMENTATION(AReverseInference)
         }
         else
         {
-          //add analyzing of ifStatement and try to find rules for use it
+          // add analyzing of ifStatement and try to find rules for use it
         }
       }
     }
@@ -135,7 +130,7 @@ SC_AGENT_IMPLEMENTATION(AReverseInference)
   ScAddr decisionTree = ms_context->CreateNode(ScType::NodeConst);
   ms_context->CreateEdge(ScType::EdgeAccessConstPosPerm, decisionTree, usedRule);
 
-  AgentUtils::finishAgentWork((ScMemoryContext *) ms_context.get(), questionNode, decisionTree);
+  AgentUtils::finishAgentWork((ScMemoryContext *)ms_context.get(), questionNode, decisionTree);
   return SC_RESULT_OK;
 }
-}
+}  // namespace inference

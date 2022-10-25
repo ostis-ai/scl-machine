@@ -1,8 +1,8 @@
 /*
-* This source file is part of an OSTIS project. For the latest info, see http://ostis.net
-* Distributed under the MIT License
-* (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
-*/
+ * This source file is part of an OSTIS project. For the latest info, see http://ostis.net
+ * Distributed under the MIT License
+ * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
+ */
 
 #include <sc-agents-common/utils/IteratorUtils.hpp>
 #include <sc-agents-common/utils/AgentUtils.hpp>
@@ -27,8 +27,10 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
   ScAddr questionNode = ms_context->GetEdgeTarget(edgeAddr);
   ScAddr rrel_4 = ms_context->HelperResolveSystemIdtf("rrel_4");
   ScAddr ruleSet = utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_1);
-  ScAddr inputStructure = utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_2);
-  ScAddr outputStructure = utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_3);
+  ScAddr inputStructure =
+      utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_2);
+  ScAddr outputStructure =
+      utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_3);
   ScAddr targetTemplate = utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), questionNode, rrel_4);
 
   if (!ruleSet.IsValid())
@@ -45,9 +47,10 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
   ScAddr answer = this->inferenceManager->applyInference(ruleSet, inputStructure, outputStructure, targetTemplate);
   answers.push_back(answer);
 
-  bool success = ms_context->HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm);
-  utils::AgentUtils::finishAgentWork((ScMemoryContext *) ms_context.get(), questionNode, answers, success);
+  bool success =
+      ms_context->HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm);
+  utils::AgentUtils::finishAgentWork((ScMemoryContext *)ms_context.get(), questionNode, answers, success);
 
   return SC_RESULT_OK;
 }
-}
+}  // namespace inference

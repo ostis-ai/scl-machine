@@ -207,7 +207,7 @@ bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> /*const
 {
   SC_LOG_DEBUG("Trying to use rule: " + ms_context->HelperGetSystemIdtf(rule));
   ScAddr keyScElement =
-        utils::IteratorUtils::getAnyByOutRelation(ms_context, rule, InferenceKeynodes::rrel_main_key_sc_element);
+      utils::IteratorUtils::getAnyByOutRelation(ms_context, rule, InferenceKeynodes::rrel_main_key_sc_element);
   if (!keyScElement.IsValid())
     return false;
 
