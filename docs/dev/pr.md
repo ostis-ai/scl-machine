@@ -8,20 +8,21 @@ Message text should start from an upper case letter. If commit doesn't fix or im
 
 Examples:
 <pre>
-[cpp] Colored log output
-[cpp][test] Add unit test for ScEvent class
-[kpm][search] Relation type check added
+[doc] Add documentation for direct inference agent
+[dia][test] Add unit tests
 </pre>
 
 Possible tags:
 
+  * `[dia]` - changes in direct inference agent;
+  * `[ria]` - changes in reverse inference agent; (or [iia] - changes in inverse/indirect inference)
   * `[test]` - changes in tests;
   * `[review]` - commits with review fixes;
   * `[refactor]` - commits with some code refactoring;
   * `[changelog]` - use when you update changelog;
   * `[doc]` - use when you update documentation;
   * `[docker]` - changes in Dockerfile, .dockerignore or Docker image build pipeline
-  * `[scripts]` - updates in the `sc-machine/scripts` files
+  * `[scripts]` - updates in the `scl-machine/scripts` files
   * `[ci]` - changes in `ci` configuration or scripts;
   * `[git]` - changes in `git` configuration;
   * `[cmake]` - changes in `cmake` build system. 
@@ -30,8 +31,8 @@ Each commit in Pull request should be an atomic. Another word implement or fix o
 <pre>
 Last commit
 ...
-[cpp] Colored log output
-[cpp] Add class to work with console
+[refactor][dia] Format dia according to clang format
+[ci] Add clang format file
 ...
 Init commit
 </pre>

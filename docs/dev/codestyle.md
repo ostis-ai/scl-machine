@@ -28,7 +28,7 @@ Below are our specific (but not all!) exceptions to the Google's coding standard
 ```
 
 - We ARE using C++ exceptions.
-- We are using all features of C++11.
+- We are using all features of C++14.
 
 Naming and formatting
 
@@ -229,7 +229,7 @@ v = w * (x + z);
 
 ### Some useful macros:
 
-- macroses to check compilation platform
+- Macroses to check compilation platform
 
 ```cpp
 #if SC_IS_PLATFORM_WIN32
@@ -251,6 +251,7 @@ v = w * (x + z);
  // android platform
 #endif
 ```
+
 - Check code in runtime for Debug builds:
 
 ```cpp
@@ -282,11 +283,11 @@ SC_CHECK_LESS_EQ(a, b, ()); // equal to SC_CHECK(a <= b, ());
 ```
 
 - Logging:
-  * `SC_LOG_DEBUG(msg)` - print message in Debug builds. Prefix: `[Debug]`
-  * `SC_LOG_INFO(msg)`
-  * `SC_LOG_WARNING(msg)`
-  * `SC_LOG_ERROR(msg)`
-  * `SC_LOG_INFO_COLOR(msg, color)` - print colored info message. Look color constants in `ScConsole::Color`
+	* `SC_LOG_DEBUG(msg)` - print message in Debug builds. Prefix: `[Debug]`
+	* `SC_LOG_INFO(msg)`
+	* `SC_LOG_WARNING(msg)`
+	* `SC_LOG_ERROR(msg)`
+	* `SC_LOG_INFO_COLOR(msg, color)` - print colored info message. Look color constants in `ScConsole::Color`
 
 - Declare your own exceptions:
 
@@ -297,6 +298,7 @@ public:
 	explicit MyException(std::string const & msg) : ScException("My: " + msg) {}
 };
 ```
+
 - Throw exceptions with `SC_THROW_EXCEPTION(exceptionName, message)`:
 
 ```cpp
