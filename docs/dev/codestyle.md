@@ -38,7 +38,7 @@ Naming and formatting
 - Underscores are allowed only in prefixes for member variables and namespace names, like `int m_keynodeAddr; namespace sc_utils`.
 - Don't use `using namespace std` or other namepsaces globaly. You can use them localy in test cpp files or functions.
 - Use right-to-left order for variables/params: `ScAddr const & addr` (reference to the const `ScAddr`).
-- In one line `if`, `for`, `while` we do not use brackets. If one line `for` or `while` is combined with one line `if`, do use brackets for cycle.
+- In one line `if`, `for`, `while` we do not use brackets, except case when one line if has multiline else. If one line `for` or `while` is combined with one line `if`, do use brackets for cycle.
 
 ```cpp
 for (ScAddr const & addr : listOfAddr)
@@ -221,7 +221,7 @@ v = w * (x + z);
 ## Tips and Hints
 
 - If you see outdated code which can be improved - DO IT NOW (but in the separate pull request).
-- Your code should work at least on [mac|win|linux][x86|x86_64] [android|ios] platforms.
+- Your code should work at least on [linux][x86|x86_64] platforms.
 - Your code should compile well with gcc 4.8+ and clang 3.5+
 - Try to avoid using any new 3party library if it is not fully tested and supported on supported platforms.
 - Cover your code with unit tests.
@@ -283,11 +283,11 @@ SC_CHECK_LESS_EQ(a, b, ()); // equal to SC_CHECK(a <= b, ());
 ```
 
 - Logging:
-	* `SC_LOG_DEBUG(msg)` - print message in Debug builds. Prefix: `[Debug]`
-	* `SC_LOG_INFO(msg)`
-	* `SC_LOG_WARNING(msg)`
-	* `SC_LOG_ERROR(msg)`
-	* `SC_LOG_INFO_COLOR(msg, color)` - print colored info message. Look color constants in `ScConsole::Color`
+	* `SC_LOG_DEBUG(msg);` - print message in Debug builds. Prefix: `[Debug]`
+	* `SC_LOG_INFO(msg);`
+	* `SC_LOG_WARNING(msg);`
+	* `SC_LOG_ERROR(msg);`
+	* `SC_LOG_INFO_COLOR(msg, color);` - print colored info message. Look color constants in `ScConsole::Color`
 
 - Declare your own exceptions:
 
@@ -299,13 +299,13 @@ public:
 };
 ```
 
-- Throw exceptions with `SC_THROW_EXCEPTION(exceptionName, message)`:
+- Throw exceptions with `SC_THROW_EXCEPTION(exceptionName, message);`:
 
 ```cpp
-SC_THROW_EXCEPTION(MyException, "my message")
+SC_THROW_EXCEPTION(MyException, "my message");
 ```
 
 - Exception for a non implemented parts of code
 ```cpp
-SC_NOT_IMPLEMENTED("message")
+SC_NOT_IMPLEMENTED("message");
 ```
