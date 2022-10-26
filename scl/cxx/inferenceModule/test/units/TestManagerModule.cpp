@@ -29,6 +29,7 @@ void initialize()
   scAgentsCommon::CoreKeynodes::InitGlobal();
 }
 
+// TODO (MksmOrlov): fail old interface
 TEST_F(InferenceManagerTest, SuccessApplyInference)
 {
   ScMemoryContext & context = *m_ctx;
@@ -80,6 +81,7 @@ TEST_F(InferenceManagerTest, RuleNotFound)
       context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
 }
 
+// TODO (MksmOrlov): fail old interface
 TEST_F(InferenceManagerTest, RuleNotUsed)
 {
   ScMemoryContext & context = *m_ctx;
@@ -132,6 +134,7 @@ TEST_F(InferenceManagerTest, IncorrectElseStatementStructure)
       context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
 }
 
+// TODO (MksmOrlov): infinite cycle
 TEST_F(InferenceManagerTest, IncorrectIfStatementStructure)
 {
   ScMemoryContext & context = *m_ctx;
@@ -158,6 +161,7 @@ TEST_F(InferenceManagerTest, IncorrectIfStatementStructure)
       context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
 }
 
+// TODO (MksmOrlov): fail old interface
 TEST_F(InferenceManagerTest, IncorrectTargetTemplate)
 {
   ScMemoryContext & context = *m_ctx;
@@ -184,6 +188,7 @@ TEST_F(InferenceManagerTest, IncorrectTargetTemplate)
       context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
 }
 
+// TODO (MksmOrlov): fail old interface
 TEST_F(InferenceManagerTest, IncorrectArgumentSet)
 {
   ScMemoryContext & context = *m_ctx;
