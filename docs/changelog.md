@@ -7,8 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Add pre-commit
+- Add clang format check
+- Add oportunity to generate and search in structure for DirectInferenceAgent
+- Add oportunity to only search and check formula, but not generate
+- Add mechanism for substituon values into variables
 - Documentation in scn-tex format
 - README
 - Changelog
 
 ### Changed
+- Move to 0.7.0 ostis-web-platform

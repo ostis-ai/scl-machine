@@ -1,0 +1,21 @@
+site_name: SCL-machine
+
+nav:
+  - Home: index.md
+  - Development:
+      - Codestyle: dev/codestyle.md
+      - Git Workflow: dev/git-workflow.md
+      - Pull request rules: dev/pr.md
+  - Changelog: changelog.md
+
+theme: material
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.details
+  - pymdownx.superfences
+
