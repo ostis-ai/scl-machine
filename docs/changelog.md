@@ -7,11 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- New tests for logic module with argument checking and with complex rules
 - Add pre-commit
 - Add clang format check
-- Add oportunity to generate and search in structure for DirectInferenceAgent
-- Add oportunity to only search and check formula, but not generate
-- Add mechanism for substituon values into variables
+- Add opportunity to generate and search in structure for DirectInferenceAgent
+- Add opportunity to only search and check formula, but not generate
+- Add mechanism for substitution values into variables
 - Documentation in scn-tex format
 - README
 - Changelog
