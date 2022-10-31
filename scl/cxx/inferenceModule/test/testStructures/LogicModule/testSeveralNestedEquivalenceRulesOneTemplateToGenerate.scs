@@ -11,7 +11,7 @@ sc_node_structure
     -> test_output_structure;;
 
 //initial model
-@test_input_structure = [*
+test_input_structure = [*
     terminal_1 => nrel_equipment_usage_points: usage_points_tuple_1 (* -> usage_point_1;; -> usage_point_2;; *);;
     terminal_1 => nrel_connectivity_nodes: usage_connectivity_nodes_tuple_1 (* -> connectivity_node_1;; *);;
     terminal_2 => nrel_connectivity_nodes: usage_connectivity_nodes_tuple_2 (* -> connectivity_node_1;; *);;
@@ -20,10 +20,10 @@ sc_node_structure
 //action description
 inference_logic_test_question
     <- action_direct_inference;
-    -> rrel_1: test_rule_set (* -> test_rule_1;; -> test_rule_2;; *);
-    //-> rrel_2: @test_input_structure;
-    -> rrel_3: test_output_structure;
-    -> rrel_4: @test_direct_inference_target;;
+    -> rrel_1: test_direct_inference_target;
+    //-> rrel_2: test_rule_set (* -> test_rule_1;; -> test_rule_2;; *);
+    -> rrel_3: test_input_structure;
+    -> rrel_4: test_output_structure;;
 
 //first rule
 @rule_1_first_structure = [*
@@ -53,7 +53,7 @@ nrel_equivalence
     _terminal _=> cim_nrel_connectivity_node:: _connectivity_node;;
 *];;
 
-@test_direct_inference_target = [*
+test_direct_inference_target = [*
 	@pair28 = (current_node_class _-> _x);;
 *];;
 @rule_2_third_structure <- concept_template_for_generation;;

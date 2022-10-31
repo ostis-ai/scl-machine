@@ -3,6 +3,7 @@ sc_node_class
 	-> atomic_logical_formula;
 	-> target_node_class;
 	-> current_node_class;
+	-> fake_class;
 	-> class_1;;
 
 sc_node_role_relation
@@ -21,7 +22,7 @@ target_template = [*
 *];;
 
 if = [*
-    current_node_class _-> _arg;;
+    fake_class _-> _arg;;
 *];;
 
 then = [*

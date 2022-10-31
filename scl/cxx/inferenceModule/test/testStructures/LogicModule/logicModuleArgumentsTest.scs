@@ -51,24 +51,24 @@ rules_set
 
 valid_arguments_action
     <- action_direct_inference;
-    -> rrel_1: rules_set;
-    -> rrel_2: input_structure;
-    -> rrel_3: output_structure;
-    -> rrel_4: target_template;;
+    -> rrel_1: target_template;
+	-> rrel_2: rules_set;
+	-> rrel_3: input_structure;
+	-> rrel_4: output_structure;;
 
 invalid_input_structure_action
     <- action_direct_inference;
-    -> rrel_1: rules_set;
-    // -> rrel_2: input_structure;
-    -> rrel_3: output_structure;
-    -> rrel_4: target_template;;
+    -> rrel_1: target_template;
+    -> rrel_2: rules_set;
+    // -> rrel_3: input_structure;
+    -> rrel_4: output_structure;;
 
 empty_rules_set_queue_action
     <- action_direct_inference;
-    -> rrel_1: empty_rules_set_queue;
-    -> rrel_2: input_structure;
-    -> rrel_3: output_structure;
-    -> rrel_4: target_template;;
+    -> rrel_1: target_template;
+	-> rrel_2: empty_rules_set_queue;
+	-> rrel_3: input_structure;
+	-> rrel_4: output_structure;;
 
 // rules_1 nad rules_2 are empty, nothing to apply
 @rules_1 = (empty_rules_set -> set_1);;
@@ -78,7 +78,7 @@ rrel_1 -> @rules_1;;
 
 empty_rules_set_action
     <- action_direct_inference;
-    -> rrel_1: empty_rules_set;
-    -> rrel_2: input_structure;
-    -> rrel_3: output_structure;
-    -> rrel_4: target_template;;
+    -> rrel_1: target_template;
+	-> rrel_2: empty_rules_set;
+	-> rrel_3: input_structure;
+	-> rrel_4: output_structure;;

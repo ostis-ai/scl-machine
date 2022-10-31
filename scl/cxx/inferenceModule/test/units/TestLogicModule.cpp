@@ -51,7 +51,61 @@ TEST_F(InferenceLogicTest, TrueSimpleLogicRule)
   loader.loadScsFile(context,TEST_FILES_DIR_PATH + "trueSimpleRuleTest.scs");
   initialize();
 
-  ScAddr action = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
+  ScAddr action = context.HelperResolveSystemIdtf("four_arguments_action");
+  EXPECT_TRUE(action.IsValid());
+
+  ScAddr argument = context.HelperFindBySystemIdtf("argument");
+  EXPECT_TRUE(argument.IsValid());
+
+  ScIterator3Ptr argumentClassIteratorBefore = context.Iterator3(
+        ScType::NodeConstClass,
+        ScType::EdgeAccessConstPosPerm,
+        argument);
+
+  // There is only two classes of argument before agent run
+  EXPECT_TRUE(argumentClassIteratorBefore->Next());
+  EXPECT_TRUE(argumentClassIteratorBefore->Next());
+
+  // And there is no more classes
+  EXPECT_FALSE(argumentClassIteratorBefore->Next());
+
+  context.CreateEdge(
+        ScType::EdgeAccessConstPosPerm,
+        InferenceKeynodes::action_direct_inference,
+        action);
+
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
+  EXPECT_TRUE(context.HelperCheckEdge(
+        scAgentsCommon::CoreKeynodes::question_finished_successfully,
+        action,
+        ScType::EdgeAccessConstPosPerm));
+
+  ScIterator3Ptr argumentClassIteratorAfter = context.Iterator3(
+        ScType::NodeConstClass,
+        ScType::EdgeAccessConstPosPerm,
+        argument);
+
+  // There is only 3 classes of argument: two was before agent run and one is generated
+  EXPECT_TRUE(argumentClassIteratorAfter->Next());
+  EXPECT_TRUE(argumentClassIteratorAfter->Next());
+  EXPECT_TRUE(argumentClassIteratorAfter->Next());
+
+  // And there is no more classes
+  EXPECT_FALSE(argumentClassIteratorAfter->Next());
+
+  shutdown();
+  context.Destroy();
+}
+
+// Simple test with only one implication that must generates one class to the argument
+TEST_F(InferenceLogicTest, TrueSimpleLogicRuleThreeArguments)
+{
+  ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
+
+  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "trueSimpleRuleTest.scs");
+  initialize();
+
+  ScAddr action = context.HelperResolveSystemIdtf("three_arguments_action");
   EXPECT_TRUE(action.IsValid());
 
   ScAddr argument = context.HelperFindBySystemIdtf("argument");

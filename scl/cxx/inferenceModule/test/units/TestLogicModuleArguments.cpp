@@ -44,7 +44,7 @@ void shutdown()
 
 // All arguments are valid
 // a -> b
-TEST_F(InferenceLogicTest, TrueSimpleLogicRule)
+TEST_F(InferenceLogicTest, AllArgumentsValid)
 {
   ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
 

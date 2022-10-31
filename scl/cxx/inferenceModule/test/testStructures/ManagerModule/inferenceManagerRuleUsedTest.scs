@@ -1,9 +1,0 @@
-message
-	<- concept_weather_request_message;
-	<- message_singleton;
-	<- concept_message;
-	=> nrel_authors: authors;;
-
-template_reply_target = [*
-	_message _=> nrel_reply: _reply_message;;
-*];;

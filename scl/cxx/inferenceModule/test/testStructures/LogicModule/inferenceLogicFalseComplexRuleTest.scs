@@ -10,7 +10,7 @@ rrel_main_key_sc_element
 nrel_implication
   <- sc_node_norole_relation;;
 
-@test_direct_inference_target = [*
+test_direct_inference_target = [*
 	@pair28 = (current_node_class _-> _x);;
 	@pair29 = (target_node_class _-> _x);;
 *];;
@@ -70,10 +70,10 @@ action_direct_inference <- sc_node_class;;
 
 inference_logic_test_question
     <- action_direct_inference;
-    -> rrel_1: rule_set;
-    -> rrel_2: { test_argument };
-    -> rrel_3: output_structure;
-    -> rrel_4: @test_direct_inference_target;;
+    -> rrel_1: test_direct_inference_target;
+    -> rrel_2: rule_set;
+    -> rrel_3: { test_argument };
+    -> rrel_4: output_structure;;
 
 rule_set
     -> rrel_1: {inference_logic_test_rule};;
