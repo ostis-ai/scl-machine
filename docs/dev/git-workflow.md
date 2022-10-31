@@ -18,9 +18,6 @@ git merge upstream/main
 git push origin main
 ```
 
-### Common rules
-  * use `git rebase` instead of `merge`
-
 ### Pre-commit
 To setup `pre-commit` run:
 ```sh

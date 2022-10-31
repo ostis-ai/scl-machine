@@ -15,7 +15,6 @@ Examples:
 Possible tags:
 
   * `[dia]` - changes in direct inference agent;
-  * `[ria]` - changes in reverse inference agent; (or [iia] - changes in inverse/indirect inference)
   * `[test]` - changes in tests;
   * `[review]` - commits with review fixes;
   * `[refactor]` - commits with some code refactoring;

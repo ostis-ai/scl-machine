@@ -1,8 +1,5 @@
 # Documentation
 
-- **Building**
-    * [Linux](build/linux-build.md)
-
 - **Development**
     * [Codestyle](dev/codestyle.md)
     * [Git Workflow](dev/git-workflow.md)

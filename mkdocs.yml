@@ -1,15 +1,7 @@
 site_name: SCL-machine
 
-extra_css:
-  - _assets/main.css
-extra_javascript:
-  - _assets/scg.min.js
-  - _assets/main.js
-
 nav:
   - Home: index.md
-  - Build:
-      - Build on Linux: build/linux-build.md
   - Development:
       - Codestyle: dev/codestyle.md
       - Git Workflow: dev/git-workflow.md

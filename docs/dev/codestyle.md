@@ -229,29 +229,6 @@ v = w * (x + z);
 
 ### Some useful macros:
 
-- Macroses to check compilation platform
-
-```cpp
-#if SC_IS_PLATFORM_WIN32
-  // windows platform
-#endif
-
-#if SC_IS_PLATFORM_LINUX
- // linux platform
-#endif
-#if SC_IS_PLATFORM_MAC
- // OSX (mac) platform
-#endif
-
-#if SC_IS_PLATFORM_IOS
- // iOS platform
-#endif
-
-#if SC_IS_PLATFORM_ANDROID
- // android platform
-#endif
-```
-
 - Check code in runtime for Debug builds:
 
 ```cpp
