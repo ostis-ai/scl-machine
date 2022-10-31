@@ -10,7 +10,6 @@
 #include <sc-agents-common/utils/GenerationUtils.hpp>
 #include <sc-agents-common/utils/IteratorUtils.hpp>
 #include <logic/LogicExpression.hpp>
-#include <utils/LogicRuleUtils.hpp>
 
 #include "utils/ContainersUtils.hpp"
 
@@ -25,86 +24,14 @@ DirectInferenceManager::DirectInferenceManager(ScMemoryContext * ms_context)
 }
 
 ScAddr DirectInferenceManager::applyInference(
-    ScAddr const & targetStatement,
-    ScAddr const & ruleSet,
-    ScAddr const & argumentSet)
-{
-  // returns all <ScType::Node>s from argumentSet
-  vector<ScAddr> argumentList = utils::IteratorUtils::getAllWithType(ms_context, argumentSet, ScType::Node);
-  //
-  bool targetAchieved = isTargetAchieved(targetStatement, argumentList);
-  vector<queue<ScAddr>> rulesQueuesByPriority;
-  try
-  {
-    rulesQueuesByPriority = createRulesQueuesListByPriority(ruleSet);
-  }
-  catch (std::runtime_error & ex)
-  {
-    SC_LOG_ERROR(ex.what());
-    return this->solutionTreeGenerator->createSolution(targetAchieved);
-  }
-
-  if (rulesQueuesByPriority.empty())
-  {
-    SC_LOG_DEBUG("No rule sets found.");
-    return this->solutionTreeGenerator->createSolution(targetAchieved);
-  }
-
-  vector<ScAddr> checkedRuleList;
-  queue<ScAddr> uncheckedRules = rulesQueuesByPriority[0];
-
-  ScAddr rule;
-  bool isUsed;
-  if (targetAchieved == false)
-  {
-    for (size_t ruleQueueIndex = 0; ruleQueueIndex < rulesQueuesByPriority.size() && targetAchieved == false;
-         ruleQueueIndex++)
-    {
-      queue<ScAddr> uncheckedRules = rulesQueuesByPriority.at(ruleQueueIndex);
-      while (uncheckedRules.empty() == false)
-      {
-        rule = uncheckedRules.front();
-        isUsed = useRule(rule, argumentList);
-        if (isUsed)
-        {
-          targetAchieved = isTargetAchieved(targetStatement, argumentList);
-          if (targetAchieved)
-          {
-            SC_LOG_DEBUG("Target achieved");
-            break;
-          }
-          else
-          {
-            ContainersUtils::addToQueue(checkedRuleList, uncheckedRules);
-            ruleQueueIndex = 0;
-            checkedRuleList.clear();
-          }
-        }
-        else
-        {
-          checkedRuleList.push_back(rule);
-        }
-        uncheckedRules.pop();
-      }
-    }
-  }
-  else
-  {
-    SC_LOG_DEBUG("Target is already achieved");
-  }
-
-  return this->solutionTreeGenerator->createSolution(targetAchieved);
-}
-
-ScAddr DirectInferenceManager::applyInference(
+    const ScAddr & targetTemplate,
     const ScAddr & ruleSet,
     const ScAddr & inputStructure,
-    const ScAddr & outputStructure,
-    const ScAddr & targetStatement)
+    const ScAddr & outputStructure)
 {
   this->inputStructure = inputStructure;
   this->outputStructure = outputStructure;
-  this->targetStatement = targetStatement;
+  this->targetStatement = targetTemplate;
 
   vector<ScAddr> argumentList;
   if (inputStructure.IsValid())
@@ -122,12 +49,12 @@ ScAddr DirectInferenceManager::applyInference(
   bool targetAchieved = isTargetAchieved(targetStatement, argumentList);
 
   if (targetAchieved)
-    SC_LOG_DEBUG("Target is already achieved");
+    SC_LOG_WARNING("Target is already achieved");
   else
   {
     if (!ruleSet.IsValid())
     {
-      SC_LOG_DEBUG("rules set is not valid");
+      SC_LOG_WARNING("rules set is not valid");
       return this->solutionTreeGenerator->createSolution(targetAchieved);
     }
 
@@ -144,7 +71,7 @@ ScAddr DirectInferenceManager::applyInference(
 
     if (rulesQueuesByPriority.empty())
     {
-      SC_LOG_DEBUG("No rule sets found.");
+      SC_LOG_WARNING("No rule sets found.");
       return this->solutionTreeGenerator->createSolution(targetAchieved);
     }
 
@@ -154,7 +81,7 @@ ScAddr DirectInferenceManager::applyInference(
     ScAddr rule;
     ScAddr model = (inputStructure.IsValid() ? inputStructure : InferenceKeynodes::knowledge_base_IMS);
     bool isUsed;
-    SC_LOG_DEBUG("Start rule applying. There is " + to_string(rulesQueuesByPriority.size()) + " rule(s)");
+    SC_LOG_WARNING("Start rule applying. There is " + to_string(rulesQueuesByPriority.size()) + " rule(s)");
     for (size_t ruleQueueIndex = 0; ruleQueueIndex < rulesQueuesByPriority.size() && !targetAchieved; ruleQueueIndex++)
     {
       uncheckedRules = rulesQueuesByPriority[ruleQueueIndex];
@@ -162,7 +89,7 @@ ScAddr DirectInferenceManager::applyInference(
       {
         rule = uncheckedRules.front();
         clearSatisfiabilityInformation(rule, model);
-        SC_LOG_DEBUG("Using rule " + ms_context->HelperGetSystemIdtf(rule));
+        SC_LOG_WARNING("Using rule " + ms_context->HelperGetSystemIdtf(rule));
         isUsed = useRule(rule, argumentList);
         if (isUsed)
         {
@@ -170,7 +97,7 @@ ScAddr DirectInferenceManager::applyInference(
           targetAchieved = isTargetAchieved(targetStatement, argumentList);
           if (targetAchieved)
           {
-            SC_LOG_DEBUG("Target achieved in applyInterference([4])");
+            SC_LOG_WARNING("Target achieved in applyInterference([4])");
             break;
           }
           else
@@ -205,7 +132,7 @@ queue<ScAddr> DirectInferenceManager::createQueue(ScAddr const & set)
 
 bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> /*const*/ & argumentList)
 {
-  SC_LOG_DEBUG("Trying to use rule: " + ms_context->HelperGetSystemIdtf(rule));
+  SC_LOG_WARNING("Trying to use rule: " + ms_context->HelperGetSystemIdtf(rule));
   ScAddr keyScElement =
       utils::IteratorUtils::getAnyByOutRelation(ms_context, rule, InferenceKeynodes::rrel_main_key_sc_element);
   if (!keyScElement.IsValid())
@@ -216,7 +143,7 @@ bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> /*const
 
   auto root = logicExpression.build(keyScElement);
   auto result = root->compute();
-  SC_LOG_DEBUG(std::string("Whole statement is ") + (result.value ? "right" : "wrong"));
+  SC_LOG_WARNING(std::string("Whole statement is ") + (result.value ? "right" : "wrong"));
 
   return result.value;
 }

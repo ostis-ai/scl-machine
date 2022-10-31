@@ -27,13 +27,11 @@ class DirectInferenceManager
 public:
   explicit DirectInferenceManager(ScMemoryContext * ms_context);
 
-  ScAddr applyInference(const ScAddr & targetStatement, const ScAddr & ruleSet, const ScAddr & argumentSet);
-
   ScAddr applyInference(
+      const ScAddr & targetStatement,
       const ScAddr & ruleSet,
       const ScAddr & inputStructure,
-      const ScAddr & outputStructure,
-      const ScAddr & targetStatement);
+      const ScAddr & outputStructure);
 
 private:
   vector<queue<ScAddr>> createRulesQueuesListByPriority(ScAddr const & rulesSet);

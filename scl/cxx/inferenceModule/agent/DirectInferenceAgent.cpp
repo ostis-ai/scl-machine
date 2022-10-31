@@ -20,37 +20,56 @@ namespace inference
 
 SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
 {
-  SC_LOG_DEBUG("Starting DirectInferenceAgent");
   if (!edgeAddr.IsValid())
     return SC_RESULT_ERROR;
 
-  ScAddr questionNode = ms_context->GetEdgeTarget(edgeAddr);
-  ScAddr rrel_4 = ms_context->HelperResolveSystemIdtf("rrel_4");
-  ScAddr ruleSet = utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_1);
-  ScAddr inputStructure =
-      utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_2);
-  ScAddr outputStructure =
-      utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), questionNode, CoreKeynodes::rrel_3);
-  ScAddr targetTemplate = utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), questionNode, rrel_4);
+  ScAddr actionNode = m_memoryCtx.GetEdgeTarget(edgeAddr);
+  if (!checkActionClass(actionNode))
+    return SC_RESULT_OK;
 
+  SC_LOG_DEBUG("DirectInferenceAgent started");
+
+  ScAddr targetTemplate = utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), actionNode, CoreKeynodes::rrel_1);
+  ScAddr ruleSet = utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), actionNode, CoreKeynodes::rrel_2);
+  ScAddr inputStructure =
+      utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), actionNode, CoreKeynodes::rrel_3);
+  ScAddr rrel_4 = utils::IteratorUtils::getRoleRelation(ms_context.get(), 4);
+  ScAddr outputStructure =
+      utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), actionNode, rrel_4);
+
+  if (!targetTemplate.IsValid())
+    SC_LOG_WARNING("Target template is not valid");
   if (!ruleSet.IsValid())
     SC_LOG_WARNING("Rule set is not valid");
   if (!inputStructure.IsValid())
     SC_LOG_WARNING("Input structure is not valid");
   if (!outputStructure.IsValid())
+  {
     SC_LOG_WARNING("Output structure is not valid");
-  if (!targetTemplate.IsValid())
-    SC_LOG_WARNING("Target template is not valid");
+  }
+  else
+  {
+    outputStructure = ms_context->CreateNode(ScType::NodeConstStruct);
+  }
 
   this->inferenceManager = std::make_unique<DirectInferenceManager>(ms_context.get());
-  ScAddrVector answers;
-  ScAddr answer = this->inferenceManager->applyInference(ruleSet, inputStructure, outputStructure, targetTemplate);
-  answers.push_back(answer);
+  ScAddr solutionNode;
+  solutionNode = this->inferenceManager->applyInference(targetTemplate, ruleSet, inputStructure, outputStructure);
+  ScAddrVector answerElements;
+  answerElements.push_back(solutionNode);
 
-  bool success =
-      ms_context->HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm);
-  utils::AgentUtils::finishAgentWork((ScMemoryContext *)ms_context.get(), questionNode, answers, success);
+  bool isSuccess =
+      ms_context->HelperCheckEdge(InferenceKeynodes::concept_success_solution, solutionNode, ScType::EdgeAccessConstPosPerm);
 
+  utils::AgentUtils::finishAgentWork(ms_context.get(), actionNode, answerElements, isSuccess);
+  SC_LOG_DEBUG("DirectInferenceAgent finished");
   return SC_RESULT_OK;
 }
+
+bool DirectInferenceAgent::checkActionClass(ScAddr const & actionNode)
+{
+  return m_memoryCtx.HelperCheckEdge(
+        InferenceKeynodes::action_direct_inference, actionNode, ScType::EdgeAccessConstPosPerm);
+}
+
 }  // namespace inference
