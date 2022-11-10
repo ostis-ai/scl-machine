@@ -71,7 +71,7 @@ ScAddr DirectInferenceManager::applyInference(
 
     if (rulesQueuesByPriority.empty())
     {
-      SC_LOG_WARNING("No rule sets found.");
+      SC_LOG_DEBUG("No rule sets found.");
       return this->solutionTreeGenerator->createSolution(targetAchieved);
     }
 
@@ -81,7 +81,7 @@ ScAddr DirectInferenceManager::applyInference(
     ScAddr rule;
     ScAddr model = (inputStructure.IsValid() ? inputStructure : InferenceKeynodes::knowledge_base_IMS);
     bool isUsed;
-    SC_LOG_WARNING("Start rule applying. There is " + to_string(rulesQueuesByPriority.size()) + " rule(s)");
+    SC_LOG_DEBUG("Start rule applying. There is " + to_string(rulesQueuesByPriority.size()) + " rule(s)");
     for (size_t ruleQueueIndex = 0; ruleQueueIndex < rulesQueuesByPriority.size() && !targetAchieved; ruleQueueIndex++)
     {
       uncheckedRules = rulesQueuesByPriority[ruleQueueIndex];
@@ -89,7 +89,7 @@ ScAddr DirectInferenceManager::applyInference(
       {
         rule = uncheckedRules.front();
         clearSatisfiabilityInformation(rule, model);
-        SC_LOG_WARNING("Using rule " + ms_context->HelperGetSystemIdtf(rule));
+        SC_LOG_DEBUG("Using rule " + ms_context->HelperGetSystemIdtf(rule));
         isUsed = useRule(rule, argumentList);
         if (isUsed)
         {
@@ -97,7 +97,7 @@ ScAddr DirectInferenceManager::applyInference(
           targetAchieved = isTargetAchieved(targetStatement, argumentList);
           if (targetAchieved)
           {
-            SC_LOG_WARNING("Target achieved in applyInterference([4])");
+            SC_LOG_DEBUG("Target achieved in applyInterference([4])");
             break;
           }
           else
@@ -132,7 +132,7 @@ queue<ScAddr> DirectInferenceManager::createQueue(ScAddr const & set)
 
 bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> /*const*/ & argumentList)
 {
-  SC_LOG_WARNING("Trying to use rule: " + ms_context->HelperGetSystemIdtf(rule));
+  SC_LOG_DEBUG("Trying to use rule: " + ms_context->HelperGetSystemIdtf(rule));
   ScAddr keyScElement =
       utils::IteratorUtils::getAnyByOutRelation(ms_context, rule, InferenceKeynodes::rrel_main_key_sc_element);
   if (!keyScElement.IsValid())
@@ -143,7 +143,7 @@ bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> /*const
 
   auto root = logicExpression.build(keyScElement);
   auto result = root->compute();
-  SC_LOG_WARNING(std::string("Whole statement is ") + (result.value ? "right" : "wrong"));
+  SC_LOG_DEBUG(std::string("Whole statement is ") + (result.value ? "right" : "wrong"));
 
   return result.value;
 }

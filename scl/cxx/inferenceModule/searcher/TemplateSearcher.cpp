@@ -39,7 +39,9 @@ vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplate(
       searchResult = searchTemplateWithContent(searchTemplate, templateAddr);
     else
     {
-      context->HelperSearchTemplateInStruct(searchTemplate, inputStructure, *searchWithoutContentResult);
+      // TODO(MksmOrlov): need to separate input structure and arguments, search in structure
+      // context->HelperSearchTemplateInStruct(searchTemplate, inputStructure, *searchWithoutContentResult);
+      context->HelperSearchTemplate(searchTemplate, *searchWithoutContentResult);
       for (size_t searchItemIndex = 0; searchItemIndex < searchWithoutContentResult->Size(); searchItemIndex++)
         searchResult.push_back((*searchWithoutContentResult)[searchItemIndex]);
     }

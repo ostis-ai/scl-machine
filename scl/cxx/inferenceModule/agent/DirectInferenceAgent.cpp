@@ -45,10 +45,7 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
     SC_LOG_WARNING("Input structure is not valid");
   if (!outputStructure.IsValid())
   {
-    SC_LOG_WARNING("Output structure is not valid");
-  }
-  else
-  {
+    SC_LOG_WARNING("Output structure is not valid, generate new");
     outputStructure = ms_context->CreateNode(ScType::NodeConstStruct);
   }
 
