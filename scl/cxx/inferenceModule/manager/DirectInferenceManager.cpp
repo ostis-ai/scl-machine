@@ -49,12 +49,12 @@ ScAddr DirectInferenceManager::applyInference(
   bool targetAchieved = isTargetAchieved(targetStatement, argumentList);
 
   if (targetAchieved)
-    SC_LOG_WARNING("Target is already achieved");
+    SC_LOG_DEBUG("Target is already achieved");
   else
   {
     if (!ruleSet.IsValid())
     {
-      SC_LOG_WARNING("rules set is not valid");
+      SC_LOG_DEBUG("rules set is not valid");
       return this->solutionTreeGenerator->createSolution(targetAchieved);
     }
 
