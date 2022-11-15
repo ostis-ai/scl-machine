@@ -253,7 +253,7 @@ LogicFormulaResult ImplicationExpressionNode::compute() const
 
   if (!isLeftGenerated)
   {
-    SC_LOG_DEBUG("*** Left part shouldn't be generated");
+    SC_LOG_DEBUG("If part shouldn't be generated");
     leftResult = operands[0]->compute();
     rightResult = (isRightGenerated ? rightAtom->generate(leftResult.replacements) : operands[1]->compute());
   }
@@ -261,12 +261,12 @@ LogicFormulaResult ImplicationExpressionNode::compute() const
   {
     if (isRightGenerated)
     {
-      SC_LOG_DEBUG("*** Right part should be generated");
+      SC_LOG_DEBUG("Then part should be generated");
       return {true, {}};
     }
     else
     {
-      SC_LOG_DEBUG("*** Right part shouldn't be generated");
+      SC_LOG_DEBUG("Then part shouldn't be generated");
       rightResult = operands[1]->compute();
       leftResult = leftAtom->generate(rightResult.replacements);
     }
@@ -445,11 +445,9 @@ LogicFormulaResult TemplateExpressionNode::compute() const
   LogicFormulaResult result;
   auto const & idtf = context->HelperGetSystemIdtf(formulaTemplate);
   SC_LOG_DEBUG("Checking atom " + idtf);
-
   result.replacements = templateSearcher->searchTemplate(formulaTemplate);
-  SC_LOG_DEBUG("after  search in " + idtf);
   result.value = !result.replacements.empty();
-  std::string ending = (result.value ? " right" : " wrong");
+  std::string ending = (result.value ? " true" : " false");
   SC_LOG_DEBUG("Compute Statement " + idtf + ending);
 
   return result;
@@ -463,7 +461,7 @@ LogicFormulaResult TemplateExpressionNode::find(map<string, vector<ScAddr>> & re
   result.value = !result.replacements.empty();
 
   auto const & idtf = context->HelperGetSystemIdtf(formulaTemplate);
-  std::string ending = (result.value ? " right" : " wrong");
+  std::string ending = (result.value ? " true" : " false");
   SC_LOG_DEBUG("Find Statement " + idtf + ending);
   return result;
 }
@@ -472,20 +470,23 @@ LogicFormulaResult TemplateExpressionNode::generate(map<string, vector<ScAddr>> 
 {
   LogicFormulaResult result;
   auto paramsVector = ReplacementsUtils::getReplacementsToScTemplateParams(replacements);
+  if (paramsVector.empty())
+  {
+    SC_LOG_DEBUG("Template " + context->HelperGetSystemIdtf(formulaTemplate) + " is not generated");
+    return compute();
+  }
+
   for (auto const & scTemplateParams : paramsVector)
   {
     auto searchResult = templateSearcher->searchTemplate(formulaTemplate, scTemplateParams);
     if (searchResult.empty())
     {
-      SC_LOG_DEBUG("SearchResult is empty");
       ScTemplate generatedTemplate;
       context->HelperBuildTemplate(generatedTemplate, formulaTemplate, scTemplateParams);
 
       ScTemplateGenResult generationResult;
       const ScTemplate::Result & genTemplate = context->HelperGenTemplate(generatedTemplate, generationResult);
-      SC_LOG_DEBUG("context->HelperGenTemplate() = " + genTemplate.Msg());
-      SC_LOG_DEBUG("generationResult.Size() = " + to_string(generationResult.Size()));
-
+      SC_LOG_DEBUG("Template " + context->HelperGetSystemIdtf(formulaTemplate) + " is generated");
       bool outputIsValid = outputStructure.IsValid();
       for (auto i = 0; i < generationResult.Size(); ++i)
       {
@@ -643,12 +644,10 @@ std::unique_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & node)
 
   if (implicationIter3->Next())
   {
-    SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is an implication");
     if (utils::CommonUtils::checkType(context, node, ScType::EdgeDCommon))
     {
       SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is an implication edge");
       auto operands = resolveOperandsForEdge(node);
-      SC_LOG_DEBUG("Found " + to_string(operands.size()) + " operands in implication edge");
       if (operands.size() == 2)
         return std::make_unique<ImplicationExpressionNode>(context, operands);
       else
