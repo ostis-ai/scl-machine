@@ -43,7 +43,7 @@ void shutdown()
   SC_AGENT_UNREGISTER(inference::DirectInferenceAgent);
 }
 
-// Simple test with only one implication that must generates one class to the argument
+// a -> b; Simple test with only one implication that must generates one class to the argument
 TEST_F(InferenceLogicTest, TrueSimpleLogicRule)
 {
   ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
@@ -97,7 +97,7 @@ TEST_F(InferenceLogicTest, TrueSimpleLogicRule)
   context.Destroy();
 }
 
-// Simple test with only one implication that must generates one class to the argument
+// a -> b; Simple test with only one implication that must generates one class to the argument
 TEST_F(InferenceLogicTest, TrueSimpleLogicRuleThreeArguments)
 {
   ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
@@ -151,8 +151,7 @@ TEST_F(InferenceLogicTest, TrueSimpleLogicRuleThreeArguments)
   context.Destroy();
 }
 
-// Two implications with equal 'if' and different 'then'. Should apply both of them to achieve target
-// TODO (MksmOrlov): Can't apply the rule for the second time
+// a -> b; b -> c. Should apply both of them to achieve the target
 TEST_F(InferenceLogicTest, TrueDoubleApplyLogicRule)
 {
   ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
@@ -193,7 +192,61 @@ TEST_F(InferenceLogicTest, TrueDoubleApplyLogicRule)
         ScType::EdgeAccessConstPosPerm,
         argument);
 
-  // There is only two classes of argument: one was before agent run and one is generated
+  // There is only two classes of argument: one was before agent run and two was generated
+  EXPECT_TRUE(argumentClassIteratorAfter->Next());
+  EXPECT_TRUE(argumentClassIteratorAfter->Next());
+  EXPECT_TRUE(argumentClassIteratorAfter->Next());
+
+  // And there is no more classes
+  EXPECT_FALSE(argumentClassIteratorAfter->Next());
+
+  shutdown();
+  context.Destroy();
+}
+
+// (a -> b) -> c
+TEST_F(InferenceLogicTest, TrueComplexRule)
+{
+  ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
+
+  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "trueComplexImplicationRule.scs");
+  initialize();
+
+  ScAddr action = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
+  EXPECT_TRUE(action.IsValid());
+
+  ScAddr argument = context.HelperFindBySystemIdtf("argument");
+  EXPECT_TRUE(argument.IsValid());
+
+  ScIterator3Ptr argumentClassIteratorBefore = context.Iterator3(
+        ScType::NodeConstClass,
+        ScType::EdgeAccessConstPosPerm,
+        argument);
+
+  // There is only one class of argument before agent run
+  EXPECT_TRUE(argumentClassIteratorBefore->Next());
+
+  // And there is no more classes
+  EXPECT_FALSE(argumentClassIteratorBefore->Next());
+
+  context.CreateEdge(
+        ScType::EdgeAccessConstPosPerm,
+        InferenceKeynodes::action_direct_inference,
+        action);
+
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
+  EXPECT_TRUE(context.HelperCheckEdge(
+        scAgentsCommon::CoreKeynodes::question_finished_successfully,
+        action,
+        ScType::EdgeAccessConstPosPerm));
+
+  ScIterator3Ptr argumentClassIteratorAfter = context.Iterator3(
+        ScType::NodeConstClass,
+        ScType::EdgeAccessConstPosPerm,
+        argument);
+
+  // There is only two classes of argument: one was before agent run and two was generated
+  EXPECT_TRUE(argumentClassIteratorAfter->Next());
   EXPECT_TRUE(argumentClassIteratorAfter->Next());
   EXPECT_TRUE(argumentClassIteratorAfter->Next());
 
