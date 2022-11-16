@@ -17,7 +17,7 @@ nrel_implication
 
 target_template = [*
 	current_node_class _-> _arg;;
-	target_node_class _-> _arg;;
+	fake_node_class _-> _arg;;
 *];;
 
 if = [*

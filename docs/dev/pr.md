@@ -15,6 +15,7 @@ Examples:
 Possible tags:
 
   * `[dia]` - changes in direct inference agent;
+  * `[template]` - changes in template manager;
   * `[test]` - changes in tests;
   * `[review]` - commits with review fixes;
   * `[refactor]` - commits with some code refactoring;

@@ -10,7 +10,6 @@
 #include <sc-agents-common/utils/GenerationUtils.hpp>
 #include <sc-agents-common/utils/IteratorUtils.hpp>
 #include <logic/LogicExpression.hpp>
-#include <utils/LogicRuleUtils.hpp>
 
 #include "utils/ContainersUtils.hpp"
 
@@ -25,86 +24,14 @@ DirectInferenceManager::DirectInferenceManager(ScMemoryContext * ms_context)
 }
 
 ScAddr DirectInferenceManager::applyInference(
-    ScAddr const & targetStatement,
-    ScAddr const & ruleSet,
-    ScAddr const & argumentSet)
-{
-  // returns all <ScType::Node>s from argumentSet
-  vector<ScAddr> argumentList = utils::IteratorUtils::getAllWithType(ms_context, argumentSet, ScType::Node);
-  //
-  bool targetAchieved = isTargetAchieved(targetStatement, argumentList);
-  vector<queue<ScAddr>> rulesQueuesByPriority;
-  try
-  {
-    rulesQueuesByPriority = createRulesQueuesListByPriority(ruleSet);
-  }
-  catch (std::runtime_error & ex)
-  {
-    SC_LOG_ERROR(ex.what());
-    return this->solutionTreeGenerator->createSolution(targetAchieved);
-  }
-
-  if (rulesQueuesByPriority.empty())
-  {
-    SC_LOG_DEBUG("No rule sets found.");
-    return this->solutionTreeGenerator->createSolution(targetAchieved);
-  }
-
-  vector<ScAddr> checkedRuleList;
-  queue<ScAddr> uncheckedRules = rulesQueuesByPriority[0];
-
-  ScAddr rule;
-  bool isUsed;
-  if (targetAchieved == false)
-  {
-    for (size_t ruleQueueIndex = 0; ruleQueueIndex < rulesQueuesByPriority.size() && targetAchieved == false;
-         ruleQueueIndex++)
-    {
-      queue<ScAddr> uncheckedRules = rulesQueuesByPriority.at(ruleQueueIndex);
-      while (uncheckedRules.empty() == false)
-      {
-        rule = uncheckedRules.front();
-        isUsed = useRule(rule, argumentList);
-        if (isUsed)
-        {
-          targetAchieved = isTargetAchieved(targetStatement, argumentList);
-          if (targetAchieved)
-          {
-            SC_LOG_DEBUG("Target achieved");
-            break;
-          }
-          else
-          {
-            ContainersUtils::addToQueue(checkedRuleList, uncheckedRules);
-            ruleQueueIndex = 0;
-            checkedRuleList.clear();
-          }
-        }
-        else
-        {
-          checkedRuleList.push_back(rule);
-        }
-        uncheckedRules.pop();
-      }
-    }
-  }
-  else
-  {
-    SC_LOG_DEBUG("Target is already achieved");
-  }
-
-  return this->solutionTreeGenerator->createSolution(targetAchieved);
-}
-
-ScAddr DirectInferenceManager::applyInference(
+    const ScAddr & targetTemplate,
     const ScAddr & ruleSet,
     const ScAddr & inputStructure,
-    const ScAddr & outputStructure,
-    const ScAddr & targetStatement)
+    const ScAddr & outputStructure)
 {
   this->inputStructure = inputStructure;
   this->outputStructure = outputStructure;
-  this->targetStatement = targetStatement;
+  this->targetStatement = targetTemplate;
 
   vector<ScAddr> argumentList;
   if (inputStructure.IsValid())

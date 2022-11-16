@@ -11,13 +11,13 @@ sc_node_structure
     -> test_output_structure;;
 
 //initial model
-@test_input_structure = [*
+test_input_structure = [*
     terminal_1 => nrel_equipment_usage_points: usage_points_tuple_1 (* -> usage_point_1;; -> usage_point_2;; *);;
     terminal_1 => nrel_connectivity_nodes: usage_connectivity_nodes_tuple_1 (* -> connectivity_node_1;; *);;
     terminal_2 => nrel_connectivity_nodes: usage_connectivity_nodes_tuple_2 (* -> connectivity_node_1;; *);;
 *];;
 
-@target_structure = [*
+target_structure = [*
 	@pair28 = (current_node_class _-> _x);;
 *];;
 
@@ -30,10 +30,10 @@ test_rule_set
 //action description
 inference_logic_test_question
     <- action_direct_inference;
-    -> rrel_1: test_rule_set;
-    //-> rrel_2: @test_input_structure;
-    -> rrel_3: test_output_structure;
-    -> rrel_4 : @target_structure;;
+    -> rrel_1: target_structure;
+    //-> rrel_2: test_rule_set;
+    -> rrel_3: test_input_structure;
+    -> rrel_4: test_output_structure;;
 
 //first rule
 rule_1_first_structure = [*
