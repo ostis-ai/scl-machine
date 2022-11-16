@@ -99,7 +99,7 @@ ScAddr DirectInferenceManager::applyInference(
           targetAchieved = isTargetAchieved(targetStatement, argumentList);
           if (targetAchieved)
           {
-            SC_LOG_DEBUG("Target achieved in applyInterference([4])");
+            SC_LOG_DEBUG("Target achieved");
             break;
           }
           else
@@ -134,7 +134,7 @@ queue<ScAddr> DirectInferenceManager::createQueue(ScAddr const & set)
 
 bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> /*const*/ & argumentList)
 {
-  SC_LOG_DEBUG("Trying to use rule: " + ms_context->HelperGetSystemIdtf(rule));
+  LogicFormulaResult ruleResult = {false, false, {}};
   ScAddr keyScElement =
       utils::IteratorUtils::getAnyByOutRelation(ms_context, rule, InferenceKeynodes::rrel_main_key_sc_element);
   if (!keyScElement.IsValid())
@@ -144,9 +144,9 @@ bool DirectInferenceManager::useRule(ScAddr const & rule, vector<ScAddr> /*const
       ms_context, templateSearcher.get(), templateManager.get(), argumentList, outputStructure);
 
   auto root = logicExpression.build(keyScElement);
-  auto result = root->compute();
+  auto result = root->compute(ruleResult);
 
-  return result.value;
+  return result.isGenerated;
 }
 
 vector<queue<ScAddr>> DirectInferenceManager::createRulesQueuesListByPriority(ScAddr const & rulesSet)
