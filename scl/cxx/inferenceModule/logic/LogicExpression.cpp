@@ -251,7 +251,7 @@ LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & resul
 
   if (!isLeftGenerated)
   {
-    SC_LOG_DEBUG("If part shouldn't be generated");
+    SC_LOG_DEBUG("Premise shouldn't be generated");
     leftResult = operands[0]->compute(result);
     rightResult = (isRightGenerated ? rightAtom->generate(leftResult.replacements) : operands[1]->compute(result));
   }
@@ -259,12 +259,12 @@ LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & resul
   {
     if (isRightGenerated)
     {
-      SC_LOG_DEBUG("Then part should be generated");
+      SC_LOG_DEBUG("Conclusion should be generated");
       return {true, true, {}};
     }
     else
     {
-      SC_LOG_DEBUG("Then part shouldn't be generated");
+      SC_LOG_DEBUG("Conclusion shouldn't be generated");
       rightResult = operands[1]->compute(result);
       leftResult = leftAtom->generate(rightResult.replacements);
     }
