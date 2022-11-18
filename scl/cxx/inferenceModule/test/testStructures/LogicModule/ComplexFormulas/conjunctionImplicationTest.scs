@@ -1,0 +1,66 @@
+sc_node_class
+	-> atomic_logical_formula;
+	-> concept_template_for_generation;
+	-> target_class;
+	-> class_1;
+	-> current_class;;
+
+sc_node_norole_relation
+	-> nrel_implication;
+	-> nrel_disjunction;;
+
+sc_node_role_relation
+	-> rrel_if;
+	-> rrel_then;
+	-> rrel_main_key_sc_element;;
+
+sc_node_tuple
+	-> impl_tuple;
+	-> disjunction_tuple;;
+
+then = [*
+    @edge_15172272 = (target_class _-> _arg);;
+*];;
+then <- concept_template_for_generation;;
+
+conj_2 = [*
+    @edge_15414784 = (class_1 _-> _arg);;
+*];;
+
+conj_1 = [*
+    @edge_15430864 = (current_class _-> _arg);;
+*];;
+
+@edge_16600368 = (atomic_logical_formula -> then);;
+@edge_16599328 = (impl_tuple -> then);;
+@edge_16598288 = (nrel_implication -> impl_tuple);;
+@edge_16596208 = (rrel_then -> @edge_16599328);;
+@edge_16595168 = (lr_complex -> impl_tuple);;
+@edge_16594128 = (rrel_main_key_sc_element -> @edge_16595168);;
+@edge_16592560 = (nrel_conjunction -> conjunction_tuple);;
+@edge_16591520 = (conjunction_tuple -> conj_2);;
+@edge_16590480 = (atomic_logical_formula -> conj_2);;
+@edge_16589440 = (conjunction_tuple -> conj_1);;
+@edge_16588400 = (atomic_logical_formula -> conj_1);;
+@edge_16587360 = (impl_tuple -> conjunction_tuple);;
+@edge_16597248 = (rrel_if -> @edge_16587360);;
+
+inference_logic_test_question
+    <- action_direct_inference;
+    -> rrel_1: test_direct_inference_target;
+    -> rrel_2: rules_set;
+    -> rrel_3: input_structure;
+    -> rrel_4: output_structure;;
+
+input_structure = [*
+	argument <- current_class;;
+	argument <- class_1;;
+*];;
+
+
+rules_set
+    -> rrel_1: { lr_complex };;
+
+test_direct_inference_target = [*
+	@pair29 = (target_class _-> _x);;
+*];;

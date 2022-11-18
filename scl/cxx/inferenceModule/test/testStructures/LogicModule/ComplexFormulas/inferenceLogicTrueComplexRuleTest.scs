@@ -1,0 +1,86 @@
+rrel_1
+  <- sc_node_role_relation;;
+
+atomic_logical_formula
+  <- sc_node_class;;
+
+rrel_main_key_sc_element
+  <- sc_node_role_relation;;
+
+nrel_implication
+  <- sc_node_norole_relation;;
+
+test_direct_inference_target = [*
+	@pair28 = (current_node_class _-> _x);;
+	@pair29 = (target_node_class _-> _x);;
+*];;
+
+target_node_class <- sc_node_class;;
+current_node_class <- sc_node_class;;
+class_which_must_not_include_the_node <- sc_node_class;;
+class_1_which_may_not_include_the_node <- sc_node_class;;
+class_2_which_may_not_include_the_node <- sc_node_class;;
+
+not = [*
+    class_which_must_not_include_the_node _-> _res;;
+    current_node_class _-> _res;;
+*];;
+
+or_1 = [*
+    class_1_which_may_not_include_the_node _-> _res;;
+    current_node_class _-> _res;;
+*];;
+
+or_2 = [*
+    class_2_which_may_not_include_the_node _-> _res;;
+    current_node_class _-> _res;;
+*];;
+
+then = [*
+    current_node_class _-> _res;;
+    target_node_class _-> _res;;
+*];;
+@p1 = (conj_link => then);;
+@p1 <- nrel_implication;;
+@p1 => nrel_system_identifier: [impl_edge];;
+@p2 = (inference_logic_test_rule -> @p1);;
+@p2 <- rrel_main_key_sc_element;;
+inference_logic_test_rule <- statement;;
+conj_link <- nrel_conjunction;;
+conj_link -> not_link;;
+nrel_negation -> not_link;;
+not_link -> not;;
+conj_link -> disj_link;;
+disj_link <- nrel_disjunction;;
+disj_link -> or_1;;
+disj_link -> or_2;;
+
+atomic_logical_formula
+ -> not;
+ -> or_1;
+ -> or_2;
+ -> then;;
+concept_template_for_generation
+ -> then;;
+test_argument <- current_node_class;;
+test_argument <- class_1_which_may_not_include_the_node;;
+
+fake_test_argument <- current_node_class;;
+
+action_direct_inference <- sc_node_class;;
+
+input_structure = [*
+  test_argument <- current_node_class;;
+  test_argument <- class_1_which_may_not_include_the_node;;
+  fake_test_argument <- current_node_class;;
+*];;
+
+inference_logic_test_question
+    <- action_direct_inference;
+    -> rrel_1: test_direct_inference_target;
+	-> rrel_2: rule_set;
+	-> rrel_3: input_structure;
+	-> rrel_4: output_structure;;
+
+rule_set
+    -> rrel_1: { inference_logic_test_rule };;

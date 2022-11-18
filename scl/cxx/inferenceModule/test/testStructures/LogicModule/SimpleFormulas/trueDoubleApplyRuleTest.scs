@@ -39,11 +39,13 @@ then2 = [*
 @p1 <- nrel_implication;;
 @p2 = (logic_rule -> @p1);;
 @p2 <- rrel_main_key_sc_element;;
+@p1 => nrel_system_identifier: [implication_1];;
 
 @p3 = (if2 => then2);;
 @p3 <- nrel_implication;;
 @p4 = (logic_rule2 -> @p3);;
 @p4 <- rrel_main_key_sc_element;;
+@p3 => nrel_system_identifier: [implication_2];;
 
 atomic_logical_formula
 	-> if1;

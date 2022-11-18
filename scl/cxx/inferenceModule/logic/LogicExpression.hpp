@@ -30,6 +30,7 @@ struct LogicExpressionResult
 struct LogicFormulaResult
 {
   bool value;
+  bool isGenerated;
   std::map<string, std::vector<ScAddr>> replacements;
 };
 
@@ -37,7 +38,7 @@ class LogicExpressionNode
 {
 public:
   virtual LogicExpressionResult check(ScTemplateParams params) const = 0;
-  virtual LogicFormulaResult compute() const = 0;
+  virtual LogicFormulaResult compute(LogicFormulaResult & result) const = 0;
 
   virtual ScAddr getFormulaTemplate() const = 0;
 };
@@ -58,7 +59,7 @@ public:
   explicit AndExpressionNode(ScMemoryContext * context, OperandsVectorType & operands);
 
   LogicExpressionResult check(ScTemplateParams params) const override;
-  LogicFormulaResult compute() const override;
+  LogicFormulaResult compute(LogicFormulaResult & result) const override;
 
   ScAddr getFormulaTemplate() const override
   {
@@ -76,7 +77,7 @@ public:
   explicit OrExpressionNode(ScMemoryContext * context, OperandsVectorType & operands);
 
   LogicExpressionResult check(ScTemplateParams params) const override;
-  LogicFormulaResult compute() const override;
+  LogicFormulaResult compute(LogicFormulaResult & result) const override;
 
   ScAddr getFormulaTemplate() const override
   {
@@ -94,7 +95,7 @@ public:
   explicit NotExpressionNode(ScMemoryContext * context, std::unique_ptr<LogicExpressionNode> op);
 
   LogicExpressionResult check(ScTemplateParams params) const override;
-  LogicFormulaResult compute() const override;
+  LogicFormulaResult compute(LogicFormulaResult & result) const override;
 
   ScAddr getFormulaTemplate() const override
   {
@@ -112,7 +113,7 @@ public:
   explicit ImplicationExpressionNode(ScMemoryContext * context, OperandsVectorType & operands);
 
   LogicExpressionResult check(ScTemplateParams params) const override;
-  LogicFormulaResult compute() const override;
+  LogicFormulaResult compute(LogicFormulaResult & result) const override;
 
   ScAddr getFormulaTemplate() const override
   {
@@ -130,7 +131,7 @@ public:
   explicit EquivalenceExpressionNode(ScMemoryContext * context, OperandsVectorType & operands);
 
   LogicExpressionResult check(ScTemplateParams params) const override;
-  LogicFormulaResult compute() const override;
+  LogicFormulaResult compute(LogicFormulaResult & result) const override;
 
   ScAddr getFormulaTemplate() const override
   {
@@ -153,7 +154,7 @@ public:
       ScAddr outputStructure);
 
   LogicExpressionResult check(ScTemplateParams params) const override;
-  LogicFormulaResult compute() const override;
+  LogicFormulaResult compute(LogicFormulaResult & result) const override;
 
   LogicFormulaResult find(map<string, vector<ScAddr>> & replacements) const;
   LogicFormulaResult generate(map<string, vector<ScAddr>> & replacements) const;
