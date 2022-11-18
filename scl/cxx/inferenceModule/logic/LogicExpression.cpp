@@ -165,8 +165,8 @@ LogicFormulaResult OrExpressionNode::compute(LogicFormulaResult & result) const
         continue;
       }
     }
-    LogicFormulaResult lastResult = operand->compute(result);
-    SC_LOG_DEBUG("One of operands in disjunction returned " + to_string(lastResult.value));
+    LogicFormulaResult lastResult;
+    operand->compute(lastResult);
     result.value |= lastResult.value;
     result.replacements = ReplacementsUtils::uniteReplacements(result.replacements, lastResult.replacements);
   }
@@ -214,7 +214,8 @@ LogicExpressionResult NotExpressionNode::check(ScTemplateParams params) const
 LogicFormulaResult NotExpressionNode::compute(LogicFormulaResult & result) const
 {
   const LogicFormulaResult & formulaResult = operands[0]->compute(result);
-  SC_LOG_DEBUG("Sub formula in negation returned " + to_string(formulaResult.value));
+  std::string formulaValue = (formulaResult.value ? "true" : "false");
+  SC_LOG_DEBUG("Sub formula in negation returned " + formulaValue);
   return {!formulaResult.value, formulaResult.isGenerated, formulaResult.replacements};
 }
 
