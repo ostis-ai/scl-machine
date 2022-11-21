@@ -19,22 +19,21 @@ int FormulaClassifier::EQUIVALENCE_TUPLE = 8;
 FormulaClassifier::FormulaClassifier(ScMemoryContext * ms_context)
   : ms_context(ms_context)
 {
-  /*  empty   */
 }
 
 /*  This method is never used except for tests      */
 int FormulaClassifier::typeOfFormula(ScAddr formula)
 {
-  SC_LOG_DEBUG("Checking type of formula ");
+  SC_LOG_DEBUG("Checking type of formula " + ms_context->HelperGetSystemIdtf(formula));
   if (!formula.IsValid())
   {
     SC_LOG_DEBUG("Formula is not valid");
     return NONE;
   }
 
-  bool isAtom =
+  bool isAtomicFormula =
       ms_context->HelperCheckEdge(InferenceKeynodes::atomic_logical_formula, formula, ScType::EdgeAccessConstPosPerm);
-  if (isAtom)
+  if (isAtomicFormula)
     return ATOM;
   SC_LOG_DEBUG("Formula is not atom");
 
@@ -88,11 +87,11 @@ int FormulaClassifier::typeOfFormula(ScAddr formula)
 
 bool FormulaClassifier::isFormulaWithConst(ScAddr formula)
 {
-  ScIterator3Ptr constNodesIter3 = ms_context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::NodeConst);
-  if (constNodesIter3->Next())
+  ScIterator3Ptr constNodesIterator = ms_context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::NodeConst);
+  if (constNodesIterator->Next())
     return true;
-  ScIterator3Ptr constLinksIter3 = ms_context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::LinkConst);
-  return constLinksIter3->Next();
+  ScIterator3Ptr constLinksIterator = ms_context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::LinkConst);
+  return constLinksIterator->Next();
 }
 
 bool FormulaClassifier::isFormulaToGenerate(ScAddr formula)

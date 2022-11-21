@@ -46,17 +46,17 @@ public:
 class OperatorLogicExpressionNode : public LogicExpressionNode
 {
 public:
-  using OperandsVectorType = std::vector<std::unique_ptr<LogicExpressionNode>>;
+  using OperandsVector = std::vector<std::unique_ptr<LogicExpressionNode>>;
 
 protected:
-  OperandsVectorType operands;
+  OperandsVector operands;
 };
 
-class AndExpressionNode : public OperatorLogicExpressionNode
+class ConjunctionExpressionNode : public OperatorLogicExpressionNode
 {
 public:
-  explicit AndExpressionNode(OperandsVectorType & operands);
-  explicit AndExpressionNode(ScMemoryContext * context, OperandsVectorType & operands);
+  explicit ConjunctionExpressionNode(OperandsVector & operands);
+  explicit ConjunctionExpressionNode(ScMemoryContext * context, OperandsVector & operands);
 
   LogicExpressionResult check(ScTemplateParams params) const override;
   LogicFormulaResult compute(LogicFormulaResult & result) const override;
@@ -70,11 +70,11 @@ private:
   ScMemoryContext * context;
 };
 
-class OrExpressionNode : public OperatorLogicExpressionNode
+class DisjunctionExpressionNode : public OperatorLogicExpressionNode
 {
 public:
-  explicit OrExpressionNode(OperandsVectorType & operands);
-  explicit OrExpressionNode(ScMemoryContext * context, OperandsVectorType & operands);
+  explicit DisjunctionExpressionNode(OperandsVector & operands);
+  explicit DisjunctionExpressionNode(ScMemoryContext * context, OperandsVector & operands);
 
   LogicExpressionResult check(ScTemplateParams params) const override;
   LogicFormulaResult compute(LogicFormulaResult & result) const override;
@@ -88,11 +88,11 @@ private:
   ScMemoryContext * context;
 };
 
-class NotExpressionNode : public OperatorLogicExpressionNode
+class NegationExpressionNode : public OperatorLogicExpressionNode
 {
 public:
-  explicit NotExpressionNode(std::unique_ptr<LogicExpressionNode> op);
-  explicit NotExpressionNode(ScMemoryContext * context, std::unique_ptr<LogicExpressionNode> op);
+  explicit NegationExpressionNode(std::unique_ptr<LogicExpressionNode> op);
+  explicit NegationExpressionNode(ScMemoryContext * context, std::unique_ptr<LogicExpressionNode> op);
 
   LogicExpressionResult check(ScTemplateParams params) const override;
   LogicFormulaResult compute(LogicFormulaResult & result) const override;
@@ -109,8 +109,8 @@ private:
 class ImplicationExpressionNode : public OperatorLogicExpressionNode
 {
 public:
-  explicit ImplicationExpressionNode(OperandsVectorType & operands);
-  explicit ImplicationExpressionNode(ScMemoryContext * context, OperandsVectorType & operands);
+  explicit ImplicationExpressionNode(OperandsVector & operands);
+  explicit ImplicationExpressionNode(ScMemoryContext * context, OperandsVector & operands);
 
   LogicExpressionResult check(ScTemplateParams params) const override;
   LogicFormulaResult compute(LogicFormulaResult & result) const override;
@@ -127,8 +127,8 @@ private:
 class EquivalenceExpressionNode : public OperatorLogicExpressionNode
 {
 public:
-  explicit EquivalenceExpressionNode(OperandsVectorType & operands);
-  explicit EquivalenceExpressionNode(ScMemoryContext * context, OperandsVectorType & operands);
+  explicit EquivalenceExpressionNode(OperandsVector & operands);
+  explicit EquivalenceExpressionNode(ScMemoryContext * context, OperandsVector & operands);
 
   LogicExpressionResult check(ScTemplateParams params) const override;
   LogicFormulaResult compute(LogicFormulaResult & result) const override;
@@ -179,12 +179,12 @@ public:
       ScMemoryContext * context,
       TemplateSearcher * templateSearcher,
       TemplateManager * templateManager,
-      ScAddrVector argumentList);
+      ScAddrVector argumentVector);
   LogicExpression(
       ScMemoryContext * context,
       TemplateSearcher * templateSearcher,
       TemplateManager * templateManager,
-      ScAddrVector argumentList,
+      ScAddrVector argumentVector,
       ScAddr outputStructure);
 
   std::unique_ptr<LogicExpressionNode> build(ScAddr const & node);
@@ -200,7 +200,7 @@ private:
 
   TemplateSearcher * templateSearcher;
   TemplateManager * templateManager;
-  ScAddrVector argumentList;
+  ScAddrVector argumentVector;
 
   ScAddr inputStructure;
   ScAddr outputStructure;

@@ -28,22 +28,22 @@ public:
   explicit DirectInferenceManager(ScMemoryContext * ms_context);
 
   ScAddr applyInference(
-      const ScAddr & targetStatement,
-      const ScAddr & ruleSet,
+      const ScAddr & targetStructure,
+      const ScAddr & formulasSet,
       const ScAddr & inputStructure,
       const ScAddr & outputStructure);
 
 private:
-  vector<queue<ScAddr>> createRulesQueuesListByPriority(ScAddr const & rulesSet);
+  vector<queue<ScAddr>> createFormulasQueuesListByPriority(ScAddr const & formulasSet);
 
   queue<ScAddr> createQueue(ScAddr const & set);
 
-  void clearSatisfiabilityInformation(ScAddr const & rule, ScAddr const & model);
+  void clearSatisfiabilityInformation(ScAddr const & formula, ScAddr const & model);
   void addSatisfiabilityInformation(ScAddr const & rule, ScAddr const & model, bool isSatisfiable);
 
-  bool useRule(ScAddr const & rule, vector<ScAddr> /*const*/ & argumentList);
+  bool useRule(ScAddr const & rule, vector<ScAddr> /*const*/ & argumentVector);
 
-  bool isTargetAchieved(ScAddr const & target, vector<ScAddr> const & argumentList);
+  bool isTargetAchieved(ScAddr const & targetStructure, vector<ScAddr> const & argumentVactor);
 
   bool generateStatement(ScAddr const & statement, ScTemplateParams const & templateParams);
 
@@ -54,6 +54,6 @@ private:
   FormulaClassifier * formulaClassifier;
   ScAddr inputStructure;
   ScAddr outputStructure;
-  ScAddr targetStatement;
+  ScAddr targetStructure;
 };
 }  // namespace inference

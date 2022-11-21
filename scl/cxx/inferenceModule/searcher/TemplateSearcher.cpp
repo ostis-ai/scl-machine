@@ -30,20 +30,20 @@ vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplate(
     const ScTemplateParams & templateParams)
 {
   searchWithoutContentResult = std::make_unique<ScTemplateSearchResult>();
-  vector<ScTemplateSearchResultItem> searchResult;
+  vector<ScTemplateSearchResultItem> searchResultItems;
   ScTemplate searchTemplate;
   if (context->HelperBuildTemplate(searchTemplate, templateAddr, templateParams))
   {
     if (context->HelperCheckEdge(
             InferenceKeynodes::concept_template_with_links, templateAddr, ScType::EdgeAccessConstPosPerm))
-      searchResult = searchTemplateWithContent(searchTemplate, templateAddr);
+      searchResultItems = searchTemplateWithContent(searchTemplate, templateAddr);
     else
     {
       // TODO(MksmOrlov): need to separate input structure and arguments, search in structure
       // context->HelperSearchTemplateInStruct(searchTemplate, inputStructure, *searchWithoutContentResult);
       context->HelperSearchTemplate(searchTemplate, *searchWithoutContentResult);
       for (size_t searchItemIndex = 0; searchItemIndex < searchWithoutContentResult->Size(); searchItemIndex++)
-        searchResult.push_back((*searchWithoutContentResult)[searchItemIndex]);
+        searchResultItems.push_back((*searchWithoutContentResult)[searchItemIndex]);
     }
   }
   else
@@ -51,7 +51,7 @@ vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplate(
     throw runtime_error("Template is not built.");
   }
 
-  return searchResult;
+  return searchResultItems;
 }
 
 std::vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplateWithContent(

@@ -9,43 +9,43 @@
 #include <sc-agents-common/utils/IteratorUtils.hpp>
 #include <sc-agents-common/utils/CommonUtils.hpp>
 
-AndExpressionNode::AndExpressionNode(OperandsVectorType & operands)
+ConjunctionExpressionNode::ConjunctionExpressionNode(OperandsVector & operands)
 {
   for (auto & operand : operands)
     this->operands.emplace_back(std::move(operand));
 }
 
-AndExpressionNode::AndExpressionNode(
+ConjunctionExpressionNode::ConjunctionExpressionNode(
     ScMemoryContext * context,
-    OperatorLogicExpressionNode::OperandsVectorType & operands)
-  : AndExpressionNode(operands)
+    OperatorLogicExpressionNode::OperandsVector & operands)
+  : ConjunctionExpressionNode(operands)
 {
   this->context = context;
 }
 
-LogicExpressionResult AndExpressionNode::check(ScTemplateParams params) const
+LogicExpressionResult ConjunctionExpressionNode::check(ScTemplateParams params) const
 {
-  LogicExpressionResult operatorResult;
-  operatorResult.value = true;
+  LogicExpressionResult conjunctionResult;
+  conjunctionResult.value = true;
 
   for (auto & operand : operands)
   {
-    auto checkResult = operand->check(params);
-    operatorResult.formulaTemplate = checkResult.formulaTemplate;
-    if (checkResult.hasSearchResult)
-      operatorResult.templateSearchResult = checkResult.templateSearchResult;
+    auto operandResult = operand->check(params);
+    conjunctionResult.formulaTemplate = operandResult.formulaTemplate;
+    if (operandResult.hasSearchResult)
+      conjunctionResult.templateSearchResult = operandResult.templateSearchResult;
 
-    if (!checkResult.value)
+    if (!operandResult.value)
     {
-      operatorResult.value = false;
-      return operatorResult;
+      conjunctionResult.value = false;
+      return conjunctionResult;
     }
   }
 
-  return operatorResult;
+  return conjunctionResult;
 }
 
-LogicFormulaResult AndExpressionNode::compute(LogicFormulaResult & result) const
+LogicFormulaResult ConjunctionExpressionNode::compute(LogicFormulaResult & result) const
 {
   result.value = false;
   LogicFormulaResult fail = {false, false, {}};
@@ -91,9 +91,9 @@ LogicFormulaResult AndExpressionNode::compute(LogicFormulaResult & result) const
     if (result.replacements.empty())
       return fail;
   }
-  for (auto const & genAtom : formulasToGenerate)  // atoms which should be generated are processed here
+  for (auto const & formulaToGenerate : formulasToGenerate)  // atoms which should be generated are processed here
   {
-    LogicFormulaResult lastResult = genAtom->generate(result.replacements);
+    LogicFormulaResult lastResult = formulaToGenerate->generate(result.replacements);
     if (!lastResult.value)
       return fail;
     result.replacements = ReplacementsUtils::intersectReplacements(result.replacements, lastResult.replacements);
@@ -103,44 +103,44 @@ LogicFormulaResult AndExpressionNode::compute(LogicFormulaResult & result) const
   return result;
 }
 
-OrExpressionNode::OrExpressionNode(OperandsVectorType & operands)
+DisjunctionExpressionNode::DisjunctionExpressionNode(OperandsVector & operands)
 {
   for (auto & operand : operands)
     this->operands.emplace_back(std::move(operand));
 }
 
-OrExpressionNode::OrExpressionNode(
+DisjunctionExpressionNode::DisjunctionExpressionNode(
     ScMemoryContext * context,
-    OperatorLogicExpressionNode::OperandsVectorType & operands)
-  : OrExpressionNode(operands)
+    OperatorLogicExpressionNode::OperandsVector & operands)
+  : DisjunctionExpressionNode(operands)
 {
   this->context = context;
 }
 
-LogicExpressionResult OrExpressionNode::check(ScTemplateParams params) const
+LogicExpressionResult DisjunctionExpressionNode::check(ScTemplateParams params) const
 {
-  LogicExpressionResult operatorResult;
-  operatorResult.value = false;
+  LogicExpressionResult disjunctionResult;
+  disjunctionResult.value = false;
 
   for (auto & operand : operands)
   {
-    auto checkResult = operand->check(params);
-    operatorResult.formulaTemplate = checkResult.formulaTemplate;
+    auto operandResult = operand->check(params);
+    disjunctionResult.formulaTemplate = operandResult.formulaTemplate;
 
-    if (checkResult.hasSearchResult)
-      operatorResult.templateSearchResult = checkResult.templateSearchResult;
+    if (operandResult.hasSearchResult)
+      disjunctionResult.templateSearchResult = operandResult.templateSearchResult;
 
-    if (checkResult.value)
+    if (operandResult.value)
     {
-      operatorResult.value = true;
-      return operatorResult;
+      disjunctionResult.value = true;
+      return disjunctionResult;
     }
   }
 
-  return operatorResult;
+  return disjunctionResult;
 }
 
-LogicFormulaResult OrExpressionNode::compute(LogicFormulaResult & result) const
+LogicFormulaResult DisjunctionExpressionNode::compute(LogicFormulaResult & result) const
 {
   LogicFormulaResult fail = {false, false, {}};
   result.value = false;
@@ -178,40 +178,40 @@ LogicFormulaResult OrExpressionNode::compute(LogicFormulaResult & result) const
     result.value |= lastResult.value;
     result.replacements = ReplacementsUtils::uniteReplacements(result.replacements, lastResult.replacements);
   }
-  for (auto const & genAtom : formulasToGenerate)
+  for (auto const & formulaToGenerate : formulasToGenerate)
   {
-    LogicFormulaResult lastResult = genAtom->generate(result.replacements);
+    LogicFormulaResult lastResult = formulaToGenerate->generate(result.replacements);
     result.value |= lastResult.value;
     result.replacements = ReplacementsUtils::uniteReplacements(result.replacements, lastResult.replacements);
   }
   return result;
 }
 
-NotExpressionNode::NotExpressionNode(std::unique_ptr<LogicExpressionNode> op)
+NegationExpressionNode::NegationExpressionNode(std::unique_ptr<LogicExpressionNode> op)
 {
   operands.emplace_back(std::move(op));
 }
 
-NotExpressionNode::NotExpressionNode(ScMemoryContext * context, std::unique_ptr<LogicExpressionNode> op)
-  : NotExpressionNode(std::move(op))
+NegationExpressionNode::NegationExpressionNode(ScMemoryContext * context, std::unique_ptr<LogicExpressionNode> op)
+  : NegationExpressionNode(std::move(op))
 {
   this->context = context;
 }
 
-LogicExpressionResult NotExpressionNode::check(ScTemplateParams params) const
+LogicExpressionResult NegationExpressionNode::check(ScTemplateParams params) const
 {
   if (operands.size() != 1)
   {
     SC_LOG_ERROR("Negation should have 1 operand but it has " + to_string(operands.size()));
     return {false, false, {nullptr, nullptr}, ScAddr()};
   }
-  auto checkResult = operands[0]->check(params);
-  checkResult.value = !checkResult.value;
+  auto operandResult = operands[0]->check(params);
+  operandResult.value = !operandResult.value;
 
-  return checkResult;
+  return operandResult;
 }
 
-LogicFormulaResult NotExpressionNode::compute(LogicFormulaResult & result) const
+LogicFormulaResult NegationExpressionNode::compute(LogicFormulaResult & result) const
 {
   const LogicFormulaResult & formulaResult = operands[0]->compute(result);
   std::string formulaValue = (formulaResult.value ? "true" : "false");
@@ -219,7 +219,7 @@ LogicFormulaResult NotExpressionNode::compute(LogicFormulaResult & result) const
   return {!formulaResult.value, formulaResult.isGenerated, formulaResult.replacements};
 }
 
-ImplicationExpressionNode::ImplicationExpressionNode(OperandsVectorType & operands)
+ImplicationExpressionNode::ImplicationExpressionNode(OperandsVector & operands)
 {
   for (auto & operand : operands)
     this->operands.emplace_back(std::move(operand));
@@ -232,8 +232,8 @@ LogicExpressionResult ImplicationExpressionNode::check(ScTemplateParams params) 
     SC_LOG_ERROR("Implication should have 2 operands but it has " + to_string(operands.size()));
     return {false, false, {nullptr, nullptr}, ScAddr()};
   }
-  auto ifResult = operands[0]->check(params);
-  auto checkResult = operands[1]->check(params);
+  auto premiseResult = operands[0]->check(params);
+  auto conclusionResult = operands[1]->check(params);
 }
 
 LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & result) const
@@ -241,20 +241,20 @@ LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & resul
   result.value = false;
   FormulaClassifier formulaClassifier(context);
 
-  auto leftAtom = dynamic_cast<TemplateExpressionNode *>(operands[0].get());
-  bool isLeftGenerated = (leftAtom) && formulaClassifier.isFormulaToGenerate(leftAtom->getFormulaTemplate());
+  auto premiseAtom = dynamic_cast<TemplateExpressionNode *>(operands[0].get());
+  bool isLeftGenerated = (premiseAtom) && formulaClassifier.isFormulaToGenerate(premiseAtom->getFormulaTemplate());
 
-  auto rightAtom = dynamic_cast<TemplateExpressionNode *>(operands[1].get());
-  bool isRightGenerated = (rightAtom) && formulaClassifier.isFormulaToGenerate(rightAtom->getFormulaTemplate());
+  auto conclusionAtom = dynamic_cast<TemplateExpressionNode *>(operands[1].get());
+  bool isRightGenerated = (conclusionAtom) && formulaClassifier.isFormulaToGenerate(conclusionAtom->getFormulaTemplate());
 
-  LogicFormulaResult leftResult;
-  LogicFormulaResult rightResult;
+  LogicFormulaResult premiseResult;
+  LogicFormulaResult conclusionResult;
 
   if (!isLeftGenerated)
   {
     SC_LOG_DEBUG("Premise shouldn't be generated");
-    leftResult = operands[0]->compute(result);
-    rightResult = (isRightGenerated ? rightAtom->generate(leftResult.replacements) : operands[1]->compute(result));
+    premiseResult = operands[0]->compute(result);
+    conclusionResult = (isRightGenerated ? conclusionAtom->generate(premiseResult.replacements) : operands[1]->compute(result));
   }
   else
   {
@@ -266,27 +266,27 @@ LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & resul
     else
     {
       SC_LOG_DEBUG("Conclusion shouldn't be generated");
-      rightResult = operands[1]->compute(result);
-      leftResult = leftAtom->generate(rightResult.replacements);
+      conclusionResult = operands[1]->compute(result);
+      premiseResult = premiseAtom->generate(conclusionResult.replacements);
     }
   }
 
-  result.value = !leftResult.value || rightResult.value;
-  result.isGenerated = leftResult.isGenerated || rightResult.isGenerated;
-  if (rightResult.value)
-    result.replacements = ReplacementsUtils::uniteReplacements(leftResult.replacements, rightResult.replacements);
+  result.value = !premiseResult.value || conclusionResult.value;
+  result.isGenerated = premiseResult.isGenerated || conclusionResult.isGenerated;
+  if (conclusionResult.value)
+    result.replacements = ReplacementsUtils::uniteReplacements(premiseResult.replacements, conclusionResult.replacements);
   return result;
 }
 
 ImplicationExpressionNode::ImplicationExpressionNode(
     ScMemoryContext * context,
-    OperatorLogicExpressionNode::OperandsVectorType & operands)
+    OperatorLogicExpressionNode::OperandsVector & operands)
   : ImplicationExpressionNode(operands)
 {
   this->context = context;
 }
 
-EquivalenceExpressionNode::EquivalenceExpressionNode(OperandsVectorType & operands)
+EquivalenceExpressionNode::EquivalenceExpressionNode(OperandsVector & operands)
 {
   for (auto & operand : operands)
     this->operands.emplace_back(std::move(operand));
@@ -394,7 +394,7 @@ LogicFormulaResult EquivalenceExpressionNode::compute(LogicFormulaResult & resul
 
 EquivalenceExpressionNode::EquivalenceExpressionNode(
     ScMemoryContext * context,
-    OperatorLogicExpressionNode::OperandsVectorType & operands)
+    OperatorLogicExpressionNode::OperandsVector & operands)
   : EquivalenceExpressionNode(operands)
 {
   this->context = context;
@@ -426,8 +426,8 @@ TemplateExpressionNode::TemplateExpressionNode(
 LogicExpressionResult TemplateExpressionNode::check(ScTemplateParams params) const
 {
   auto searchResult = templateSearcher->searchTemplate(formulaTemplate, params);
-  std::string result = (!searchResult.empty() ? "right" : "wrong");
-  SC_LOG_DEBUG("Statement " + context->HelperGetSystemIdtf(formulaTemplate) + " " + result);
+  std::string result = (!searchResult.empty() ? "true" : "false");
+  SC_LOG_DEBUG("Atomic logical formula " + context->HelperGetSystemIdtf(formulaTemplate) + " " + result);
 
   if (!searchResult.empty())
   {
@@ -441,12 +441,12 @@ LogicExpressionResult TemplateExpressionNode::check(ScTemplateParams params) con
 
 LogicFormulaResult TemplateExpressionNode::compute(LogicFormulaResult & result) const
 {
-  auto const & idtf = context->HelperGetSystemIdtf(formulaTemplate);
-  SC_LOG_DEBUG("Checking atom " + idtf);
+  auto const & formulaIdentifier = context->HelperGetSystemIdtf(formulaTemplate);
+  SC_LOG_DEBUG("Checking atomic logical formula " + formulaIdentifier);
   result.replacements = templateSearcher->searchTemplate(formulaTemplate);
   result.value = !result.replacements.empty();
-  std::string ending = (result.value ? " true" : " false");
-  SC_LOG_DEBUG("Compute Statement " + idtf + ending);
+  std::string formulaValue = (result.value ? " true" : " false");
+  SC_LOG_DEBUG("Compute atomic logical formula " + formulaIdentifier + formulaValue);
 
   return result;
 }
@@ -471,7 +471,7 @@ LogicFormulaResult TemplateExpressionNode::generate(map<string, vector<ScAddr>> 
   if (paramsVector.empty())
   {
     result.isGenerated = false;
-    SC_LOG_DEBUG("Template " + context->HelperGetSystemIdtf(formulaTemplate) + " is not generated");
+    SC_LOG_DEBUG("Atomic logical formula " + context->HelperGetSystemIdtf(formulaTemplate) + " is not generated");
     return compute(result);
   }
 
@@ -486,7 +486,7 @@ LogicFormulaResult TemplateExpressionNode::generate(map<string, vector<ScAddr>> 
       ScTemplateGenResult generationResult;
       const ScTemplate::Result & genTemplate = context->HelperGenTemplate(generatedTemplate, generationResult);
       result.isGenerated = true;
-      SC_LOG_DEBUG("Template " + context->HelperGetSystemIdtf(formulaTemplate) + " is generated");
+      SC_LOG_DEBUG("Atomic logical formula " + context->HelperGetSystemIdtf(formulaTemplate) + " is generated");
       bool outputIsValid = outputStructure.IsValid();
       for (auto i = 0; i < generationResult.Size(); ++i)
       {
@@ -503,11 +503,11 @@ LogicExpression::LogicExpression(
     ScMemoryContext * context,
     TemplateSearcher * templateSearcher,
     TemplateManager * templateManager,
-    ScAddrVector argumentList)
+    ScAddrVector argumentVector)
   : context(context)
   , templateSearcher(templateSearcher)
   , templateManager(templateManager)
-  , argumentList(std::move(argumentList))
+  , argumentVector(std::move(argumentVector))
 {
 }
 
@@ -515,28 +515,28 @@ LogicExpression::LogicExpression(
     ScMemoryContext * context,
     TemplateSearcher * templateSearcher,
     TemplateManager * templateManager,
-    ScAddrVector argumentList,
+    ScAddrVector argumentVector,
     ScAddr outputStructure)
   : context(context)
   , templateSearcher(templateSearcher)
   , templateManager(templateManager)
-  , argumentList(std::move(argumentList))
+  , argumentVector(std::move(argumentVector))
   , outputStructure(outputStructure)
 {
 }
 
 std::unique_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & node)
 {
-  auto resolveOperandsForTuple = [this](ScAddr const & node) {
-    ScIterator3Ptr operands = context->Iterator3(node, ScType::EdgeAccessConstPosPerm, ScType::Unknown);
+  auto resolveTupleOperands = [this](ScAddr const & node) {
+    ScIterator3Ptr operandsIterator = context->Iterator3(node, ScType::EdgeAccessConstPosPerm, ScType::Unknown);
 
-    OperatorLogicExpressionNode::OperandsVectorType operandsVector;
+    OperatorLogicExpressionNode::OperandsVector operandsVector;
 
-    while (operands->Next())
+    while (operandsIterator->Next())
     {
-      if (!operands->Get(2).IsValid())
+      if (!operandsIterator->Get(2).IsValid())
         continue;
-      std::unique_ptr<LogicExpressionNode> op = build(operands->Get(2));
+      std::unique_ptr<LogicExpressionNode> op = build(operandsIterator->Get(2));
       operandsVector.emplace_back(std::move(op));
     }
     SC_LOG_DEBUG(
@@ -544,21 +544,21 @@ std::unique_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & node)
 
     return operandsVector;
   };
-  auto resolveOperandsForEdge = [this](ScAddr const & edge) {
+  auto resolveEdgeOperands = [this](ScAddr const & edge) {
     ScAddr begin;
     ScAddr end;
     context->GetEdgeInfo(edge, begin, end);
-    OperatorLogicExpressionNode::OperandsVectorType operandsVector;
+    OperatorLogicExpressionNode::OperandsVector operandsVector;
 
     if (begin.IsValid())
     {
-      std::unique_ptr<LogicExpressionNode> op1 = build(begin);
-      operandsVector.emplace_back(std::move(op1));
+      std::unique_ptr<LogicExpressionNode> beginOperand = build(begin);
+      operandsVector.emplace_back(std::move(beginOperand));
     }
     if (end.IsValid())
     {
-      std::unique_ptr<LogicExpressionNode> op2 = build(end);
-      operandsVector.emplace_back(std::move(op2));
+      std::unique_ptr<LogicExpressionNode> endOperand = build(end);
+      operandsVector.emplace_back(std::move(endOperand));
     }
     return operandsVector;
   };
@@ -568,24 +568,24 @@ std::unique_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & node)
     ScAddr begin = utils::IteratorUtils::getAnyByOutRelation(context, node, rrel_if);
     ScAddr end = utils::IteratorUtils::getAnyByOutRelation(context, node, rrel_then);
 
-    OperatorLogicExpressionNode::OperandsVectorType operandsVector;
+    OperatorLogicExpressionNode::OperandsVector operandsVector;
     if (begin.IsValid())
     {
-      std::unique_ptr<LogicExpressionNode> op1 = build(begin);
-      operandsVector.emplace_back(std::move(op1));
+      std::unique_ptr<LogicExpressionNode> premiseOperand = build(begin);
+      operandsVector.emplace_back(std::move(premiseOperand));
     }
     if (end.IsValid())
     {
-      std::unique_ptr<LogicExpressionNode> op2 = build(end);
-      operandsVector.emplace_back(std::move(op2));
+      std::unique_ptr<LogicExpressionNode> conclusionOperand = build(end);
+      operandsVector.emplace_back(std::move(conclusionOperand));
     }
     return operandsVector;
   };
 
-  ScIterator3Ptr atomicFormulaIter3 =
+  ScIterator3Ptr atomicFormulaIterator =
       context->Iterator3(InferenceKeynodes::atomic_logical_formula, ScType::EdgeAccessConstPosPerm, node);
 
-  if (atomicFormulaIter3->Next())
+  if (atomicFormulaIterator->Next())
   {
     SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is a template");
     std::vector<ScTemplateParams> params =
@@ -599,55 +599,55 @@ std::unique_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & node)
     return std::make_unique<TemplateExpressionNode>(context, node, templateSearcher, templateManager, outputStructure);
   }
 
-  ScIterator3Ptr conjunctionIter3 =
+  ScIterator3Ptr conjunctionIterator =
       context->Iterator3(InferenceKeynodes::nrel_conjunction, ScType::EdgeAccessConstPosPerm, node);
 
-  if (conjunctionIter3->Next())
+  if (conjunctionIterator->Next())
   {
     SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is a conjunction tuple");
-    auto operands = resolveOperandsForTuple(node);
+    auto operands = resolveTupleOperands(node);
     if (!operands.empty())
-      return std::make_unique<AndExpressionNode>(context, operands);
+      return std::make_unique<ConjunctionExpressionNode>(context, operands);
     else
       SC_THROW_EXCEPTION(utils::ScException, "Conjunction must have operands");
   }
 
-  ScIterator3Ptr disjunctionIter3 =
+  ScIterator3Ptr disjunctionIterator =
       context->Iterator3(InferenceKeynodes::nrel_disjunction, ScType::EdgeAccessConstPosPerm, node);
 
-  if (disjunctionIter3->Next())
+  if (disjunctionIterator->Next())
   {
     SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is a disjunction tuple");
-    auto operands = resolveOperandsForTuple(node);
+    auto operands = resolveTupleOperands(node);
     if (!operands.empty())
-      return std::make_unique<OrExpressionNode>(context, operands);
+      return std::make_unique<DisjunctionExpressionNode>(context, operands);
     else
       SC_THROW_EXCEPTION(utils::ScException, "Disjunction must have operands");
   }
 
-  ScIterator3Ptr negationIter3 =
+  ScIterator3Ptr negationIterator =
       context->Iterator3(InferenceKeynodes::nrel_negation, ScType::EdgeAccessConstPosPerm, node);
 
-  if (negationIter3->Next())
+  if (negationIterator->Next())
   {
     SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is a negation tuple");
-    auto operands = resolveOperandsForTuple(node);
+    auto operands = resolveTupleOperands(node);
     if (operands.size() == 1)
-      return std::make_unique<NotExpressionNode>(context, std::move(operands[0]));
+      return std::make_unique<NegationExpressionNode>(context, std::move(operands[0]));
     else
       SC_THROW_EXCEPTION(
           utils::ScException, "There is " + to_string(operands.size()) + " operands in negation, but should be one");
   }
 
-  ScIterator3Ptr implicationIter3 =
+  ScIterator3Ptr implicationIterator =
       context->Iterator3(InferenceKeynodes::nrel_implication, ScType::EdgeAccessConstPosPerm, node);
 
-  if (implicationIter3->Next())
+  if (implicationIterator->Next())
   {
     if (utils::CommonUtils::checkType(context, node, ScType::EdgeDCommon))
     {
       SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is an implication edge");
-      auto operands = resolveOperandsForEdge(node);
+      auto operands = resolveEdgeOperands(node);
       if (operands.size() == 2)
         return std::make_unique<ImplicationExpressionNode>(context, operands);
       else
@@ -667,16 +667,15 @@ std::unique_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & node)
             "There is " + to_string(operands.size()) + " operands in implication tuple, but should be two");
     }
   }
-  ScIterator3Ptr equivalenceIter3 =
+  ScIterator3Ptr equivalenceIterator =
       context->Iterator3(InferenceKeynodes::nrel_equivalence, ScType::EdgeAccessConstPosPerm, node);
 
-  if (equivalenceIter3->Next())
+  if (equivalenceIterator->Next())
   {
-    SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is an equivalence");
     if (utils::CommonUtils::checkType(context, node, ScType::EdgeUCommon))
     {
       SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is an equivalence edge");
-      auto operands = resolveOperandsForEdge(node);
+      auto operands = resolveEdgeOperands(node);
       if (operands.size() == 2)
         return std::make_unique<EquivalenceExpressionNode>(context, operands);
       else
@@ -687,7 +686,7 @@ std::unique_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & node)
     if (utils::CommonUtils::checkType(context, node, ScType::NodeTuple))
     {
       SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is an equivalence tuple");
-      auto operands = resolveOperandsForTuple(node);
+      auto operands = resolveTupleOperands(node);
       if (operands.size() == 2)
         return std::make_unique<EquivalenceExpressionNode>(context, operands);
       else
