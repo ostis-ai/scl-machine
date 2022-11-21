@@ -73,6 +73,12 @@ public:
 
   SC_PROPERTY(Keynode("rrel_main_key_sc_element"), ForceCreate)
   static ScAddr rrel_main_key_sc_element;
+
+  SC_PROPERTY(Keynode("rrel_if"), ForceCreate)
+  static ScAddr rrel_if;
+
+  SC_PROPERTY(Keynode("rrel_then"), ForceCreate)
+  static ScAddr rrel_then;
 };
 
 }  // namespace inference

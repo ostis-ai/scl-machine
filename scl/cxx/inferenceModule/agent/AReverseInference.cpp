@@ -100,8 +100,8 @@ SC_AGENT_IMPLEMENTATION(AReverseInference)
     vector<ScAddr> ruleList = findRulesWithKeyElement(keyElement);
     for (auto & rule : ruleList)
     {
-      ScAddr ifStatement = LogicRuleUtils::getIfStatement(ms_context.get(), rule);
-      ScAddr elseStatement = LogicRuleUtils::getElseStatement(ms_context.get(), rule);
+      ScAddr ifStatement = LogicRuleUtils::getFormulaPremise(ms_context.get(), rule);
+      ScAddr elseStatement = LogicRuleUtils::getFormulaConclusion(ms_context.get(), rule);
 
       ScTemplateParams templateParams;
       createTemplateParams(ifStatement, argumentList, templateParams);

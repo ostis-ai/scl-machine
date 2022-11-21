@@ -6,14 +6,12 @@
 
 #include "ContainersUtils.hpp"
 
-using namespace std;
-
 namespace inference
 {
 
-void ContainersUtils::addToQueue(vector<ScAddr> const & elementList, queue<ScAddr> & targetQueue)
+void ContainersUtils::addToQueue(ScAddrVector const & elementList, std::queue<ScAddr> & targetQueue)
 {
-  for (auto element : elementList)
+  for (ScAddr const & element : elementList)
   {
     targetQueue.push(element);
   }

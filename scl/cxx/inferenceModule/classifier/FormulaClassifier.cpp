@@ -1,8 +1,6 @@
-#include <sc-agents-common/utils/CommonUtils.hpp>
-#include "sc-agents-common/utils/IteratorUtils.hpp"
 #include "FormulaClassifier.hpp"
 
-#include "../keynodes/InferenceKeynodes.hpp"
+#include <sc-agents-common/utils/CommonUtils.hpp>
 
 namespace inference
 {
@@ -19,22 +17,21 @@ int FormulaClassifier::EQUIVALENCE_TUPLE = 8;
 FormulaClassifier::FormulaClassifier(ScMemoryContext * ms_context)
   : ms_context(ms_context)
 {
-  /*  empty   */
 }
 
 /*  This method is never used except for tests      */
-int FormulaClassifier::typeOfFormula(ScAddr formula)
+int FormulaClassifier::typeOfFormula(ScAddr const & formula)
 {
-  SC_LOG_DEBUG("Checking type of formula ");
+  SC_LOG_DEBUG("Checking type of formula " + ms_context->HelperGetSystemIdtf(formula));
   if (!formula.IsValid())
   {
     SC_LOG_DEBUG("Formula is not valid");
     return NONE;
   }
 
-  bool isAtom =
+  bool isAtomicFormula =
       ms_context->HelperCheckEdge(InferenceKeynodes::atomic_logical_formula, formula, ScType::EdgeAccessConstPosPerm);
-  if (isAtom)
+  if (isAtomicFormula)
     return ATOM;
   SC_LOG_DEBUG("Formula is not atom");
 
@@ -86,16 +83,16 @@ int FormulaClassifier::typeOfFormula(ScAddr formula)
   return NONE;
 }
 
-bool FormulaClassifier::isFormulaWithConst(ScAddr formula)
+bool FormulaClassifier::isFormulaWithConst(ScAddr const & formula)
 {
-  ScIterator3Ptr constNodesIter3 = ms_context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::NodeConst);
-  if (constNodesIter3->Next())
+  ScIterator3Ptr constNodesIterator = ms_context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::NodeConst);
+  if (constNodesIterator->Next())
     return true;
-  ScIterator3Ptr constLinksIter3 = ms_context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::LinkConst);
-  return constLinksIter3->Next();
+  ScIterator3Ptr constLinksIterator = ms_context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::LinkConst);
+  return constLinksIterator->Next();
 }
 
-bool FormulaClassifier::isFormulaToGenerate(ScAddr formula)
+bool FormulaClassifier::isFormulaToGenerate(ScAddr const & formula)
 {
   return ms_context->HelperCheckEdge(
       InferenceKeynodes::concept_template_for_generation, formula, ScType::EdgeAccessConstPosPerm);

@@ -29,5 +29,7 @@ ScAddr InferenceKeynodes::nrel_negation;
 ScAddr InferenceKeynodes::nrel_implication;
 ScAddr InferenceKeynodes::nrel_equivalence;
 ScAddr InferenceKeynodes::rrel_main_key_sc_element;
+ScAddr InferenceKeynodes::rrel_if;
+ScAddr InferenceKeynodes::rrel_then;
 
 }  // namespace inference

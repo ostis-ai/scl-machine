@@ -8,7 +8,6 @@
 
 #include <sc-memory/sc_addr.hpp>
 #include <sc-agents-common/utils/GenerationUtils.hpp>
-#include <sc-agents-common/utils/IteratorUtils.hpp>
 #include <sc-agents-common/keynodes/coreKeynodes.hpp>
 
 #include "keynodes/InferenceKeynodes.hpp"

@@ -17,8 +17,6 @@
 #include "searcher/TemplateSearcher.hpp"
 #include "classifier/FormulaClassifier.hpp"
 
-using namespace std;
-
 namespace inference
 {
 // TODO: Fix issue with using interface InferenceManager
@@ -28,22 +26,22 @@ public:
   explicit DirectInferenceManager(ScMemoryContext * ms_context);
 
   ScAddr applyInference(
-      const ScAddr & targetStatement,
-      const ScAddr & ruleSet,
-      const ScAddr & inputStructure,
-      const ScAddr & outputStructure);
+      ScAddr const & targetStructure,
+      ScAddr const & formulasSet,
+      ScAddr const & inputStructure,
+      ScAddr const & outputStructure);
 
 private:
-  vector<queue<ScAddr>> createRulesQueuesListByPriority(ScAddr const & rulesSet);
+  vector<queue<ScAddr>> createFormulasQueuesListByPriority(ScAddr const & formulasSet);
 
   queue<ScAddr> createQueue(ScAddr const & set);
 
-  void clearSatisfiabilityInformation(ScAddr const & rule, ScAddr const & model);
+  void clearSatisfiabilityInformation(ScAddr const & formula, ScAddr const & model);
   void addSatisfiabilityInformation(ScAddr const & rule, ScAddr const & model, bool isSatisfiable);
 
-  bool useRule(ScAddr const & rule, vector<ScAddr> /*const*/ & argumentList);
+  bool useFormula(ScAddr const & rule, ScAddrVector /*const*/ & argumentVector);
 
-  bool isTargetAchieved(ScAddr const & target, vector<ScAddr> const & argumentList);
+  bool isTargetAchieved(ScAddr const & targetStructure, ScAddrVector const & argumentVector);
 
   bool generateStatement(ScAddr const & statement, ScTemplateParams const & templateParams);
 
@@ -54,6 +52,6 @@ private:
   FormulaClassifier * formulaClassifier;
   ScAddr inputStructure;
   ScAddr outputStructure;
-  ScAddr targetStatement;
+  ScAddr targetStructure;
 };
 }  // namespace inference

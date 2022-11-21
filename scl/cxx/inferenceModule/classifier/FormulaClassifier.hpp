@@ -23,9 +23,9 @@ public:
   static int EQUIVALENCE_EDGE;
   static int EQUIVALENCE_TUPLE;
 
-  int typeOfFormula(ScAddr formula);
-  bool isFormulaWithConst(ScAddr formula);
-  bool isFormulaToGenerate(ScAddr formula);
+  int typeOfFormula(ScAddr const & formula);
+  bool isFormulaWithConst(ScAddr const & formula);
+  bool isFormulaToGenerate(ScAddr const & formula);
 
 private:
   ScMemoryContext * ms_context;

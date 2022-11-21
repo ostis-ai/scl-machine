@@ -14,9 +14,9 @@ namespace inference
 class LogicRuleUtils
 {
 public:
-  static ScAddr getIfStatement(ScMemoryContext * context, const ScAddr & logicRule);
+  static ScAddr getFormulaPremise(ScMemoryContext * context, ScAddr const & logicalFormula);
 
-  static ScAddr getElseStatement(ScMemoryContext * context, const ScAddr & logicRule);
+  static ScAddr getFormulaConclusion(ScMemoryContext * context, ScAddr const & logicalFormula);
 };
 
 }  // namespace inference
