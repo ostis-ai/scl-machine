@@ -11,15 +11,13 @@
 
 #include <sc-memory/sc_addr.hpp>
 
-using namespace std;
-
 namespace inference
 {
 
 class ContainersUtils
 {
 public:
-  static void addToQueue(vector<ScAddr> const & elementList, queue<ScAddr> & targetQueue);
+  static void addToQueue(ScAddrVector const & elementList, std::queue<ScAddr> & targetQueue);
 };
 
 }  // namespace inference

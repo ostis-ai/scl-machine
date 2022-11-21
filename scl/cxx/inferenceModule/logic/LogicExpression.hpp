@@ -7,15 +7,15 @@
 #pragma once
 
 #include <sc-memory/sc_template.hpp>
-
-#include <keynodes/InferenceKeynodes.hpp>
-#include <manager/TemplateManager.hpp>
-#include "searcher/TemplateSearcher.hpp"
-#include "classifier/FormulaClassifier.hpp"
-
 #include <sc-agents-common/keynodes/coreKeynodes.hpp>
 #include <sc-agents-common/utils/IteratorUtils.hpp>
 #include <sc-agents-common/utils/AgentUtils.hpp>
+
+#include "keynodes/InferenceKeynodes.hpp"
+
+#include "manager/TemplateManager.hpp"
+#include "searcher/TemplateSearcher.hpp"
+#include "classifier/FormulaClassifier.hpp"
 
 using namespace inference;
 
@@ -37,7 +37,7 @@ struct LogicFormulaResult
 class LogicExpressionNode
 {
 public:
-  virtual LogicExpressionResult check(ScTemplateParams params) const = 0;
+  virtual LogicExpressionResult check(ScTemplateParams & params) const = 0;
   virtual LogicFormulaResult compute(LogicFormulaResult & result) const = 0;
 
   virtual ScAddr getFormulaTemplate() const = 0;
@@ -58,7 +58,7 @@ public:
   explicit ConjunctionExpressionNode(OperandsVector & operands);
   explicit ConjunctionExpressionNode(ScMemoryContext * context, OperandsVector & operands);
 
-  LogicExpressionResult check(ScTemplateParams params) const override;
+  LogicExpressionResult check(ScTemplateParams & params) const override;
   LogicFormulaResult compute(LogicFormulaResult & result) const override;
 
   ScAddr getFormulaTemplate() const override
@@ -76,7 +76,7 @@ public:
   explicit DisjunctionExpressionNode(OperandsVector & operands);
   explicit DisjunctionExpressionNode(ScMemoryContext * context, OperandsVector & operands);
 
-  LogicExpressionResult check(ScTemplateParams params) const override;
+  LogicExpressionResult check(ScTemplateParams & params) const override;
   LogicFormulaResult compute(LogicFormulaResult & result) const override;
 
   ScAddr getFormulaTemplate() const override
@@ -94,7 +94,7 @@ public:
   explicit NegationExpressionNode(std::unique_ptr<LogicExpressionNode> op);
   explicit NegationExpressionNode(ScMemoryContext * context, std::unique_ptr<LogicExpressionNode> op);
 
-  LogicExpressionResult check(ScTemplateParams params) const override;
+  LogicExpressionResult check(ScTemplateParams & params) const override;
   LogicFormulaResult compute(LogicFormulaResult & result) const override;
 
   ScAddr getFormulaTemplate() const override
@@ -112,7 +112,7 @@ public:
   explicit ImplicationExpressionNode(OperandsVector & operands);
   explicit ImplicationExpressionNode(ScMemoryContext * context, OperandsVector & operands);
 
-  LogicExpressionResult check(ScTemplateParams params) const override;
+  LogicExpressionResult check(ScTemplateParams & params) const override;
   LogicFormulaResult compute(LogicFormulaResult & result) const override;
 
   ScAddr getFormulaTemplate() const override
@@ -130,7 +130,7 @@ public:
   explicit EquivalenceExpressionNode(OperandsVector & operands);
   explicit EquivalenceExpressionNode(ScMemoryContext * context, OperandsVector & operands);
 
-  LogicExpressionResult check(ScTemplateParams params) const override;
+  LogicExpressionResult check(ScTemplateParams & params) const override;
   LogicFormulaResult compute(LogicFormulaResult & result) const override;
 
   ScAddr getFormulaTemplate() const override
@@ -145,15 +145,15 @@ private:
 class TemplateExpressionNode : public LogicExpressionNode
 {
 public:
-  TemplateExpressionNode(ScMemoryContext * context, ScAddr formulaTemplate, TemplateSearcher * templateSearcher);
+  TemplateExpressionNode(ScMemoryContext * context, ScAddr const & formulaTemplate, TemplateSearcher * templateSearcher);
   TemplateExpressionNode(
       ScMemoryContext * context,
-      ScAddr formulaTemplate,
+      ScAddr const & formulaTemplate,
       TemplateSearcher * templateSearcher,
       TemplateManager * templateManager,
-      ScAddr outputStructure);
+      ScAddr const & outputStructure);
 
-  LogicExpressionResult check(ScTemplateParams params) const override;
+  LogicExpressionResult check(ScTemplateParams & params) const override;
   LogicFormulaResult compute(LogicFormulaResult & result) const override;
 
   LogicFormulaResult find(map<string, vector<ScAddr>> & replacements) const;

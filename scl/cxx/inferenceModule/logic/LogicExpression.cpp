@@ -5,9 +5,11 @@
  */
 
 #include "LogicExpression.hpp"
-#include "utils/ReplacementsUtils.hpp"
+
 #include <sc-agents-common/utils/IteratorUtils.hpp>
 #include <sc-agents-common/utils/CommonUtils.hpp>
+
+#include "utils/ReplacementsUtils.hpp"
 
 ConjunctionExpressionNode::ConjunctionExpressionNode(OperandsVector & operands)
 {
@@ -23,14 +25,14 @@ ConjunctionExpressionNode::ConjunctionExpressionNode(
   this->context = context;
 }
 
-LogicExpressionResult ConjunctionExpressionNode::check(ScTemplateParams params) const
+LogicExpressionResult ConjunctionExpressionNode::check(ScTemplateParams & params) const
 {
   LogicExpressionResult conjunctionResult;
   conjunctionResult.value = true;
 
   for (auto & operand : operands)
   {
-    auto operandResult = operand->check(params);
+    LogicExpressionResult operandResult = operand->check(params);
     conjunctionResult.formulaTemplate = operandResult.formulaTemplate;
     if (operandResult.hasSearchResult)
       conjunctionResult.templateSearchResult = operandResult.templateSearchResult;
@@ -117,14 +119,14 @@ DisjunctionExpressionNode::DisjunctionExpressionNode(
   this->context = context;
 }
 
-LogicExpressionResult DisjunctionExpressionNode::check(ScTemplateParams params) const
+LogicExpressionResult DisjunctionExpressionNode::check(ScTemplateParams & params) const
 {
   LogicExpressionResult disjunctionResult;
   disjunctionResult.value = false;
 
   for (auto & operand : operands)
   {
-    auto operandResult = operand->check(params);
+    LogicExpressionResult operandResult = operand->check(params);
     disjunctionResult.formulaTemplate = operandResult.formulaTemplate;
 
     if (operandResult.hasSearchResult)
@@ -198,14 +200,14 @@ NegationExpressionNode::NegationExpressionNode(ScMemoryContext * context, std::u
   this->context = context;
 }
 
-LogicExpressionResult NegationExpressionNode::check(ScTemplateParams params) const
+LogicExpressionResult NegationExpressionNode::check(ScTemplateParams & params) const
 {
   if (operands.size() != 1)
   {
     SC_LOG_ERROR("Negation should have 1 operand but it has " + to_string(operands.size()));
     return {false, false, {nullptr, nullptr}, ScAddr()};
   }
-  auto operandResult = operands[0]->check(params);
+  LogicExpressionResult operandResult = operands[0]->check(params);
   operandResult.value = !operandResult.value;
 
   return operandResult;
@@ -225,15 +227,15 @@ ImplicationExpressionNode::ImplicationExpressionNode(OperandsVector & operands)
     this->operands.emplace_back(std::move(operand));
 }
 
-LogicExpressionResult ImplicationExpressionNode::check(ScTemplateParams params) const
+LogicExpressionResult ImplicationExpressionNode::check(ScTemplateParams & params) const
 {
   if (operands.size() != 2)
   {
     SC_LOG_ERROR("Implication should have 2 operands but it has " + to_string(operands.size()));
     return {false, false, {nullptr, nullptr}, ScAddr()};
   }
-  auto premiseResult = operands[0]->check(params);
-  auto conclusionResult = operands[1]->check(params);
+  LogicExpressionResult premiseResult = operands[0]->check(params);
+  LogicExpressionResult conclusionResult = operands[1]->check(params);
 }
 
 LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & result) const
@@ -292,7 +294,7 @@ EquivalenceExpressionNode::EquivalenceExpressionNode(OperandsVector & operands)
     this->operands.emplace_back(std::move(operand));
 }
 
-LogicExpressionResult EquivalenceExpressionNode::check(ScTemplateParams params) const
+LogicExpressionResult EquivalenceExpressionNode::check(ScTemplateParams & params) const
 {
 }
 
@@ -402,7 +404,7 @@ EquivalenceExpressionNode::EquivalenceExpressionNode(
 
 TemplateExpressionNode::TemplateExpressionNode(
     ScMemoryContext * context,
-    ScAddr formulaTemplate,
+    ScAddr const & formulaTemplate,
     TemplateSearcher * templateSearcher)
   : context(context)
   , formulaTemplate(formulaTemplate)
@@ -411,10 +413,10 @@ TemplateExpressionNode::TemplateExpressionNode(
 }
 TemplateExpressionNode::TemplateExpressionNode(
     ScMemoryContext * context,
-    ScAddr formulaTemplate,
+    ScAddr const & formulaTemplate,
     TemplateSearcher * templateSearcher,
     TemplateManager * templateManager,
-    ScAddr outputStructure)
+    ScAddr const & outputStructure)
   : context(context)
   , formulaTemplate(formulaTemplate)
   , templateSearcher(templateSearcher)
@@ -423,9 +425,9 @@ TemplateExpressionNode::TemplateExpressionNode(
 {
 }
 
-LogicExpressionResult TemplateExpressionNode::check(ScTemplateParams params) const
+LogicExpressionResult TemplateExpressionNode::check(ScTemplateParams & params) const
 {
-  auto searchResult = templateSearcher->searchTemplate(formulaTemplate, params);
+  std::vector<ScTemplateSearchResultItem> searchResult = templateSearcher->searchTemplate(formulaTemplate, params);
   std::string result = (!searchResult.empty() ? "true" : "false");
   SC_LOG_DEBUG("Atomic logical formula " + context->HelperGetSystemIdtf(formulaTemplate) + " " + result);
 
@@ -488,7 +490,7 @@ LogicFormulaResult TemplateExpressionNode::generate(map<string, vector<ScAddr>> 
       result.isGenerated = true;
       SC_LOG_DEBUG("Atomic logical formula " + context->HelperGetSystemIdtf(formulaTemplate) + " is generated");
       bool outputIsValid = outputStructure.IsValid();
-      for (auto i = 0; i < generationResult.Size(); ++i)
+      for (size_t i = 0; i < generationResult.Size(); ++i)
       {
         templateSearcher->addParamIfNotPresent(generationResult[i]);
         if (outputIsValid)
@@ -563,10 +565,8 @@ std::unique_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & node)
     return operandsVector;
   };
   auto resolveOperandsForImplicationTuple = [this](ScAddr const & node) {
-    ScAddr rrel_if = context->HelperFindBySystemIdtf("rrel_if");
-    ScAddr rrel_then = context->HelperFindBySystemIdtf("rrel_then");
-    ScAddr begin = utils::IteratorUtils::getAnyByOutRelation(context, node, rrel_if);
-    ScAddr end = utils::IteratorUtils::getAnyByOutRelation(context, node, rrel_then);
+    ScAddr begin = utils::IteratorUtils::getAnyByOutRelation(context, node, InferenceKeynodes::rrel_if);
+    ScAddr end = utils::IteratorUtils::getAnyByOutRelation(context, node, InferenceKeynodes::rrel_then);
 
     OperatorLogicExpressionNode::OperandsVector operandsVector;
     if (begin.IsValid())

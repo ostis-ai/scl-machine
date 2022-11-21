@@ -59,7 +59,7 @@ SC_AGENT_IMPLEMENTATION(ATemplateGeneration)
     return SC_RESULT_ERROR_INVALID_PARAMS;
   }
 
-  ScAddr elseStatement = LogicRuleUtils::getElseStatement(ms_context.get(), statementNode);
+  ScAddr elseStatement = LogicRuleUtils::getFormulaConclusion(ms_context.get(), statementNode);
 
   ScTemplateParams genParams;
   fillGenParams(paramSet, genParams);

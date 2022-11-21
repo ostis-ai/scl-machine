@@ -6,38 +6,39 @@
 
 #include "LogicRuleUtils.hpp"
 
+#include <sc-agents-common/keynodes/coreKeynodes.hpp>
+#include <sc-agents-common/utils/IteratorUtils.hpp>
+
 #include "keynodes/InferenceKeynodes.hpp"
-#include "sc-agents-common/keynodes/coreKeynodes.hpp"
-#include "sc-agents-common/utils/IteratorUtils.hpp"
 
 using namespace scAgentsCommon;
 
 namespace inference
 {
-ScAddr LogicRuleUtils::getIfStatement(ScMemoryContext * context, const ScAddr & logicRule)
+ScAddr LogicRuleUtils::getFormulaPremise(ScMemoryContext * context, ScAddr const & logicalFormula)
 {
-  SC_CHECK_PARAM(logicRule, ("Invalid logic rule address"));
+  SC_CHECK_PARAM(logicalFormula, ("Invalid logic rule address"));
 
-  ScAddr ifStatement;
-  ScAddr implEdge;
-  implEdge = utils::IteratorUtils::getAnyByOutRelation(context, logicRule, CoreKeynodes::rrel_main_key_sc_element);
+  ScAddr formulaPremise;
+  ScAddr implicationEdge;
+  implicationEdge = utils::IteratorUtils::getAnyByOutRelation(context, logicalFormula, CoreKeynodes::rrel_main_key_sc_element);
   if (context->HelperCheckEdge(
-          inference::InferenceKeynodes::nrel_implication, implEdge, ScType::EdgeAccessConstPosPerm))
-    ifStatement = context->GetEdgeSource(implEdge);
-  return ifStatement;
+        inference::InferenceKeynodes::nrel_implication, implicationEdge, ScType::EdgeAccessConstPosPerm))
+    formulaPremise = context->GetEdgeSource(implicationEdge);
+  return formulaPremise;
 }
 
-ScAddr LogicRuleUtils::getElseStatement(ScMemoryContext * context, const ScAddr & logicRule)
+ScAddr LogicRuleUtils::getFormulaConclusion(ScMemoryContext * context, const ScAddr & logicalFormula)
 {
-  SC_CHECK_PARAM(logicRule, ("Invalid logic rule address"));
+  SC_CHECK_PARAM(logicalFormula, ("Invalid logic rule address"));
 
-  ScAddr implEdge;
-  ScAddr elseStatement;
-  implEdge = utils::IteratorUtils::getAnyByOutRelation(context, logicRule, CoreKeynodes::rrel_main_key_sc_element);
+  ScAddr formulaConclusion;
+  ScAddr implicationEdge;
+  implicationEdge = utils::IteratorUtils::getAnyByOutRelation(context, logicalFormula, CoreKeynodes::rrel_main_key_sc_element);
   if (context->HelperCheckEdge(
-          inference::InferenceKeynodes::nrel_implication, implEdge, ScType::EdgeAccessConstPosPerm))
-    elseStatement = context->GetEdgeTarget(implEdge);
-  return elseStatement;
+        inference::InferenceKeynodes::nrel_implication, implicationEdge, ScType::EdgeAccessConstPosPerm))
+    formulaConclusion = context->GetEdgeTarget(implicationEdge);
+  return formulaConclusion;
 }
 
 }  // namespace inference

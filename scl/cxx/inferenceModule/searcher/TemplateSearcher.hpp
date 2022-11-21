@@ -21,29 +21,31 @@ public:
   explicit TemplateSearcher(ScMemoryContext * ms_context);
 
   std::vector<ScTemplateSearchResultItem> searchTemplate(
-      const ScAddr & templateAddr,
-      const ScTemplateParams & templateParams);
+      ScAddr const & templateAddr,
+      ScTemplateParams const & templateParams);
 
   std::map<std::string, std::vector<ScAddr>> searchTemplate(
-      const ScAddr & templateAddr,
-      const std::vector<ScTemplateParams> & scTemplateParamsVector);
+      ScAddr const & templateAddr,
+      std::vector<ScTemplateParams> const & scTemplateParamsVector);
 
-  std::map<std::string, std::vector<ScAddr>> searchTemplate(const ScAddr & templateAddr);
+  std::map<std::string, std::vector<ScAddr>> searchTemplate(ScAddr const & templateAddr);
 
   std::set<std::string> getVarNames(ScAddr const & structure);
 
-  const ScAddrVector & getParams() const;
-  void addParam(ScAddr param);
-  bool addParamIfNotPresent(ScAddr param);
+  ScAddrVector const & getParams() const;
 
-  void setInputStructure(const ScAddr & inputStructure);
+  void addParam(ScAddr const & param);
+
+  bool addParamIfNotPresent(ScAddr const & param);
+
+  void setInputStructure(ScAddr const & inputStructure);
 
 private:
   std::vector<ScTemplateSearchResultItem> searchTemplateWithContent(
-      const ScTemplate & searchTemplate,
-      const ScAddr & templateAddr);
+      ScTemplate const & searchTemplate,
+      ScAddr const & templateAddr);
 
-  std::map<std::string, std::string> getTemplateKeyLinksContent(const ScAddr & templateAddr);
+  std::map<std::string, std::string> getTemplateKeyLinksContent(ScAddr const & templateAddr);
 
   ScMemoryContext * context;
   std::unique_ptr<ScTemplateSearchResult> searchWithoutContentResult;

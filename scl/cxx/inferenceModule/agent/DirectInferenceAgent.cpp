@@ -29,9 +29,9 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
 
   SC_LOG_DEBUG("DirectInferenceAgent started");
 
-  ScAddr targetStructure = utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), actionNode, CoreKeynodes::rrel_1);
-  ScAddr formulasSet = utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), actionNode, CoreKeynodes::rrel_2);
-  ScAddr inputStructure =
+  ScAddr const targetStructure = utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), actionNode, CoreKeynodes::rrel_1);
+  ScAddr const formulasSet = utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), actionNode, CoreKeynodes::rrel_2);
+  ScAddr const inputStructure =
       utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), actionNode, CoreKeynodes::rrel_3);
   ScAddr rrel_4 = utils::IteratorUtils::getRoleRelation(ms_context.get(), 4);
   ScAddr outputStructure =

@@ -4,9 +4,9 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <algorithm>
 #include "TemplateManager.hpp"
-#include <sc-agents-common/utils/IteratorUtils.hpp>
+
+#include <algorithm>
 
 using namespace inference;
 
@@ -15,25 +15,25 @@ TemplateManager::TemplateManager(ScMemoryContext * ms_context)
   this->context = ms_context;
 }
 
-vector<ScTemplateParams> TemplateManager::createTemplateParamsList(
+std::vector<ScTemplateParams> TemplateManager::createTemplateParamsList(
     ScAddr const & scTemplate,
-    vector<ScAddr> const & argumentList)
+    ScAddrVector const & argumentList)
 {
   return createTemplateParams(scTemplate, argumentList);
 }
 
-vector<ScTemplateParams> TemplateManager::createTemplateParams(
+std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
     ScAddr const & scTemplate,
-    const vector<ScAddr> & argumentList)
+    ScAddrVector const & argumentList)
 {
-  map<string, set<ScAddr, AddrComparator>> replacementsMultimap;
-  vector<ScTemplateParams> vectorOfTemplateParams;
+  std::map<std::string, std::set<ScAddr, AddrComparator>> replacementsMultimap;
+  std::vector<ScTemplateParams> templateParamsVector;
 
   ScIterator3Ptr varIterator = context->Iterator3(scTemplate, ScType::EdgeAccessConstPosPerm, ScType::NodeVar);
   while (varIterator->Next())
   {
     ScAddr var = varIterator->Get(2);
-    string varName = context->HelperGetSystemIdtf(var);
+    std::string varName = context->HelperGetSystemIdtf(var);
     if (!replacementsMultimap[varName].empty())
     {
       continue;
@@ -44,7 +44,7 @@ vector<ScTemplateParams> TemplateManager::createTemplateParams(
     while (classesIterator->Next())
     {
       ScAddr varClass = classesIterator->Get(0);
-      for (auto & argument : argumentList)  // this block is executed if inputStructure is valid
+      for (ScAddr const & argument : argumentList)  // this block is executed if inputStructure is valid
       {
         if (context->HelperCheckEdge(varClass, argument, ScType::EdgeAccessConstPosPerm))
           replacementsMultimap[varName].insert(argument);
@@ -56,36 +56,36 @@ vector<ScTemplateParams> TemplateManager::createTemplateParams(
           replacementsMultimap[varName].insert(iterator3->Get(2));
       }
     }
-    if (vectorOfTemplateParams.empty())
+    if (templateParamsVector.empty())
     {
-      auto addresses = replacementsMultimap[varName];
-      vectorOfTemplateParams.reserve(replacementsMultimap[varName].size());
-      for (auto const & address : addresses)
+      std::set<ScAddr, AddrComparator> addresses = replacementsMultimap[varName];
+      templateParamsVector.reserve(replacementsMultimap[varName].size());
+      for (ScAddr const & address : addresses)
       {
         ScTemplateParams params;
         params.Add(varName, address);
-        vectorOfTemplateParams.push_back(params);
+        templateParamsVector.push_back(params);
       }
     }
     else
     {
-      auto addresses = replacementsMultimap[varName];
-      auto amountOfAddressesForVar = addresses.size();
-      auto oldParamsSize = vectorOfTemplateParams.size();
-      auto amountOfNewElements = oldParamsSize * (amountOfAddressesForVar - 1);
-      vectorOfTemplateParams.reserve(amountOfNewElements);
-      int beginOfCopy = 0;
-      int endOfCopy = oldParamsSize;
-      for (auto const & address : addresses)
+      std::set<ScAddr, AddrComparator> addresses = replacementsMultimap[varName];
+      size_t amountOfAddressesForVar = addresses.size();
+      size_t oldParamsSize = templateParamsVector.size();
+      size_t amountOfNewElements = oldParamsSize * (amountOfAddressesForVar - 1);
+      templateParamsVector.reserve(amountOfNewElements);
+      size_t beginOfCopy = 0;
+      size_t endOfCopy = oldParamsSize;
+      for (ScAddr const & address : addresses)
       {
-        copy_n(vectorOfTemplateParams.begin() + beginOfCopy, oldParamsSize, back_inserter(vectorOfTemplateParams));
-        for (int i = 0; i < oldParamsSize; ++i)
-          vectorOfTemplateParams[beginOfCopy + i].Add(varName, address);
+        copy_n(templateParamsVector.begin() + beginOfCopy, oldParamsSize, back_inserter(templateParamsVector));
+        for (size_t i = 0; i < oldParamsSize; ++i)
+          templateParamsVector[beginOfCopy + i].Add(varName, address);
         beginOfCopy = endOfCopy;
         endOfCopy += oldParamsSize;
       }
     }
   }
 
-  return vectorOfTemplateParams;
+  return templateParamsVector;
 }

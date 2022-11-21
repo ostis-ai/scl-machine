@@ -17,8 +17,6 @@
 #include "searcher/TemplateSearcher.hpp"
 #include "classifier/FormulaClassifier.hpp"
 
-using namespace std;
-
 namespace inference
 {
 // TODO: Fix issue with using interface InferenceManager
@@ -28,10 +26,10 @@ public:
   explicit DirectInferenceManager(ScMemoryContext * ms_context);
 
   ScAddr applyInference(
-      const ScAddr & targetStructure,
-      const ScAddr & formulasSet,
-      const ScAddr & inputStructure,
-      const ScAddr & outputStructure);
+      ScAddr const & targetStructure,
+      ScAddr const & formulasSet,
+      ScAddr const & inputStructure,
+      ScAddr const & outputStructure);
 
 private:
   vector<queue<ScAddr>> createFormulasQueuesListByPriority(ScAddr const & formulasSet);
@@ -41,9 +39,9 @@ private:
   void clearSatisfiabilityInformation(ScAddr const & formula, ScAddr const & model);
   void addSatisfiabilityInformation(ScAddr const & rule, ScAddr const & model, bool isSatisfiable);
 
-  bool useRule(ScAddr const & rule, vector<ScAddr> /*const*/ & argumentVector);
+  bool useFormula(ScAddr const & rule, ScAddrVector /*const*/ & argumentVector);
 
-  bool isTargetAchieved(ScAddr const & targetStructure, vector<ScAddr> const & argumentVactor);
+  bool isTargetAchieved(ScAddr const & targetStructure, ScAddrVector const & argumentVector);
 
   bool generateStatement(ScAddr const & statement, ScTemplateParams const & templateParams);
 

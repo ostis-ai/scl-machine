@@ -8,10 +8,9 @@
 
 #include <vector>
 
-#include "comparator/AddrComparator.hpp"
-#include "sc-memory/sc_memory.hpp"
+#include <sc-memory/sc_memory.hpp>
 
-using namespace std;
+#include "comparator/AddrComparator.hpp"
 
 namespace inference
 {
@@ -22,9 +21,9 @@ public:
 
   std::vector<ScTemplateParams> createTemplateParamsList(
       ScAddr const & scTemplate,
-      const vector<ScAddr> & argumentList);
+      ScAddrVector const & argumentList);
 
-  vector<ScTemplateParams> createTemplateParams(ScAddr const & scTemplate, const vector<ScAddr> & argumentList);
+  std::vector<ScTemplateParams> createTemplateParams(ScAddr const & scTemplate, ScAddrVector const & argumentList);
 
   ~TemplateManager() = default;
 

@@ -1,8 +1,6 @@
-#include <sc-agents-common/utils/CommonUtils.hpp>
-#include "sc-agents-common/utils/IteratorUtils.hpp"
 #include "FormulaClassifier.hpp"
 
-#include "../keynodes/InferenceKeynodes.hpp"
+#include <sc-agents-common/utils/CommonUtils.hpp>
 
 namespace inference
 {
@@ -22,7 +20,7 @@ FormulaClassifier::FormulaClassifier(ScMemoryContext * ms_context)
 }
 
 /*  This method is never used except for tests      */
-int FormulaClassifier::typeOfFormula(ScAddr formula)
+int FormulaClassifier::typeOfFormula(ScAddr const & formula)
 {
   SC_LOG_DEBUG("Checking type of formula " + ms_context->HelperGetSystemIdtf(formula));
   if (!formula.IsValid())
@@ -85,7 +83,7 @@ int FormulaClassifier::typeOfFormula(ScAddr formula)
   return NONE;
 }
 
-bool FormulaClassifier::isFormulaWithConst(ScAddr formula)
+bool FormulaClassifier::isFormulaWithConst(ScAddr const & formula)
 {
   ScIterator3Ptr constNodesIterator = ms_context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::NodeConst);
   if (constNodesIterator->Next())
@@ -94,7 +92,7 @@ bool FormulaClassifier::isFormulaWithConst(ScAddr formula)
   return constLinksIterator->Next();
 }
 
-bool FormulaClassifier::isFormulaToGenerate(ScAddr formula)
+bool FormulaClassifier::isFormulaToGenerate(ScAddr const & formula)
 {
   return ms_context->HelperCheckEdge(
       InferenceKeynodes::concept_template_for_generation, formula, ScType::EdgeAccessConstPosPerm);

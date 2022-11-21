@@ -13,8 +13,6 @@
 
 #include "DirectInferenceAgent.generated.hpp"
 
-using namespace std;
-
 namespace inference
 {
 
