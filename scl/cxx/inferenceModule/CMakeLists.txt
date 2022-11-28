@@ -12,6 +12,12 @@ set(SOURCES
         "comparator/AddrComparator.cpp"
         "searcher/TemplateSearcher.cpp"
         "logic/LogicExpression.cpp"
+        "logic/ConjunctionExpressionNode.cpp"
+        "logic/DisjunctionExpressionNode.cpp"
+        "logic/EquivalenceExpressionNode.cpp"
+        "logic/ImplicationExpressionNode.cpp"
+        "logic/NegationExpressionNode.cpp"
+        "logic/TemplateExpressionNode.cpp"
         "classifier/FormulaClassifier.cpp"
         "utils/ReplacementsUtils.cpp"
         )
@@ -30,6 +36,13 @@ set(HEADERS
         "comparator/AddrComparator.hpp"
         "searcher/TemplateSearcher.hpp"
         "logic/LogicExpression.hpp"
+        "logic/ConjunctionExpressionNode.hpp"
+        "logic/DisjunctionExpressionNode.hpp"
+        "logic/EquivalenceExpressionNode.hpp"
+        "logic/ImplicationExpressionNode.hpp"
+        "logic/LogicExpressionNode.hpp"
+        "logic/NegationExpressionNode.hpp"
+        "logic/TemplateExpressionNode.hpp"
         "classifier/FormulaClassifier.hpp"
         "formulas/Formula.hpp"
         "utils/ReplacementsUtils.hpp"
@@ -46,4 +59,3 @@ sc_codegen_ex(inferenceModule ${CMAKE_CURRENT_LIST_DIR} ${CMAKE_CURRENT_LIST_DIR
 if (${SC_BUILD_TESTS})
     include(${CMAKE_CURRENT_LIST_DIR}/test/tests.cmake)
 endif ()
-

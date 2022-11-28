@@ -18,5 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README
 - Changelog
 
+### Fixed
+- Fixed applying rules chain
+
 ### Changed
+- Separate logical connectives classes
+- Rename variables, log message concepts and methods according to the Standard concepts
+- Separate tests for simple formulas, complex formulas and agent arguments
 - Move to 0.7.0 ostis-web-platform
