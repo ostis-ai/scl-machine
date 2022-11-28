@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Finish agent work if exception occurred
 - Unify interfaces with old 3-argument applying inference
 - New tests for logic module with argument checking and with complex rules
 - Add pre-commit
