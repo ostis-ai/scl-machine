@@ -12,7 +12,6 @@
 
 #include "DirectInferenceAgent.hpp"
 
-using namespace std;
 using namespace scAgentsCommon;
 
 namespace inference
@@ -38,27 +37,45 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
       utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), actionNode, rrel_4);
 
   if (!targetStructure.IsValid())
+  {
     SC_LOG_WARNING("Target structure is not valid");
-  if (!formulasSet.IsValid())
-    SC_LOG_WARNING("Formulas set is not valid");
-  if (!inputStructure.IsValid())
-    SC_LOG_WARNING("Input structure is not valid");
+  }
+  if (!formulasSet.IsValid() ||
+    !utils::IteratorUtils::getAnyFromSet(ms_context.get(), formulasSet).IsValid())
+  {
+    SC_LOG_ERROR("Formulas set is not valid.");
+    utils::AgentUtils::finishAgentWork(&m_memoryCtx, actionNode, false);
+    return SC_RESULT_ERROR;
+  }
+  if (!inputStructure.IsValid() ||
+      !utils::IteratorUtils::getAnyFromSet(ms_context.get(), inputStructure).IsValid())
+  {
+    SC_LOG_ERROR("Input structure is not valid.");
+    utils::AgentUtils::finishAgentWork(&m_memoryCtx, actionNode, false);
+    return SC_RESULT_ERROR;
+  }
   if (!outputStructure.IsValid())
   {
     SC_LOG_WARNING("Output structure is not valid, generate new");
     outputStructure = ms_context->CreateNode(ScType::NodeConstStruct);
   }
 
+  ScAddrVector answerElements;
   this->inferenceManager = std::make_unique<DirectInferenceManager>(ms_context.get());
   ScAddr solutionNode;
-  solutionNode = this->inferenceManager->applyInference(targetStructure, formulasSet, inputStructure, outputStructure);
-  ScAddrVector answerElements;
+  try
+  {
+    solutionNode = this->inferenceManager->applyInference(targetStructure, formulasSet, inputStructure, outputStructure);
+  }
+  catch (utils::ScException const & exception)
+  {
+    SC_LOG_ERROR(exception.Message());
+    utils::AgentUtils::finishAgentWork(&m_memoryCtx, actionNode, false);
+    return SC_RESULT_ERROR;
+  }
+
   answerElements.push_back(solutionNode);
-
-  bool isSuccess =
-      ms_context->HelperCheckEdge(InferenceKeynodes::concept_success_solution, solutionNode, ScType::EdgeAccessConstPosPerm);
-
-  utils::AgentUtils::finishAgentWork(ms_context.get(), actionNode, answerElements, isSuccess);
+  utils::AgentUtils::finishAgentWork(ms_context.get(), actionNode, answerElements, true);
   SC_LOG_DEBUG("DirectInferenceAgent finished");
   return SC_RESULT_OK;
 }

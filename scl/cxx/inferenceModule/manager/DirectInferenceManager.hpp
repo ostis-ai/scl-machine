@@ -39,7 +39,7 @@ private:
   void clearSatisfiabilityInformation(ScAddr const & formula, ScAddr const & model);
   void addSatisfiabilityInformation(ScAddr const & rule, ScAddr const & model, bool isSatisfiable);
 
-  bool useFormula(ScAddr const & rule, ScAddrVector /*const*/ & argumentVector);
+  bool useFormula(ScAddr const & rule, ScAddrVector /*const*/ & argumentVector, ScAddr const & outputStructure);
 
   bool isTargetAchieved(ScAddr const & targetStructure, ScAddrVector const & argumentVector);
 
@@ -49,9 +49,5 @@ private:
   std::unique_ptr<TemplateManager> templateManager;
   std::unique_ptr<TemplateSearcher> templateSearcher;
   std::unique_ptr<SolutionTreeGenerator> solutionTreeGenerator;
-  FormulaClassifier * formulaClassifier;
-  ScAddr inputStructure;
-  ScAddr outputStructure;
-  ScAddr targetStructure;
 };
 }  // namespace inference
