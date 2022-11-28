@@ -19,6 +19,8 @@
 
 namespace inference
 {
+using ScAddrQueue = std::queue<ScAddr>;
+
 // TODO: Fix issue with using interface InferenceManager
 class DirectInferenceManager
 {
@@ -32,12 +34,13 @@ public:
       ScAddr const & outputStructure);
 
 private:
-  vector<queue<ScAddr>> createFormulasQueuesListByPriority(ScAddr const & formulasSet);
+  std::vector<ScAddrQueue> createFormulasQueuesListByPriority(ScAddr const & formulasSet);
 
-  queue<ScAddr> createQueue(ScAddr const & set);
+  ScAddrQueue createQueue(ScAddr const & set);
 
-  void clearSatisfiabilityInformation(ScAddr const & formula, ScAddr const & model);
-  void addSatisfiabilityInformation(ScAddr const & rule, ScAddr const & model, bool isSatisfiable);
+  void clearSatisfiabilityInformation(ScAddr const & formula, ScAddr const & inputStructure);
+
+  void addSatisfiabilityInformation(ScAddr const & formula, ScAddr const & inputStructure, bool isSatisfiable);
 
   bool useFormula(ScAddr const & rule, ScAddrVector /*const*/ & argumentVector, ScAddr const & outputStructure);
 

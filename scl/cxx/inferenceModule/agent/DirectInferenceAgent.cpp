@@ -32,31 +32,32 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
   ScAddr const formulasSet = utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), actionNode, CoreKeynodes::rrel_2);
   ScAddr const inputStructure =
       utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), actionNode, CoreKeynodes::rrel_3);
-  ScAddr rrel_4 = utils::IteratorUtils::getRoleRelation(ms_context.get(), 4);
+  ScAddr const rrel_4 = utils::IteratorUtils::getRoleRelation(ms_context.get(), 4);
   ScAddr outputStructure =
       utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), actionNode, rrel_4);
 
-  if (!targetStructure.IsValid())
+  if (!targetStructure.IsValid() ||
+      !utils::IteratorUtils::getAnyFromSet(ms_context.get(), targetStructure).IsValid())
   {
-    SC_LOG_WARNING("Target structure is not valid");
+    SC_LOG_WARNING("Target structure is not valid or empty.");
   }
   if (!formulasSet.IsValid() ||
     !utils::IteratorUtils::getAnyFromSet(ms_context.get(), formulasSet).IsValid())
   {
-    SC_LOG_ERROR("Formulas set is not valid.");
+    SC_LOG_ERROR("Formulas set is not valid or empty.");
     utils::AgentUtils::finishAgentWork(&m_memoryCtx, actionNode, false);
     return SC_RESULT_ERROR;
   }
   if (!inputStructure.IsValid() ||
       !utils::IteratorUtils::getAnyFromSet(ms_context.get(), inputStructure).IsValid())
   {
-    SC_LOG_ERROR("Input structure is not valid.");
+    SC_LOG_ERROR("Input structure is not valid or empty.");
     utils::AgentUtils::finishAgentWork(&m_memoryCtx, actionNode, false);
     return SC_RESULT_ERROR;
   }
   if (!outputStructure.IsValid())
   {
-    SC_LOG_WARNING("Output structure is not valid, generate new");
+    SC_LOG_WARNING("Output structure is not valid or empty, generate new");
     outputStructure = ms_context->CreateNode(ScType::NodeConstStruct);
   }
 
