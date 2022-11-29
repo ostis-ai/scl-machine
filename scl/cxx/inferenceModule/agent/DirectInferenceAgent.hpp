@@ -25,7 +25,7 @@ private:
   // TODO: Need to implement common logic of DI
   std::unique_ptr<DirectInferenceManager> inferenceManager;
 
-  bool checkActionClass(ScAddr const & actionNode);
+  static bool checkActionClass(ScAddr const & actionNode);
 };
 
 }  // namespace inference

@@ -22,7 +22,7 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
   if (!edgeAddr.IsValid())
     return SC_RESULT_ERROR;
 
-  ScAddr actionNode = m_memoryCtx.GetEdgeTarget(edgeAddr);
+  ScAddr actionNode = ms_context->GetEdgeTarget(edgeAddr);
   if (!checkActionClass(actionNode))
     return SC_RESULT_OK;
 
@@ -45,14 +45,14 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
     !utils::IteratorUtils::getAnyFromSet(ms_context.get(), formulasSet).IsValid())
   {
     SC_LOG_ERROR("Formulas set is not valid or empty.");
-    utils::AgentUtils::finishAgentWork(&m_memoryCtx, actionNode, false);
+    utils::AgentUtils::finishAgentWork(ms_context.get(), actionNode, false);
     return SC_RESULT_ERROR;
   }
   if (!inputStructure.IsValid() ||
       !utils::IteratorUtils::getAnyFromSet(ms_context.get(), inputStructure).IsValid())
   {
     SC_LOG_ERROR("Input structure is not valid or empty.");
-    utils::AgentUtils::finishAgentWork(&m_memoryCtx, actionNode, false);
+    utils::AgentUtils::finishAgentWork(ms_context.get(), actionNode, false);
     return SC_RESULT_ERROR;
   }
   if (!outputStructure.IsValid())
@@ -71,7 +71,7 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
   catch (utils::ScException const & exception)
   {
     SC_LOG_ERROR(exception.Message());
-    utils::AgentUtils::finishAgentWork(&m_memoryCtx, actionNode, false);
+    utils::AgentUtils::finishAgentWork(ms_context.get(), actionNode, false);
     return SC_RESULT_ERROR;
   }
 
@@ -83,7 +83,7 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
 
 bool DirectInferenceAgent::checkActionClass(ScAddr const & actionNode)
 {
-  return m_memoryCtx.HelperCheckEdge(
+  return ms_context->HelperCheckEdge(
         InferenceKeynodes::action_direct_inference, actionNode, ScType::EdgeAccessConstPosPerm);
 }
 
