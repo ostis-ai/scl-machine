@@ -62,17 +62,15 @@ atomic_logical_formula
  -> then;;
 concept_template_for_generation
  -> then;;
-test_argument <- current_node_class;;
-test_argument <- class_1_which_may_not_include_the_node;;
 
-fake_test_argument <- current_node_class;;
+fake_argument <- current_node_class;;
 
 action_direct_inference <- sc_node_class;;
 
 input_structure = [*
-  test_argument <- current_node_class;;
-  test_argument <- class_1_which_may_not_include_the_node;;
-  fake_test_argument <- current_node_class;;
+  argument <- current_node_class;;
+  argument <- class_1_which_may_not_include_the_node;;
+  fake_argument <- current_node_class;;
 *];;
 
 inference_logic_test_question

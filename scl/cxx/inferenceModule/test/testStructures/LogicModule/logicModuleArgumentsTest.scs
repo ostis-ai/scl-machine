@@ -49,6 +49,12 @@ input_structure = [*
 rules_set
     -> rrel_1: { logic_rule };;
 
+// rules_1 nad rules_2 are empty, nothing to apply
+@rules_1 = (empty_rules_set -> set_1);;
+rrel_1 -> @rules_1;;
+@rules_2 = (empty_rules_set -> set_2);;
+@rules_1 => nrel_basic_sequence: @rules_2;;
+
 valid_arguments_action
     <- action_direct_inference;
     -> rrel_1: target_template;
@@ -63,18 +69,19 @@ invalid_input_structure_action
     // -> rrel_3: input_structure;
     -> rrel_4: output_structure;;
 
+empty_input_structure_action
+    <- action_direct_inference;
+    -> rrel_1: target_template;
+	-> rrel_2: rules_set;
+	-> rrel_3: empty_input_structure;
+	-> rrel_4: output_structure;;
+
 empty_rules_set_queue_action
     <- action_direct_inference;
     -> rrel_1: target_template;
 	-> rrel_2: empty_rules_set_queue;
 	-> rrel_3: input_structure;
 	-> rrel_4: output_structure;;
-
-// rules_1 nad rules_2 are empty, nothing to apply
-@rules_1 = (empty_rules_set -> set_1);;
-rrel_1 -> @rules_1;;
-@rules_2 = (empty_rules_set -> set_2);;
-@rules_1 => nrel_basic_sequence: @rules_2;;
 
 empty_rules_set_action
     <- action_direct_inference;

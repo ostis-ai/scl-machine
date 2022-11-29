@@ -50,9 +50,9 @@ concept_template_for_generation
 	-> then;;
 
 input_structure = [*
-	test_argument <- current_node_class;;
-	test_argument <- class_1;;
-	fake_test_argument <- current_node_class;;
+	argument <- current_node_class;;
+	argument <- class_1;;
+	fake_argument <- current_node_class;;
 *];;
 
 inference_logic_test_question
