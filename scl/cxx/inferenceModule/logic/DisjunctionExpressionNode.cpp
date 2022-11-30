@@ -13,9 +13,9 @@ DisjunctionExpressionNode::DisjunctionExpressionNode(OperandsVector & operands)
 }
 
 DisjunctionExpressionNode::DisjunctionExpressionNode(
-      ScMemoryContext * context,
-      OperatorLogicExpressionNode::OperandsVector & operands)
-      : DisjunctionExpressionNode(operands)
+    ScMemoryContext * context,
+    OperatorLogicExpressionNode::OperandsVector & operands)
+  : DisjunctionExpressionNode(operands)
 {
   this->context = context;
 }

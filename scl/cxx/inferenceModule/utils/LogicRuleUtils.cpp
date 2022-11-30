@@ -21,9 +21,10 @@ ScAddr LogicRuleUtils::getFormulaPremise(ScMemoryContext * context, ScAddr const
 
   ScAddr formulaPremise;
   ScAddr implicationEdge;
-  implicationEdge = utils::IteratorUtils::getAnyByOutRelation(context, logicalFormula, CoreKeynodes::rrel_main_key_sc_element);
+  implicationEdge =
+      utils::IteratorUtils::getAnyByOutRelation(context, logicalFormula, CoreKeynodes::rrel_main_key_sc_element);
   if (context->HelperCheckEdge(
-        inference::InferenceKeynodes::nrel_implication, implicationEdge, ScType::EdgeAccessConstPosPerm))
+          inference::InferenceKeynodes::nrel_implication, implicationEdge, ScType::EdgeAccessConstPosPerm))
     formulaPremise = context->GetEdgeSource(implicationEdge);
   return formulaPremise;
 }
@@ -34,9 +35,10 @@ ScAddr LogicRuleUtils::getFormulaConclusion(ScMemoryContext * context, const ScA
 
   ScAddr formulaConclusion;
   ScAddr implicationEdge;
-  implicationEdge = utils::IteratorUtils::getAnyByOutRelation(context, logicalFormula, CoreKeynodes::rrel_main_key_sc_element);
+  implicationEdge =
+      utils::IteratorUtils::getAnyByOutRelation(context, logicalFormula, CoreKeynodes::rrel_main_key_sc_element);
   if (context->HelperCheckEdge(
-        inference::InferenceKeynodes::nrel_implication, implicationEdge, ScType::EdgeAccessConstPosPerm))
+          inference::InferenceKeynodes::nrel_implication, implicationEdge, ScType::EdgeAccessConstPosPerm))
     formulaConclusion = context->GetEdgeTarget(implicationEdge);
   return formulaConclusion;
 }

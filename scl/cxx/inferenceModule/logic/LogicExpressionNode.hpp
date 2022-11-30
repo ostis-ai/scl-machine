@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "utils/ReplacementsUtils.hpp"
+
 struct LogicExpressionResult
 {
   bool value;
@@ -18,7 +20,7 @@ struct LogicFormulaResult
 {
   bool value;
   bool isGenerated;
-  std::map<string, std::vector<ScAddr>> replacements;
+  Replacements replacements;
 };
 
 class LogicExpressionNode

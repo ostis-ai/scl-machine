@@ -46,7 +46,7 @@ TEST_F(InferenceLogicTest, AllArgumentsValid)
 {
   ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
 
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "logicModuleArgumentsTest.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "logicModuleArgumentsTest.scs");
   initialize();
 
   ScAddr action = context.HelperResolveSystemIdtf("valid_arguments_action");
@@ -55,10 +55,8 @@ TEST_F(InferenceLogicTest, AllArgumentsValid)
   ScAddr argument = context.HelperFindBySystemIdtf("argument");
   EXPECT_TRUE(argument.IsValid());
 
-  ScIterator3Ptr argumentClassIteratorBefore = context.Iterator3(
-        ScType::NodeConstClass,
-        ScType::EdgeAccessConstPosPerm,
-        argument);
+  ScIterator3Ptr argumentClassIteratorBefore =
+      context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
 
   // There is only two classes of argument before agent run
   EXPECT_TRUE(argumentClassIteratorBefore->Next());
@@ -67,21 +65,14 @@ TEST_F(InferenceLogicTest, AllArgumentsValid)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorBefore->Next());
 
-  context.CreateEdge(
-        ScType::EdgeAccessConstPosPerm,
-        InferenceKeynodes::action_direct_inference,
-        action);
+  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
 
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
-        scAgentsCommon::CoreKeynodes::question_finished_successfully,
-        action,
-        ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
-  ScIterator3Ptr argumentClassIteratorAfter = context.Iterator3(
-        ScType::NodeConstClass,
-        ScType::EdgeAccessConstPosPerm,
-        argument);
+  ScIterator3Ptr argumentClassIteratorAfter =
+      context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
 
   // There is only 3 classes of argument: two was before agent run and one is generated
   EXPECT_TRUE(argumentClassIteratorAfter->Next());
@@ -100,7 +91,7 @@ TEST_F(InferenceLogicTest, InvalidInputStructure)
 {
   ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
 
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "logicModuleArgumentsTest.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "logicModuleArgumentsTest.scs");
   initialize();
 
   ScAddr action = context.HelperResolveSystemIdtf("invalid_input_structure_action");
@@ -109,21 +100,14 @@ TEST_F(InferenceLogicTest, InvalidInputStructure)
   ScAddr argument = context.HelperFindBySystemIdtf("argument");
   EXPECT_TRUE(argument.IsValid());
 
-  ScIterator3Ptr argumentClassIteratorBefore = context.Iterator3(
-        ScType::NodeConstClass,
-        ScType::EdgeAccessConstPosPerm,
-        argument);
+  ScIterator3Ptr argumentClassIteratorBefore =
+      context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
 
-  context.CreateEdge(
-        ScType::EdgeAccessConstPosPerm,
-        InferenceKeynodes::action_direct_inference,
-        action);
+  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
 
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
-        scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully,
-        action,
-        ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully, action, ScType::EdgeAccessConstPosPerm));
 
   shutdown();
   context.Destroy();
@@ -134,7 +118,7 @@ TEST_F(InferenceLogicTest, EmptyInputStructure)
 {
   ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
 
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "logicModuleArgumentsTest.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "logicModuleArgumentsTest.scs");
   initialize();
 
   ScAddr action = context.HelperResolveSystemIdtf("empty_input_structure_action");
@@ -143,16 +127,11 @@ TEST_F(InferenceLogicTest, EmptyInputStructure)
   ScAddr argument = context.HelperFindBySystemIdtf("argument");
   EXPECT_TRUE(argument.IsValid());
 
-  context.CreateEdge(
-        ScType::EdgeAccessConstPosPerm,
-        InferenceKeynodes::action_direct_inference,
-        action);
+  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
 
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
-        scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully,
-        action,
-        ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully, action, ScType::EdgeAccessConstPosPerm));
 
   shutdown();
   context.Destroy();
@@ -163,22 +142,17 @@ TEST_F(InferenceLogicTest, EmptyRuleSet)
 {
   ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
 
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "logicModuleArgumentsTest.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "logicModuleArgumentsTest.scs");
   initialize();
 
   ScAddr action = context.HelperResolveSystemIdtf("empty_rules_set_queue_action");
   EXPECT_TRUE(action.IsValid());
 
-  context.CreateEdge(
-        ScType::EdgeAccessConstPosPerm,
-        InferenceKeynodes::action_direct_inference,
-        action);
+  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
 
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
-        scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully,
-        action,
-        ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully, action, ScType::EdgeAccessConstPosPerm));
 
   shutdown();
   context.Destroy();
@@ -189,22 +163,17 @@ TEST_F(InferenceLogicTest, EmptyRuleSetQueue)
 {
   ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
 
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "logicModuleArgumentsTest.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "logicModuleArgumentsTest.scs");
   initialize();
 
   ScAddr action = context.HelperResolveSystemIdtf("empty_rules_set_action");
   EXPECT_TRUE(action.IsValid());
 
-  context.CreateEdge(
-        ScType::EdgeAccessConstPosPerm,
-        InferenceKeynodes::action_direct_inference,
-        action);
+  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
 
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
-        scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully,
-        action,
-        ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully, action, ScType::EdgeAccessConstPosPerm));
 
   shutdown();
   context.Destroy();

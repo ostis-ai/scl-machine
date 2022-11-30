@@ -19,9 +19,7 @@ class TemplateManager
 public:
   explicit TemplateManager(ScMemoryContext * ms_context);
 
-  std::vector<ScTemplateParams> createTemplateParamsList(
-      ScAddr const & scTemplate,
-      ScAddrVector const & argumentList);
+  std::vector<ScTemplateParams> createTemplateParamsList(ScAddr const & scTemplate, ScAddrVector const & argumentList);
 
   std::vector<ScTemplateParams> createTemplateParams(ScAddr const & scTemplate, ScAddrVector const & argumentList);
 

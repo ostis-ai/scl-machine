@@ -13,9 +13,9 @@ ConjunctionExpressionNode::ConjunctionExpressionNode(OperandsVector & operands)
 }
 
 ConjunctionExpressionNode::ConjunctionExpressionNode(
-      ScMemoryContext * context,
-      OperatorLogicExpressionNode::OperandsVector & operands)
-      : ConjunctionExpressionNode(operands)
+    ScMemoryContext * context,
+    OperatorLogicExpressionNode::OperandsVector & operands)
+  : ConjunctionExpressionNode(operands)
 {
   this->context = context;
 }

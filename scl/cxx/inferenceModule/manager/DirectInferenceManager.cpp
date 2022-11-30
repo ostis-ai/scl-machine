@@ -10,6 +10,8 @@
 #include <sc-agents-common/utils/GenerationUtils.hpp>
 #include <sc-agents-common/utils/IteratorUtils.hpp>
 
+#include <algorithm>
+
 #include "utils/ContainersUtils.hpp"
 #include "logic/LogicExpression.hpp"
 
@@ -55,14 +57,17 @@ ScAddr DirectInferenceManager::applyInference(
   ScAddr formula;
   bool isGenerated;
   SC_LOG_DEBUG("Start rule applying. There is " + to_string(formulasQueuesByPriority.size()) + " formulas sets");
-  for (size_t formulasQueueIndex = 0; formulasQueueIndex < formulasQueuesByPriority.size() && !targetAchieved; formulasQueueIndex++)
+  for (size_t formulasQueueIndex = 0; formulasQueueIndex < formulasQueuesByPriority.size() && !targetAchieved;
+       formulasQueueIndex++)
   {
     uncheckedFormulas = formulasQueuesByPriority[formulasQueueIndex];
     if (uncheckedFormulas.empty())
     {
       SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, "No rules found in set by priority.");
     }
-    SC_LOG_DEBUG("There is " + to_string(uncheckedFormulas.size()) + " formulas in " + to_string(formulasQueueIndex + 1) + " set");
+    SC_LOG_DEBUG(
+        "There is " + to_string(uncheckedFormulas.size()) + " formulas in " + to_string(formulasQueueIndex + 1) +
+        " set");
     while (!uncheckedFormulas.empty())
     {
       formula = uncheckedFormulas.front();
@@ -108,7 +113,10 @@ ScAddrQueue DirectInferenceManager::createQueue(ScAddr const & set)
   return queue;
 }
 
-bool DirectInferenceManager::useFormula(ScAddr const & rule, ScAddrVector /*const*/ & argumentVector, ScAddr const & outputStructure)
+bool DirectInferenceManager::useFormula(
+    ScAddr const & rule,
+    ScAddrVector /*const*/ & argumentVector,
+    ScAddr const & outputStructure)
 {
   LogicFormulaResult formulaResult = {false, false, {}};
   ScAddr const formulaRoot =
@@ -119,8 +127,8 @@ bool DirectInferenceManager::useFormula(ScAddr const & rule, ScAddrVector /*cons
   LogicExpression logicExpression(
       ms_context, templateSearcher.get(), templateManager.get(), argumentVector, outputStructure);
 
-  auto expressionRoot = logicExpression.build(formulaRoot);
-  auto result = expressionRoot->compute(formulaResult);
+  unique_ptr<LogicExpressionNode> expressionRoot = logicExpression.build(formulaRoot);
+  LogicFormulaResult result = expressionRoot->compute(formulaResult);
 
   return result.isGenerated;
 }
@@ -158,26 +166,29 @@ bool DirectInferenceManager::generateStatement(ScAddr const & statement, ScTempl
 
 bool DirectInferenceManager::isTargetAchieved(ScAddr const & targetStructure, ScAddrVector const & argumentVector)
 {
-  std::vector<ScTemplateParams> const templateParamsVector = templateManager->createTemplateParams(targetStructure, argumentVector);
-  for (ScTemplateParams const & templateParams : templateParamsVector)
-  {
-    std::vector<ScTemplateSearchResultItem> searchResult = templateSearcher->searchTemplate(targetStructure, templateParams);
-    if (!searchResult.empty())
-      return true;
-  }
-  return false;
+  std::vector<ScTemplateParams> const templateParamsVector =
+      templateManager->createTemplateParams(targetStructure, argumentVector);
+  return std::any_of(
+      templateParamsVector.cbegin(),
+      templateParamsVector.cend(),
+      [this, &targetStructure](ScTemplateParams const & templateParams) {
+        return !templateSearcher->searchTemplate(targetStructure, templateParams).empty();
+      });
 }
 
 void DirectInferenceManager::clearSatisfiabilityInformation(ScAddr const & formula, ScAddr const & inputStructure)
 {
-  ScIterator5Ptr iterator5Ptr = ms_context->Iterator5(
-        formula, ScType::EdgeDCommon, inputStructure, ScType::EdgeAccess, InferenceKeynodes::nrel_satisfiable_formula);
+  ScIterator5Ptr satisfiabilityIterator = ms_context->Iterator5(
+      formula, ScType::EdgeDCommon, inputStructure, ScType::EdgeAccess, InferenceKeynodes::nrel_satisfiable_formula);
 
-  while (iterator5Ptr->Next())
-    ms_context->EraseElement(iterator5Ptr->Get(1));
+  while (satisfiabilityIterator->Next())
+    ms_context->EraseElement(satisfiabilityIterator->Get(1));
 }
 
-void DirectInferenceManager::addSatisfiabilityInformation(ScAddr const & formula, ScAddr const & inputStructure, bool isSatisfiable)
+void DirectInferenceManager::addSatisfiabilityInformation(
+    ScAddr const & formula,
+    ScAddr const & inputStructure,
+    bool isSatisfiable)
 {
   clearSatisfiabilityInformation(formula, inputStructure);
   ScAddr const satisfiableRelationEdge = ms_context->CreateEdge(ScType::EdgeDCommonConst, formula, inputStructure);

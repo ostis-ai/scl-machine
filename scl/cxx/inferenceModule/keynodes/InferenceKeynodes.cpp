@@ -10,7 +10,6 @@
 
 namespace inference
 {
-
 ScAddr InferenceKeynodes::knowledge_base_IMS;
 ScAddr InferenceKeynodes::action_use_logic_rule;
 ScAddr InferenceKeynodes::action_reverse_inference;

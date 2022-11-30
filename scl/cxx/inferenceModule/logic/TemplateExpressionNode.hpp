@@ -18,13 +18,16 @@ using namespace inference;
 class TemplateExpressionNode : public LogicExpressionNode
 {
 public:
-  TemplateExpressionNode(ScMemoryContext * context, ScAddr const & formulaTemplate, TemplateSearcher * templateSearcher);
   TemplateExpressionNode(
-        ScMemoryContext * context,
-        ScAddr const & formulaTemplate,
-        TemplateSearcher * templateSearcher,
-        TemplateManager * templateManager,
-        ScAddr const & outputStructure);
+      ScMemoryContext * context,
+      ScAddr const & formulaTemplate,
+      TemplateSearcher * templateSearcher);
+  TemplateExpressionNode(
+      ScMemoryContext * context,
+      ScAddr const & formulaTemplate,
+      TemplateSearcher * templateSearcher,
+      TemplateManager * templateManager,
+      ScAddr const & outputStructure);
 
   LogicExpressionResult check(ScTemplateParams & params) const override;
   LogicFormulaResult compute(LogicFormulaResult & result) const override;

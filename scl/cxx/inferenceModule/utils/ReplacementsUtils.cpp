@@ -1,11 +1,11 @@
 #include "ReplacementsUtils.hpp"
 #include "sc-memory/kpm/sc_agent.hpp"
 
-map<string, ScAddrVector> inference::ReplacementsUtils::intersectReplacements(
-    map<string, ScAddrVector> const & first,
-    map<string, ScAddrVector> const & second)
+Replacements inference::ReplacementsUtils::intersectReplacements(
+    Replacements const & first,
+    Replacements const & second)
 {
-  map<string, ScAddrVector> result;
+  Replacements result;
   size_t resultSize = 0;
   set<string> firstKeys = getKeySet(first);
   set<string> secondKeys = getKeySet(second);
@@ -44,11 +44,9 @@ map<string, ScAddrVector> inference::ReplacementsUtils::intersectReplacements(
   return result;
 }
 
-map<string, ScAddrVector> inference::ReplacementsUtils::uniteReplacements(
-    map<string, ScAddrVector> const & first,
-    map<string, ScAddrVector> const & second)
+Replacements inference::ReplacementsUtils::uniteReplacements(Replacements const & first, Replacements const & second)
 {
-  map<string, ScAddrVector> result;
+  Replacements result;
   int resultSize = 0;
   set<string> firstKeys = getKeySet(first);
   set<string> secondKeys = getKeySet(second);
@@ -86,7 +84,7 @@ map<string, ScAddrVector> inference::ReplacementsUtils::uniteReplacements(
   return result;
 }
 
-set<string> inference::ReplacementsUtils::getKeySet(map<string, ScAddrVector> const & map)
+set<string> inference::ReplacementsUtils::getKeySet(Replacements const & map)
 {
   set<string> keySet;
   for (auto const & pair : map)
@@ -94,7 +92,7 @@ set<string> inference::ReplacementsUtils::getKeySet(map<string, ScAddrVector> co
   return keySet;
 }
 
-set<string> inference::ReplacementsUtils::getCommonKeys(set<string> const& first, set<string> const & second)
+set<string> inference::ReplacementsUtils::getCommonKeys(set<string> const & first, set<string> const & second)
 {
   set<string> result;
   for (string const & key : first)
@@ -105,10 +103,9 @@ set<string> inference::ReplacementsUtils::getCommonKeys(set<string> const& first
   return result;
 }
 
-map<string, ScAddrVector> inference::ReplacementsUtils::copyReplacements(
-    map<string, ScAddrVector> const & replacements)
+Replacements inference::ReplacementsUtils::copyReplacements(Replacements const & replacements)
 {
-  map<string, ScAddrVector> result;
+  Replacements result;
   for (auto const & pair : replacements)
   {
     string const & key = pair.first;
@@ -119,7 +116,7 @@ map<string, ScAddrVector> inference::ReplacementsUtils::copyReplacements(
 }
 
 vector<ScTemplateParams> inference::ReplacementsUtils::getReplacementsToScTemplateParams(
-    map<string, ScAddrVector> const & replacements)
+    Replacements const & replacements)
 {
   vector<ScTemplateParams> result;
   set<string> keys = getKeySet(replacements);
@@ -137,12 +134,12 @@ vector<ScTemplateParams> inference::ReplacementsUtils::getReplacementsToScTempla
   return result;
 }
 
-size_t inference::ReplacementsUtils::getColumnsAmount(map<string, ScAddrVector> const & replacements)
+size_t inference::ReplacementsUtils::getColumnsAmount(Replacements const & replacements)
 {
   return (replacements.empty() ? 0 : replacements.begin()->second.size());
 }
 
-size_t inference::ReplacementsUtils::getRowsAmount(map<string, ScAddrVector> const & replacements)
+size_t inference::ReplacementsUtils::getRowsAmount(Replacements const & replacements)
 {
   return replacements.size();
 }

@@ -20,7 +20,6 @@ using namespace scAgentsCommon;
 
 namespace inference
 {
-
 void ATemplateGeneration::fillGenParams(ScAddr & paramsSet, ScTemplateParams & genParams)
 {
   ScIterator3Ptr iter_params = ms_context->Iterator3(paramsSet, ScType::EdgeAccessConstPosPerm, ScType::NodeConst);
