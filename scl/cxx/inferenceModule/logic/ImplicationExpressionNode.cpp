@@ -13,9 +13,9 @@ ImplicationExpressionNode::ImplicationExpressionNode(OperandsVector & operands)
 }
 
 ImplicationExpressionNode::ImplicationExpressionNode(
-      ScMemoryContext * context,
-      OperatorLogicExpressionNode::OperandsVector & operands)
-      : ImplicationExpressionNode(operands)
+    ScMemoryContext * context,
+    OperatorLogicExpressionNode::OperandsVector & operands)
+  : ImplicationExpressionNode(operands)
 {
   this->context = context;
 }
@@ -40,7 +40,8 @@ LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & resul
   bool isLeftGenerated = (premiseAtom) && formulaClassifier.isFormulaToGenerate(premiseAtom->getFormulaTemplate());
 
   auto conclusionAtom = dynamic_cast<TemplateExpressionNode *>(operands[1].get());
-  bool isRightGenerated = (conclusionAtom) && formulaClassifier.isFormulaToGenerate(conclusionAtom->getFormulaTemplate());
+  bool isRightGenerated =
+      (conclusionAtom) && formulaClassifier.isFormulaToGenerate(conclusionAtom->getFormulaTemplate());
 
   LogicFormulaResult premiseResult;
   LogicFormulaResult conclusionResult;
@@ -49,7 +50,8 @@ LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & resul
   {
     SC_LOG_DEBUG("Premise shouldn't be generated");
     premiseResult = operands[0]->compute(result);
-    conclusionResult = (isRightGenerated ? conclusionAtom->generate(premiseResult.replacements) : operands[1]->compute(result));
+    conclusionResult =
+        (isRightGenerated ? conclusionAtom->generate(premiseResult.replacements) : operands[1]->compute(result));
   }
   else
   {
@@ -69,6 +71,7 @@ LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & resul
   result.value = !premiseResult.value || conclusionResult.value;
   result.isGenerated = premiseResult.isGenerated || conclusionResult.isGenerated;
   if (conclusionResult.value)
-    result.replacements = ReplacementsUtils::uniteReplacements(premiseResult.replacements, conclusionResult.replacements);
+    result.replacements =
+        ReplacementsUtils::uniteReplacements(premiseResult.replacements, conclusionResult.replacements);
   return result;
 }

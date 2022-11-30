@@ -16,7 +16,6 @@ using namespace std;
 
 namespace inference
 {
-
 class AReverseInference : public ScAgent
 {
   SC_CLASS(Agent, Event(InferenceKeynodes::action_reverse_inference, ScEvent::Type::AddOutputEdge))

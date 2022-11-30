@@ -8,7 +8,6 @@
 
 namespace inference
 {
-
 void ContainersUtils::addToQueue(ScAddrVector const & elementList, std::queue<ScAddr> & targetQueue)
 {
   for (ScAddr const & element : elementList)

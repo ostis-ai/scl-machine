@@ -13,7 +13,6 @@
 
 namespace inference
 {
-
 class InferenceKeynodes : public ScObject
 {
   SC_CLASS()

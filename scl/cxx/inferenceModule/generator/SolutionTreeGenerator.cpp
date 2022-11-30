@@ -42,7 +42,7 @@ ScAddr SolutionTreeGenerator::createSolutionNode(ScAddr const & rule, ScTemplate
   return solutionNode;
 }
 
-ScAddr SolutionTreeGenerator::createSolution(const bool targetAchieved)
+ScAddr SolutionTreeGenerator::createSolution(bool const targetAchieved)
 {
   ScAddr solution = ms_context->CreateNode(ScType::NodeConst);
   if (lastNode.IsValid())

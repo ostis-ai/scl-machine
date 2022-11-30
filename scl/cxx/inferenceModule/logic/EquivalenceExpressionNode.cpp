@@ -13,9 +13,9 @@ EquivalenceExpressionNode::EquivalenceExpressionNode(OperandsVector & operands)
 }
 
 EquivalenceExpressionNode::EquivalenceExpressionNode(
-      ScMemoryContext * context,
-      OperatorLogicExpressionNode::OperandsVector & operands)
-      : EquivalenceExpressionNode(operands)
+    ScMemoryContext * context,
+    OperatorLogicExpressionNode::OperandsVector & operands)
+  : EquivalenceExpressionNode(operands)
 {
   this->context = context;
 }
@@ -77,7 +77,7 @@ LogicFormulaResult EquivalenceExpressionNode::compute(LogicFormulaResult & resul
   result.value = subFormulaResults[0].value == subFormulaResults[1].value;
   if (result.value)
     result.replacements =
-          ReplacementsUtils::intersectReplacements(subFormulaResults[0].replacements, subFormulaResults[1].replacements);
+        ReplacementsUtils::intersectReplacements(subFormulaResults[0].replacements, subFormulaResults[1].replacements);
   return result;
 
   auto leftAtom = dynamic_cast<TemplateExpressionNode *>(operands[0].get());

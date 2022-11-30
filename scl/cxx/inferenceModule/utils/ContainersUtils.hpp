@@ -13,7 +13,6 @@
 
 namespace inference
 {
-
 class ContainersUtils
 {
 public:

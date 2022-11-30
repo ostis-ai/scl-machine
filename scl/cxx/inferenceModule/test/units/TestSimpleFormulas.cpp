@@ -45,7 +45,7 @@ TEST_F(InferenceSimpleFormulasTest, TrueSimpleLogicRule)
 {
   ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
 
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "trueSimpleRuleTest.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "trueSimpleRuleTest.scs");
   initialize();
 
   ScAddr action = context.HelperResolveSystemIdtf("four_arguments_action");
@@ -54,10 +54,8 @@ TEST_F(InferenceSimpleFormulasTest, TrueSimpleLogicRule)
   ScAddr argument = context.HelperFindBySystemIdtf("argument");
   EXPECT_TRUE(argument.IsValid());
 
-  ScIterator3Ptr argumentClassIteratorBefore = context.Iterator3(
-        ScType::NodeConstClass,
-        ScType::EdgeAccessConstPosPerm,
-        argument);
+  ScIterator3Ptr argumentClassIteratorBefore =
+      context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
 
   // There is only two classes of argument before agent run
   EXPECT_TRUE(argumentClassIteratorBefore->Next());
@@ -66,21 +64,14 @@ TEST_F(InferenceSimpleFormulasTest, TrueSimpleLogicRule)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorBefore->Next());
 
-  context.CreateEdge(
-        ScType::EdgeAccessConstPosPerm,
-        InferenceKeynodes::action_direct_inference,
-        action);
+  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
 
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
-        scAgentsCommon::CoreKeynodes::question_finished_successfully,
-        action,
-        ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
-  ScIterator3Ptr argumentClassIteratorAfter = context.Iterator3(
-        ScType::NodeConstClass,
-        ScType::EdgeAccessConstPosPerm,
-        argument);
+  ScIterator3Ptr argumentClassIteratorAfter =
+      context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
 
   // There is only 3 classes of argument: two was before agent run and one is generated
   EXPECT_TRUE(argumentClassIteratorAfter->Next());
@@ -99,7 +90,7 @@ TEST_F(InferenceSimpleFormulasTest, TrueSimpleLogicRuleThreeArguments)
 {
   ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
 
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "trueSimpleRuleTest.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "trueSimpleRuleTest.scs");
   initialize();
 
   ScAddr action = context.HelperResolveSystemIdtf("three_arguments_action");
@@ -108,10 +99,8 @@ TEST_F(InferenceSimpleFormulasTest, TrueSimpleLogicRuleThreeArguments)
   ScAddr argument = context.HelperFindBySystemIdtf("argument");
   EXPECT_TRUE(argument.IsValid());
 
-  ScIterator3Ptr argumentClassIteratorBefore = context.Iterator3(
-        ScType::NodeConstClass,
-        ScType::EdgeAccessConstPosPerm,
-        argument);
+  ScIterator3Ptr argumentClassIteratorBefore =
+      context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
 
   // There is only two classes of argument before agent run
   EXPECT_TRUE(argumentClassIteratorBefore->Next());
@@ -120,21 +109,14 @@ TEST_F(InferenceSimpleFormulasTest, TrueSimpleLogicRuleThreeArguments)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorBefore->Next());
 
-  context.CreateEdge(
-        ScType::EdgeAccessConstPosPerm,
-        InferenceKeynodes::action_direct_inference,
-        action);
+  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
 
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
-        scAgentsCommon::CoreKeynodes::question_finished_successfully,
-        action,
-        ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
-  ScIterator3Ptr argumentClassIteratorAfter = context.Iterator3(
-        ScType::NodeConstClass,
-        ScType::EdgeAccessConstPosPerm,
-        argument);
+  ScIterator3Ptr argumentClassIteratorAfter =
+      context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
 
   // There is only 3 classes of argument: two was before agent run and one is generated
   EXPECT_TRUE(argumentClassIteratorAfter->Next());
@@ -153,7 +135,7 @@ TEST_F(InferenceSimpleFormulasTest, TrueDoubleApplyLogicRule)
 {
   ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
 
-  loader.loadScsFile(context,TEST_FILES_DIR_PATH + "trueDoubleApplyRuleTest.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "trueDoubleApplyRuleTest.scs");
   initialize();
 
   ScAddr action = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
@@ -162,10 +144,8 @@ TEST_F(InferenceSimpleFormulasTest, TrueDoubleApplyLogicRule)
   ScAddr argument = context.HelperFindBySystemIdtf("argument");
   EXPECT_TRUE(argument.IsValid());
 
-  ScIterator3Ptr argumentClassIteratorBefore = context.Iterator3(
-        ScType::NodeConstClass,
-        ScType::EdgeAccessConstPosPerm,
-        argument);
+  ScIterator3Ptr argumentClassIteratorBefore =
+      context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
 
   // There is only one class of argument before agent run
   EXPECT_TRUE(argumentClassIteratorBefore->Next());
@@ -173,21 +153,14 @@ TEST_F(InferenceSimpleFormulasTest, TrueDoubleApplyLogicRule)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorBefore->Next());
 
-  context.CreateEdge(
-        ScType::EdgeAccessConstPosPerm,
-        InferenceKeynodes::action_direct_inference,
-        action);
+  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
 
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
-        scAgentsCommon::CoreKeynodes::question_finished_successfully,
-        action,
-        ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
-  ScIterator3Ptr argumentClassIteratorAfter = context.Iterator3(
-        ScType::NodeConstClass,
-        ScType::EdgeAccessConstPosPerm,
-        argument);
+  ScIterator3Ptr argumentClassIteratorAfter =
+      context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
 
   // There is only two classes of argument: one was before agent run and two was generated
   EXPECT_TRUE(argumentClassIteratorAfter->Next());

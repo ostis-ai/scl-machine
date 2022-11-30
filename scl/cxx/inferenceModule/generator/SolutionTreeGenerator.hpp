@@ -13,7 +13,6 @@
 
 namespace inference
 {
-
 // TODO: Fix issue with using interface InferenceManager
 class SolutionTreeGenerator
 {

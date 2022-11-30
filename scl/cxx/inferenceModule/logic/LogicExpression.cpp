@@ -5,7 +5,6 @@
  */
 
 #include "LogicExpression.hpp"
-
 #include "LogicExpressionNode.hpp"
 
 #include "ConjunctionExpressionNode.hpp"
@@ -43,59 +42,6 @@ LogicExpression::LogicExpression(
 
 std::unique_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & node)
 {
-  auto resolveTupleOperands = [this](ScAddr const & node) {
-    ScIterator3Ptr operandsIterator = context->Iterator3(node, ScType::EdgeAccessConstPosPerm, ScType::Unknown);
-
-    OperatorLogicExpressionNode::OperandsVector operandsVector;
-
-    while (operandsIterator->Next())
-    {
-      if (!operandsIterator->Get(2).IsValid())
-        continue;
-      std::unique_ptr<LogicExpressionNode> op = build(operandsIterator->Get(2));
-      operandsVector.emplace_back(std::move(op));
-    }
-    SC_LOG_DEBUG(
-        "[Amount of operands in " + context->HelperGetSystemIdtf(node) + "]: " + to_string(operandsVector.size()));
-
-    return operandsVector;
-  };
-  auto resolveEdgeOperands = [this](ScAddr const & edge) {
-    ScAddr begin;
-    ScAddr end;
-    context->GetEdgeInfo(edge, begin, end);
-    OperatorLogicExpressionNode::OperandsVector operandsVector;
-
-    if (begin.IsValid())
-    {
-      std::unique_ptr<LogicExpressionNode> beginOperand = build(begin);
-      operandsVector.emplace_back(std::move(beginOperand));
-    }
-    if (end.IsValid())
-    {
-      std::unique_ptr<LogicExpressionNode> endOperand = build(end);
-      operandsVector.emplace_back(std::move(endOperand));
-    }
-    return operandsVector;
-  };
-  auto resolveOperandsForImplicationTuple = [this](ScAddr const & node) {
-    ScAddr begin = utils::IteratorUtils::getAnyByOutRelation(context, node, InferenceKeynodes::rrel_if);
-    ScAddr end = utils::IteratorUtils::getAnyByOutRelation(context, node, InferenceKeynodes::rrel_then);
-
-    OperatorLogicExpressionNode::OperandsVector operandsVector;
-    if (begin.IsValid())
-    {
-      std::unique_ptr<LogicExpressionNode> premiseOperand = build(begin);
-      operandsVector.emplace_back(std::move(premiseOperand));
-    }
-    if (end.IsValid())
-    {
-      std::unique_ptr<LogicExpressionNode> conclusionOperand = build(end);
-      operandsVector.emplace_back(std::move(conclusionOperand));
-    }
-    return operandsVector;
-  };
-
   ScIterator3Ptr atomicFormulaIterator =
       context->Iterator3(InferenceKeynodes::atomic_logical_formula, ScType::EdgeAccessConstPosPerm, node);
 
@@ -210,4 +156,62 @@ std::unique_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & node)
     }
   }
   SC_THROW_EXCEPTION(utils::ScException, context->HelperGetSystemIdtf(node) + " is not defined tuple");
+}
+
+OperatorLogicExpressionNode::OperandsVector LogicExpression::resolveTupleOperands(ScAddr const & tuple)
+{
+  ScIterator3Ptr operandsIterator = context->Iterator3(tuple, ScType::EdgeAccessConstPosPerm, ScType::Unknown);
+
+  OperatorLogicExpressionNode::OperandsVector operandsVector;
+
+  while (operandsIterator->Next())
+  {
+    if (!operandsIterator->Get(2).IsValid())
+      continue;
+    std::unique_ptr<LogicExpressionNode> op = build(operandsIterator->Get(2));
+    operandsVector.emplace_back(std::move(op));
+  }
+  SC_LOG_DEBUG(
+      "[Amount of operands in " + context->HelperGetSystemIdtf(tuple) + "]: " + to_string(operandsVector.size()));
+
+  return operandsVector;
+}
+
+OperatorLogicExpressionNode::OperandsVector LogicExpression::resolveEdgeOperands(ScAddr const & edge)
+{
+  ScAddr begin;
+  ScAddr end;
+  context->GetEdgeInfo(edge, begin, end);
+  OperatorLogicExpressionNode::OperandsVector operandsVector;
+
+  if (begin.IsValid())
+  {
+    std::unique_ptr<LogicExpressionNode> beginOperand = build(begin);
+    operandsVector.emplace_back(std::move(beginOperand));
+  }
+  if (end.IsValid())
+  {
+    std::unique_ptr<LogicExpressionNode> endOperand = build(end);
+    operandsVector.emplace_back(std::move(endOperand));
+  }
+  return operandsVector;
+}
+
+OperatorLogicExpressionNode::OperandsVector LogicExpression::resolveOperandsForImplicationTuple(ScAddr const & tuple)
+{
+  ScAddr begin = utils::IteratorUtils::getAnyByOutRelation(context, tuple, InferenceKeynodes::rrel_if);
+  ScAddr end = utils::IteratorUtils::getAnyByOutRelation(context, tuple, InferenceKeynodes::rrel_then);
+
+  OperatorLogicExpressionNode::OperandsVector operandsVector;
+  if (begin.IsValid())
+  {
+    std::unique_ptr<LogicExpressionNode> premiseOperand = build(begin);
+    operandsVector.emplace_back(std::move(premiseOperand));
+  }
+  if (end.IsValid())
+  {
+    std::unique_ptr<LogicExpressionNode> conclusionOperand = build(end);
+    operandsVector.emplace_back(std::move(conclusionOperand));
+  }
+  return operandsVector;
 }

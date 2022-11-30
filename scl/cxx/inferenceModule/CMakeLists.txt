@@ -44,7 +44,6 @@ set(HEADERS
         "logic/NegationExpressionNode.hpp"
         "logic/TemplateExpressionNode.hpp"
         "classifier/FormulaClassifier.hpp"
-        "formulas/Formula.hpp"
         "utils/ReplacementsUtils.hpp"
         )
 

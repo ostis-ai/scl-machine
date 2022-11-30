@@ -39,11 +39,11 @@ TEST_F(FormulaClassifierTest, RuleIsImplication)
   ScAddr testRule = context.HelperResolveSystemIdtf("inference_logic_test_rule");
   ScAddr rrel_main_key_sc_element = context.HelperResolveSystemIdtf("rrel_main_key_sc_element");
   ScIterator5Ptr iter5 = context.Iterator5(
-        testRule,
-        ScType::EdgeAccessConstPosPerm,
-        ScType::Unknown,
-        ScType::EdgeAccessConstPosPerm,
-        rrel_main_key_sc_element);
+      testRule,
+      ScType::EdgeAccessConstPosPerm,
+      ScType::Unknown,
+      ScType::EdgeAccessConstPosPerm,
+      rrel_main_key_sc_element);
   if (iter5->Next())
   {
     ScAddr formula = iter5->Get(2);

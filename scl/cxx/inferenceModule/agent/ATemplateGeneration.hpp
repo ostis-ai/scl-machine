@@ -15,7 +15,6 @@
 
 namespace inference
 {
-
 class ATemplateGeneration : public ScAgent
 {
   SC_CLASS(Agent, Event(InferenceKeynodes::action_use_logic_rule, ScEvent::Type::AddOutputEdge))

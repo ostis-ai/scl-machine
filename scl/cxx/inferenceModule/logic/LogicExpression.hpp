@@ -40,10 +40,11 @@ public:
 
   std::unique_ptr<LogicExpressionNode> build(ScAddr const & node);
 
-  std::vector<ScTemplateParams> const & GetParamsSet() const
-  {
-    return paramsSet;
-  }
+  OperatorLogicExpressionNode::OperandsVector resolveTupleOperands(ScAddr const & tuple);
+
+  OperatorLogicExpressionNode::OperandsVector resolveEdgeOperands(ScAddr const & edge);
+
+  OperatorLogicExpressionNode::OperandsVector resolveOperandsForImplicationTuple(ScAddr const & tuple);
 
 private:
   ScMemoryContext * context;
