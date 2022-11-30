@@ -48,19 +48,19 @@ LogicFormulaResult ConjunctionExpressionNode::compute(LogicFormulaResult & resul
   LogicFormulaResult fail = {false, false, {}};
   vector<TemplateExpressionNode *> formulasWithoutConstants;
   vector<TemplateExpressionNode *> formulasToGenerate;
-  FormulaClassifier formulaClassifier(context);
+
   for (auto const & operand : operands)
   {
     auto atom = dynamic_cast<TemplateExpressionNode *>(operand.get());
     if (atom)
     {
-      if (!formulaClassifier.isFormulaWithConst(atom->getFormulaTemplate()))
+      if (!FormulaClassifier::isFormulaWithConst(context, atom->getFormulaTemplate()))
       {
         SC_LOG_DEBUG("Found formula without constants in conjunction");
         formulasWithoutConstants.push_back(atom);
         continue;
       }
-      if (formulaClassifier.isFormulaToGenerate(atom->getFormulaTemplate()))
+      if (FormulaClassifier::isFormulaToGenerate(context, atom->getFormulaTemplate()))
       {
         SC_LOG_DEBUG("Found formula to generate in conjunction");
         formulasToGenerate.push_back(atom);

@@ -30,6 +30,8 @@ public:
   virtual LogicFormulaResult compute(LogicFormulaResult & result) const = 0;
 
   virtual ScAddr getFormulaTemplate() const = 0;
+
+  virtual ~LogicExpressionNode() = default;
 };
 
 class OperatorLogicExpressionNode : public LogicExpressionNode

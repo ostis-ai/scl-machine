@@ -30,7 +30,6 @@ LogicFormulaResult EquivalenceExpressionNode::compute(LogicFormulaResult & resul
 {
   vector<LogicFormulaResult> subFormulaResults;
   result.value = false;
-  FormulaClassifier formulaClassifier(context);
 
   vector<TemplateExpressionNode *> formulasWithoutConstants;
   vector<TemplateExpressionNode *> formulasToGenerate;
@@ -39,13 +38,13 @@ LogicFormulaResult EquivalenceExpressionNode::compute(LogicFormulaResult & resul
     auto atom = dynamic_cast<TemplateExpressionNode *>(operand.get());
     if (atom)
     {
-      if (!formulaClassifier.isFormulaWithConst(atom->getFormulaTemplate()))
+      if (!FormulaClassifier::isFormulaWithConst(context, atom->getFormulaTemplate()))
       {
         SC_LOG_DEBUG("Found formula without constants in equivalence");
         formulasWithoutConstants.push_back(atom);
         continue;
       }
-      if (formulaClassifier.isFormulaToGenerate(atom->getFormulaTemplate()))
+      if (FormulaClassifier::isFormulaToGenerate(context, atom->getFormulaTemplate()))
       {
         SC_LOG_DEBUG("Found formula to generate in equivalence");
         formulasToGenerate.push_back(atom);
@@ -81,13 +80,15 @@ LogicFormulaResult EquivalenceExpressionNode::compute(LogicFormulaResult & resul
   return result;
 
   auto leftAtom = dynamic_cast<TemplateExpressionNode *>(operands[0].get());
-  bool isLeftGenerated = (leftAtom) && formulaClassifier.isFormulaToGenerate(leftAtom->getFormulaTemplate());
+  bool isLeftGenerated = (leftAtom) && FormulaClassifier::isFormulaToGenerate(context, leftAtom->getFormulaTemplate());
 
   auto rightAtom = dynamic_cast<TemplateExpressionNode *>(operands[1].get());
-  bool isRightGenerated = (rightAtom) && formulaClassifier.isFormulaToGenerate(rightAtom->getFormulaTemplate());
+  bool isRightGenerated =
+      (rightAtom) && FormulaClassifier::isFormulaToGenerate(context, rightAtom->getFormulaTemplate());
 
-  bool leftHasConstants = (leftAtom) && formulaClassifier.isFormulaWithConst(leftAtom->getFormulaTemplate());
-  bool rightHasConstants = (rightAtom) && formulaClassifier.isFormulaWithConst(rightAtom->getFormulaTemplate());
+  bool leftHasConstants = (leftAtom) && FormulaClassifier::isFormulaWithConst(context, leftAtom->getFormulaTemplate());
+  bool rightHasConstants =
+      (rightAtom) && FormulaClassifier::isFormulaWithConst(context, rightAtom->getFormulaTemplate());
 
   SC_LOG_DEBUG("Left has constants = " + to_string(leftHasConstants));
   SC_LOG_DEBUG("Right has constants = " + to_string(rightHasConstants));

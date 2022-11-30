@@ -30,20 +30,22 @@ public:
       ScMemoryContext * context,
       TemplateSearcher * templateSearcher,
       TemplateManager * templateManager,
-      ScAddrVector argumentVector);
-  LogicExpression(
-      ScMemoryContext * context,
-      TemplateSearcher * templateSearcher,
-      TemplateManager * templateManager,
       ScAddrVector argumentVector,
       ScAddr outputStructure);
 
   std::unique_ptr<LogicExpressionNode> build(ScAddr const & node);
 
+  std::unique_ptr<LogicExpressionNode> buildAtomicFormula(ScAddr const & node);
+  std::unique_ptr<LogicExpressionNode> buildConjunctionFormula(ScAddr const & node);
+  std::unique_ptr<LogicExpressionNode> buildDisjunctionFormula(ScAddr const & node);
+  std::unique_ptr<LogicExpressionNode> buildNegationFormula(ScAddr const & node);
+  std::unique_ptr<LogicExpressionNode> buildImplicationEdgeFormula(ScAddr const & node);
+  std::unique_ptr<LogicExpressionNode> buildImplicationTupleFormula(ScAddr const & node);
+  std::unique_ptr<LogicExpressionNode> buildEquivalenceEdgeFormula(ScAddr const & node);
+  std::unique_ptr<LogicExpressionNode> buildEquivalenceTupleFormula(ScAddr const & node);
+
   OperatorLogicExpressionNode::OperandsVector resolveTupleOperands(ScAddr const & tuple);
-
   OperatorLogicExpressionNode::OperandsVector resolveEdgeOperands(ScAddr const & edge);
-
   OperatorLogicExpressionNode::OperandsVector resolveOperandsForImplicationTuple(ScAddr const & tuple);
 
 private:

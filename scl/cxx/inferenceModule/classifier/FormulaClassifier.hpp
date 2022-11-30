@@ -13,20 +13,22 @@ namespace inference
 class FormulaClassifier
 {
 public:
-  FormulaClassifier(ScMemoryContext * ms_context);
-  static int NONE;
-  static int ATOM;
-  static int NEGATION;
-  static int CONJUNCTION;
-  static int DISJUNCTION;
-  static int IMPLICATION_EDGE;
-  static int IMPLICATION_TUPLE;
-  static int EQUIVALENCE_EDGE;
-  static int EQUIVALENCE_TUPLE;
+  enum FormulaClasses
+  {
+    NONE = 0,
+    ATOM = 1,
+    NEGATION = 2,
+    CONJUNCTION = 3,
+    DISJUNCTION = 4,
+    IMPLICATION_EDGE = 5,
+    IMPLICATION_TUPLE = 6,
+    EQUIVALENCE_EDGE = 7,
+    EQUIVALENCE_TUPLE = 8
+  };
 
-  int typeOfFormula(ScAddr const & formula);
-  bool isFormulaWithConst(ScAddr const & formula);
-  bool isFormulaToGenerate(ScAddr const & formula);
+  static int typeOfFormula(ScMemoryContext * ms_context, ScAddr const & formula);
+  static bool isFormulaWithConst(ScMemoryContext * ms_context, ScAddr const & formula);
+  static bool isFormulaToGenerate(ScMemoryContext * ms_context, ScAddr const & formula);
 
 private:
   ScMemoryContext * ms_context;

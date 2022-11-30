@@ -34,14 +34,14 @@ LogicExpressionResult ImplicationExpressionNode::check(ScTemplateParams & params
 LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & result) const
 {
   result.value = false;
-  FormulaClassifier formulaClassifier(context);
 
   auto premiseAtom = dynamic_cast<TemplateExpressionNode *>(operands[0].get());
-  bool isLeftGenerated = (premiseAtom) && formulaClassifier.isFormulaToGenerate(premiseAtom->getFormulaTemplate());
+  bool isLeftGenerated =
+      (premiseAtom) && FormulaClassifier::isFormulaToGenerate(context, premiseAtom->getFormulaTemplate());
 
   auto conclusionAtom = dynamic_cast<TemplateExpressionNode *>(operands[1].get());
   bool isRightGenerated =
-      (conclusionAtom) && formulaClassifier.isFormulaToGenerate(conclusionAtom->getFormulaTemplate());
+      (conclusionAtom) && FormulaClassifier::isFormulaToGenerate(context, conclusionAtom->getFormulaTemplate());
 
   LogicFormulaResult premiseResult;
   LogicFormulaResult conclusionResult;
