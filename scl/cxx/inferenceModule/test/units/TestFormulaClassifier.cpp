@@ -31,7 +31,6 @@ void initialize()
 TEST_F(FormulaClassifierTest, RuleIsImplication)
 {
   ScMemoryContext context(sc_access_lvl_make_min, "implication_detected");
-  FormulaClassifier fc(&context);
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "inferenceLogicTrueComplexRuleTest.scs");
   initialize();
@@ -47,12 +46,12 @@ TEST_F(FormulaClassifierTest, RuleIsImplication)
   if (iter5->Next())
   {
     ScAddr formula = iter5->Get(2);
-    EXPECT_EQ(fc.typeOfFormula(formula), FormulaClassifier::IMPLICATION_EDGE);
+    EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, formula), FormulaClassifier::IMPLICATION_EDGE);
     ScAddr begin;
     ScAddr end;
     context.GetEdgeInfo(formula, begin, end);
-    EXPECT_EQ(fc.typeOfFormula(begin), FormulaClassifier::CONJUNCTION);
-    EXPECT_EQ(fc.typeOfFormula(end), FormulaClassifier::ATOM);
+    EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, begin), FormulaClassifier::CONJUNCTION);
+    EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, end), FormulaClassifier::ATOM);
   }
   else
     SC_LOG_DEBUG("Cannot find main key sc element");

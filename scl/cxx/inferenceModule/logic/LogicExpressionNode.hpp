@@ -28,8 +28,9 @@ class LogicExpressionNode
 public:
   virtual LogicExpressionResult check(ScTemplateParams & params) const = 0;
   virtual LogicFormulaResult compute(LogicFormulaResult & result) const = 0;
-
   virtual ScAddr getFormulaTemplate() const = 0;
+
+  virtual ~LogicExpressionNode() = default;
 };
 
 class OperatorLogicExpressionNode : public LogicExpressionNode

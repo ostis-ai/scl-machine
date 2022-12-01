@@ -8,8 +8,6 @@
 #include <sc-agents-common/utils/AgentUtils.hpp>
 #include <sc-agents-common/keynodes/coreKeynodes.hpp>
 
-#include "keynodes/InferenceKeynodes.hpp"
-
 #include "DirectInferenceAgent.hpp"
 
 using namespace scAgentsCommon;
