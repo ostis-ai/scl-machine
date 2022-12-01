@@ -12,7 +12,6 @@
 #include <sc-agents-common/utils/AgentUtils.hpp>
 
 #include "keynodes/InferenceKeynodes.hpp"
-#include "utils/ReplacementsUtils.hpp"
 
 #include "agent/DirectInferenceAgent.hpp"
 
