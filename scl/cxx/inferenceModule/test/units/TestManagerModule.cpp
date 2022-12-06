@@ -103,7 +103,7 @@ TEST_F(InferenceManagerTest, TargetNotAchieved)
       context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
 }
 
-//Replace not working
+// Replace not working
 TEST_F(InferenceManagerTest, ReplaceNotWorking)
 {
   ScMemoryContext & context = *m_ctx;
@@ -127,6 +127,8 @@ TEST_F(InferenceManagerTest, ReplaceNotWorking)
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
       context.HelperCheckEdge(InferenceKeynodes::concept_solution, answer, ScType::EdgeAccessConstNegPerm));
+  EXPECT_FALSE(
+      context.HelperCheckEdge(InferenceKeynodes::concept_solution, answer, ScType::EdgeAccessConstPosPerm));
 }
 
 }  // namespace directInferenceManagerTest

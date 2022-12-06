@@ -1,11 +1,10 @@
 sc_node_class
-	-> action_direct_inference;
 	-> atomic_logical_formula;
 	-> class_for_s;
 	-> class_1;
-    -> class_3;
-    -> fake_argument;
-    -> argument;;
+	-> class_3;
+	-> fake_argument;
+	-> argument;;
 
 fake_argument <- class_1;;
 fake_argument <- class_for_s;;
@@ -24,17 +23,16 @@ nrel_implication
 
 target_template = [*
 	class_3 _-> fake_argument;;
-    class_for_s _-> argument;;
+	class_for_s _-> argument;;
 *];;
 
-
 if = [*
-    class_for_s _-> _arg;;
-    class_1 _-> _arg;;
+	class_for_s _-> _arg;;
+	class_1 _-> _arg;;
 *];;
 
 then = [*
-    class_3 _-> _arg;;
+	class_3 _-> _arg;;
 *];;
 
 @p1 = (if => then);;
@@ -49,26 +47,8 @@ atomic_logical_formula
 concept_template_for_generation
 	-> then;;
 
-input_structure = [*
-    argument <- class_for_s;;
-*];;
-
-
 rules_set
-    -> rrel_1: { logic_rule };;
-
-four_arguments_action
-    <- action_direct_inference;
-    -> rrel_1: target_template;
-    -> rrel_2: rules_set;
-    -> rrel_3: input_structure;
-    -> rrel_4: output_structure;;
+	-> rrel_1: { logic_rule };;
 
 argument_set
 	-> argument;;
-
-three_arguments_action
-    <- action_direct_inference;
-    -> rrel_1: target_template;
-    -> rrel_2: rules_set;
-    -> rrel_3: argument_set;;
