@@ -54,6 +54,34 @@ TEST_F(InferenceManagerTest, SuccessApplyInference)
       context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm));
 }
 
+TEST_F(InferenceManagerTest, SuccessGenerateInferenceConclusion)
+{
+  ScMemoryContext & context = *m_ctx;
+
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "conclusionGenerationTest.scs");
+  initialize();
+
+  ScAddr targetTemplate = context.HelperResolveSystemIdtf(TARGET_TEMPLATE);
+  EXPECT_TRUE(targetTemplate.IsValid());
+
+  ScAddr ruleSet = context.HelperResolveSystemIdtf(RULES_SET);
+  EXPECT_TRUE(ruleSet.IsValid());
+
+  ScAddr argumentSet = context.HelperResolveSystemIdtf(ARGUMENT_SET);
+  EXPECT_TRUE(argumentSet.IsValid());
+
+  ScAddr outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  DirectInferenceManager inferenceManager(&context);
+  ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet, outputStructure);
+  EXPECT_TRUE(answer.IsValid());
+  EXPECT_TRUE(
+      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm));
+  ScTemplate conclusionTemplate;
+  ScTemplateSearchResult conclusionSearchResult;
+  context.HelperBuildTemplate(conclusionTemplate,targetTemplate);
+  EXPECT_TRUE(context.HelperSearchTemplate(conclusionTemplate, conclusionSearchResult));
+}
+
 TEST_F(InferenceManagerTest, RuleNotUsed)
 {
   ScMemoryContext & context = *m_ctx;
