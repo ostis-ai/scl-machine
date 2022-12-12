@@ -30,8 +30,7 @@ public:
       ScMemoryContext * context,
       TemplateSearcher * templateSearcher,
       TemplateManager * templateManager,
-      ScAddrVector argumentVector,
-      ScAddr outputStructure);
+      ScAddr const & outputStructure);
 
   std::unique_ptr<LogicExpressionNode> build(ScAddr const & node);
 
@@ -54,8 +53,6 @@ private:
 
   TemplateSearcher * templateSearcher;
   TemplateManager * templateManager;
-  ScAddrVector argumentVector;
 
-  ScAddr inputStructure;
   ScAddr outputStructure;
 };

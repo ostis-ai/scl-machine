@@ -18,12 +18,10 @@ LogicExpression::LogicExpression(
     ScMemoryContext * context,
     TemplateSearcher * templateSearcher,
     TemplateManager * templateManager,
-    ScAddrVector argumentVector,
-    ScAddr outputStructure)
+    ScAddr const & outputStructure)
   : context(context)
   , templateSearcher(templateSearcher)
   , templateManager(templateManager)
-  , argumentVector(std::move(argumentVector))
   , outputStructure(outputStructure)
 {
 }
@@ -115,7 +113,7 @@ OperatorLogicExpressionNode::OperandsVector LogicExpression::resolveOperandsForI
 std::unique_ptr<LogicExpressionNode> LogicExpression::buildAtomicFormula(ScAddr const & node)
 {
   SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is a template");
-  std::vector<ScTemplateParams> params = templateManager->createTemplateParamsList(node, templateSearcher->getParams());
+  std::vector<ScTemplateParams> params = templateManager->createTemplateParams(node, templateSearcher->getParams());
 
   if (!params.empty() && paramsSet.empty())
   {

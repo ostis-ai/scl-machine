@@ -15,13 +15,9 @@ TemplateManager::TemplateManager(ScMemoryContext * ms_context)
   this->context = ms_context;
 }
 
-std::vector<ScTemplateParams> TemplateManager::createTemplateParamsList(
-    ScAddr const & scTemplate,
-    ScAddrVector const & argumentList)
-{
-  return createTemplateParams(scTemplate, argumentList);
-}
-
+/* For all classes of the all template variables create map <varName, arguments>
+   Where arguments are elements from argumentList, and each argument class is the same as variable varName class
+ */
 std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
     ScAddr const & scTemplate,
     ScAddrVector const & argumentList)
