@@ -74,7 +74,7 @@ ScAddr DirectInferenceManager::applyInference(
       clearSatisfiabilityInformation(formula, inputStructure);
       SC_LOG_DEBUG("Trying to generate by formula: " + ms_context->HelperGetSystemIdtf(formula));
       isGenerated = useFormula(formula, argumentVector, outputStructure);
-      SC_LOG_DEBUG(std::string("Logical formulas is ") + (isGenerated ? "generated" : "not generated"));
+      SC_LOG_DEBUG(std::string("Logical formula is ") + (isGenerated ? "generated" : "not generated"));
       if (isGenerated)
       {
         addSatisfiabilityInformation(formula, inputStructure, true);
@@ -124,10 +124,11 @@ bool DirectInferenceManager::useFormula(
   if (!formulaRoot.IsValid())
     return false;
 
-  LogicExpression logicExpression(
-      ms_context, templateSearcher.get(), templateManager.get(), argumentVector, outputStructure);
+  LogicExpression logicExpression(ms_context, templateSearcher.get(), templateManager.get(), outputStructure);
 
   unique_ptr<LogicExpressionNode> expressionRoot = logicExpression.build(formulaRoot);
+  expressionRoot->setArgumentVector(argumentVector);
+
   LogicFormulaResult result = expressionRoot->compute(formulaResult);
 
   return result.isGenerated;

@@ -31,9 +31,8 @@ public:
 
   LogicExpressionResult check(ScTemplateParams & params) const override;
   LogicFormulaResult compute(LogicFormulaResult & result) const override;
-
-  LogicFormulaResult find(std::map<std::string, ScAddrVector> & replacements) const;
-  LogicFormulaResult generate(std::map<std::string, ScAddrVector> & replacements) const;
+  LogicFormulaResult find(Replacements & replacements) const;
+  LogicFormulaResult generate(Replacements & replacements) const override;
 
   ScAddr getFormulaTemplate() const override
   {
@@ -43,7 +42,7 @@ public:
 private:
   ScMemoryContext * context;
   ScAddr formulaTemplate;
-  inference::TemplateSearcher * templateSearcher;
-  inference::TemplateManager * templateManager;
+  TemplateSearcher * templateSearcher;
+  TemplateManager * templateManager;
   ScAddr outputStructure;
 };

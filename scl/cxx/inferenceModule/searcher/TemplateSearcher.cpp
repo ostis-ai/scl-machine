@@ -158,6 +158,7 @@ Replacements TemplateSearcher::searchTemplate(
     vector<ScTemplateParams> const & scTemplateParamsVector)
 {
   Replacements result;
+  ScAddr argument;
   std::set<string> varNames = getVarNames(templateAddr);
   for (ScTemplateParams const & scTemplateParams : scTemplateParamsVector)
   {
@@ -166,8 +167,8 @@ Replacements TemplateSearcher::searchTemplate(
     {
       for (std::string const & varName : varNames)
       {
-        if (searchResult.Has(varName))
-          result[varName].push_back(searchResult[varName]);
+        if (scTemplateParams.Get(varName, argument))
+          result[varName].push_back(argument);
       }
     }
   }
@@ -177,7 +178,7 @@ Replacements TemplateSearcher::searchTemplate(
 
 void TemplateSearcher::setInputStructure(ScAddr const & inputStructure)
 {
-  TemplateSearcher::inputStructure = inputStructure;
+  this->inputStructure = inputStructure;
 }
 
 Replacements TemplateSearcher::searchTemplate(ScAddr const & templateAddr)

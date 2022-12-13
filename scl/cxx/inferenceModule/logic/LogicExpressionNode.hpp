@@ -29,8 +29,17 @@ public:
   virtual LogicExpressionResult check(ScTemplateParams & params) const = 0;
   virtual LogicFormulaResult compute(LogicFormulaResult & result) const = 0;
   virtual ScAddr getFormulaTemplate() const = 0;
-
   virtual ~LogicExpressionNode() = default;
+
+  virtual LogicFormulaResult generate(Replacements & replacements) const = 0;
+
+  void setArgumentVector(ScAddrVector const & otherArgumentVector)
+  {
+    argumentVector = otherArgumentVector;
+  }
+
+protected:
+  ScAddrVector argumentVector;
 };
 
 class OperatorLogicExpressionNode : public LogicExpressionNode

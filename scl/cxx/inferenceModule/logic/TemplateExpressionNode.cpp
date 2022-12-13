@@ -49,7 +49,10 @@ LogicFormulaResult TemplateExpressionNode::compute(LogicFormulaResult & result) 
 {
   std::string const formulaIdentifier = context->HelperGetSystemIdtf(formulaTemplate);
   SC_LOG_DEBUG("Checking atomic logical formula " + formulaIdentifier);
-  result.replacements = templateSearcher->searchTemplate(formulaTemplate);
+
+  std::vector<ScTemplateParams> const templateParamsVector =
+      templateManager->createTemplateParams(formulaTemplate, argumentVector);
+  result.replacements = templateSearcher->searchTemplate(formulaTemplate, templateParamsVector);
   result.value = !result.replacements.empty();
   std::string formulaValue = (result.value ? " true" : " false");
   SC_LOG_DEBUG("Compute atomic logical formula " + formulaIdentifier + formulaValue);

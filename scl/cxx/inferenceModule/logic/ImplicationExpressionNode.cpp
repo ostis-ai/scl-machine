@@ -35,13 +35,13 @@ LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & resul
 {
   result.value = false;
 
-  auto premiseAtom = dynamic_cast<TemplateExpressionNode *>(operands[0].get());
-  bool isLeftGenerated =
-      (premiseAtom) && FormulaClassifier::isFormulaToGenerate(context, premiseAtom->getFormulaTemplate());
+  LogicExpressionNode * premiseAtom = operands[0].get();
+  premiseAtom->setArgumentVector(argumentVector);
+  bool isLeftGenerated = FormulaClassifier::isFormulaToGenerate(context, premiseAtom->getFormulaTemplate());
 
-  auto conclusionAtom = dynamic_cast<TemplateExpressionNode *>(operands[1].get());
-  bool isRightGenerated =
-      (conclusionAtom) && FormulaClassifier::isFormulaToGenerate(context, conclusionAtom->getFormulaTemplate());
+  LogicExpressionNode * conclusionAtom = operands[1].get();
+  conclusionAtom->setArgumentVector(argumentVector);
+  bool isRightGenerated = FormulaClassifier::isFormulaToGenerate(context, conclusionAtom->getFormulaTemplate());
 
   LogicFormulaResult premiseResult;
   LogicFormulaResult conclusionResult;
