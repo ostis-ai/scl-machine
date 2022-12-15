@@ -71,13 +71,13 @@ ScAddr DirectInferenceManager::applyInference(
     while (!uncheckedFormulas.empty())
     {
       formula = uncheckedFormulas.front();
-      clearSatisfiabilityInformation(formula, inputStructure);
+      // clearSatisfiabilityInformation(formula, inputStructure);
       SC_LOG_DEBUG("Trying to generate by formula: " + ms_context->HelperGetSystemIdtf(formula));
       isGenerated = useFormula(formula, argumentVector, outputStructure);
       SC_LOG_DEBUG(std::string("Logical formula is ") + (isGenerated ? "generated" : "not generated"));
       if (isGenerated)
       {
-        addSatisfiabilityInformation(formula, inputStructure, true);
+        // addSatisfiabilityInformation(formula, inputStructure, true);
         targetAchieved = isTargetAchieved(targetStructure, argumentVector);
         if (targetAchieved)
         {
@@ -93,7 +93,7 @@ ScAddr DirectInferenceManager::applyInference(
       }
       else
       {
-        addSatisfiabilityInformation(formula, inputStructure, false);
+        // addSatisfiabilityInformation(formula, inputStructure, false);
         checkedFormulas.push_back(formula);
       }
 
