@@ -1,0 +1,74 @@
+sc_node_class
+	-> action_direct_inference;
+	-> atomic_logical_formula;
+	-> target_node_class;
+	-> current_node_class;
+	-> fake_class2;
+	-> fake_class;;
+
+sc_node_role_relation
+	-> rrel_1;
+	-> rrel_2;
+	-> rrel_3;
+	-> rrel_4;
+	-> rrel_main_key_sc_element;;
+
+nrel_implication
+  <- sc_node_norole_relation;;
+
+target_template = [*
+	target_node_class _-> _arg;;
+*];;
+
+if1 = [*
+    fake_class _-> _arg;;
+*];;
+
+then1 = [*
+    target_node_class _-> _arg;;
+*];;
+
+if2 = [*
+    fake_class2 _-> _arg;;
+*];;
+
+then2 = [*
+    target_node_class _-> _arg;;
+*];;
+
+@p1 = (if1 => then1);;
+@p1 <- nrel_implication;;
+@p2 = (logic_rule -> @p1);;
+@p2 <- rrel_main_key_sc_element;;
+@p1 => nrel_system_identifier: [implication_1];;
+
+@p3 = (if2 => then2);;
+@p3 <- nrel_implication;;
+@p4 = (logic_rule2 -> @p3);;
+@p4 <- rrel_main_key_sc_element;;
+@p3 => nrel_system_identifier: [implication_2];;
+
+atomic_logical_formula
+	-> if1;
+	-> then1;
+	-> if2;
+	-> then2;;
+
+input_structure = [*
+	argument <- current_node_class;;
+*];;
+
+rules_1 -> logic_rule;;
+rules_2 -> logic_rule2;;
+
+@rules_set_arc = (rules_set -> rules_1);;
+rrel_1 -> @rules_set_arc;;
+@rules2_set_arc = (rules_set -> rules_2);;
+@rules_set_arc => nrel_basic_sequence: @rules2_set_arc;;
+
+inference_logic_test_question
+    <- action_direct_inference;
+    -> rrel_1: target_template;
+    -> rrel_2: rules_set;
+    -> rrel_3: input_structure;
+    -> rrel_4: output_structure;;
