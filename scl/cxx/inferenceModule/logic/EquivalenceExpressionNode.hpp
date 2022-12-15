@@ -21,7 +21,7 @@ public:
 
   LogicFormulaResult generate(Replacements & replacements) const override
   {
-    return {};
+    return {false, false, {}};
   }
 
   ScAddr getFormulaTemplate() const override
