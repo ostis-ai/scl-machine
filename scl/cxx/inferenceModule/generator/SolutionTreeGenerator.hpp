@@ -21,15 +21,16 @@ public:
 
   ~SolutionTreeGenerator() = default;
 
-  bool addNode(ScAddr const & rule, ScTemplateParams const & templateParams);
+  bool addNode(ScAddr const & formula, ScTemplateParams const & templateParams);
 
   ScAddr createSolution(bool targetAchieved);
 
 private:
-  ScAddr createSolutionNode(ScAddr const & rule, ScTemplateParams const & templateParams);
+  ScAddr createSolutionNode(ScAddr const & formula, ScTemplateParams const & templateParams);
 
   ScMemoryContext * ms_context;
-  ScAddr lastNode;
+  ScAddr solution;
+  ScAddr lastSolutionNode;
 };
 
 }  // namespace inference

@@ -1,0 +1,79 @@
+sc_node_class
+	-> concept_dialog_state_change_rule_priority_1;
+	-> concept_dialog_class;
+	-> action_direct_inference;
+	-> atomic_logical_formula;
+	-> concept_template_for_generation;
+	-> concept_dialog;
+	-> concept_message;
+	-> concept_message_class;;
+
+sc_node_role_relation
+	-> rrel_1;
+	-> rrel_2;
+	-> rrel_3;
+	-> rrel_4;
+	-> rrel_last;
+	-> rrel_main_key_sc_element;;
+
+sc_node_norole_relation
+	-> nrel_message_sequence;
+	-> nrel_implication;;
+
+sc_node_tuple
+	-> dialog_states_by_dialog_theme_sheaf;;
+
+rules_sets
+	-> rrel_1: rules_set_priority_1;;
+
+rules_set_priority_1
+	-> lr_test_conclusion_arguments;;
+
+inference_logic_test_question
+    <- action_direct_inference;
+    -> rrel_1: inference_target;
+    -> rrel_2: rules_sets;
+    -> rrel_3: argument_set;
+    -> rrel_4: output_structure;;
+
+inference_target = [*
+    dialog_states_by_dialog_theme_sheaf _-> _dialog_state;;
+    _dialog _<- _dialog_state;;
+    _dialog _<- concept_dialog;;
+    _dialog _-> rrel_last:: _user_message;;
+	concept_message _-> _user_message;;
+*];;
+atomic_logical_formula -> inference_target;;
+
+dialog_states_by_dialog_theme_sheaf
+    -> concept_dialog_class;;
+
+message
+	<- argument_set;
+	<- concept_message_class;
+	<- concept_message;;
+
+dialog
+	// <- argument_set;
+	<- concept_dialog;
+	-> rrel_last: message;;
+
+rule_condition = [*
+    concept_message_class _-> _user_message;;
+    concept_dialog _-> _dialog;;
+    _dialog _-> rrel_last:: _user_message;;
+    concept_message _-> _user_message;;
+*];;
+
+rule_result = [*
+    concept_dialog_class _-> _dialog;;
+*];;
+
+atomic_logical_formula
+    -> rule_condition;
+    -> rule_result;;
+
+@rule_implication_arc = (rule_condition => rule_result);;
+@rule_implication_arc
+    <- nrel_implication;
+    <- rrel_main_key_sc_element: lr_test_conclusion_arguments;;

@@ -87,6 +87,9 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
 
   for (ScTemplateParams const & scTemplateParams : paramsVector)
   {
+    if (result.isGenerated)
+      break;
+
     std::vector<ScTemplateSearchResultItem> searchResult =
         templateSearcher->searchTemplate(formulaTemplate, scTemplateParams);
     if (searchResult.empty())
@@ -97,16 +100,19 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
       ScTemplateGenResult generationResult;
       ScTemplate::Result const & genTemplate = context->HelperGenTemplate(generatedTemplate, generationResult);
       if (genTemplate)
+      {
         result.isGenerated = true;
+        result.value = true;
+        result.replacements = replacements;
+      }
+
       SC_LOG_DEBUG("Atomic logical formula " + context->HelperGetSystemIdtf(formulaTemplate) + " is generated");
-      bool outputIsValid = outputStructure.IsValid();
       for (size_t i = 0; i < generationResult.Size(); ++i)
       {
         templateSearcher->addParamIfNotPresent(generationResult[i]);
-        if (outputIsValid)
-          context->CreateEdge(ScType::EdgeAccessConstPosPerm, outputStructure, generationResult[i]);
+        context->CreateEdge(ScType::EdgeAccessConstPosPerm, outputStructure, generationResult[i]);
       }
     }
   }
-  return compute(result);
+  return result;
 }

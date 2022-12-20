@@ -52,6 +52,13 @@ TEST_F(InferenceManagerTest, SuccessApplyInference)
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
       context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm));
+
+  ScAddr argument = context.HelperFindBySystemIdtf("argument");
+  EXPECT_TRUE(argument.IsValid());
+  ScAddr targetClass = context.HelperFindBySystemIdtf("target_node_class");
+  EXPECT_TRUE(targetClass.IsValid());
+
+  EXPECT_TRUE(context.HelperCheckEdge(targetClass, argument, ScType::EdgeAccessConstPosPerm));
 }
 
 TEST_F(InferenceManagerTest, SuccessGenerateInferenceConclusion)
@@ -154,6 +161,40 @@ TEST_F(InferenceManagerTest, ReplacementsTest)
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
       context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
+}
+
+// Add dialog to arguments_set and test will pass
+TEST_F(InferenceManagerTest, DISABLED_ConclusionArgumentsTest)
+{
+  ScMemoryContext & context = *m_ctx;
+
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "ConclusionArgumentsTest.scs");
+
+  initialize();
+
+  ScAddr targetStructure = context.HelperResolveSystemIdtf("inference_target");
+  EXPECT_TRUE(targetStructure.IsValid());
+
+  ScAddr formulasSet = context.HelperResolveSystemIdtf("rules_sets");
+  EXPECT_TRUE(formulasSet.IsValid());
+
+  ScAddr argumentSet = context.HelperResolveSystemIdtf(ARGUMENT_SET);
+  EXPECT_TRUE(argumentSet.IsValid());
+
+  ScAddr outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  DirectInferenceManager inferenceManager(&context);
+  ScAddr answer = inferenceManager.applyInference(targetStructure, formulasSet, argumentSet, outputStructure);
+
+  EXPECT_TRUE(answer.IsValid());
+  EXPECT_TRUE(
+        context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm));
+
+  ScAddr dialog = context.HelperFindBySystemIdtf("dialog");
+  ScAddr dialogClass = context.HelperFindBySystemIdtf("concept_dialog_class");
+  EXPECT_TRUE(dialog.IsValid());
+  EXPECT_TRUE(dialogClass.IsValid());
+
+  EXPECT_TRUE(context.HelperCheckEdge(dialogClass, dialog, ScType::EdgeAccessConstPosPerm));
 }
 
 }  // namespace directInferenceManagerTest
