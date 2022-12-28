@@ -23,7 +23,7 @@ public:
 
   bool addNode(ScAddr const & formula, ScTemplateParams const & templateParams);
 
-  ScAddr createSolution(bool targetAchieved);
+  ScAddr createSolution(ScAddr const & outputStructure, bool targetAchieved);
 
 private:
   ScAddr createSolutionNode(ScAddr const & formula, ScTemplateParams const & templateParams);

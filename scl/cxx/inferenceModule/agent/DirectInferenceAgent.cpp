@@ -29,10 +29,10 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
       utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), actionNode, CoreKeynodes::rrel_1);
   ScAddr const formulasSet =
       utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), actionNode, CoreKeynodes::rrel_2);
-  ScAddr const inputStructure =
+  ScAddr const arguments =
       utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), actionNode, CoreKeynodes::rrel_3);
   ScAddr const rrel_4 = utils::IteratorUtils::getRoleRelation(ms_context.get(), 4);
-  ScAddr outputStructure = utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), actionNode, rrel_4);
+  ScAddr inputStructure = utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), actionNode, rrel_4);
 
   if (!targetStructure.IsValid() || !utils::IteratorUtils::getAnyFromSet(ms_context.get(), targetStructure).IsValid())
   {
@@ -44,16 +44,15 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
     utils::AgentUtils::finishAgentWork(ms_context.get(), actionNode, false);
     return SC_RESULT_ERROR;
   }
-  if (!inputStructure.IsValid() || !utils::IteratorUtils::getAnyFromSet(ms_context.get(), inputStructure).IsValid())
+  if (!arguments.IsValid() || !utils::IteratorUtils::getAnyFromSet(ms_context.get(), arguments).IsValid())
   {
     SC_LOG_ERROR("Input structure is not valid or empty.");
     utils::AgentUtils::finishAgentWork(ms_context.get(), actionNode, false);
     return SC_RESULT_ERROR;
   }
-  if (!outputStructure.IsValid())
+  if (!inputStructure.IsValid())
   {
-    SC_LOG_WARNING("Output structure is not valid or empty, generate new");
-    outputStructure = ms_context->CreateNode(ScType::NodeConstStruct);
+    SC_LOG_WARNING("Intput structure is not valid use whole knowledge base");
   }
 
   ScAddrVector answerElements;
@@ -62,7 +61,7 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
   try
   {
     solutionNode =
-        this->inferenceManager->applyInference(targetStructure, formulasSet, inputStructure, outputStructure);
+        this->inferenceManager->applyInference(targetStructure, formulasSet, arguments, inputStructure);
   }
   catch (utils::ScException const & exception)
   {

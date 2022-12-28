@@ -28,21 +28,22 @@ DirectInferenceManager::DirectInferenceManager(ScMemoryContext * ms_context)
 ScAddr DirectInferenceManager::applyInference(
     ScAddr const & targetStructure,
     ScAddr const & formulasSet,
-    ScAddr const & inputStructure,
-    ScAddr const & outputStructure)
+    ScAddr const & arguments,
+    ScAddr const & inputStructure)
 {
-  ScAddrVector argumentVector = utils::IteratorUtils::getAllWithType(ms_context, inputStructure, ScType::Node);
+  ScAddr outputStructure = ms_context->CreateNode(ScType::NodeConstStruct);
+  ScAddrVector argumentVector = utils::IteratorUtils::getAllWithType(ms_context, arguments, ScType::Node);
   for (ScAddr const & argument : argumentVector)
   {
     templateSearcher->addParam(argument);
   }
-  templateSearcher->setInputStructure(inputStructure);
+  templateSearcher->setArguments(arguments);
 
   bool targetAchieved = isTargetAchieved(targetStructure, argumentVector);
   if (targetAchieved)
   {
     SC_LOG_DEBUG("Target is already achieved");
-    return solutionTreeGenerator->createSolution(targetAchieved);
+    return solutionTreeGenerator->createSolution(outputStructure, targetAchieved);
   }
 
   vector<ScAddrQueue> formulasQueuesByPriority = createFormulasQueuesListByPriority(formulasSet);
@@ -95,7 +96,7 @@ ScAddr DirectInferenceManager::applyInference(
     }
   }
 
-  return solutionTreeGenerator->createSolution(targetAchieved);
+  return solutionTreeGenerator->createSolution(outputStructure, targetAchieved);
 }
 
 ScAddrQueue DirectInferenceManager::createQueue(ScAddr const & set)
@@ -153,24 +154,4 @@ bool DirectInferenceManager::isTargetAchieved(ScAddr const & targetStructure, Sc
       [this, &targetStructure](ScTemplateParams const & templateParams) {
         return !templateSearcher->searchTemplate(targetStructure, templateParams).empty();
       });
-}
-
-void DirectInferenceManager::clearSatisfiabilityInformation(ScAddr const & formula, ScAddr const & inputStructure)
-{
-  ScIterator5Ptr satisfiabilityIterator = ms_context->Iterator5(
-      formula, ScType::EdgeDCommon, inputStructure, ScType::EdgeAccess, InferenceKeynodes::nrel_satisfiable_formula);
-
-  while (satisfiabilityIterator->Next())
-    ms_context->EraseElement(satisfiabilityIterator->Get(1));
-}
-
-void DirectInferenceManager::addSatisfiabilityInformation(
-    ScAddr const & formula,
-    ScAddr const & inputStructure,
-    bool isSatisfiable)
-{
-  clearSatisfiabilityInformation(formula, inputStructure);
-  ScAddr const satisfiableRelationEdge = ms_context->CreateEdge(ScType::EdgeDCommonConst, formula, inputStructure);
-  ScType const accessArcType = (isSatisfiable ? ScType::EdgeAccessConstPosTemp : ScType::EdgeAccessConstNegTemp);
-  ms_context->CreateEdge(accessArcType, InferenceKeynodes::nrel_satisfiable_formula, satisfiableRelationEdge);
 }

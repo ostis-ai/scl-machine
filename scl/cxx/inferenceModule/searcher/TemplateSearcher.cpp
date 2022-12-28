@@ -21,7 +21,7 @@ TemplateSearcher::TemplateSearcher(ScMemoryContext * context)
 {
   this->context = context;
   params = {};
-  inputStructure = {};
+  arguments = {};
 }
 
 vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplate(
@@ -57,7 +57,7 @@ std::vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplateWithCont
     ScTemplate const & searchTemplate,
     ScAddr const & templateAddr)
 {
-  context->HelperSearchTemplateInStruct(searchTemplate, inputStructure, *searchWithoutContentResult);
+  context->HelperSearchTemplateInStruct(searchTemplate, arguments, *searchWithoutContentResult);
   std::map<std::string, std::string> linksContentMap = getTemplateKeyLinksContent(templateAddr);
   std::vector<ScTemplateSearchResultItem> searchWithContentResult;
   for (size_t searchItemIndex = 0; searchItemIndex < searchWithoutContentResult->Size(); searchItemIndex++)
@@ -98,7 +98,7 @@ std::map<std::string, std::string> TemplateSearcher::getTemplateKeyLinksContent(
       ScType::EdgeAccessVarPosPerm,
       scAgentsCommon::CoreKeynodes::rrel_key_sc_element);
   ScTemplateSearchResult searchResult;
-  context->HelperSearchTemplateInStruct(scTemplate, inputStructure, searchResult);
+  context->HelperSearchTemplateInStruct(scTemplate, arguments, searchResult);
   for (size_t i = 0; i < searchResult.Size(); i++)
   {
     ScAddr linkAddr = searchResult[i][link_alias];
@@ -146,8 +146,8 @@ bool TemplateSearcher::addParamIfNotPresent(ScAddr const & param)
   if (std::find(params.begin(), params.end(), param) == std::end(params))
   {
     params.push_back(param);
-    if (inputStructure.IsValid())
-      context->CreateEdge(ScType::EdgeAccessConstPosPerm, inputStructure, param);
+    if (arguments.IsValid())
+      context->CreateEdge(ScType::EdgeAccessConstPosPerm, arguments, param);
     return true;
   }
   return false;
@@ -176,9 +176,9 @@ Replacements TemplateSearcher::searchTemplate(
   return result;
 }
 
-void TemplateSearcher::setInputStructure(ScAddr const & inputStructure)
+void TemplateSearcher::setArguments(ScAddr const & arguments)
 {
-  this->inputStructure = inputStructure;
+  this->arguments = arguments;
 }
 
 Replacements TemplateSearcher::searchTemplate(ScAddr const & templateAddr)
