@@ -172,7 +172,7 @@ TEST_F(InferenceLogicTest, EmptyRuleSetQueue)
 
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully, action, ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
   shutdown();
   context.Destroy();

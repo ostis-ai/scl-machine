@@ -197,4 +197,80 @@ TEST_F(InferenceManagerTest, DISABLED_ConclusionArgumentsTest)
   EXPECT_TRUE(context.HelperCheckEdge(dialogClass, dialog, ScType::EdgeAccessConstPosPerm));
 }
 
+TEST_F(InferenceManagerTest, SolutionOutputStrcuture)
+{
+  ScMemoryContext & context = *m_ctx;
+
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "trueSimpleRuleTest.scs");
+  initialize();
+
+  ScAddr targetTemplate = context.HelperResolveSystemIdtf(TARGET_TEMPLATE);
+  EXPECT_TRUE(targetTemplate.IsValid());
+
+  ScAddr ruleSet = context.HelperResolveSystemIdtf(RULES_SET);
+  EXPECT_TRUE(ruleSet.IsValid());
+
+  ScAddr argumentSet = context.HelperResolveSystemIdtf(ARGUMENT_SET);
+  EXPECT_TRUE(argumentSet.IsValid());
+
+  DirectInferenceManager inferenceManager(&context);
+  ScAddr solution = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet, ScAddr());
+  EXPECT_TRUE(solution.IsValid());
+  EXPECT_TRUE(
+      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
+
+  // Check if nrel_output_structure exists
+  ScIterator5Ptr solutionOutputIterator = context.Iterator5(
+      solution,
+      ScType::EdgeDCommonConst,
+      ScType::NodeConstStruct,
+      ScType::EdgeAccessConstPosPerm,
+      InferenceKeynodes::nrel_output_structure);
+
+  EXPECT_TRUE(solutionOutputIterator->Next());
+  ScAddr outputStructure = solutionOutputIterator->Get(2);
+  EXPECT_TRUE(outputStructure.IsValid());
+
+  // Check class in output structure, expect target_node_class
+  ScIterator3Ptr outputStructureClassIterator = context.Iterator3(
+      outputStructure,
+      ScType::EdgeAccessConstPosPerm,
+      ScType::NodeConstClass);
+  EXPECT_TRUE(outputStructureClassIterator->Next());
+
+  ScAddr outputStructureClass = outputStructureClassIterator->Get(2);
+  EXPECT_TRUE(outputStructureClass.IsValid());
+
+  ScAddr targetClass = context.HelperFindBySystemIdtf("target_node_class");
+  EXPECT_TRUE(targetClass.IsValid());
+  EXPECT_TRUE(targetClass == outputStructureClass);
+
+  // Check target_node_class element in output structure, expect argument
+  ScIterator5Ptr outputStructureClassElementIterator = context.Iterator5(
+      outputStructureClass,
+      ScType::EdgeAccessConstPosPerm,
+      ScType::NodeConst,
+      ScType::EdgeAccessConstPosPerm,
+      outputStructure);
+  EXPECT_TRUE(outputStructureClassElementIterator->Next());
+
+  ScAddr outputStructureClassElement = outputStructureClassElementIterator->Get(2);
+  ScAddr argument = context.HelperFindBySystemIdtf("argument");
+  EXPECT_TRUE(argument.IsValid());
+  EXPECT_TRUE(outputStructureClassElement.IsValid());
+  EXPECT_TRUE(argument == outputStructureClassElement);
+
+  // Check if edge between target_node_class and argument exists in output structure
+  ScIterator5Ptr edgeOutputStructureIterator = context.Iterator5(
+      outputStructureClass,
+      ScType::EdgeAccessConstPosPerm,
+      outputStructureClassElement,
+      ScType::EdgeAccessConstPosPerm,
+      outputStructure);
+  EXPECT_TRUE(edgeOutputStructureIterator->Next());
+  EXPECT_FALSE(edgeOutputStructureIterator->Next());
+
+  EXPECT_FALSE(solutionOutputIterator->Next());
+}
+
 }  // namespace directInferenceManagerTest
