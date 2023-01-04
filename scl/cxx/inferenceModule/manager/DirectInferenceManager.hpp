@@ -30,23 +30,17 @@ public:
   ScAddr applyInference(
       ScAddr const & targetStructure,
       ScAddr const & formulasSet,
-      ScAddr const & inputStructure,
-      ScAddr const & outputStructure);
+      ScAddr const & arguments,
+      ScAddr const & inputStructure);
 
 private:
   std::vector<ScAddrQueue> createFormulasQueuesListByPriority(ScAddr const & formulasSet);
 
   ScAddrQueue createQueue(ScAddr const & set);
 
-  void clearSatisfiabilityInformation(ScAddr const & formula, ScAddr const & inputStructure);
-
-  void addSatisfiabilityInformation(ScAddr const & formula, ScAddr const & inputStructure, bool isSatisfiable);
-
   bool useFormula(ScAddr const & rule, ScAddrVector /*const*/ & argumentVector, ScAddr const & outputStructure);
 
   bool isTargetAchieved(ScAddr const & targetStructure, ScAddrVector const & argumentVector);
-
-  bool generateStatement(ScAddr const & statement, ScTemplateParams const & templateParams);
 
   ScMemoryContext * ms_context;
   std::unique_ptr<TemplateManager> templateManager;

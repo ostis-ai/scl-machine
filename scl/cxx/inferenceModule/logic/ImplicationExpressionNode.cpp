@@ -37,7 +37,6 @@ LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & resul
 
   LogicExpressionNode * premiseAtom = operands[0].get();
   premiseAtom->setArgumentVector(argumentVector);
-  bool isLeftGenerated = FormulaClassifier::isFormulaToGenerate(context, premiseAtom->getFormulaTemplate());
 
   LogicExpressionNode * conclusionAtom = operands[1].get();
   conclusionAtom->setArgumentVector(argumentVector);
@@ -49,38 +48,18 @@ LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & resul
         ScType::EdgeAccessConstPosPerm,
         InferenceKeynodes::concept_template_for_generation,
         conclusionAtom->getFormulaTemplate());
-    isRightGenerated = true;
   }
 
-  LogicFormulaResult premiseResult;
-  LogicFormulaResult conclusionResult;
-
-  if (!isLeftGenerated)
-  {
-    SC_LOG_DEBUG("Premise shouldn't be generated");
-    premiseResult = operands[0]->compute(result);
-    conclusionResult =
-        (isRightGenerated ? conclusionAtom->generate(premiseResult.replacements) : operands[1]->compute(result));
-  }
-  else
-  {
-    if (isRightGenerated)
-    {
-      SC_LOG_DEBUG("Conclusion should be generated");
-      return {true, true, {}};
-    }
-    else
-    {
-      SC_LOG_DEBUG("Conclusion shouldn't be generated");
-      conclusionResult = operands[1]->compute(result);
-      premiseResult = premiseAtom->generate(conclusionResult.replacements);
-    }
-  }
+  LogicFormulaResult premiseResult = operands[0]->compute(result);
+  LogicFormulaResult conclusionResult = conclusionAtom->generate(premiseResult.replacements);
 
   result.value = !premiseResult.value || conclusionResult.value;
-  result.isGenerated = premiseResult.isGenerated || conclusionResult.isGenerated;
+  result.isGenerated = conclusionResult.isGenerated;
   if (conclusionResult.value)
+  {
     result.replacements =
-        ReplacementsUtils::uniteReplacements(premiseResult.replacements, conclusionResult.replacements);
+          ReplacementsUtils::uniteReplacements(premiseResult.replacements, conclusionResult.replacements);
+  }
+
   return result;
 }

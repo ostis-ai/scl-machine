@@ -17,40 +17,62 @@ using namespace utils;
 using namespace scAgentsCommon;
 
 SolutionTreeGenerator::SolutionTreeGenerator(ScMemoryContext * ms_context)
-  : ms_context(ms_context)
+      : ms_context(ms_context)
 {
-  lastNode = ScAddr();
+  solution = ms_context->CreateNode(ScType::NodeConst);
 }
 
-bool SolutionTreeGenerator::addNode(ScAddr const & rule, ScTemplateParams const & templateParams)
+bool SolutionTreeGenerator::addNode(ScAddr const & formula, ScTemplateParams const & templateParams)
 {
-  ScAddr newNode = createSolutionNode(rule, templateParams);
-  bool result = newNode.IsValid();
+  ScAddr newSolutionNode = createSolutionNode(formula, templateParams);
+  bool result = newSolutionNode.IsValid();
   if (result)
   {
-    result = GenerationUtils::generateRelationBetween(ms_context, lastNode, newNode, CoreKeynodes::nrel_basic_sequence);
-    lastNode = newNode;
+    if (!lastSolutionNode.IsValid())
+    {
+      result = GenerationUtils::generateRelationBetween(ms_context, solution, newSolutionNode, CoreKeynodes::rrel_1);
+    }
+    else
+    {
+      ScIterator3Ptr lastSolutionNodeArcIterator = ms_context->Iterator3(
+            solution,
+            ScType::EdgeAccessConstPosPerm,
+            lastSolutionNode);
+      if (lastSolutionNodeArcIterator->Next())
+      {
+        ScAddr lastSolutionNodeArc = lastSolutionNodeArcIterator->Get(1);
+        ScAddr newSolutionNodeArc = ms_context->CreateEdge(ScType::EdgeAccessConstPosPerm, solution, newSolutionNode);
+        GenerationUtils::generateRelationBetween(
+              ms_context,
+              lastSolutionNodeArc,
+              newSolutionNodeArc,
+              CoreKeynodes::nrel_basic_sequence);
+      }
+      else
+      {
+        result = false;
+      }
+    }
+
+    lastSolutionNode = newSolutionNode;
   }
   return result;
 }
 
-ScAddr SolutionTreeGenerator::createSolutionNode(ScAddr const & rule, ScTemplateParams const & templateParams)
+ScAddr SolutionTreeGenerator::createSolutionNode(ScAddr const & formula, ScTemplateParams const & templateParams)
 {
   ScAddr solutionNode = ms_context->CreateNode(ScType::NodeConst);
   // TODO: Add params to solution node
-  GenerationUtils::generateRelationBetween(ms_context, solutionNode, rule, CoreKeynodes::rrel_1);
+  GenerationUtils::generateRelationBetween(ms_context, solutionNode, formula, CoreKeynodes::rrel_1);
   return solutionNode;
 }
 
-ScAddr SolutionTreeGenerator::createSolution(bool const targetAchieved)
+ScAddr SolutionTreeGenerator::createSolution(ScAddr const & outputStructure, bool const targetAchieved)
 {
-  ScAddr solution = ms_context->CreateNode(ScType::NodeConst);
-  if (lastNode.IsValid())
-  {
-    ms_context->CreateEdge(ScType::EdgeAccessConstPosPerm, lastNode, solution);
-  }
   ScType arcType = targetAchieved ? ScType::EdgeAccessConstPosPerm : ScType::EdgeAccessConstNegPerm;
   ms_context->CreateEdge(arcType, InferenceKeynodes::concept_success_solution, solution);
   ms_context->CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::concept_solution, solution);
+  GenerationUtils::generateRelationBetween(ms_context, solution, outputStructure, InferenceKeynodes::nrel_output_structure);
+
   return solution;
 }

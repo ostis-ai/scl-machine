@@ -46,9 +46,6 @@ public:
   SC_PROPERTY(Keynode("concept_template_for_generation"), ForceCreate)
   static ScAddr concept_template_for_generation;
 
-  SC_PROPERTY(Keynode("nrel_satisfiable_formula"), ForceCreate)
-  static ScAddr nrel_satisfiable_formula;
-
   SC_PROPERTY(Keynode("nrel_basic_sequence"), ForceCreate)
   static ScAddr nrel_basic_sequence;
 
@@ -78,6 +75,9 @@ public:
 
   SC_PROPERTY(Keynode("rrel_then"), ForceCreate)
   static ScAddr rrel_then;
+
+  SC_PROPERTY(Keynode("nrel_output_structure"), ForceCreate)
+  static ScAddr nrel_output_structure;
 };
 
 }  // namespace inference

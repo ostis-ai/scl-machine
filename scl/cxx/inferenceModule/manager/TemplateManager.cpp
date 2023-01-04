@@ -12,11 +12,11 @@ using namespace inference;
 
 TemplateManager::TemplateManager(ScMemoryContext * ms_context)
 {
-  this->context = ms_context;
+  context = ms_context;
 }
 
 /* For all classes of the all template variables create map <varName, arguments>
-   Where arguments are elements from argumentList, and each argument class is the same as variable varName class
+ * Where arguments are elements from argumentList, and each argument class is the same as variable varName class
  */
 std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
     ScAddr const & scTemplate,
@@ -68,13 +68,17 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
       std::set<ScAddr, AddrComparator> addresses = replacementsMultimap[varName];
       size_t amountOfAddressesForVar = addresses.size();
       size_t oldParamsSize = templateParamsVector.size();
+
+      if (amountOfAddressesForVar == 0)
+        continue;
+
       size_t amountOfNewElements = oldParamsSize * (amountOfAddressesForVar - 1);
       templateParamsVector.reserve(amountOfNewElements);
       size_t beginOfCopy = 0;
       size_t endOfCopy = oldParamsSize;
       for (ScAddr const & address : addresses)
       {
-        copy_n(templateParamsVector.begin() + beginOfCopy, oldParamsSize, back_inserter(templateParamsVector));
+        copy_n(templateParamsVector.begin(), oldParamsSize, back_inserter(templateParamsVector));
         for (size_t i = 0; i < oldParamsSize; ++i)
           templateParamsVector[beginOfCopy + i].Add(varName, address);
         beginOfCopy = endOfCopy;

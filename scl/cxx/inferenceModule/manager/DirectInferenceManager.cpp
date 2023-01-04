@@ -20,29 +20,30 @@ using namespace inference;
 DirectInferenceManager::DirectInferenceManager(ScMemoryContext * ms_context)
   : ms_context(ms_context)
 {
-  this->solutionTreeGenerator = std::make_unique<SolutionTreeGenerator>(ms_context);
-  this->templateManager = std::make_unique<TemplateManager>(ms_context);
-  this->templateSearcher = std::make_unique<TemplateSearcher>(ms_context);
+  solutionTreeGenerator = std::make_unique<SolutionTreeGenerator>(ms_context);
+  templateManager = std::make_unique<TemplateManager>(ms_context);
+  templateSearcher = std::make_unique<TemplateSearcher>(ms_context);
 }
 
 ScAddr DirectInferenceManager::applyInference(
     ScAddr const & targetStructure,
     ScAddr const & formulasSet,
-    ScAddr const & inputStructure,
-    ScAddr const & outputStructure)
+    ScAddr const & arguments,
+    ScAddr const & inputStructure)
 {
-  ScAddrVector argumentVector = utils::IteratorUtils::getAllWithType(ms_context, inputStructure, ScType::Node);
+  ScAddr outputStructure = ms_context->CreateNode(ScType::NodeConstStruct);
+  ScAddrVector argumentVector = utils::IteratorUtils::getAllWithType(ms_context, arguments, ScType::Node);
   for (ScAddr const & argument : argumentVector)
   {
     templateSearcher->addParam(argument);
   }
-  templateSearcher->setInputStructure(inputStructure);
+  templateSearcher->setArguments(arguments);
 
   bool targetAchieved = isTargetAchieved(targetStructure, argumentVector);
   if (targetAchieved)
   {
     SC_LOG_DEBUG("Target is already achieved");
-    return this->solutionTreeGenerator->createSolution(targetAchieved);
+    return solutionTreeGenerator->createSolution(outputStructure, targetAchieved);
   }
 
   vector<ScAddrQueue> formulasQueuesByPriority = createFormulasQueuesListByPriority(formulasSet);
@@ -61,23 +62,18 @@ ScAddr DirectInferenceManager::applyInference(
        formulasQueueIndex++)
   {
     uncheckedFormulas = formulasQueuesByPriority[formulasQueueIndex];
-    if (uncheckedFormulas.empty())
-    {
-      SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, "No rules found in set by priority.");
-    }
     SC_LOG_DEBUG(
         "There is " + to_string(uncheckedFormulas.size()) + " formulas in " + to_string(formulasQueueIndex + 1) +
         " set");
     while (!uncheckedFormulas.empty())
     {
       formula = uncheckedFormulas.front();
-      clearSatisfiabilityInformation(formula, inputStructure);
       SC_LOG_DEBUG("Trying to generate by formula: " + ms_context->HelperGetSystemIdtf(formula));
       isGenerated = useFormula(formula, argumentVector, outputStructure);
       SC_LOG_DEBUG(std::string("Logical formula is ") + (isGenerated ? "generated" : "not generated"));
       if (isGenerated)
       {
-        addSatisfiabilityInformation(formula, inputStructure, true);
+        solutionTreeGenerator->addNode(formula, ScTemplateParams());
         targetAchieved = isTargetAchieved(targetStructure, argumentVector);
         if (targetAchieved)
         {
@@ -93,7 +89,6 @@ ScAddr DirectInferenceManager::applyInference(
       }
       else
       {
-        addSatisfiabilityInformation(formula, inputStructure, false);
         checkedFormulas.push_back(formula);
       }
 
@@ -101,7 +96,7 @@ ScAddr DirectInferenceManager::applyInference(
     }
   }
 
-  return this->solutionTreeGenerator->createSolution(targetAchieved);
+  return solutionTreeGenerator->createSolution(outputStructure, targetAchieved);
 }
 
 ScAddrQueue DirectInferenceManager::createQueue(ScAddr const & set)
@@ -149,22 +144,6 @@ vector<ScAddrQueue> DirectInferenceManager::createFormulasQueuesListByPriority(S
   return formulasQueuesList;
 }
 
-bool DirectInferenceManager::generateStatement(ScAddr const & statement, ScTemplateParams const & templateParams)
-{
-  bool result = false;
-  ScTemplate searchTemplate;
-  ms_context->HelperBuildTemplate(searchTemplate, statement, templateParams);
-  ScTemplateSearchResult templateSearchResult;
-  if (!ms_context->HelperSearchTemplate(searchTemplate, templateSearchResult))
-  {
-    ScTemplate statementTemplate;
-    ms_context->HelperBuildTemplate(statementTemplate, statement);
-    ScTemplateGenResult templateGenResult;
-    result = ms_context->HelperGenTemplate(statementTemplate, templateGenResult, templateParams);
-  }
-  return result;
-}
-
 bool DirectInferenceManager::isTargetAchieved(ScAddr const & targetStructure, ScAddrVector const & argumentVector)
 {
   std::vector<ScTemplateParams> const templateParamsVector =
@@ -175,24 +154,4 @@ bool DirectInferenceManager::isTargetAchieved(ScAddr const & targetStructure, Sc
       [this, &targetStructure](ScTemplateParams const & templateParams) {
         return !templateSearcher->searchTemplate(targetStructure, templateParams).empty();
       });
-}
-
-void DirectInferenceManager::clearSatisfiabilityInformation(ScAddr const & formula, ScAddr const & inputStructure)
-{
-  ScIterator5Ptr satisfiabilityIterator = ms_context->Iterator5(
-      formula, ScType::EdgeDCommon, inputStructure, ScType::EdgeAccess, InferenceKeynodes::nrel_satisfiable_formula);
-
-  while (satisfiabilityIterator->Next())
-    ms_context->EraseElement(satisfiabilityIterator->Get(1));
-}
-
-void DirectInferenceManager::addSatisfiabilityInformation(
-    ScAddr const & formula,
-    ScAddr const & inputStructure,
-    bool isSatisfiable)
-{
-  clearSatisfiabilityInformation(formula, inputStructure);
-  ScAddr const satisfiableRelationEdge = ms_context->CreateEdge(ScType::EdgeDCommonConst, formula, inputStructure);
-  ScType const accessArcType = (isSatisfiable ? ScType::EdgeAccessConstPosTemp : ScType::EdgeAccessConstNegTemp);
-  ms_context->CreateEdge(accessArcType, InferenceKeynodes::nrel_satisfiable_formula, satisfiableRelationEdge);
 }

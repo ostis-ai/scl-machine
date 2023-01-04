@@ -39,7 +39,7 @@ public:
 
   bool addParamIfNotPresent(ScAddr const & param);
 
-  void setInputStructure(ScAddr const & inputStructure);
+  void setArguments(ScAddr const & arguments);
 
 private:
   std::vector<ScTemplateSearchResultItem> searchTemplateWithContent(
@@ -51,6 +51,6 @@ private:
   ScMemoryContext * context;
   std::unique_ptr<ScTemplateSearchResult> searchWithoutContentResult;
   ScAddrVector params;
-  ScAddr inputStructure;
+  ScAddr arguments;
 };
 }  // namespace inference
