@@ -72,18 +72,22 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
       if (amountOfAddressesForVar == 0)
         continue;
 
-      size_t amountOfNewElements = oldParamsSize * (amountOfAddressesForVar - 1);
-      templateParamsVector.reserve(amountOfNewElements);
+      size_t amountOfNewElements = oldParamsSize * amountOfAddressesForVar;
+      std::vector<ScTemplateParams> updatedParams;
+      updatedParams.reserve(amountOfNewElements);
+
       size_t beginOfCopy = 0;
       size_t endOfCopy = oldParamsSize;
       for (ScAddr const & address : addresses)
       {
-        copy_n(templateParamsVector.begin(), oldParamsSize, back_inserter(templateParamsVector));
+        copy_n(templateParamsVector.begin(), oldParamsSize, back_inserter(updatedParams));
         for (size_t i = 0; i < oldParamsSize; ++i)
-          templateParamsVector[beginOfCopy + i].Add(varName, address);
+          updatedParams[beginOfCopy + i].Add(varName, address);
         beginOfCopy = endOfCopy;
         endOfCopy += oldParamsSize;
       }
+
+      templateParamsVector = std::move(updatedParams);
     }
   }
 
