@@ -169,6 +169,8 @@ Replacements TemplateSearcher::searchTemplate(
       {
         if (scTemplateParams.Get(varName, argument))
           result[varName].push_back(argument);
+        else if (searchResult.Has(varName))
+          result[varName].push_back(searchResult[varName]);
       }
     }
   }
