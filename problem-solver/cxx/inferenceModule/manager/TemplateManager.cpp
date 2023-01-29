@@ -23,72 +23,86 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
     ScAddrVector const & argumentList)
 {
   std::map<std::string, std::set<ScAddr, AddrComparator>> replacementsMultimap;
-  std::vector<ScTemplateParams> templateParamsVector;
 
   ScIterator3Ptr varIterator = context->Iterator3(scTemplate, ScType::EdgeAccessConstPosPerm, ScType::NodeVar);
   while (varIterator->Next())
   {
     ScAddr var = varIterator->Get(2);
     std::string varName = context->HelperGetSystemIdtf(var);
-    if (!replacementsMultimap[varName].empty())
-    {
-      continue;
-    }
     ScAddr argumentOfVar;
-    ScIterator5Ptr classesIterator = context->Iterator5(
-        ScType::NodeConstClass, ScType::EdgeAccessVarPosPerm, var, ScType::EdgeAccessConstPosPerm, scTemplate);
-    while (classesIterator->Next())
+    for (ScAddr const & argument : argumentList)
     {
-      ScAddr varClass = classesIterator->Get(0);
-      for (ScAddr const & argument : argumentList)  // this block is executed if inputStructure is valid
+      ScIterator5Ptr const & classesIterator = context->Iterator5(
+          ScType::NodeConstClass, ScType::EdgeAccessVarPosPerm, var, ScType::EdgeAccessConstPosPerm, scTemplate);
+      bool isBelong = false;
+      while (classesIterator->Next())
       {
+        ScAddr varClass = classesIterator->Get(0);
         if (context->HelperCheckEdge(varClass, argument, ScType::EdgeAccessConstPosPerm))
-          replacementsMultimap[varName].insert(argument);
+        {
+          isBelong = true;
+        }
+        else
+        {
+          isBelong = false;
+          break;
+        }
       }
-      if (argumentList.empty())  // this block is executed if inputStructure is not valid
+
+      if (isBelong)
       {
-        ScIterator3Ptr iterator3 = context->Iterator3(varClass, ScType::EdgeAccessConstPosPerm, ScType::Unknown);
-        while (iterator3->Next())
-          replacementsMultimap[varName].insert(iterator3->Get(2));
+        replacementsMultimap[varName].insert(argument);
       }
     }
-    if (templateParamsVector.empty())
+  }
+
+  std::vector<std::map<std::string, ScAddr>> paramsVector;
+  paramsVector.reserve(replacementsMultimap.size());
+  for (auto const & pair : replacementsMultimap)
+  {
+    std::vector<std::map<std::string, ScAddr>> newParamsVector;
+    newParamsVector.reserve(replacementsMultimap.size());
+    for (auto const & addr : pair.second)
     {
-      std::set<ScAddr, AddrComparator> addresses = replacementsMultimap[varName];
-      templateParamsVector.reserve(replacementsMultimap[varName].size());
-      for (ScAddr const & address : addresses)
+      bool isUploaded = false;
+      for (auto map : paramsVector)
       {
-        ScTemplateParams params;
-        params.Add(varName, address);
-        templateParamsVector.push_back(params);
+        bool isDuplicatedValue = false;
+        for (auto const & mapPair : map)
+        {
+          if (mapPair.second == addr)
+          {
+            isDuplicatedValue = true;
+          }
+        }
+
+        if (!isDuplicatedValue)
+        {
+          map.insert({ pair.first, addr });
+          newParamsVector.emplace_back(map);
+        }
+
+        isUploaded = true;
+      }
+
+      if (!isUploaded)
+      {
+        std::map<std::string, ScAddr> map{{ pair.first, addr }};
+        newParamsVector.emplace_back(map);
       }
     }
-    else
+    paramsVector = newParamsVector;
+  }
+
+  std::vector<ScTemplateParams> templateParamsVector;
+  for (auto const & params : paramsVector)
+  {
+    ScTemplateParams templateParams;
+    for (auto const & param : params)
     {
-      std::set<ScAddr, AddrComparator> addresses = replacementsMultimap[varName];
-      size_t amountOfAddressesForVar = addresses.size();
-      size_t oldParamsSize = templateParamsVector.size();
-
-      if (amountOfAddressesForVar == 0)
-        continue;
-
-      size_t amountOfNewElements = oldParamsSize * amountOfAddressesForVar;
-      std::vector<ScTemplateParams> updatedParams;
-      updatedParams.reserve(amountOfNewElements);
-
-      size_t beginOfCopy = 0;
-      size_t endOfCopy = oldParamsSize;
-      for (ScAddr const & address : addresses)
-      {
-        copy_n(templateParamsVector.begin(), oldParamsSize, back_inserter(updatedParams));
-        for (size_t i = 0; i < oldParamsSize; ++i)
-          updatedParams[beginOfCopy + i].Add(varName, address);
-        beginOfCopy = endOfCopy;
-        endOfCopy += oldParamsSize;
-      }
-
-      templateParamsVector = std::move(updatedParams);
+      templateParams.Add(param.first, param.second);
     }
+    templateParamsVector.emplace_back(templateParams);
   }
 
   return templateParamsVector;
