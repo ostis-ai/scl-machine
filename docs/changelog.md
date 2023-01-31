@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README
 - Changelog
 - Add always generating for conclusion in implication
-- Add arguments to sub formulas in conjunction and disjunction
+- Add arguments to subformulas in conjunction and disjunction
 
 ### Fixed
 - Fixed applying rules chain
