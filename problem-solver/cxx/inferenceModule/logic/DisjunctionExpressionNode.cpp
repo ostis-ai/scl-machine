@@ -52,6 +52,7 @@ LogicFormulaResult DisjunctionExpressionNode::compute(LogicFormulaResult & resul
 
   for (auto const & operand : operands)
   {
+    operand->setArgumentVector(argumentVector);
     auto atom = dynamic_cast<TemplateExpressionNode *>(operand.get());
     if (atom)
     {
