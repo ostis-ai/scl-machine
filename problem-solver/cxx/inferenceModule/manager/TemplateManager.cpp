@@ -22,9 +22,9 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
     ScAddr const & scTemplate,
     ScAddrVector const & argumentList)
 {
-  std::map<std::string, std::set<ScAddr, AddrComparator>> replacementsMultimap;
+  std::unordered_map<std::string, std::set<ScAddr, AddrComparator>> replacementsMultimap;
 
-  ScIterator3Ptr varIterator = context->Iterator3(scTemplate, ScType::EdgeAccessConstPosPerm, ScType::NodeVar);
+  ScIterator3Ptr const & varIterator = context->Iterator3(scTemplate, ScType::EdgeAccessConstPosPerm, ScType::NodeVar);
   while (varIterator->Next())
   {
     ScAddr var = varIterator->Get(2);
@@ -34,34 +34,34 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
     {
       ScIterator5Ptr const & classesIterator = context->Iterator5(
           ScType::NodeConstClass, ScType::EdgeAccessVarPosPerm, var, ScType::EdgeAccessConstPosPerm, scTemplate);
-      bool isBelong = false;
+      bool isArgumentBelongToVarClasses = false;
       while (classesIterator->Next())
       {
         ScAddr varClass = classesIterator->Get(0);
         if (context->HelperCheckEdge(varClass, argument, ScType::EdgeAccessConstPosPerm))
         {
-          isBelong = true;
+          isArgumentBelongToVarClasses = true;
         }
         else
         {
-          isBelong = false;
+          isArgumentBelongToVarClasses = false;
           break;
         }
       }
 
-      if (isBelong)
+      if (isArgumentBelongToVarClasses)
       {
         replacementsMultimap[varName].insert(argument);
       }
     }
   }
 
-  std::vector<std::map<std::string, ScAddr>> paramsVector;
+  std::vector<std::unordered_map<std::string, ScAddr>> paramsVector;
   paramsVector.reserve(replacementsMultimap.size());
   for (auto const & pair : replacementsMultimap)
   {
-    std::vector<std::map<std::string, ScAddr>> newParamsVector;
-    newParamsVector.reserve(replacementsMultimap.size());
+    std::vector<std::unordered_map<std::string, ScAddr>> newParamsVector;
+    newParamsVector.reserve(paramsVector.size() * pair.second.size());
     for (auto const & addr : pair.second)
     {
       bool isUploaded = false;
@@ -87,7 +87,7 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
 
       if (!isUploaded)
       {
-        std::map<std::string, ScAddr> map{{ pair.first, addr }};
+        std::unordered_map<std::string, ScAddr> map{{ pair.first, addr }};
         newParamsVector.emplace_back(map);
       }
     }
