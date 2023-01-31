@@ -11,6 +11,8 @@
 #include "searcher/TemplateSearcher.hpp"
 #include "keynodes/InferenceKeynodes.hpp"
 
+#include "algorithm"
+
 namespace inferenceTest
 {
 ScsLoader loader;
@@ -97,10 +99,17 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_MultipleResultTestCase)
       templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
 
   EXPECT_TRUE(searchResults.size() == 2);
-  EXPECT_TRUE(
-      searchResults[1][searchLinkIdentifier] == context.HelperFindBySystemIdtf(firstCorrectResultLinkIdentifier));
-  EXPECT_TRUE(
-      searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(secondCorrectResultLinkIdentifier));
+  ScAddrVector expectedResults = {
+      context.HelperFindBySystemIdtf(firstCorrectResultLinkIdentifier),
+      context.HelperFindBySystemIdtf(secondCorrectResultLinkIdentifier)};
+  expectedResults.erase(
+      std::remove(expectedResults.begin(), expectedResults.end(), searchResults[0][searchLinkIdentifier]),
+      expectedResults.end());
+  EXPECT_TRUE(expectedResults.size() == 1);
+  expectedResults.erase(
+      std::remove(expectedResults.begin(), expectedResults.end(), searchResults[1][searchLinkIdentifier]),
+      expectedResults.end());
+  EXPECT_TRUE(expectedResults.empty());
 }
 
 TEST_F(TemplateSearchManagerTest, SearchWithoutContent_NoStructuresTestCase)
@@ -158,10 +167,17 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_MultipleResultTestCase)
       templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
 
   EXPECT_TRUE(searchResults.size() == 2);
-  EXPECT_TRUE(
-      searchResults[1][searchLinkIdentifier] == context.HelperFindBySystemIdtf(firstCorrectResultLinkIdentifier));
-  EXPECT_TRUE(
-      searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(secondCorrectResultLinkIdentifier));
+  ScAddrVector expectedResults = {
+      context.HelperFindBySystemIdtf(firstCorrectResultLinkIdentifier),
+      context.HelperFindBySystemIdtf(secondCorrectResultLinkIdentifier)};
+  expectedResults.erase(
+      std::remove(expectedResults.begin(), expectedResults.end(), searchResults[0][searchLinkIdentifier]),
+      expectedResults.end());
+  EXPECT_TRUE(expectedResults.size() == 1);
+  expectedResults.erase(
+      std::remove(expectedResults.begin(), expectedResults.end(), searchResults[1][searchLinkIdentifier]),
+      expectedResults.end());
+  EXPECT_TRUE(expectedResults.empty());
 }
 
 TEST_F(TemplateSearchManagerTest, SearchWithoutContent_SelectiveTestCase)
