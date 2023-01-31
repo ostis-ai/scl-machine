@@ -116,7 +116,7 @@ TEST_F(TemplateSearchManagerTest, Search_EqualResultTestCase)
   ScAddr const & firstHumanAddr = context.HelperFindBySystemIdtf(firstHumanIdtf);
   ScAddr const & secondHumanAddr = context.HelperFindBySystemIdtf(secondHumanIdtf);
 
-  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchWithContentEqualResultTestStucture.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchEqualResultTestStucture.scs");
   initialize();
 
   ScAddr const & searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
