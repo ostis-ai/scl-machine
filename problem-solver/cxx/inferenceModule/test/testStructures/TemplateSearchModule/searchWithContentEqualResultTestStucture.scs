@@ -1,0 +1,31 @@
+@template = [*
+    _hum1
+    _=> nrel_father::
+        _hum2;;
+
+    _hum3
+    _=> nrel_father::
+        _hum2;;
+
+    concept_human
+    _-> _hum1;
+    _-> _hum3;;
+*];;
+@template
+	=> nrel_system_identifier: [search_template];;
+
+human_ivan_ivanov
+<- concept_human;
+=> nrel_father:
+    human_andrey_ivanov;;
+
+human_pavel_ivanov
+<- concept_human;
+=> nrel_father:
+    human_andrey_ivanov;;
+
+human_andrey_ivanov
+<- concept_human;;
+
+sc_node_class
+-> concept_human;;

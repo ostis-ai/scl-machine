@@ -103,6 +103,32 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_MultipleResultTestCase)
       searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(secondCorrectResultLinkIdentifier));
 }
 
+TEST_F(TemplateSearchManagerTest, SearchWithContent_EqualResultTestCase)
+{
+  std::string firstHuman = "human_ivan_ivanov";
+  std::string secondHuman = "human_pavel_ivanov";
+  std::string varHumanName1 = "_hum1";
+  std::string varHumanName3 = "_hum3";
+
+  ScMemoryContext & context = *m_ctx;
+
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchWithContentEqualResultTestStucture.scs");
+  initialize();
+
+  ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
+  inference::TemplateSearcher templateSearcher = inference::TemplateSearcher(&context);
+  ScTemplateParams templateParams;
+  std::vector<ScTemplateSearchResultItem> searchResults =
+      templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
+
+  EXPECT_EQ(searchResults.size(), 1);
+  EXPECT_TRUE(searchResults[0][varHumanName1] == context.HelperFindBySystemIdtf(firstHuman) ||
+              searchResults[0][varHumanName1] == context.HelperFindBySystemIdtf(secondHuman));
+  EXPECT_TRUE(searchResults[0][varHumanName3] == context.HelperFindBySystemIdtf(firstHuman) ||
+              searchResults[0][varHumanName3] == context.HelperFindBySystemIdtf(secondHuman));
+  EXPECT_FALSE(searchResults[0][varHumanName1] == searchResults[0][varHumanName3]);
+}
+
 TEST_F(TemplateSearchManagerTest, SearchWithoutContent_NoStructuresTestCase)
 {
   ScMemoryContext & context = *m_ctx;
