@@ -62,19 +62,17 @@ sc_node_struct
     _tuple_for_nrel_relation_3
         _<= nrel_relation_3::
             _var_class_1_element;
-        _-> _inner_contour
-            (*
-                _-> _var_class;;
-                _-> _var_class_element;;
-                _-> second_target_class;;
-                _-> @edge_var_class_to_var_class_element;;
-                _-> @edge_second_target_class_to_var_class_element;;
-            *);
-    _var_class;
-    _var_class_element;
-    second_target_class;
-    @edge_var_class_to_var_class_element;
-    @edge_second_target_class_to_var_class_element;;
+        _-> _inner_contour;;
+
+        @edge_var_class_to_var_class_element = (_var_class _-> _var_class_element);;
+        @edge_second_target_class_to_var_class_element = (second_target_class _-> _var_class_element);;
+
+        _inner_contour _->
+            _var_class;
+            _var_class_element;
+            second_target_class;
+            @edge_var_class_to_var_class_element;
+            @edge_second_target_class_to_var_class_element;;
 *];;
 
 @edge_implication = (@premise => @conclusion);;
