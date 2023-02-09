@@ -20,12 +20,16 @@ TemplateExpressionNode::TemplateExpressionNode(
     ScAddr const & formulaTemplate,
     TemplateSearcher * templateSearcher,
     TemplateManager * templateManager,
-    ScAddr const & outputStructure)
+    SolutionTreeManager * solutionTreeManager,
+    ScAddr const & outputStructure,
+    ScAddr const & rule)
   : context(context)
   , formulaTemplate(formulaTemplate)
   , templateSearcher(templateSearcher)
   , templateManager(templateManager)
+  , solutionTreeManager(solutionTreeManager)
   , outputStructure(outputStructure)
+  , rule(rule)
 {
 }
 

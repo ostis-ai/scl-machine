@@ -12,10 +12,11 @@
 #include <sc-memory/sc_memory.hpp>
 #include <sc-memory/sc_addr.hpp>
 
-#include "generator/SolutionTreeGenerator.hpp"
+#include "manager/SolutionTreeManager.hpp"
 #include "manager/TemplateManager.hpp"
 #include "searcher/TemplateSearcher.hpp"
 #include "classifier/FormulaClassifier.hpp"
+#include "logic/LogicExpressionNode.hpp"
 
 namespace inference
 {
@@ -38,13 +39,13 @@ private:
 
   ScAddrQueue createQueue(ScAddr const & set);
 
-  bool useFormula(ScAddr const & rule, ScAddrVector /*const*/ & argumentVector, ScAddr const & outputStructure);
+  LogicFormulaResult useFormula(ScAddr const & rule, ScAddrVector /*const*/ & argumentVector, ScAddr const & outputStructure);
 
   bool isTargetAchieved(ScAddr const & targetStructure, ScAddrVector const & argumentVector);
 
   ScMemoryContext * ms_context;
   std::unique_ptr<TemplateManager> templateManager;
   std::unique_ptr<TemplateSearcher> templateSearcher;
-  std::unique_ptr<SolutionTreeGenerator> solutionTreeGenerator;
+  std::unique_ptr<SolutionTreeManager> solutionTreeManager;
 };
 }  // namespace inference

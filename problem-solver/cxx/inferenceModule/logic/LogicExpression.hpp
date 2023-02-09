@@ -17,6 +17,7 @@
 #include "LogicExpressionNode.hpp"
 
 #include "utils/ReplacementsUtils.hpp"
+#include "manager/SolutionTreeManager.hpp"
 #include "manager/TemplateManager.hpp"
 #include "searcher/TemplateSearcher.hpp"
 #include "classifier/FormulaClassifier.hpp"
@@ -30,7 +31,9 @@ public:
       ScMemoryContext * context,
       TemplateSearcher * templateSearcher,
       TemplateManager * templateManager,
-      ScAddr const & outputStructure);
+      SolutionTreeManager * solutionTreeManager,
+      ScAddr const & outputStructure,
+      ScAddr const & rule);
 
   std::unique_ptr<LogicExpressionNode> build(ScAddr const & node);
 
@@ -53,6 +56,8 @@ private:
 
   TemplateSearcher * templateSearcher;
   TemplateManager * templateManager;
+  SolutionTreeManager * solutionTreeManager;
 
   ScAddr outputStructure;
+  ScAddr rule;
 };

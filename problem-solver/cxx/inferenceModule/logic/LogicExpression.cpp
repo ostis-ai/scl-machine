@@ -18,11 +18,15 @@ LogicExpression::LogicExpression(
     ScMemoryContext * context,
     TemplateSearcher * templateSearcher,
     TemplateManager * templateManager,
-    ScAddr const & outputStructure)
+    SolutionTreeManager * solutionTreeManager,
+    ScAddr const & outputStructure,
+    ScAddr const & rule)
   : context(context)
   , templateSearcher(templateSearcher)
   , templateManager(templateManager)
+  , solutionTreeManager(solutionTreeManager)
   , outputStructure(outputStructure)
+  , rule(rule)
 {
 }
 
@@ -120,7 +124,7 @@ std::unique_ptr<LogicExpressionNode> LogicExpression::buildAtomicFormula(ScAddr 
     paramsSet = std::move(params);
   }
 
-  return std::make_unique<TemplateExpressionNode>(context, node, templateSearcher, templateManager, outputStructure);
+  return std::make_unique<TemplateExpressionNode>(context, node, templateSearcher, templateManager, solutionTreeManager, outputStructure, rule);
 }
 
 std::unique_ptr<LogicExpressionNode> LogicExpression::buildConjunctionFormula(ScAddr const & node)
