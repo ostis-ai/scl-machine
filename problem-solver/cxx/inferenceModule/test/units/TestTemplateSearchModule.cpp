@@ -11,7 +11,7 @@
 #include "searcher/TemplateSearcher.hpp"
 #include "keynodes/InferenceKeynodes.hpp"
 
-#include "algorithm"
+#include <algorithm>
 
 namespace inferenceTest
 {
@@ -98,18 +98,13 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_MultipleResultTestCase)
   std::vector<ScTemplateSearchResultItem> searchResults =
       templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
 
-  EXPECT_TRUE(searchResults.size() == 2);
-  ScAddrVector expectedResults = {
-      context.HelperFindBySystemIdtf(firstCorrectResultLinkIdentifier),
-      context.HelperFindBySystemIdtf(secondCorrectResultLinkIdentifier)};
-  expectedResults.erase(
-      std::remove(expectedResults.begin(), expectedResults.end(), searchResults[0][searchLinkIdentifier]),
-      expectedResults.end());
-  EXPECT_TRUE(expectedResults.size() == 1);
-  expectedResults.erase(
-      std::remove(expectedResults.begin(), expectedResults.end(), searchResults[1][searchLinkIdentifier]),
-      expectedResults.end());
-  EXPECT_TRUE(expectedResults.empty());
+  EXPECT_EQ(searchResults.size(), 2u);
+  std::set<ScAddr, ScAddLessFunc> expectedResultSet;
+  expectedResultSet.insert(context.HelperFindBySystemIdtf(firstCorrectResultLinkIdentifier));
+  expectedResultSet.insert(context.HelperFindBySystemIdtf(secondCorrectResultLinkIdentifier));
+  EXPECT_EQ(expectedResultSet.erase(searchResults[0][searchLinkIdentifier]), 1u);
+  EXPECT_EQ(expectedResultSet.erase(searchResults[1][searchLinkIdentifier]), 1u);
+  EXPECT_TRUE(expectedResultSet.empty());
 }
 
 TEST_F(TemplateSearchManagerTest, SearchWithoutContent_NoStructuresTestCase)
@@ -166,18 +161,13 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_MultipleResultTestCase)
   std::vector<ScTemplateSearchResultItem> searchResults =
       templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
 
-  EXPECT_TRUE(searchResults.size() == 2);
-  ScAddrVector expectedResults = {
-      context.HelperFindBySystemIdtf(firstCorrectResultLinkIdentifier),
-      context.HelperFindBySystemIdtf(secondCorrectResultLinkIdentifier)};
-  expectedResults.erase(
-      std::remove(expectedResults.begin(), expectedResults.end(), searchResults[0][searchLinkIdentifier]),
-      expectedResults.end());
-  EXPECT_TRUE(expectedResults.size() == 1);
-  expectedResults.erase(
-      std::remove(expectedResults.begin(), expectedResults.end(), searchResults[1][searchLinkIdentifier]),
-      expectedResults.end());
-  EXPECT_TRUE(expectedResults.empty());
+  EXPECT_EQ(searchResults.size(), 2u);
+  std::set<ScAddr, ScAddLessFunc> expectedResultSet;
+  expectedResultSet.insert(context.HelperFindBySystemIdtf(firstCorrectResultLinkIdentifier));
+  expectedResultSet.insert(context.HelperFindBySystemIdtf(secondCorrectResultLinkIdentifier));
+  EXPECT_EQ(expectedResultSet.erase(searchResults[0][searchLinkIdentifier]), 1u);
+  EXPECT_EQ(expectedResultSet.erase(searchResults[1][searchLinkIdentifier]), 1u);
+  EXPECT_TRUE(expectedResultSet.empty());
 }
 
 TEST_F(TemplateSearchManagerTest, SearchWithoutContent_SelectiveTestCase)
