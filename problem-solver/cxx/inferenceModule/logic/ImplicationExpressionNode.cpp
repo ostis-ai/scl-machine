@@ -49,7 +49,9 @@ LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & resul
   if (conclusionResult.value)
   {
     result.replacements =
-          ReplacementsUtils::uniteReplacements(premiseResult.replacements, conclusionResult.replacements);
+          ReplacementsUtils::intersectReplacements(premiseResult.replacements, conclusionResult.replacements);
+    if (ReplacementsUtils::getColumnsAmount(result.replacements) != 1)
+      SC_THROW_EXCEPTION(utils::ScException, "replacements after generation have " << ReplacementsUtils::getColumnsAmount(result.replacements) << " replacements");
   }
 
   return result;
