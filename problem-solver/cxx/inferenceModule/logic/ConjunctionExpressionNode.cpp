@@ -100,3 +100,20 @@ LogicFormulaResult ConjunctionExpressionNode::compute(LogicFormulaResult & resul
   }
   return result;
 }
+
+LogicFormulaResult ConjunctionExpressionNode::generate(Replacements & replacements) const
+{
+  LogicFormulaResult fail = {false, false, {}};
+  LogicFormulaResult globalResult = {true, false, replacements};
+  for (auto const & operand : operands)
+  {
+    LogicFormulaResult lastResult = operand->generate(globalResult.replacements);
+    if (!lastResult.value)
+      return fail;
+    globalResult.isGenerated |= lastResult.isGenerated;
+    globalResult.replacements = ReplacementsUtils::intersectReplacements(globalResult.replacements, lastResult.replacements);
+    if (ReplacementsUtils::getColumnsAmount(globalResult.replacements) == 0)
+      return fail;
+  }
+  return globalResult;
+}
