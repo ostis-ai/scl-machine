@@ -40,15 +40,6 @@ LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & resul
 
   LogicExpressionNode * conclusionAtom = operands[1].get();
   conclusionAtom->setArgumentVector(argumentVector);
-  bool isRightGenerated = FormulaClassifier::isFormulaToGenerate(context, conclusionAtom->getFormulaTemplate());
-
-  if (!isRightGenerated)
-  {
-    context->CreateEdge(
-        ScType::EdgeAccessConstPosPerm,
-        InferenceKeynodes::concept_template_for_generation,
-        conclusionAtom->getFormulaTemplate());
-  }
 
   LogicFormulaResult premiseResult = operands[0]->compute(result);
   LogicFormulaResult conclusionResult = conclusionAtom->generate(premiseResult.replacements);
