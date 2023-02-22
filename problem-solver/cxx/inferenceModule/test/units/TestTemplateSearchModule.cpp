@@ -11,6 +11,8 @@
 #include "searcher/TemplateSearcher.hpp"
 #include "keynodes/InferenceKeynodes.hpp"
 
+#include <algorithm>
+
 namespace inferenceTest
 {
 ScsLoader loader;
@@ -96,11 +98,13 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_MultipleResultTestCase)
   std::vector<ScTemplateSearchResultItem> searchResults =
       templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
 
-  EXPECT_TRUE(searchResults.size() == 2);
-  EXPECT_TRUE(
-      searchResults[1][searchLinkIdentifier] == context.HelperFindBySystemIdtf(firstCorrectResultLinkIdentifier));
-  EXPECT_TRUE(
-      searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(secondCorrectResultLinkIdentifier));
+  EXPECT_EQ(searchResults.size(), 2u);
+  std::set<ScAddr, ScAddLessFunc> expectedResultSet;
+  expectedResultSet.insert(context.HelperFindBySystemIdtf(firstCorrectResultLinkIdentifier));
+  expectedResultSet.insert(context.HelperFindBySystemIdtf(secondCorrectResultLinkIdentifier));
+  EXPECT_EQ(expectedResultSet.erase(searchResults[0][searchLinkIdentifier]), 1u);
+  EXPECT_EQ(expectedResultSet.erase(searchResults[1][searchLinkIdentifier]), 1u);
+  EXPECT_TRUE(expectedResultSet.empty());
 }
 
 TEST_F(TemplateSearchManagerTest, SearchWithoutContent_NoStructuresTestCase)
@@ -157,11 +161,13 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_MultipleResultTestCase)
   std::vector<ScTemplateSearchResultItem> searchResults =
       templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
 
-  EXPECT_TRUE(searchResults.size() == 2);
-  EXPECT_TRUE(
-      searchResults[1][searchLinkIdentifier] == context.HelperFindBySystemIdtf(firstCorrectResultLinkIdentifier));
-  EXPECT_TRUE(
-      searchResults[0][searchLinkIdentifier] == context.HelperFindBySystemIdtf(secondCorrectResultLinkIdentifier));
+  EXPECT_EQ(searchResults.size(), 2u);
+  std::set<ScAddr, ScAddLessFunc> expectedResultSet;
+  expectedResultSet.insert(context.HelperFindBySystemIdtf(firstCorrectResultLinkIdentifier));
+  expectedResultSet.insert(context.HelperFindBySystemIdtf(secondCorrectResultLinkIdentifier));
+  EXPECT_EQ(expectedResultSet.erase(searchResults[0][searchLinkIdentifier]), 1u);
+  EXPECT_EQ(expectedResultSet.erase(searchResults[1][searchLinkIdentifier]), 1u);
+  EXPECT_TRUE(expectedResultSet.empty());
 }
 
 TEST_F(TemplateSearchManagerTest, SearchWithoutContent_SelectiveTestCase)
