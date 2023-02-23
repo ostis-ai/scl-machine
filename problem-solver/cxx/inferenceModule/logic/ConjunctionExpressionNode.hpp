@@ -19,10 +19,7 @@ public:
   LogicExpressionResult check(ScTemplateParams & params) const override;
   LogicFormulaResult compute(LogicFormulaResult & result) const override;
 
-  LogicFormulaResult generate(Replacements & replacements) const override
-  {
-    return {false, false, {}};
-  }
+  LogicFormulaResult generate(Replacements & replacements) const override;
 
   ScAddr getFormulaTemplate() const override
   {

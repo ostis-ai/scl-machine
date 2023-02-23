@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changelog
 - Add always generating for conclusion in implication
 - Add arguments to subformulas in conjunction and disjunction
+- Add conjunction generation
 
 ### Fixed
 - Fixed applying rules chain
