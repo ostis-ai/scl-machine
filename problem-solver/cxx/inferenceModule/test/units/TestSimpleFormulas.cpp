@@ -336,4 +336,60 @@ TEST_F(InferenceSimpleFormulasTest, SubstitutionsTest)
   context.Destroy();
 }
 
+TEST_F(InferenceSimpleFormulasTest, ApplyRuleFromSecondAndThenFromFirstSetTest)
+{
+  ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
+
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "applyRuleFromSecondAndThenFromFirstSetTest.scs");
+
+  initialize();
+
+  ScAddr const & inference_logic_test_question = context.HelperFindBySystemIdtf(QUESTION_IDENTIFIER);
+  EXPECT_TRUE(inference_logic_test_question.IsValid());
+  EXPECT_TRUE(context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference,
+                                 inference_logic_test_question).IsValid());
+  EXPECT_TRUE(utils::AgentUtils::applyAction(& context, inference_logic_test_question, WAIT_TIME));
+  EXPECT_TRUE(context.HelperCheckEdge(scAgentsCommon::CoreKeynodes::question_finished_successfully,
+                                      inference_logic_test_question, ScType::EdgeAccessConstPosPerm));
+
+  shutdown();
+  context.Destroy();
+}
+
+TEST_F(InferenceSimpleFormulasTest, SolutionTreePreventsDoubleRuleApplyingOnSameReplacementsTest)
+{
+  ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "solutionTreePreventsDoubleRuleApplyingTest.scs");
+  initialize();
+  ScAddr const & first_inference_logic_test_question = context.HelperFindBySystemIdtf("first_" + QUESTION_IDENTIFIER);
+  EXPECT_TRUE(first_inference_logic_test_question.IsValid());
+  EXPECT_TRUE(context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference,
+                                 first_inference_logic_test_question).IsValid());
+  EXPECT_TRUE(utils::AgentUtils::applyAction(& context, first_inference_logic_test_question, WAIT_TIME));
+  EXPECT_TRUE(context.HelperCheckEdge(scAgentsCommon::CoreKeynodes::question_finished_successfully,
+                                      first_inference_logic_test_question, ScType::EdgeAccessConstPosPerm));
+  ScAddr const & second_inference_logic_test_question = context.HelperFindBySystemIdtf(
+      "second_" + QUESTION_IDENTIFIER);
+  EXPECT_TRUE(context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference,
+                                 second_inference_logic_test_question).IsValid());
+  EXPECT_TRUE(utils::AgentUtils::applyAction(& context, second_inference_logic_test_question, WAIT_TIME));
+  EXPECT_TRUE(context.HelperCheckEdge(scAgentsCommon::CoreKeynodes::question_finished_successfully,
+                                      second_inference_logic_test_question, ScType::EdgeAccessConstPosPerm));
+
+  ScIterator3Ptr iterator = context.Iterator3(context.HelperFindBySystemIdtf("class_2"),
+                                              ScType::EdgeAccessConstPosPerm, ScType::NodeConst);
+
+  EXPECT_TRUE(iterator->Next());
+  EXPECT_FALSE(iterator->Next());
+
+  ScAddr const & treeTemplate = context.HelperFindBySystemIdtf("solution_tree_template");
+  ScTemplate scTemplate;
+  context.HelperBuildTemplate(scTemplate, treeTemplate);
+  ScTemplateSearchResult result;
+  context.HelperSearchTemplate(scTemplate, result);
+  EXPECT_EQ(result.Size(), 1u);
+  shutdown();
+  context.Destroy();
+}
+
 }  // namespace directInferenceSimpleFormulasTest

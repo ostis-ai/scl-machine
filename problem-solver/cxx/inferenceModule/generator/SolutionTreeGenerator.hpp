@@ -10,6 +10,7 @@
 #include <vector>
 
 #include <sc-memory/kpm/sc_agent.hpp>
+#include "searcher/TemplateSearcher.hpp"
 
 namespace inference
 {
@@ -21,12 +22,12 @@ public:
 
   ~SolutionTreeGenerator() = default;
 
-  bool addNode(ScAddr const & formula, ScTemplateParams const & templateParams);
+  bool addNode(ScAddr const & formula, ScTemplateParams const & templateParams, std::set<std::string> const & varNames);
 
   ScAddr createSolution(ScAddr const & outputStructure, bool targetAchieved);
 
 private:
-  ScAddr createSolutionNode(ScAddr const & formula, ScTemplateParams const & templateParams);
+  ScAddr createSolutionNode(ScAddr const & formula, ScTemplateParams const & templateParams, std::set<std::string> const & varNames);
 
   ScMemoryContext * ms_context;
   ScAddr solution;

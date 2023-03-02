@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add always generating for conclusion in implication
 - Add arguments to subformulas in conjunction and disjunction
 - Add conjunction generation
+- Add parameters to solution tree
 
 ### Fixed
 - Fixed applying rules chain
@@ -30,3 +31,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rename variables, log message concepts and methods according to the Standard concepts
 - Separate tests for simple formulas, complex formulas and agent arguments
 - Move to 0.7.0 ostis-web-platform
+- Changed condition for applying generation(generate if this rule with this parameters wasn't applied yet)

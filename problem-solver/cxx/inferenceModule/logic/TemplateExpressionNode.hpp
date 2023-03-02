@@ -12,6 +12,7 @@
 
 #include "searcher/TemplateSearcher.hpp"
 #include "manager/TemplateManager.hpp"
+#include "manager/SolutionTreeManager.hpp"
 
 using namespace inference;
 
@@ -27,7 +28,9 @@ public:
       ScAddr const & formulaTemplate,
       TemplateSearcher * templateSearcher,
       TemplateManager * templateManager,
-      ScAddr const & outputStructure);
+      SolutionTreeManager * solutionTreeManager,
+      ScAddr const & outputStructure,
+      ScAddr const & rule);
 
   LogicExpressionResult check(ScTemplateParams & params) const override;
   LogicFormulaResult compute(LogicFormulaResult & result) const override;
@@ -44,5 +47,7 @@ private:
   ScAddr formulaTemplate;
   TemplateSearcher * templateSearcher;
   TemplateManager * templateManager;
+  SolutionTreeManager * solutionTreeManager;
   ScAddr outputStructure;
+  ScAddr rule;
 };

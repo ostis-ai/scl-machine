@@ -20,7 +20,7 @@ using namespace inference;
 DirectInferenceManager::DirectInferenceManager(ScMemoryContext * ms_context)
   : ms_context(ms_context)
 {
-  solutionTreeGenerator = std::make_unique<SolutionTreeGenerator>(ms_context);
+  solutionTreeManager = std::make_unique<SolutionTreeManager>(ms_context);
   templateManager = std::make_unique<TemplateManager>(ms_context);
   templateSearcher = std::make_unique<TemplateSearcher>(ms_context);
 }
@@ -43,7 +43,7 @@ ScAddr DirectInferenceManager::applyInference(
   if (targetAchieved)
   {
     SC_LOG_DEBUG("Target is already achieved");
-    return solutionTreeGenerator->createSolution(outputStructure, targetAchieved);
+    return solutionTreeManager->createSolution(outputStructure, targetAchieved);
   }
 
   vector<ScAddrQueue> formulasQueuesByPriority = createFormulasQueuesListByPriority(formulasSet);
@@ -56,7 +56,7 @@ ScAddr DirectInferenceManager::applyInference(
   ScAddrQueue uncheckedFormulas;
 
   ScAddr formula;
-  bool isGenerated;
+  LogicFormulaResult formulaResult;
   SC_LOG_DEBUG("Start rule applying. There is " + to_string(formulasQueuesByPriority.size()) + " formulas sets");
   for (size_t formulasQueueIndex = 0; formulasQueueIndex < formulasQueuesByPriority.size() && !targetAchieved;
        formulasQueueIndex++)
@@ -69,11 +69,12 @@ ScAddr DirectInferenceManager::applyInference(
     {
       formula = uncheckedFormulas.front();
       SC_LOG_DEBUG("Trying to generate by formula: " + ms_context->HelperGetSystemIdtf(formula));
-      isGenerated = useFormula(formula, argumentVector, outputStructure);
-      SC_LOG_DEBUG(std::string("Logical formula is ") + (isGenerated ? "generated" : "not generated"));
-      if (isGenerated)
+      formulaResult = useFormula(formula, argumentVector, outputStructure);
+      SC_LOG_DEBUG(std::string("Logical formula is ") + (formulaResult.isGenerated ? "generated" : "not generated"));
+      if (formulaResult.isGenerated)
       {
-        solutionTreeGenerator->addNode(formula, ScTemplateParams());
+        solutionTreeManager->addNode(formula, ReplacementsUtils::getReplacementsToScTemplateParams(
+            formulaResult.replacements), ReplacementsUtils::getKeySet(formulaResult.replacements));
         targetAchieved = isTargetAchieved(targetStructure, argumentVector);
         if (targetAchieved)
         {
@@ -96,7 +97,7 @@ ScAddr DirectInferenceManager::applyInference(
     }
   }
 
-  return solutionTreeGenerator->createSolution(outputStructure, targetAchieved);
+  return solutionTreeManager->createSolution(outputStructure, targetAchieved);
 }
 
 ScAddrQueue DirectInferenceManager::createQueue(ScAddr const & set)
@@ -108,25 +109,29 @@ ScAddrQueue DirectInferenceManager::createQueue(ScAddr const & set)
   return queue;
 }
 
-bool DirectInferenceManager::useFormula(
+LogicFormulaResult DirectInferenceManager::useFormula(
     ScAddr const & rule,
-    ScAddrVector /*const*/ & argumentVector,
+    ScAddrVector & argumentVector,
     ScAddr const & outputStructure)
 {
   LogicFormulaResult formulaResult = {false, false, {}};
   ScAddr const formulaRoot =
       utils::IteratorUtils::getAnyByOutRelation(ms_context, rule, InferenceKeynodes::rrel_main_key_sc_element);
   if (!formulaRoot.IsValid())
-    return false;
+    return {false, false, {}};
 
-  LogicExpression logicExpression(ms_context, templateSearcher.get(), templateManager.get(), outputStructure);
+  LogicExpression logicExpression(ms_context, templateSearcher.get(), templateManager.get(), solutionTreeManager.get(),
+                                  outputStructure, rule);
 
   unique_ptr<LogicExpressionNode> expressionRoot = logicExpression.build(formulaRoot);
   expressionRoot->setArgumentVector(argumentVector);
 
   LogicFormulaResult result = expressionRoot->compute(formulaResult);
 
-  return result.isGenerated;
+  if (result.isGenerated && (ReplacementsUtils::getColumnsAmount(result.replacements)) != 1)
+    SC_THROW_EXCEPTION(utils::ScException, "replacements have " << ReplacementsUtils::getColumnsAmount(result.replacements) << " replacements");
+
+  return result;
 }
 
 vector<ScAddrQueue> DirectInferenceManager::createFormulasQueuesListByPriority(ScAddr const & formulasSet)

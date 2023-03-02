@@ -20,12 +20,16 @@ TemplateExpressionNode::TemplateExpressionNode(
     ScAddr const & formulaTemplate,
     TemplateSearcher * templateSearcher,
     TemplateManager * templateManager,
-    ScAddr const & outputStructure)
+    SolutionTreeManager * solutionTreeManager,
+    ScAddr const & outputStructure,
+    ScAddr const & rule)
   : context(context)
   , formulaTemplate(formulaTemplate)
   , templateSearcher(templateSearcher)
   , templateManager(templateManager)
+  , solutionTreeManager(solutionTreeManager)
   , outputStructure(outputStructure)
+  , rule(rule)
 {
 }
 
@@ -79,10 +83,14 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
   LogicFormulaResult result;
   result.isGenerated = false;
   std::vector<ScTemplateParams> paramsVector = ReplacementsUtils::getReplacementsToScTemplateParams(replacements);
-  std::set<std::string> const & varNames = templateSearcher->getVarNames(formulaTemplate);
+  std::set<std::string> const & replacementVarNames = ReplacementsUtils::getKeySet(replacements);
+  std::set<std::string> const & templateVarNames = templateSearcher->getVarNames(formulaTemplate);
+  std::set<std::string> varNames;
+  std::set_union(replacementVarNames.begin(), replacementVarNames.end(), templateVarNames.begin(),
+                 templateVarNames.end(), std::inserter(varNames, varNames.begin()));
   if (paramsVector.empty())
   {
-    SC_LOG_DEBUG("Atomic logical formula " + context->HelperGetSystemIdtf(formulaTemplate) + " is not generated");
+    SC_LOG_DEBUG("Atomic logical formula " << context->HelperGetSystemIdtf(formulaTemplate) << " is not generated");
     return compute(result);
   }
 
@@ -105,7 +113,7 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
         result.isGenerated = true;
         result.value = true;
         Replacements temporalReplacements;
-        for (auto const & name : varNames)
+        for (std::string const & name : varNames)
         {
           ScAddrVector replacementsVector;
           bool const generationHasVar =
@@ -117,13 +125,13 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
           else if (paramsHaveVar)
             replacementsVector.push_back(outResult);
           else
-            SC_THROW_EXCEPTION(utils::ScException, "generation result and template params do not have replacement for " + name);
+            SC_THROW_EXCEPTION(utils::ScException, "generation result and template params do not have replacement for " << name);
           temporalReplacements[name] = replacementsVector;
         }
         result.replacements = ReplacementsUtils::uniteReplacements(result.replacements, temporalReplacements);
       }
 
-      SC_LOG_DEBUG("Atomic logical formula " + context->HelperGetSystemIdtf(formulaTemplate) + " is generated");
+      SC_LOG_DEBUG("Atomic logical formula " << context->HelperGetSystemIdtf(formulaTemplate) << " is generated");
       for (size_t i = 0; i < generationResult.Size(); ++i)
       {
         templateSearcher->addParamIfNotPresent(generationResult[i]);
