@@ -86,8 +86,8 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
   std::set<std::string> const & replacementVarNames = ReplacementsUtils::getKeySet(replacements);
   std::set<std::string> const & templateVarNames = templateSearcher->getVarNames(formulaTemplate);
   std::set<std::string> varNames;
-  std::set_union(replacementVarNames.begin(), replacementVarNames.end(), templateVarNames.begin(),
-                 templateVarNames.end(), std::inserter(varNames, varNames.begin()));
+  varNames.insert(replacementVarNames.cbegin(), replacementVarNames.cend());
+  varNames.insert(templateVarNames.cbegin(), templateVarNames.cend());
   if (paramsVector.empty())
   {
     SC_LOG_DEBUG("Atomic logical formula " << context->HelperGetSystemIdtf(formulaTemplate) << " is not generated");
