@@ -22,13 +22,13 @@ public:
   TemplateExpressionNode(
       ScMemoryContext * context,
       ScAddr const & formulaTemplate,
-      TemplateSearcher * templateSearcher);
+      std::shared_ptr<TemplateSearcherAbstract> templateSearcher);
   TemplateExpressionNode(
       ScMemoryContext * context,
       ScAddr const & formulaTemplate,
-      TemplateSearcher * templateSearcher,
-      TemplateManager * templateManager,
-      SolutionTreeManager * solutionTreeManager,
+      std::shared_ptr<TemplateSearcherAbstract> templateSearcher,
+      std::shared_ptr<TemplateManager> templateManager,
+      std::shared_ptr<SolutionTreeManager> solutionTreeManager,
       ScAddr const & outputStructure,
       ScAddr const & rule);
 
@@ -45,9 +45,9 @@ public:
 private:
   ScMemoryContext * context;
   ScAddr formulaTemplate;
-  TemplateSearcher * templateSearcher;
-  TemplateManager * templateManager;
-  SolutionTreeManager * solutionTreeManager;
+  std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
+  std::shared_ptr<TemplateManager> templateManager;
+  std::shared_ptr<SolutionTreeManager> solutionTreeManager;
   ScAddr outputStructure;
   ScAddr rule;
 };

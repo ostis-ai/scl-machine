@@ -45,7 +45,7 @@ protected:
 class OperatorLogicExpressionNode : public LogicExpressionNode
 {
 public:
-  using OperandsVector = std::vector<std::unique_ptr<LogicExpressionNode>>;
+  using OperandsVector = std::vector<std::shared_ptr<LogicExpressionNode>>;
 
 protected:
   OperandsVector operands;

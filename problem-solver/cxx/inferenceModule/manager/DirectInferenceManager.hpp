@@ -44,8 +44,8 @@ private:
   bool isTargetAchieved(ScAddr const & targetStructure, ScAddrVector const & argumentVector);
 
   ScMemoryContext * ms_context;
-  std::unique_ptr<TemplateManager> templateManager;
-  std::unique_ptr<TemplateSearcher> templateSearcher;
-  std::unique_ptr<SolutionTreeManager> solutionTreeManager;
+  std::shared_ptr<TemplateManager> templateManager;
+  std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
+  std::shared_ptr<SolutionTreeManager> solutionTreeManager;
 };
 }  // namespace inference

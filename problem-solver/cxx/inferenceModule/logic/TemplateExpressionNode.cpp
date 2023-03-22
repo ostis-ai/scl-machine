@@ -9,25 +9,25 @@
 TemplateExpressionNode::TemplateExpressionNode(
     ScMemoryContext * context,
     ScAddr const & formulaTemplate,
-    TemplateSearcher * templateSearcher)
+    std::shared_ptr<TemplateSearcherAbstract> templateSearcher)
   : context(context)
   , formulaTemplate(formulaTemplate)
-  , templateSearcher(templateSearcher)
+  , templateSearcher(std::move(templateSearcher))
 {
 }
 TemplateExpressionNode::TemplateExpressionNode(
     ScMemoryContext * context,
     ScAddr const & formulaTemplate,
-    TemplateSearcher * templateSearcher,
-    TemplateManager * templateManager,
-    SolutionTreeManager * solutionTreeManager,
+    std::shared_ptr<TemplateSearcherAbstract> templateSearcher,
+    std::shared_ptr<TemplateManager> templateManager,
+    std::shared_ptr<SolutionTreeManager> solutionTreeManager,
     ScAddr const & outputStructure,
     ScAddr const & rule)
   : context(context)
   , formulaTemplate(formulaTemplate)
-  , templateSearcher(templateSearcher)
-  , templateManager(templateManager)
-  , solutionTreeManager(solutionTreeManager)
+  , templateSearcher(std::move(templateSearcher))
+  , templateManager(std::move(templateManager))
+  , solutionTreeManager(std::move(solutionTreeManager))
   , outputStructure(outputStructure)
   , rule(rule)
 {

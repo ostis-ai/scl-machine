@@ -29,22 +29,22 @@ class LogicExpression
 public:
   LogicExpression(
       ScMemoryContext * context,
-      TemplateSearcher * templateSearcher,
-      TemplateManager * templateManager,
-      SolutionTreeManager * solutionTreeManager,
+      std::shared_ptr<TemplateSearcherAbstract> templateSearcher,
+      std::shared_ptr<TemplateManager> templateManager,
+      std::shared_ptr<SolutionTreeManager> solutionTreeManager,
       ScAddr const & outputStructure,
       ScAddr const & rule);
 
-  std::unique_ptr<LogicExpressionNode> build(ScAddr const & node);
+  std::shared_ptr<LogicExpressionNode> build(ScAddr const & node);
 
-  std::unique_ptr<LogicExpressionNode> buildAtomicFormula(ScAddr const & node);
-  std::unique_ptr<LogicExpressionNode> buildConjunctionFormula(ScAddr const & node);
-  std::unique_ptr<LogicExpressionNode> buildDisjunctionFormula(ScAddr const & node);
-  std::unique_ptr<LogicExpressionNode> buildNegationFormula(ScAddr const & node);
-  std::unique_ptr<LogicExpressionNode> buildImplicationEdgeFormula(ScAddr const & node);
-  std::unique_ptr<LogicExpressionNode> buildImplicationTupleFormula(ScAddr const & node);
-  std::unique_ptr<LogicExpressionNode> buildEquivalenceEdgeFormula(ScAddr const & node);
-  std::unique_ptr<LogicExpressionNode> buildEquivalenceTupleFormula(ScAddr const & node);
+  std::shared_ptr<LogicExpressionNode> buildAtomicFormula(ScAddr const & node);
+  std::shared_ptr<LogicExpressionNode> buildConjunctionFormula(ScAddr const & node);
+  std::shared_ptr<LogicExpressionNode> buildDisjunctionFormula(ScAddr const & node);
+  std::shared_ptr<LogicExpressionNode> buildNegationFormula(ScAddr const & node);
+  std::shared_ptr<LogicExpressionNode> buildImplicationEdgeFormula(ScAddr const & node);
+  std::shared_ptr<LogicExpressionNode> buildImplicationTupleFormula(ScAddr const & node);
+  std::shared_ptr<LogicExpressionNode> buildEquivalenceEdgeFormula(ScAddr const & node);
+  std::shared_ptr<LogicExpressionNode> buildEquivalenceTupleFormula(ScAddr const & node);
 
   OperatorLogicExpressionNode::OperandsVector resolveTupleOperands(ScAddr const & tuple);
   OperatorLogicExpressionNode::OperandsVector resolveEdgeOperands(ScAddr const & edge);
@@ -54,9 +54,9 @@ private:
   ScMemoryContext * context;
   std::vector<ScTemplateParams> paramsSet;
 
-  TemplateSearcher * templateSearcher;
-  TemplateManager * templateManager;
-  SolutionTreeManager * solutionTreeManager;
+  std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
+  std::shared_ptr<TemplateManager> templateManager;
+  std::shared_ptr<SolutionTreeManager> solutionTreeManager;
 
   ScAddr outputStructure;
   ScAddr rule;

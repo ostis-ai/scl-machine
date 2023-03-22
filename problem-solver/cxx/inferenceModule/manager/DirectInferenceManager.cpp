@@ -20,9 +20,9 @@ using namespace inference;
 DirectInferenceManager::DirectInferenceManager(ScMemoryContext * ms_context)
   : ms_context(ms_context)
 {
-  solutionTreeManager = std::make_unique<SolutionTreeManager>(ms_context);
-  templateManager = std::make_unique<TemplateManager>(ms_context);
-  templateSearcher = std::make_unique<TemplateSearcher>(ms_context);
+  solutionTreeManager = std::make_shared<SolutionTreeManager>(ms_context);
+  templateManager = std::make_shared<TemplateManager>(ms_context);
+  templateSearcher = std::make_shared<TemplateSearcher>(ms_context);
 }
 
 ScAddr DirectInferenceManager::applyInference(
@@ -120,10 +120,15 @@ LogicFormulaResult DirectInferenceManager::useFormula(
   if (!formulaRoot.IsValid())
     return {false, false, {}};
 
-  LogicExpression logicExpression(ms_context, templateSearcher.get(), templateManager.get(), solutionTreeManager.get(),
-                                  outputStructure, rule);
+  LogicExpression logicExpression(
+        ms_context,
+        templateSearcher,
+        templateManager,
+        solutionTreeManager,
+        outputStructure,
+        rule);
 
-  unique_ptr<LogicExpressionNode> expressionRoot = logicExpression.build(formulaRoot);
+  std::shared_ptr<LogicExpressionNode> expressionRoot = logicExpression.build(formulaRoot);
   expressionRoot->setArgumentVector(argumentVector);
 
   LogicFormulaResult result = expressionRoot->compute(formulaResult);

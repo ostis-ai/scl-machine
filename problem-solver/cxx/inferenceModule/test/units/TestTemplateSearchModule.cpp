@@ -35,7 +35,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_NoStructuresTestCase)
   initialize();
 
   ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
-  inference::TemplateSearcher templateSearcher = inference::TemplateSearcher(&context);
+  inference::TemplateSearcher templateSearcher(&context);
   ScTemplateParams templateParams;
 
   std::vector<ScTemplateSearchResultItem> searchResults =
@@ -52,7 +52,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_EmptyResultsTestCase)
   initialize();
 
   ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
-  inference::TemplateSearcher templateSearcher = inference::TemplateSearcher(&context);
+  inference::TemplateSearcher templateSearcher(&context);
   ScTemplateParams templateParams;
 
   std::vector<ScTemplateSearchResultItem> searchResults =
@@ -72,7 +72,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_SingleResultTestCase)
   initialize();
 
   ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
-  inference::TemplateSearcher templateSearcher = inference::TemplateSearcher(&context);
+  inference::TemplateSearcher templateSearcher(&context);
   ScTemplateParams templateParams;
   std::vector<ScTemplateSearchResultItem> searchResults =
       templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
@@ -93,7 +93,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_MultipleResultTestCase)
   initialize();
 
   ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
-  inference::TemplateSearcher templateSearcher = inference::TemplateSearcher(&context);
+  inference::TemplateSearcher templateSearcher(&context);
   ScTemplateParams templateParams;
   std::vector<ScTemplateSearchResultItem> searchResults =
       templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
@@ -115,7 +115,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_NoStructuresTestCase)
   initialize();
 
   ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
-  inference::TemplateSearcher templateSearcher = inference::TemplateSearcher(&context);
+  inference::TemplateSearcher templateSearcher(&context);
   ScTemplateParams templateParams;
 
   std::vector<ScTemplateSearchResultItem> searchResults =
@@ -135,7 +135,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_SingleResultTestCase)
   initialize();
 
   ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
-  inference::TemplateSearcher templateSearcher = inference::TemplateSearcher(&context);
+  inference::TemplateSearcher templateSearcher(&context);
   ScTemplateParams templateParams;
   std::vector<ScTemplateSearchResultItem> searchResults =
       templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
@@ -156,7 +156,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_MultipleResultTestCase)
   initialize();
 
   ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
-  inference::TemplateSearcher templateSearcher = inference::TemplateSearcher(&context);
+  inference::TemplateSearcher templateSearcher(&context);
   ScTemplateParams templateParams;
   std::vector<ScTemplateSearchResultItem> searchResults =
       templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
@@ -181,7 +181,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_SelectiveTestCase)
   initialize();
 
   ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
-  inference::TemplateSearcher templateSearcher = inference::TemplateSearcher(&context);
+  inference::TemplateSearcher templateSearcher(&context);
   ScTemplateParams templateParams;
   std::vector<ScTemplateSearchResultItem> searchResults =
       templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
@@ -201,7 +201,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_EmptyLinkTestCase)
   initialize();
 
   ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
-  inference::TemplateSearcher templateSearcher = inference::TemplateSearcher(&context);
+  inference::TemplateSearcher templateSearcher(&context);
   ScTemplateParams templateParams;
   std::vector<ScTemplateSearchResultItem> searchResults =
       templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
@@ -221,7 +221,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_EmptyLinkTestCase)
   initialize();
 
   ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
-  inference::TemplateSearcher templateSearcher = inference::TemplateSearcher(&context);
+  inference::TemplateSearcher templateSearcher(&context);
   ScTemplateParams templateParams;
   std::vector<ScTemplateSearchResultItem> searchResults =
       templateSearcher.searchTemplate(searchTemplateAddr, templateParams);

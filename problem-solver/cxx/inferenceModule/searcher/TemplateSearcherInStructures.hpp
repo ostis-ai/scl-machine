@@ -6,34 +6,31 @@
 
 #pragma once
 
+#include <queue>
 #include <vector>
 
 #include <sc-memory/sc_memory.hpp>
 #include <sc-memory/sc_addr.hpp>
 
 #include "utils/ReplacementsUtils.hpp"
-
 #include "TemplateSearcherAbstract.hpp"
 
 namespace inference
 {
-class TemplateSearcher : public TemplateSearcherAbstract
+class TemplateSearcherInStructures : public TemplateSearcherAbstract
 {
 public:
-  explicit TemplateSearcher(ScMemoryContext * ms_context);
+  explicit TemplateSearcherInStructures(ScMemoryContext * context, ScAddr const & otherInputStructures);
+
+  explicit TemplateSearcherInStructures(ScMemoryContext * ms_context);
 
   std::vector<ScTemplateSearchResultItem> searchTemplate(
-      ScAddr const & templateAddr,
-      ScTemplateParams const & templateParams) override;
+        ScAddr const & templateAddr,
+        ScTemplateParams const & templateParams) override;
 
-  Replacements searchTemplate(
-      ScAddr const & templateAddr,
-      std::vector<ScTemplateParams> const & scTemplateParamsVector) override;
-
-protected:
   std::vector<ScTemplateSearchResultItem> searchTemplateWithContent(
-      ScTemplate const & searchTemplate,
-      ScAddr const & templateAddr) override;
+        ScTemplate const & searchTemplate,
+        ScAddr const & templateAddr) override;
 
   std::map<std::string, std::string> getTemplateKeyLinksContent(const ScAddr & templateAddr) override;
 };

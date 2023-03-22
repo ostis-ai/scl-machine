@@ -21,8 +21,6 @@ public:
 
   std::vector<ScTemplateParams> createTemplateParams(ScAddr const & scTemplate, ScAddrVector const & argumentList);
 
-  ~TemplateManager() = default;
-
 private:
   ScMemoryContext * context;
 };
