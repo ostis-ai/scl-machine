@@ -54,5 +54,6 @@ protected:
   std::shared_ptr<SolutionTreeManager> solutionTreeManager;
 
   ScAddr arguments;
+  bool generateOnlyFirst;
 };
 }

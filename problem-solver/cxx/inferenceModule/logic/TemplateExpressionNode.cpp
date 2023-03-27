@@ -6,6 +6,8 @@
 
 #include "TemplateExpressionNode.hpp"
 
+#include "sc-agents-common/utils/GenerationUtils.hpp"
+
 TemplateExpressionNode::TemplateExpressionNode(
     ScMemoryContext * context,
     ScAddr const & formulaTemplate,
@@ -78,6 +80,11 @@ LogicFormulaResult TemplateExpressionNode::find(Replacements & replacements) con
   return result;
 }
 
+/**
+ * @brief Generate atomic logical formula using replacements
+ * @param replacements variables and ScAddrs to use in generation
+ * @return LogicFormulaResult{bool: value, bool: isGenerated, Replacements: replacements}
+ */
 LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements) const
 {
   LogicFormulaResult result;
@@ -94,9 +101,10 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
     return compute(result);
   }
 
+  size_t count = 0;
   for (ScTemplateParams const & scTemplateParams : paramsVector)
   {
-    if (result.isGenerated)
+    if (generateOnlyFirst && result.isGenerated)
       break;
 
     std::vector<ScTemplateSearchResultItem> searchResult =
@@ -110,6 +118,7 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
       ScTemplate::Result const & genTemplate = context->HelperGenTemplate(generatedTemplate, generationResult);
       if (genTemplate)
       {
+        ++count;
         result.isGenerated = true;
         result.value = true;
         Replacements temporalReplacements;
@@ -131,13 +140,15 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
         result.replacements = ReplacementsUtils::uniteReplacements(result.replacements, temporalReplacements);
       }
 
-      SC_LOG_DEBUG("Atomic logical formula " << context->HelperGetSystemIdtf(formulaTemplate) << " is generated");
       for (size_t i = 0; i < generationResult.Size(); ++i)
       {
         templateSearcher->addParamIfNotPresent(generationResult[i]);
-        context->CreateEdge(ScType::EdgeAccessConstPosPerm, outputStructure, generationResult[i]);
+        utils::GenerationUtils::addToSet(context, outputStructure, generationResult[i]);
       }
     }
   }
+
+  SC_LOG_DEBUG("Atomic logical formula " << context->HelperGetSystemIdtf(formulaTemplate) << " is generated " << count << " times");
+
   return result;
 }

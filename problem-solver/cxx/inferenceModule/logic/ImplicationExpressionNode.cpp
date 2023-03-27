@@ -39,6 +39,7 @@ LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & resul
   premiseAtom->setArgumentVector(argumentVector);
 
   LogicExpressionNode * conclusionAtom = operands[1].get();
+  conclusionAtom->setGenerateOnlyFirst(generateOnlyFirst);
   conclusionAtom->setArgumentVector(argumentVector);
 
   LogicFormulaResult premiseResult = operands[0]->compute(result);
@@ -50,8 +51,6 @@ LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & resul
   {
     result.replacements =
           ReplacementsUtils::intersectReplacements(premiseResult.replacements, conclusionResult.replacements);
-    if (ReplacementsUtils::getColumnsAmount(result.replacements) != 1)
-      SC_THROW_EXCEPTION(utils::ScException, "replacements after generation have " << ReplacementsUtils::getColumnsAmount(result.replacements) << " replacements");
   }
 
   return result;

@@ -38,8 +38,14 @@ public:
     argumentVector = otherArgumentVector;
   }
 
+  void setGenerateOnlyFirst(bool const otherGenerateOnlyFirst)
+  {
+    generateOnlyFirst = otherGenerateOnlyFirst;
+  }
+
 protected:
   ScAddrVector argumentVector;
+  bool generateOnlyFirst;
 };
 
 class OperatorLogicExpressionNode : public LogicExpressionNode

@@ -35,7 +35,7 @@ inference_logic_test_question
     -> rrel_3: test_input_structure;
     -> rrel_4: test_output_structure;;
 
-//first rule
+//first formula
 rule_1_first_structure = [*
     _terminal _=> nrel_equipment_usage_points:: _usage_points_tuple;;
 *];;
@@ -52,7 +52,7 @@ nrel_equivalence
     -> @rule_1_outer_equivalence_pair;;
 @rule_1_outer_equivalence_pair <- rrel_main_key_sc_element: test_rule_1;;
 
-//second rule
+//second formula
 rule_2_first_structure = [*
     _terminal _=> nrel_connectivity_nodes:: _connectivity_nodes_tuple;;
 *];;

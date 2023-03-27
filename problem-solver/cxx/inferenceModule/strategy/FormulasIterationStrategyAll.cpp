@@ -5,14 +5,15 @@
  */
 
 #include "FormulasIterationStrategyAll.hpp"
-#include "sc-agents-common/utils/IteratorUtils.hpp"
 #include "keynodes/InferenceKeynodes.hpp"
-#include "logic/LogicExpression.hpp"
 
 using namespace inference;
 
 FormulasIterationStrategyAll::FormulasIterationStrategyAll(ScMemoryContext * context)
-      : FormulasIterationStrategyAbstract(context) { }
+      : FormulasIterationStrategyAbstract(context)
+{
+  generateOnlyFirst = false;
+}
 
 /**
  * @brief Iterate over formulas set and use formulas to generate knowledge
@@ -49,7 +50,6 @@ bool FormulasIterationStrategyAll::applyIterationStrategy(ScAddr const & formula
     {
       formula = uncheckedFormulas.front();
       SC_LOG_DEBUG("Trying to generate by formula: " << context->HelperGetSystemIdtf(formula));
-      // TODO(MksmOrlov): Use formula for all constructions!
       formulaResult = useFormula(formula, argumentVector, outputStructure);
       SC_LOG_DEBUG("Logical formula is " << (formulaResult.isGenerated ? "generated" : "not generated"));
       if (formulaResult.isGenerated)

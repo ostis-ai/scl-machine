@@ -28,7 +28,7 @@ LogicExpression::LogicExpression(
   , templateManager(std::move(templateManager))
   , solutionTreeManager(std::move(solutionTreeManager))
   , outputStructure(outputStructure)
-  , rule(rule)
+  , formula(rule)
 {
 }
 
@@ -126,7 +126,7 @@ std::shared_ptr<LogicExpressionNode> LogicExpression::buildAtomicFormula(ScAddr 
     paramsSet = std::move(params);
   }
 
-  return std::make_shared<TemplateExpressionNode>(context, node, templateSearcher, templateManager, solutionTreeManager, outputStructure, rule);
+  return std::make_shared<TemplateExpressionNode>(context, node, templateSearcher, templateManager, solutionTreeManager, outputStructure, formula);
 }
 
 std::shared_ptr<LogicExpressionNode> LogicExpression::buildConjunctionFormula(ScAddr const & node)

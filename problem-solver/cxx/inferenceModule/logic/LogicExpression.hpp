@@ -33,7 +33,7 @@ public:
       std::shared_ptr<TemplateManager> templateManager,
       std::shared_ptr<SolutionTreeManager> solutionTreeManager,
       ScAddr const & outputStructure,
-      ScAddr const & rule);
+      ScAddr const & formula);
 
   std::shared_ptr<LogicExpressionNode> build(ScAddr const & node);
 
@@ -59,5 +59,5 @@ private:
   std::shared_ptr<SolutionTreeManager> solutionTreeManager;
 
   ScAddr outputStructure;
-  ScAddr rule;
+  ScAddr formula;
 };

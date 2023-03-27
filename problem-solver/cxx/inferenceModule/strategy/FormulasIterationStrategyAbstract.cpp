@@ -21,6 +21,7 @@ FormulasIterationStrategyAbstract::FormulasIterationStrategyAbstract(ScMemoryCon
   // Now we don't have several implementations for SolutionTreeManager and TemplateManager
   solutionTreeManager = std::make_unique<SolutionTreeManager>(context);
   templateManager = std::make_unique<TemplateManager>(context);
+  generateOnlyFirst = true;
 }
 
 void FormulasIterationStrategyAbstract::setTemplateSearcher(std::shared_ptr<TemplateSearcherAbstract> searcher)
@@ -78,7 +79,6 @@ ScAddrQueue FormulasIterationStrategyAbstract::createQueue(ScAddr const & set)
  * @param argumentVector is a vector of ScAddrs to use in atomic sub formulas of `formula`. May be empty to use all existing sc-elements
  * @param outputStructure is a structure to generate new knowledge in
  * @returns LogicFormulaResult {bool: value, bool: isGenerated, Replacements: replacements}
- * @throws utils::ExceptionInvalidState Thrown if formula is generated and replacements not found
  */
 LogicFormulaResult FormulasIterationStrategyAbstract::useFormula(
       ScAddr const & formula,
@@ -100,12 +100,11 @@ LogicFormulaResult FormulasIterationStrategyAbstract::useFormula(
         formula);
 
   std::shared_ptr<LogicExpressionNode> expressionRoot = logicExpression.build(formulaRoot);
+
+  expressionRoot->setGenerateOnlyFirst(generateOnlyFirst);
   expressionRoot->setArgumentVector(argumentVector);
 
   LogicFormulaResult result = expressionRoot->compute(formulaResult);
-
-  if (result.isGenerated && (ReplacementsUtils::getColumnsAmount(result.replacements)) != 1)
-    SC_THROW_EXCEPTION(utils::ExceptionInvalidState, "replacements have " << ReplacementsUtils::getColumnsAmount(result.replacements) << " replacements");
 
   return result;
 }
