@@ -15,11 +15,11 @@
 
 #include "logic/LogicExpressionNode.hpp"
 
-// Здесь будет управление обходом формул (шаблоном цели)
 namespace inference
 {
 using ScAddrQueue = std::queue<ScAddr>;
 
+/// Class to control formulas iteration strategy: when to top applying rules and how to iterate over them
 class FormulasIterationStrategyAbstract
 {
 public:
@@ -27,18 +27,18 @@ public:
 
   virtual ~FormulasIterationStrategyAbstract() = default;
 
-  void setTemplateSearcher(std::unique_ptr<TemplateSearcherAbstract> searcher);
-  void setTemplateManager(std::unique_ptr<TemplateManager> searcher);
-  void setSolutionTreeManager(std::unique_ptr<SolutionTreeManager> searcher);
+  void setTemplateSearcher(std::shared_ptr<TemplateSearcherAbstract> searcher);
+  void setTemplateManager(std::shared_ptr<TemplateManager> searcher);
+  void setSolutionTreeManager(std::shared_ptr<SolutionTreeManager> searcher);
 
   void setArguments(ScAddr const & otherArguments);
 
-  std::unique_ptr<SolutionTreeManager> getSolutionTreeManager();
+  std::shared_ptr<SolutionTreeManager> getSolutionTreeManager();
 
   virtual bool applyIterationStrategy(ScAddr const & formulasSet, ScAddr const & outputStructure) = 0;
 
   LogicFormulaResult useFormula(
-        ScAddr const & rule,
+        ScAddr const & formula,
         ScAddrVector & argumentVector,
         ScAddr const & outputStructure);
 
@@ -49,9 +49,9 @@ public:
 protected:
   ScMemoryContext * context;
 
-  std::unique_ptr<TemplateManager> templateManager;
-  std::unique_ptr<TemplateSearcherAbstract> templateSearcher;
-  std::unique_ptr<SolutionTreeManager> solutionTreeManager;
+  std::shared_ptr<TemplateManager> templateManager;
+  std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
+  std::shared_ptr<SolutionTreeManager> solutionTreeManager;
 
   ScAddr arguments;
 };

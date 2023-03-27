@@ -21,7 +21,7 @@ void InferenceManagerGeneral::setFormulasIterationStrategy(std::unique_ptr<Formu
   formulasIterationStrategy = std::move(strategy);
 }
 
-/*!
+/**
  * @brief Use formulasIterationStrategy to apply formulas using configured strategy
  * @param formulasSet is an oriented set of formulas sets to apply
  * @returns ScAddr of the solution node, connected with output structure

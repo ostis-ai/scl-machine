@@ -18,7 +18,6 @@ namespace inference
 {
 using ScAddrQueue = std::queue<ScAddr>;
 
-// Или FormulasIterationStrategyFull то есть перебираем все формулы, генерим все, что можно. С названием туго
 class FormulasIterationStrategyAll : public FormulasIterationStrategyAbstract
 {
 public:

@@ -42,7 +42,6 @@ bool FormulasIterationStrategyTarget::applyIterationStrategy(ScAddr const & form
   vector<ScAddrQueue> formulasQueuesByPriority = createFormulasQueuesListByPriority(formulasSet);
   if (formulasQueuesByPriority.empty())
   {
-    // TODO: а кто ловит то?
     SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, "No rule sets found.");
   }
 

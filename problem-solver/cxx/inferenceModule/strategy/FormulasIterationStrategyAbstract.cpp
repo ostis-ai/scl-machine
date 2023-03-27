@@ -6,6 +6,8 @@
 
 #include "FormulasIterationStrategyAbstract.hpp"
 
+#include <utility>
+
 #include "sc-agents-common/utils/IteratorUtils.hpp"
 
 #include "utils/ContainersUtils.hpp"
@@ -21,17 +23,17 @@ FormulasIterationStrategyAbstract::FormulasIterationStrategyAbstract(ScMemoryCon
   templateManager = std::make_unique<TemplateManager>(context);
 }
 
-void FormulasIterationStrategyAbstract::setTemplateSearcher(std::unique_ptr<TemplateSearcherAbstract> searcher)
+void FormulasIterationStrategyAbstract::setTemplateSearcher(std::shared_ptr<TemplateSearcherAbstract> searcher)
 {
   templateSearcher = std::move(searcher);
 }
 
-void FormulasIterationStrategyAbstract::setTemplateManager(std::unique_ptr<TemplateManager> manager)
+void FormulasIterationStrategyAbstract::setTemplateManager(std::shared_ptr<TemplateManager> manager)
 {
   templateManager = std::move(manager);
 }
 
-void FormulasIterationStrategyAbstract::setSolutionTreeManager(std::unique_ptr<SolutionTreeManager> manager)
+void FormulasIterationStrategyAbstract::setSolutionTreeManager(std::shared_ptr<SolutionTreeManager> manager)
 {
   solutionTreeManager = std::move(manager);
 }
@@ -41,9 +43,9 @@ void FormulasIterationStrategyAbstract::setArguments(ScAddr const & otherArgumen
   arguments = otherArguments;
 }
 
-std::unique_ptr<SolutionTreeManager> FormulasIterationStrategyAbstract::getSolutionTreeManager()
+std::shared_ptr<SolutionTreeManager> FormulasIterationStrategyAbstract::getSolutionTreeManager()
 {
-  return std::move(solutionTreeManager);
+  return solutionTreeManager;
 }
 
 vector<ScAddrQueue> FormulasIterationStrategyAbstract::createFormulasQueuesListByPriority(ScAddr const & formulasSet)
@@ -70,24 +72,32 @@ ScAddrQueue FormulasIterationStrategyAbstract::createQueue(ScAddr const & set)
   return queue;
 }
 
+/**
+ * @brief Build logic expression tree and compute it
+ * @param formula is a logical formula to use (more often non-atomic formula is an implication, generating conclusion)
+ * @param argumentVector is a vector of ScAddrs to use in atomic sub formulas of `formula`. May be empty to use all existing sc-elements
+ * @param outputStructure is a structure to generate new knowledge in
+ * @returns LogicFormulaResult {bool: value, bool: isGenerated, Replacements: replacements}
+ * @throws utils::ExceptionInvalidState Thrown if formula is generated and replacements not found
+ */
 LogicFormulaResult FormulasIterationStrategyAbstract::useFormula(
-      ScAddr const & rule,
+      ScAddr const & formula,
       ScAddrVector & argumentVector,
       ScAddr const & outputStructure)
 {
   LogicFormulaResult formulaResult = {false, false, {}};
   ScAddr const formulaRoot =
-        utils::IteratorUtils::getAnyByOutRelation(context, rule, InferenceKeynodes::rrel_main_key_sc_element);
+        utils::IteratorUtils::getAnyByOutRelation(context, formula, InferenceKeynodes::rrel_main_key_sc_element);
   if (!formulaRoot.IsValid())
     return {false, false, {}};
 
   LogicExpression logicExpression(
         context,
-        std::move(templateSearcher),
-        std::move(templateManager),
-        std::move(solutionTreeManager),
+        templateSearcher,
+        templateManager,
+        solutionTreeManager,
         outputStructure,
-        rule);
+        formula);
 
   std::shared_ptr<LogicExpressionNode> expressionRoot = logicExpression.build(formulaRoot);
   expressionRoot->setArgumentVector(argumentVector);
