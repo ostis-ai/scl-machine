@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Formula iteration strategy to generate all constructions by template
+- Template searcher in structures
+- Inference builder to configure inference flow using different components
 - Finish agent work if exception occurred
 - Unify interfaces with old 3-argument applying inference
 - New tests for logic module with argument checking and with complex rules
@@ -19,11 +22,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README
 - Changelog
 - Add always generating for conclusion in implication
-- Add arguments to subformulas in conjunction and disjunction
+- Add arguments to sub formulas in conjunction and disjunction
 - Add conjunction generation
 - Add parameters to solution tree
 
 ### Fixed
+- Fixed template params creating with no arguments
 - Fixed applying rules chain
 
 ### Changed
