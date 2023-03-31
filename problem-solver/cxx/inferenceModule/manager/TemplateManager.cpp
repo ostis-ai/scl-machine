@@ -18,6 +18,10 @@ TemplateManager::TemplateManager(ScMemoryContext * ms_context)
 /* For all classes of the all template variables create map <varName, arguments>
  * Where arguments are elements from argumentList, and each argument class is the same as variable varName class
  */
+// TODO: create another implementation that returns template params from argument list only (через соответствие по формуле)
+// может быть добавить формулу как параметр
+// argument list order is important
+// выделить класс формул для конкретных аргументов с переменным
 std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
     ScAddr const & scTemplate,
     ScAddrVector const & argumentList)
@@ -36,20 +40,15 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
     }
     ScAddr argumentOfVar;
     ScIterator5Ptr classesIterator = context->Iterator5(
+          // why not ScType::NodeConst ?
         ScType::NodeConstClass, ScType::EdgeAccessVarPosPerm, var, ScType::EdgeAccessConstPosPerm, scTemplate);
     while (classesIterator->Next())
     {
       ScAddr varClass = classesIterator->Get(0);
-      for (ScAddr const & argument : argumentList)  // this block is executed if inputStructure is valid
+      for (ScAddr const & argument : argumentList)
       {
         if (context->HelperCheckEdge(varClass, argument, ScType::EdgeAccessConstPosPerm))
           replacementsMultimap[varName].insert(argument);
-      }
-      if (argumentList.empty())  // this block is executed if inputStructure is not valid
-      {
-        ScIterator3Ptr iterator3 = context->Iterator3(varClass, ScType::EdgeAccessConstPosPerm, ScType::Unknown);
-        while (iterator3->Next())
-          replacementsMultimap[varName].insert(iterator3->Get(2));
       }
     }
     if (templateParamsVector.empty())
@@ -73,9 +72,10 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
         continue;
 
       size_t amountOfNewElements = oldParamsSize * amountOfAddressesForVar;
+      // TODO(MksmOrlov): remove SC_LOG_WARNING
+      SC_LOG_WARNING("amountOfNewElements = " << amountOfNewElements);
       std::vector<ScTemplateParams> updatedParams;
       updatedParams.reserve(amountOfNewElements);
-
       size_t beginOfCopy = 0;
       size_t endOfCopy = oldParamsSize;
       for (ScAddr const & address : addresses)

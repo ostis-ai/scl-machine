@@ -25,7 +25,7 @@ public:
 
   virtual ~TemplateSearcherAbstract() = default;
 
-  virtual std::vector<ScTemplateSearchResultItem> searchTemplate(
+  virtual Replacements searchTemplate(
       ScAddr const & templateAddr,
       ScTemplateParams const & templateParams) = 0;
 
@@ -33,24 +33,23 @@ public:
         ScAddr const & templateAddr,
         vector<ScTemplateParams> const & scTemplateParamsVector);
 
-  Replacements searchTemplate(ScAddr const & templateAddr);
-
   std::set<std::string> getVarNames(ScAddr const & structure);
+
+  bool isContentIdentical(ScTemplateSearchResultItem const & item, std::map<std::string, std::string> const & linksContentMap);
 
   const ScAddrVector & getParams() const;
 
   void addParam(ScAddr const & param);
-
-  bool addParamIfNotPresent(ScAddr const & param);
 
   void setArguments(ScAddr const & otherArguments);
 
   void setInputStructures(ScAddr const & otherInputStructures);
 
 protected:
-  virtual std::vector<ScTemplateSearchResultItem> searchTemplateWithContent(
+  virtual Replacements searchTemplateWithContent(
       ScTemplate const & searchTemplate,
-      ScAddr const & templateAddr) = 0;
+      ScAddr const & templateAddr,
+      ScTemplateParams const & templateParams) = 0;
 
   virtual std::map<std::string, std::string> getTemplateKeyLinksContent(ScAddr const & templateAddr) = 0;
 

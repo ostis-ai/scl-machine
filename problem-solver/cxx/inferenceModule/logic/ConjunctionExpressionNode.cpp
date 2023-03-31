@@ -30,7 +30,7 @@ LogicExpressionResult ConjunctionExpressionNode::check(ScTemplateParams & params
     LogicExpressionResult operandResult = operand->check(params);
     conjunctionResult.formulaTemplate = operandResult.formulaTemplate;
     if (operandResult.hasSearchResult)
-      conjunctionResult.templateSearchResult = operandResult.templateSearchResult;
+      conjunctionResult.replacements = operandResult.replacements;
 
     if (!operandResult.value)
     {

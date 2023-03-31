@@ -17,25 +17,44 @@
 using namespace inference;
 
 TemplateSearcher::TemplateSearcher(ScMemoryContext * context)
-  : TemplateSearcherAbstract(context) { }
+  : TemplateSearcherAbstract(context)
+{
+}
 
-vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplate(
+Replacements TemplateSearcher::searchTemplate(
     ScAddr const & templateAddr,
     ScTemplateParams const & templateParams)
 {
-  searchWithoutContentResult = std::make_unique<ScTemplateSearchResult>();
+  Replacements result;
   vector<ScTemplateSearchResultItem> searchResultItems;
   ScTemplate searchTemplate;
   if (context->HelperBuildTemplate(searchTemplate, templateAddr, templateParams))
   {
     if (context->HelperCheckEdge(
             InferenceKeynodes::concept_template_with_links, templateAddr, ScType::EdgeAccessConstPosPerm))
-      searchResultItems = searchTemplateWithContent(searchTemplate, templateAddr);
+    {
+      result = searchTemplateWithContent(searchTemplate, templateAddr, templateParams);
+    }
     else
     {
-      context->HelperSearchTemplate(searchTemplate, *searchWithoutContentResult);
-      for (size_t searchItemIndex = 0; searchItemIndex < searchWithoutContentResult->Size(); searchItemIndex++)
-        searchResultItems.push_back((*searchWithoutContentResult)[searchItemIndex]);
+      std::set<std::string> const & varNames = getVarNames(templateAddr);
+      context->HelperSearchTemplate(
+        searchTemplate,
+        [&templateParams, &result, &varNames](ScTemplateSearchResultItem const & item) -> void {
+          // Add search result items to the result Replacements
+          for (std::string const & varName : varNames)
+          {
+            ScAddr argument;
+            if (item.Has(varName))
+            {
+              result[varName].push_back(item[varName]);
+            }
+            if (templateParams.Get(varName, argument))
+            {
+              result[varName].push_back(argument);
+            }
+          }
+      });
     }
   }
   else
@@ -43,39 +62,41 @@ vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplate(
     throw runtime_error("Template is not built.");
   }
 
-  return searchResultItems;
+  return result;
 }
 
-std::vector<ScTemplateSearchResultItem> TemplateSearcher::searchTemplateWithContent(
+Replacements TemplateSearcher::searchTemplateWithContent(
     ScTemplate const & searchTemplate,
-    ScAddr const & templateAddr)
+    ScAddr const & templateAddr,
+    ScTemplateParams const & templateParams)
 {
-  context->HelperSearchTemplate(searchTemplate, *searchWithoutContentResult);
+  Replacements result;
   std::map<std::string, std::string> linksContentMap = getTemplateKeyLinksContent(templateAddr);
-  std::vector<ScTemplateSearchResultItem> searchWithContentResult;
-  for (size_t searchItemIndex = 0; searchItemIndex < searchWithoutContentResult->Size(); searchItemIndex++)
-  {
-    bool contentIsIdentical = true;
+  std::set<std::string> const & varNames = getVarNames(templateAddr);
 
-    ScTemplateSearchResultItem searchResultItem = (*searchWithoutContentResult)[searchItemIndex];
-    for (auto const & linkIdContentPair : linksContentMap)
-    {
-      ScAddr linkAddr = searchResultItem[linkIdContentPair.first];
-      std::string stringContent;
-      ScStreamPtr linkContentStream = context->GetLinkContent(linkAddr);
-      if (linkContentStream != nullptr)
-        ScStreamConverter::StreamToString(linkContentStream, stringContent);
-      if (stringContent != linkIdContentPair.second)
-      {
-        contentIsIdentical = false;
-        break;
-      }
-    }
-    if (contentIsIdentical)
-      searchWithContentResult.push_back(searchResultItem);
-  }
+  context->HelperSearchTemplate(
+        searchTemplate,
+        [templateParams, &result, &varNames](ScTemplateSearchResultItem const & item) -> void {
+          // Add search result items to the result Replacements
+          for (std::string const & varName : varNames)
+          {
+            ScAddr argument;
+            if (item.Has(varName))
+            {
+              result[varName].push_back(item[varName]);
+            }
+            if (templateParams.Get(varName, argument))
+            {
+              result[varName].push_back(argument);
+            }
+          }
+        },
+        [&linksContentMap, this](ScTemplateSearchResultItem const & item) -> bool {
+          // Filter result item by the same content
+          return isContentIdentical(item, linksContentMap);
+        });
 
-  return searchWithContentResult;
+  return result;
 }
 
 std::map<std::string, std::string> TemplateSearcher::getTemplateKeyLinksContent(const ScAddr & templateAddr)
@@ -98,36 +119,11 @@ std::map<std::string, std::string> TemplateSearcher::getTemplateKeyLinksContent(
     if (utils::CommonUtils::checkType(context, linkAddr, ScType::LinkVar))
     {
       std::string stringContent;
-      ScStreamPtr linkContentStream = context->GetLinkContent(linkAddr);
-      if (linkContentStream != nullptr)
-        ScStreamConverter::StreamToString(linkContentStream, stringContent);
-      linksContent.emplace(context->HelperGetSystemIdtf(linkAddr), stringContent);
-    }
-  }
-  return linksContent;
-}
-
-Replacements TemplateSearcher::searchTemplate(
-    ScAddr const & templateAddr,
-    vector<ScTemplateParams> const & scTemplateParamsVector)
-{
-  Replacements result;
-  ScAddr argument;
-  std::set<string> varNames = getVarNames(templateAddr);
-  for (ScTemplateParams const & scTemplateParams : scTemplateParamsVector)
-  {
-    vector<ScTemplateSearchResultItem> searchResults = searchTemplate(templateAddr, scTemplateParams);
-    for (ScTemplateSearchResultItem const & searchResult : searchResults)
-    {
-      for (std::string const & varName : varNames)
+      if (context->GetLinkContent(linkAddr, stringContent))
       {
-        if (scTemplateParams.Get(varName, argument))
-          result[varName].push_back(argument);
-        else if (searchResult.Has(varName))
-          result[varName].push_back(searchResult[varName]);
+        linksContent.emplace(context->HelperGetSystemIdtf(linkAddr), stringContent);
       }
     }
   }
-
-  return result;
+  return linksContent;
 }

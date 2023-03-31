@@ -25,36 +25,29 @@ Replacements TemplateSearcherAbstract::searchTemplate(
       vector<ScTemplateParams> const & scTemplateParamsVector)
 {
   Replacements result;
+  Replacements searchResults;
+  ScAddrVector varNameReplacementValues;
   ScAddr argument;
-  std::set<string> varNames = getVarNames(templateAddr);
+  std::set<string> const & varNames = getVarNames(templateAddr);
+
   for (ScTemplateParams const & scTemplateParams : scTemplateParamsVector)
   {
-    vector<ScTemplateSearchResultItem> searchResults = searchTemplate(templateAddr, scTemplateParams);
-    for (ScTemplateSearchResultItem const & searchResult : searchResults)
+    searchResults = searchTemplate(templateAddr, scTemplateParams);
+    for (std::string const & varName : varNames)
     {
-      for (std::string const & varName : varNames)
+      if (searchResults.count(varName))
       {
+        varNameReplacementValues = searchResults.at(varName);
         if (scTemplateParams.Get(varName, argument))
+        {
           result[varName].push_back(argument);
-        else if (searchResult.Has(varName))
-          result[varName].push_back(searchResult[varName]);
+        }
+        else if (!varNameReplacementValues.empty())
+        {
+          result[varName] = varNameReplacementValues;
+        }
       }
     }
-  }
-
-  return result;
-}
-
-Replacements TemplateSearcherAbstract::searchTemplate(ScAddr const & templateAddr)
-{
-  Replacements result;
-  std::set<std::string> varNames = getVarNames(templateAddr);
-  ScTemplateParams blankParams;
-  vector<ScTemplateSearchResultItem> searchResults = searchTemplate(templateAddr, blankParams);
-  for (ScTemplateSearchResultItem const & searchResult : searchResults)
-  {
-    for (std::string const & varName : varNames)
-      result[varName].push_back(searchResult[varName]);
   }
 
   return result;
@@ -77,6 +70,25 @@ std::set<std::string> TemplateSearcherAbstract::getVarNames(ScAddr const & struc
   return identifiers;
 }
 
+bool TemplateSearcherAbstract::isContentIdentical(ScTemplateSearchResultItem const & item, std::map<std::string, std::string> const & linksContentMap)
+{
+  bool result = true;
+  ScAddr link;
+  std::string linkContent;
+  for (auto const & contentMap : linksContentMap)
+  {
+    item.Get(contentMap.first, link);
+    context->GetLinkContent(link, linkContent);
+    if (contentMap.second != linkContent)
+    {
+      result = false;
+      break;
+    }
+  }
+
+  return result;
+}
+
 const ScAddrVector & TemplateSearcherAbstract::getParams() const
 {
   return params;
@@ -87,19 +99,7 @@ void TemplateSearcherAbstract::addParam(ScAddr const & param)
   params.push_back(param);
 }
 
-bool TemplateSearcherAbstract::addParamIfNotPresent(ScAddr const & param)
-{
-  if (std::find(params.begin(), params.end(), param) == std::end(params))
-  {
-    params.push_back(param);
-    if (arguments.IsValid())
-      context->CreateEdge(ScType::EdgeAccessConstPosPerm, arguments, param);
-    return true;
-  }
-  return false;
-}
-
 void TemplateSearcherAbstract::setArguments(ScAddr const & otherArguments)
 {
-  this->arguments = otherArguments;
+  arguments = otherArguments;
 }

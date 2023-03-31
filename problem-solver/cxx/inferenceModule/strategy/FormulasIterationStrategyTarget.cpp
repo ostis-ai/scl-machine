@@ -25,12 +25,17 @@ void FormulasIterationStrategyTarget::setTargetStructure(ScAddr const & otherTar
 
 bool FormulasIterationStrategyTarget::applyIterationStrategy(ScAddr const & formulasSet, ScAddr const & outputStructure)
 {
-  ScAddrVector argumentVector = utils::IteratorUtils::getAllWithType(context, arguments, ScType::Node);
-  for (ScAddr const & argument : argumentVector)
+  ScAddrVector argumentVector;
+
+  if (arguments.IsValid())
   {
-    templateSearcher->addParam(argument);
+    argumentVector = utils::IteratorUtils::getAllWithType(context, arguments, ScType::Node);
+    for (ScAddr const & argument : argumentVector)
+    {
+      templateSearcher->addParam(argument);
+    }
+    templateSearcher->setArguments(arguments);
   }
-  templateSearcher->setArguments(arguments);
 
   bool targetAchieved = isTargetAchieved(argumentVector);
   if (targetAchieved)

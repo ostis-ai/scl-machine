@@ -121,6 +121,11 @@ Replacements inference::ReplacementsUtils::copyReplacements(Replacements const &
   return result;
 }
 
+/**
+ * @brief The size of the all ScAddrVector of variables is the same (it is a matrix)
+ * @param replacements to convert to vector<ScTemplateParams>
+ * @return vector<ScTemplateParams> of converted replacements
+ */
 vector<ScTemplateParams> inference::ReplacementsUtils::getReplacementsToScTemplateParams(
     Replacements const & replacements)
 {

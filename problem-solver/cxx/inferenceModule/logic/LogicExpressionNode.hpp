@@ -10,9 +10,9 @@
 
 struct LogicExpressionResult
 {
-  bool value;
-  bool hasSearchResult;
-  ScTemplateSearchResultItem templateSearchResult{nullptr, nullptr};
+  bool value = false;
+  bool hasSearchResult = false;
+  Replacements replacements{};
   ScAddr formulaTemplate{};
 };
 
@@ -26,6 +26,11 @@ struct LogicFormulaResult
 class LogicExpressionNode
 {
 public:
+  LogicExpressionNode()
+  {
+    generateOnlyFirst = true;
+  }
+
   virtual LogicExpressionResult check(ScTemplateParams & params) const = 0;
   virtual LogicFormulaResult compute(LogicFormulaResult & result) const = 0;
   virtual ScAddr getFormulaTemplate() const = 0;

@@ -25,12 +25,12 @@ TemplateSearcherInStructures::TemplateSearcherInStructures(ScMemoryContext * con
 TemplateSearcherInStructures::TemplateSearcherInStructures(ScMemoryContext * context)
     : TemplateSearcherAbstract(context) { }
 
-std::vector<ScTemplateSearchResultItem> TemplateSearcherInStructures::searchTemplate(
+Replacements TemplateSearcherInStructures::searchTemplate(
     ScAddr const & templateAddr,
     ScTemplateParams const & templateParams)
 {
+  Replacements result;
   searchWithoutContentResult = std::make_unique<ScTemplateSearchResult>();
-  std::vector<ScTemplateSearchResultItem> searchResultItems;
   ScAddrVector const & inputStructuresVector = utils::IteratorUtils::getAllWithType(context, inputStructures, ScType::Node);
   ScTemplate searchTemplate;
   if (context->HelperBuildTemplate(searchTemplate, templateAddr, templateParams))
@@ -38,15 +38,27 @@ std::vector<ScTemplateSearchResultItem> TemplateSearcherInStructures::searchTemp
     if (context->HelperCheckEdge(
           InferenceKeynodes::concept_template_with_links, templateAddr, ScType::EdgeAccessConstPosPerm))
     {
-      searchResultItems = searchTemplateWithContent(searchTemplate, templateAddr);
+      result = searchTemplateWithContent(searchTemplate, templateAddr, templateParams);
     }
     else
     {
+      std::set<std::string> const & varNames = getVarNames(templateAddr);
       context->HelperSearchTemplate(
             searchTemplate,
-            [&searchResultItems](ScTemplateSearchResultItem const & item) -> void {
+            [templateParams, &result, &varNames](ScTemplateSearchResultItem const & item) -> void {
               // Add search result item to the answer container
-              searchResultItems.push_back(item);
+              for (std::string const & varName : varNames)
+              {
+                ScAddr argument;
+                if (item.Has(varName))
+                {
+                  result[varName].push_back(item[varName]);
+                }
+                if (templateParams.Get(varName, argument))
+                {
+                  result[varName].push_back(argument);
+                }
+              }
             },
             [&inputStructuresVector, this](ScAddr const & item) -> bool {
               // Filter result item belonging to any of the input structures
@@ -64,56 +76,58 @@ std::vector<ScTemplateSearchResultItem> TemplateSearcherInStructures::searchTemp
     throw std::runtime_error("Template is not built.");
   }
 
-  return searchResultItems;
+  return result;
 }
 
-std::vector<ScTemplateSearchResultItem> TemplateSearcherInStructures::searchTemplateWithContent(
+Replacements TemplateSearcherInStructures::searchTemplateWithContent(
       ScTemplate const & searchTemplate,
-      ScAddr const & templateAddr)
+      ScAddr const & templateAddr,
+      ScTemplateParams const & templateParams)
 {
+  Replacements result;
   ScAddrVector const & inputStructuresVector = utils::IteratorUtils::getAllWithType(context, inputStructures, ScType::Node);
-  std::vector<ScTemplateSearchResultItem> searchResultItems;
+  std::set<std::string> const & varNames = getVarNames(templateAddr);
   std::map<std::string, std::string> linksContentMap = getTemplateKeyLinksContent(templateAddr);
-  std::vector<ScTemplateSearchResultItem> searchWithContentResult;
 
   context->HelperSearchTemplate(
         searchTemplate,
-        [&searchResultItems](ScTemplateSearchResultItem const & item) -> void {
+        [templateParams, &result, &varNames](ScTemplateSearchResultItem const & item) -> void {
           // Add search result item to the answer container
-          searchResultItems.push_back(item);
+          for (std::string const & varName : varNames)
+          {
+            ScAddr argument;
+            if (item.Has(varName))
+            {
+              result[varName].push_back(item[varName]);
+            }
+            if (templateParams.Get(varName, argument))
+            {
+              result[varName].push_back(argument);
+            }
+          }
         },
-        [&inputStructuresVector, this](ScAddr const & item) -> bool {
-          // Filter result item belonging to any of the input structures
-          return std::any_of(
+        [&inputStructuresVector, &linksContentMap, this](ScTemplateSearchResultItem const & item) -> bool {
+          // Filter result item by the same content and belonging to any of the input structures
+          bool contentIdentical = isContentIdentical(item, linksContentMap);
+          bool isElementInStructures = std::any_of(
                 inputStructuresVector.cbegin(),
                 inputStructuresVector.cend(),
                 [&item, this](ScAddr const & structure) -> bool {
-                  return context->HelperCheckEdge(structure, item, ScType::EdgeAccessConstPosPerm);
+                  bool result = true;
+                  for (size_t i = 0; i < item.Size(); i++)
+                  {
+                    if (!context->HelperCheckEdge(structure, item[i], ScType::EdgeAccessConstPosPerm))
+                    {
+                      result = false;
+                      break;
+                    }
+                  }
+                  return result;
                 });
+          return contentIdentical && isElementInStructures;
         });
 
-  for (ScTemplateSearchResultItem searchResultItem : searchResultItems)
-  {
-    bool contentIsIdentical = true;
-
-    for (auto const & linkIdContentPair : linksContentMap)
-    {
-      ScAddr linkAddr = searchResultItem[linkIdContentPair.first];
-      std::string stringContent;
-      ScStreamPtr linkContentStream = context->GetLinkContent(linkAddr);
-      if (linkContentStream != nullptr)
-        ScStreamConverter::StreamToString(linkContentStream, stringContent);
-      if (stringContent != linkIdContentPair.second)
-      {
-        contentIsIdentical = false;
-        break;
-      }
-    }
-    if (contentIsIdentical)
-      searchWithContentResult.push_back(searchResultItem);
-  }
-
-  return searchWithContentResult;
+  return result;
 }
 
 

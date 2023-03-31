@@ -24,6 +24,7 @@ std::string const TEST_FILES_DIR_PATH = TEMPLATE_SEARCH_MODULE_TEST_SRC_PATH "/t
 std::string const INPUT_STRUCTURES = "input_structures";
 std::string const RULES_SET = "rules_set";
 std::string const ARGUMENT = "argument";
+std::string const ARGUMENTS = "arguments";
 std::string const TARGET_NODE_CLASS = "target_node_class";
 std::string const CURRENT_NODE_CLASS = "current_node_class";
 
@@ -48,6 +49,43 @@ TEST_F(InferenceManagerBuilderTest, SingleSuccessApplyInference)
   // Create inference builder with input structures
   std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
         std::make_unique<inference::InferenceManagerInputStructuresBuilder>(&context, inputStructures);
+
+  // Create inference manager with `strategy all` using director with builder
+  std::unique_ptr<inference::InferenceManagerGeneral> inferenceManager =
+        inference::InferenceManagerDirector::constructDirectInferenceManagerInputStructuresStrategyAll(&context, std::move(builder));
+
+  ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
+
+  // Apply inference with configured manager
+  ScAddr const & solution = inferenceManager->applyInference(rulesSet);
+
+  EXPECT_TRUE(solution.IsValid());
+  EXPECT_TRUE(
+      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
+
+  ScAddr const & argument = context.HelperFindBySystemIdtf(ARGUMENT);
+  EXPECT_TRUE(argument.IsValid());
+  ScAddr const & targetClass = context.HelperFindBySystemIdtf(TARGET_NODE_CLASS);
+  EXPECT_TRUE(targetClass.IsValid());
+
+  EXPECT_TRUE(context.HelperCheckEdge(targetClass, argument, ScType::EdgeAccessConstPosPerm));
+}
+
+TEST_F(InferenceManagerBuilderTest, SingleSuccessArgumentApplyInference)
+{
+  ScMemoryContext & context = *m_ctx;
+
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "singleArgumentApplyTest.scs");
+  initialize();
+
+  // Get input structures set of two structures. One of them consists one triple from premise and the other -- the second triple.
+  ScAddr const & inputStructures = context.HelperResolveSystemIdtf(INPUT_STRUCTURES);
+
+  ScAddr const & arguments = context.HelperResolveSystemIdtf(ARGUMENTS);
+
+  // Create inference builder with input structures
+  std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
+        std::make_unique<inference::InferenceManagerInputStructuresBuilder>(&context, inputStructures, arguments);
 
   // Create inference manager with `strategy all` using director with builder
   std::unique_ptr<inference::InferenceManagerGeneral> inferenceManager =
@@ -110,9 +148,9 @@ TEST_F(InferenceManagerBuilderTest, MultipleSuccessApplyInference)
     foundElements.push_back(targetClassIterator->Get(2));
   }
 
+  // TODO: incorrect comparing
   EXPECT_EQ(foundElements, expectedElements);
 }
-
 
 TEST_F(InferenceManagerBuilderTest, SingleUnsuccessfulApplyInference)
 {

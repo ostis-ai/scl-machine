@@ -11,9 +11,10 @@
 using namespace inference;
 
 InferenceManagerInputStructuresBuilder::InferenceManagerInputStructuresBuilder(
-      ScMemoryContext * context, ScAddr const & otherInputStructures) : InferenceManagerBuilderAbstract(context)
+      ScMemoryContext * context, ScAddr const & otherInputStructures, ScAddr const & otherArguments) : InferenceManagerBuilderAbstract(context)
 {
   inputStructures = otherInputStructures;
+  arguments = otherArguments;
 }
 
 InferenceManagerBuilderAbstract & InferenceManagerInputStructuresBuilder::setTemplateSearcher(std::unique_ptr<TemplateSearcherAbstract> searcher)
@@ -27,6 +28,8 @@ InferenceManagerBuilderAbstract & InferenceManagerInputStructuresBuilder::setTem
 InferenceManagerBuilderAbstract & InferenceManagerInputStructuresBuilder::setFormulasIterationStrategy(std::unique_ptr<FormulasIterationStrategyAbstract> strategy)
 {
   strategy->setTemplateSearcher(std::move(templateSearcher));
+  strategy->setArguments(arguments);
+
   manager->setFormulasIterationStrategy(std::move(strategy));
 
   return *this;

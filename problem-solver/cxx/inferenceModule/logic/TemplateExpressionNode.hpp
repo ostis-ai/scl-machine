@@ -30,8 +30,9 @@ public:
       std::shared_ptr<TemplateManager> templateManager,
       std::shared_ptr<SolutionTreeManager> solutionTreeManager,
       ScAddr const & outputStructure,
-      ScAddr const & rule);
+      ScAddr const & formula);
 
+  // TODO(MksmOrlov): check method is never used
   LogicExpressionResult check(ScTemplateParams & params) const override;
   LogicFormulaResult compute(LogicFormulaResult & result) const override;
   LogicFormulaResult find(Replacements & replacements) const;
@@ -49,5 +50,5 @@ private:
   std::shared_ptr<TemplateManager> templateManager;
   std::shared_ptr<SolutionTreeManager> solutionTreeManager;
   ScAddr outputStructure;
-  ScAddr rule;
+  ScAddr formula;
 };

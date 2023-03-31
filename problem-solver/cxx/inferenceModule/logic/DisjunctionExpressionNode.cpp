@@ -31,7 +31,7 @@ LogicExpressionResult DisjunctionExpressionNode::check(ScTemplateParams & params
     disjunctionResult.formulaTemplate = operandResult.formulaTemplate;
 
     if (operandResult.hasSearchResult)
-      disjunctionResult.templateSearchResult = operandResult.templateSearchResult;
+      disjunctionResult.replacements = operandResult.replacements;
 
     if (operandResult.value)
     {

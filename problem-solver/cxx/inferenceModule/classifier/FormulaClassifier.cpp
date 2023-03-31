@@ -18,6 +18,7 @@ int FormulaClassifier::typeOfFormula(ScMemoryContext * ms_context, ScAddr const 
     return NONE;
   }
 
+  // TODO(MksmOrlov): maybe we need just to check element type (struct) with/without variables
   bool isAtomicFormula =
       ms_context->HelperCheckEdge(InferenceKeynodes::atomic_logical_formula, formula, ScType::EdgeAccessConstPosPerm);
   if (isAtomicFormula)

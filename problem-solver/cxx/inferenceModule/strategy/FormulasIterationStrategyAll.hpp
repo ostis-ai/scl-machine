@@ -24,10 +24,5 @@ public:
   explicit FormulasIterationStrategyAll(ScMemoryContext * context);
 
   bool applyIterationStrategy(ScAddr const & formulasSet, ScAddr const & outputStructure) override;
-
-protected:
-  std::unique_ptr<TemplateManager> templateManager;
-
-  ScAddr arguments;
 };
 }

@@ -22,7 +22,7 @@ LogicExpressionResult NegationExpressionNode::check(ScTemplateParams & params) c
   if (operands.size() != 1)
   {
     SC_LOG_ERROR("Negation should have 1 operand but it has " + to_string(operands.size()));
-    return {false, false, {nullptr, nullptr}, ScAddr()};
+    return {false, false, {}, ScAddr()};
   }
   LogicExpressionResult operandResult = operands[0]->check(params);
   operandResult.value = !operandResult.value;
