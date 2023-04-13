@@ -10,9 +10,8 @@
 
 using namespace inference;
 
-TemplateManager::TemplateManager(ScMemoryContext * ms_context)
+TemplateManager::TemplateManager(ScMemoryContext * ms_context) : TemplateManagerAbstract(ms_context)
 {
-  context = ms_context;
 }
 
 /* For all classes of the all template variables create map <varName, arguments>
@@ -22,10 +21,12 @@ TemplateManager::TemplateManager(ScMemoryContext * ms_context)
 // может быть добавить формулу как параметр
 // argument list order is important
 // выделить класс формул для конкретных аргументов с переменным
+// Этот метод имеет смысл только если передаются непустые аргументы argumentList
 std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
     ScAddr const & scTemplate,
     ScAddrVector const & argumentList)
 {
+  SC_LOG_ERROR("createTemplateParams for " << context->HelperGetSystemIdtf(scTemplate));
   std::map<std::string, std::set<ScAddr, AddrComparator>> replacementsMultimap;
   std::vector<ScTemplateParams> templateParamsVector;
 
@@ -40,11 +41,13 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
     }
     ScAddr argumentOfVar;
     ScIterator5Ptr classesIterator = context->Iterator5(
-          // why not ScType::NodeConst ?
+          // TODO(MksmOrlov): why not ScType::NodeConst ?
         ScType::NodeConstClass, ScType::EdgeAccessVarPosPerm, var, ScType::EdgeAccessConstPosPerm, scTemplate);
+    // TODO(MksmOrlov): Почему итерируемся по классам и для них ищем есть ли аргумент, а не от аргумента ищем, есть ли соответствующий класс
     while (classesIterator->Next())
     {
       ScAddr varClass = classesIterator->Get(0);
+      // TODO(MksmOrlov): make cycle for argumentList main. If it is empty, a lot of useless operations are done
       for (ScAddr const & argument : argumentList)
       {
         if (context->HelperCheckEdge(varClass, argument, ScType::EdgeAccessConstPosPerm))
@@ -60,6 +63,7 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
         ScTemplateParams params;
         params.Add(varName, address);
         templateParamsVector.push_back(params);
+        SC_LOG_ERROR("Empty Add param: " << varName);
       }
     }
     else
@@ -72,8 +76,6 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
         continue;
 
       size_t amountOfNewElements = oldParamsSize * amountOfAddressesForVar;
-      // TODO(MksmOrlov): remove SC_LOG_WARNING
-      SC_LOG_WARNING("amountOfNewElements = " << amountOfNewElements);
       std::vector<ScTemplateParams> updatedParams;
       updatedParams.reserve(amountOfNewElements);
       size_t beginOfCopy = 0;
@@ -82,7 +84,11 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
       {
         copy_n(templateParamsVector.begin(), oldParamsSize, back_inserter(updatedParams));
         for (size_t i = 0; i < oldParamsSize; ++i)
+        {
           updatedParams[beginOfCopy + i].Add(varName, address);
+          SC_LOG_ERROR("Not Empty Add param: " << varName);
+        }
+
         beginOfCopy = endOfCopy;
         endOfCopy += oldParamsSize;
       }
@@ -90,6 +96,6 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
       templateParamsVector = std::move(updatedParams);
     }
   }
-
+  SC_LOG_ERROR(templateParamsVector.size());
   return templateParamsVector;
 }

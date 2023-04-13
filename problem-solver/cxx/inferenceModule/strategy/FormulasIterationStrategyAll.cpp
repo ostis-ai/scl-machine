@@ -7,7 +7,6 @@
 #include "FormulasIterationStrategyAll.hpp"
 
 #include "keynodes/InferenceKeynodes.hpp"
-#include "sc-agents-common/utils/IteratorUtils.hpp"
 
 using namespace inference;
 
@@ -32,17 +31,12 @@ bool FormulasIterationStrategyAll::applyIterationStrategy(ScAddr const & formula
 {
   bool result = false;
 
-  ScAddrVector argumentVector;
-
-  if (arguments.IsValid())
+  ScAddrVector argumentVector = formArgumentsVector();
+  for (ScAddr const & argument : argumentVector)
   {
-    argumentVector = utils::IteratorUtils::getAllWithType(context, arguments, ScType::Node);
-    for (ScAddr const & argument : argumentVector)
-    {
-      templateSearcher->addParam(argument);
-    }
-    templateSearcher->setArguments(arguments);
+    templateSearcher->addParam(argument);
   }
+  templateSearcher->setArguments(arguments);
 
   vector<ScAddrQueue> formulasQueuesByPriority = createFormulasQueuesListByPriority(formulasSet);
   if (formulasQueuesByPriority.empty())

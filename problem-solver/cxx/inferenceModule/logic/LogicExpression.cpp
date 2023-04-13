@@ -19,7 +19,7 @@
 LogicExpression::LogicExpression(
     ScMemoryContext * context,
     std::shared_ptr<TemplateSearcherAbstract> templateSearcher,
-    std::shared_ptr<TemplateManager> templateManager,
+    std::shared_ptr<TemplateManagerAbstract> templateManager,
     std::shared_ptr<SolutionTreeManager> solutionTreeManager,
     ScAddr const & outputStructure,
     ScAddr const & rule)
@@ -119,11 +119,14 @@ OperatorLogicExpressionNode::OperandsVector LogicExpression::resolveOperandsForI
 std::shared_ptr<LogicExpressionNode> LogicExpression::buildAtomicFormula(ScAddr const & node)
 {
   SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is a template");
-  std::vector<ScTemplateParams> params = templateManager->createTemplateParams(node, templateSearcher->getParams());
-
-  if (!params.empty() && paramsSet.empty())
+  ScAddrVector const & argumentList = templateSearcher->getParams();
+  if (!argumentList.empty())
   {
-    paramsSet = std::move(params);
+    std::vector<ScTemplateParams> params = templateManager->createTemplateParams(node, argumentList);
+    if (!params.empty() && paramsSet.empty())
+    {
+      paramsSet = std::move(params);
+    }
   }
 
   return std::make_shared<TemplateExpressionNode>(context, node, templateSearcher, templateManager, solutionTreeManager, outputStructure, formula);

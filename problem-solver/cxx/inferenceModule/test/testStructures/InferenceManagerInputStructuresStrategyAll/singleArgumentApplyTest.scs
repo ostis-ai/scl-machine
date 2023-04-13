@@ -26,6 +26,9 @@ then = [*
 @p2 = (logic_rule -> @p1);;
 @p2 <- rrel_main_key_sc_element;;
 
+logic_rule
+	-> rrel_1: _arg;;
+
 atomic_logical_formula
 	-> if;
 	-> then;;
@@ -50,4 +53,5 @@ input_structure2 = [*
 rules_set
     -> rrel_1: { logic_rule };;
 
-arguments -> argument;;
+arguments
+	-> rrel_1: argument;;

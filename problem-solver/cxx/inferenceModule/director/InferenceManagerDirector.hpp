@@ -14,7 +14,7 @@ namespace inference
 class InferenceManagerDirector
 {
 public:
-  static std::unique_ptr<InferenceManagerGeneral> constructDirectInferenceManagerInputStructuresStrategyAll(
+  static std::unique_ptr<InferenceManagerGeneral> constructDirectInferenceManagerInputStructuresFixedArgumentsStrategyAll(
         ScMemoryContext * context, std::unique_ptr<InferenceManagerBuilderAbstract> builder);
 
   static std::unique_ptr<InferenceManagerGeneral> constructDirectInferenceManagerStrategyTarget(

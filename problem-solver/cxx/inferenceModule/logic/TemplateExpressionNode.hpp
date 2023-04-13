@@ -27,7 +27,7 @@ public:
       ScMemoryContext * context,
       ScAddr const & formulaTemplate,
       std::shared_ptr<TemplateSearcherAbstract> templateSearcher,
-      std::shared_ptr<TemplateManager> templateManager,
+      std::shared_ptr<TemplateManagerAbstract> templateManager,
       std::shared_ptr<SolutionTreeManager> solutionTreeManager,
       ScAddr const & outputStructure,
       ScAddr const & formula);
@@ -47,7 +47,7 @@ private:
   ScMemoryContext * context;
   ScAddr formulaTemplate;
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
-  std::shared_ptr<TemplateManager> templateManager;
+  std::shared_ptr<TemplateManagerAbstract> templateManager;
   std::shared_ptr<SolutionTreeManager> solutionTreeManager;
   ScAddr outputStructure;
   ScAddr formula;

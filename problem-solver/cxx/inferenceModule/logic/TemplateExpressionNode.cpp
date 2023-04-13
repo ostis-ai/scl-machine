@@ -22,7 +22,7 @@ TemplateExpressionNode::TemplateExpressionNode(
     ScMemoryContext * context,
     ScAddr const & formulaTemplate,
     std::shared_ptr<TemplateSearcherAbstract> templateSearcher,
-    std::shared_ptr<TemplateManager> templateManager,
+    std::shared_ptr<TemplateManagerAbstract> templateManager,
     std::shared_ptr<SolutionTreeManager> solutionTreeManager,
     ScAddr const & outputStructure,
     ScAddr const & formula)

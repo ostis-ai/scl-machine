@@ -17,30 +17,21 @@ namespace inference
 class InferenceManagerBuilderAbstract
 {
 public:
-  explicit InferenceManagerBuilderAbstract(ScMemoryContext * context) : context(context)
-  {
-    manager = std::make_unique<InferenceManagerGeneral>(context);
-  }
-
+  explicit InferenceManagerBuilderAbstract(ScMemoryContext * context);
   virtual ~InferenceManagerBuilderAbstract() = default;
 
   virtual InferenceManagerBuilderAbstract & setTemplateSearcher(std::unique_ptr<TemplateSearcherAbstract> templateSearcher) = 0;
   virtual InferenceManagerBuilderAbstract & setFormulasIterationStrategy(std::unique_ptr<FormulasIterationStrategyAbstract> strategy) = 0;
 
-  std::unique_ptr<InferenceManagerGeneral> build()
-  {
-    return std::move(manager);
-  }
-
-  void reset()
-  {
-    manager.reset();
-  }
+  InferenceManagerBuilderAbstract & setTemplateManager(std::unique_ptr<TemplateManagerAbstract> manager);
+  std::unique_ptr<InferenceManagerGeneral> build();
+  void reset();
 
 protected:
   ScMemoryContext * context;
 
   std::unique_ptr<TemplateSearcherAbstract> templateSearcher;
-  std::unique_ptr<InferenceManagerGeneral> manager;
+  std::unique_ptr<TemplateManagerAbstract> templateManager;
+  std::unique_ptr<InferenceManagerGeneral> inferenceManager;
 };
 }

@@ -13,7 +13,9 @@
 
 using namespace inference;
 
-TemplateSearcherAbstract::TemplateSearcherAbstract(ScMemoryContext * context) : context(context) { }
+TemplateSearcherAbstract::TemplateSearcherAbstract(ScMemoryContext * context) : context(context)
+{
+}
 
 void TemplateSearcherAbstract::setInputStructures(ScAddr const & otherInputStructures)
 {

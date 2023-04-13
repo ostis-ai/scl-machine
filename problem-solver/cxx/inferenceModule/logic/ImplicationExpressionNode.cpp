@@ -60,5 +60,6 @@ LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & resul
           ReplacementsUtils::intersectReplacements(premiseResult.replacements, conclusionResult.replacements);
   }
 
+  // TODO(MksmOrlov): we don't need to return an object that is passed as a reference parameter
   return result;
 }

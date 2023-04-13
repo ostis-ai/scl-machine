@@ -28,7 +28,7 @@ public:
   virtual ~FormulasIterationStrategyAbstract() = default;
 
   void setTemplateSearcher(std::shared_ptr<TemplateSearcherAbstract> searcher);
-  void setTemplateManager(std::shared_ptr<TemplateManager> searcher);
+  void setTemplateManager(std::shared_ptr<TemplateManagerAbstract> manager);
   void setSolutionTreeManager(std::shared_ptr<SolutionTreeManager> searcher);
 
   void setArguments(ScAddr const & otherArguments);
@@ -42,6 +42,10 @@ public:
         ScAddrVector & argumentVector,
         ScAddr const & outputStructure);
 
+  void fillFormulaFixedArgumentsIdentifiers(ScAddr const & formula) const;
+
+  ScAddrVector formArgumentsVector() const;
+
   vector<ScAddrQueue> createFormulasQueuesListByPriority(ScAddr const & formulasSet);
 
   ScAddrQueue createQueue(ScAddr const & set);
@@ -49,7 +53,7 @@ public:
 protected:
   ScMemoryContext * context;
 
-  std::shared_ptr<TemplateManager> templateManager;
+  std::shared_ptr<TemplateManagerAbstract> templateManager;
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
   std::shared_ptr<SolutionTreeManager> solutionTreeManager;
 

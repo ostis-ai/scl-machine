@@ -18,9 +18,9 @@ struct LogicExpressionResult
 
 struct LogicFormulaResult
 {
-  bool value;
-  bool isGenerated;
-  Replacements replacements;
+  bool value = false;
+  bool isGenerated = false;
+  Replacements replacements{};
 };
 
 class LogicExpressionNode

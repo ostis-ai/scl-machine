@@ -7,16 +7,18 @@
 #include "InferenceManagerDirector.hpp"
 
 #include "searcher/TemplateSearcherInStructures.hpp"
+#include "manager/TemplateManagerFixedArguments.hpp"
 #include "strategy/FormulasIterationStrategyAll.hpp"
 #include "strategy/FormulasIterationStrategyTarget.hpp"
 
 using namespace inference;
 
-std::unique_ptr<InferenceManagerGeneral> InferenceManagerDirector::constructDirectInferenceManagerInputStructuresStrategyAll(
+std::unique_ptr<InferenceManagerGeneral> InferenceManagerDirector::constructDirectInferenceManagerInputStructuresFixedArgumentsStrategyAll(
       ScMemoryContext * context, std::unique_ptr<InferenceManagerBuilderAbstract> builder)
 {
   return builder
     ->setTemplateSearcher(std::make_unique<TemplateSearcherInStructures>(context))
+    .setTemplateManager(std::make_unique<TemplateManagerFixedArguments>(context))
     .setFormulasIterationStrategy(std::make_unique<FormulasIterationStrategyAll>(context))
     .build();
 }

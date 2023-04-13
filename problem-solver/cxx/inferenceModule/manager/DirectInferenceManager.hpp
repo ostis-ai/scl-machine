@@ -39,12 +39,12 @@ private:
 
   ScAddrQueue createQueue(ScAddr const & set);
 
-  LogicFormulaResult useFormula(ScAddr const & rule, ScAddrVector /*const*/ & argumentVector, ScAddr const & outputStructure);
+  LogicFormulaResult useFormula(ScAddr const & rule, ScAddrVector & argumentVector, ScAddr const & outputStructure);
 
   bool isTargetAchieved(ScAddr const & targetStructure, ScAddrVector const & argumentVector);
 
   ScMemoryContext * ms_context;
-  std::shared_ptr<TemplateManager> templateManager;
+  std::shared_ptr<TemplateManagerAbstract> templateManager;
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
   std::shared_ptr<SolutionTreeManager> solutionTreeManager;
 };
