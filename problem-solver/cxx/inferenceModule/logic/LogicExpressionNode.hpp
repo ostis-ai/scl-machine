@@ -26,10 +26,7 @@ struct LogicFormulaResult
 class LogicExpressionNode
 {
 public:
-  LogicExpressionNode()
-  {
-    generateOnlyFirst = true;
-  }
+  LogicExpressionNode() = default;
 
   virtual LogicExpressionResult check(ScTemplateParams & params) const = 0;
   virtual LogicFormulaResult compute(LogicFormulaResult & result) const = 0;
@@ -43,14 +40,8 @@ public:
     argumentVector = otherArgumentVector;
   }
 
-  void setGenerateOnlyFirst(bool const otherGenerateOnlyFirst)
-  {
-    generateOnlyFirst = otherGenerateOnlyFirst;
-  }
-
 protected:
   ScAddrVector argumentVector;
-  bool generateOnlyFirst;
 };
 
 class OperatorLogicExpressionNode : public LogicExpressionNode

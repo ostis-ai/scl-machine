@@ -13,7 +13,6 @@ using namespace inference;
 FormulasIterationStrategyAll::FormulasIterationStrategyAll(ScMemoryContext * context)
       : FormulasIterationStrategyAbstract(context)
 {
-  generateOnlyFirst = false;
 }
 
 /**

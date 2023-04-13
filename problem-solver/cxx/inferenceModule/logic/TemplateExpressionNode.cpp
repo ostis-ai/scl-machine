@@ -109,14 +109,18 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
   }
 
   size_t count = 0;
+  Replacements searchResult;
   for (ScTemplateParams const & scTemplateParams : paramsVector)
   {
-    if (generateOnlyFirst && result.isGenerated)
+    if (templateManager->getGenerateOnlyFirst() && result.isGenerated)
       break;
 
-    Replacements const & searchResult =
-        templateSearcher->searchTemplate(formulaTemplate, scTemplateParams);
-    if (searchResult.empty())
+    if (templateManager->getGenerateOnlyUnique())
+    {
+      searchResult = templateSearcher->searchTemplate(formulaTemplate, scTemplateParams);
+    }
+
+    if (!templateManager->getGenerateOnlyUnique() || searchResult.empty())
     {
       ScTemplate generatedTemplate;
       context->HelperBuildTemplate(generatedTemplate, formulaTemplate, scTemplateParams);

@@ -17,7 +17,9 @@ class TemplateManagerAbstract
 public:
   explicit TemplateManagerAbstract(ScMemoryContext * context) : context(context)
   {
-  };
+    generateOnlyFirst = true;
+    generateOnlyUnique = false;
+  }
 
   virtual ~TemplateManagerAbstract() = default;
 
@@ -28,9 +30,31 @@ public:
     fixedArgumentIdentifiers.push_back(fixedArgumentIdentifier);
   }
 
+  bool getGenerateOnlyFirst() const
+  {
+    return generateOnlyFirst;
+  }
+
+  bool getGenerateOnlyUnique() const
+  {
+    return generateOnlyUnique;
+  }
+
+  void setGenerateOnlyFirst(bool const otherGenerateOnlyFirst)
+  {
+    generateOnlyFirst = otherGenerateOnlyFirst;
+  }
+
+  void setGenerateOnlyUnique(bool const otherGenerateOnlyUnique)
+  {
+    generateOnlyUnique = otherGenerateOnlyUnique;
+  }
+
 protected:
   ScMemoryContext * context;
 
+  bool generateOnlyFirst;
+  bool generateOnlyUnique;
   std::vector<std::string> fixedArgumentIdentifiers;
 };
 }  // namespace inference

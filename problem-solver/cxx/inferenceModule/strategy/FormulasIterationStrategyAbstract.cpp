@@ -20,7 +20,6 @@ FormulasIterationStrategyAbstract::FormulasIterationStrategyAbstract(ScMemoryCon
 {
   // Now we don't have several implementations for SolutionTreeManager
   solutionTreeManager = std::make_unique<SolutionTreeManager>(context);
-  generateOnlyFirst = true;
 }
 
 void FormulasIterationStrategyAbstract::setTemplateSearcher(std::shared_ptr<TemplateSearcherAbstract> searcher)
@@ -101,8 +100,6 @@ LogicFormulaResult FormulasIterationStrategyAbstract::useFormula(
         formula);
 
   std::shared_ptr<LogicExpressionNode> expressionRoot = logicExpression.build(formulaRoot);
-
-  expressionRoot->setGenerateOnlyFirst(generateOnlyFirst);
   expressionRoot->setArgumentVector(argumentVector);
 
   LogicFormulaResult blankResult;

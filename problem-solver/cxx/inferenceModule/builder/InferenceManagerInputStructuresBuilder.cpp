@@ -27,6 +27,9 @@ InferenceManagerBuilderAbstract & InferenceManagerInputStructuresBuilder::setTem
 
 InferenceManagerBuilderAbstract & InferenceManagerInputStructuresBuilder::setFormulasIterationStrategy(std::unique_ptr<FormulasIterationStrategyAbstract> strategy)
 {
+  templateManager->setGenerateOnlyFirst(false);
+  templateManager->setGenerateOnlyUnique(false);
+
   strategy->setTemplateSearcher(std::move(templateSearcher));
   strategy->setTemplateManager(std::move(templateManager));
   strategy->setArguments(arguments);

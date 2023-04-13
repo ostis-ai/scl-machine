@@ -42,7 +42,6 @@ LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & resul
   premiseAtom->setArgumentVector(argumentVector);
 
   LogicExpressionNode * conclusionAtom = operands[1].get();
-  conclusionAtom->setGenerateOnlyFirst(generateOnlyFirst);
   conclusionAtom->setArgumentVector(argumentVector);
 
   // Compute premise formula, get replacements with found constructions
