@@ -24,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add parameters to solution tree
 
 ### Fixed
+- Check all var classes for argument
+- Arguments in params for different params duplication
 - Fixed applying rules chain
 
 ### Changed

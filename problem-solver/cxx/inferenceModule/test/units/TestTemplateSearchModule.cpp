@@ -10,6 +10,7 @@
 
 #include "searcher/TemplateSearcher.hpp"
 #include "keynodes/InferenceKeynodes.hpp"
+#include "manager/TemplateManager.hpp"
 
 #include <algorithm>
 
@@ -105,6 +106,40 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_MultipleResultTestCase)
   EXPECT_EQ(expectedResultSet.erase(searchResults[0][searchLinkIdentifier]), 1u);
   EXPECT_EQ(expectedResultSet.erase(searchResults[1][searchLinkIdentifier]), 1u);
   EXPECT_TRUE(expectedResultSet.empty());
+}
+
+TEST_F(TemplateSearchManagerTest, Search_EqualResultTestCase)
+{
+  std::string const & firstHumanIdtf = "human_ivan_ivanov";
+  std::string const & secondHumanIdtf = "human_pavel_ivanov";
+  std::string const & varHumanName1Idtf = "_hum1";
+  std::string const & varHumanName3Idtf = "_hum3";
+
+  ScMemoryContext & context = *m_ctx;
+
+  ScAddr const & firstHumanAddr = context.HelperFindBySystemIdtf(firstHumanIdtf);
+  ScAddr const & secondHumanAddr = context.HelperFindBySystemIdtf(secondHumanIdtf);
+
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchEqualResultTestStucture.scs");
+  initialize();
+
+  ScAddr const & searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
+  inference::TemplateManager templateManager = inference::TemplateManager(&context);
+  std::vector<ScTemplateParams> templateParamsVector = templateManager.createTemplateParams(searchTemplateAddr, {firstHumanAddr, secondHumanAddr});
+
+  inference::TemplateSearcher templateSearcher = inference::TemplateSearcher(&context);
+  for (ScTemplateParams const & templateParams : templateParamsVector)
+  {
+    std::vector<ScTemplateSearchResultItem> searchResults =
+        templateSearcher.searchTemplate(searchTemplateAddr, templateParams);
+
+    EXPECT_EQ(searchResults.size(), 1);
+    EXPECT_TRUE(searchResults[0][varHumanName1Idtf] == firstHumanAddr ||
+                searchResults[0][varHumanName1Idtf] == secondHumanAddr);
+    EXPECT_TRUE(searchResults[0][varHumanName3Idtf] == firstHumanAddr ||
+                searchResults[0][varHumanName3Idtf] == secondHumanAddr);
+    EXPECT_FALSE(searchResults[0][varHumanName1Idtf] == searchResults[0][varHumanName3Idtf]);
+  }
 }
 
 TEST_F(TemplateSearchManagerTest, SearchWithoutContent_NoStructuresTestCase)
