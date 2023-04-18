@@ -8,6 +8,7 @@
 
 #include <memory>
 #include <algorithm>
+#include <chrono>
 
 #include <sc-agents-common/utils/CommonUtils.hpp>
 #include <sc-agents-common/utils/IteratorUtils.hpp>
@@ -43,9 +44,9 @@ Replacements TemplateSearcherInStructures::searchTemplate(
     else
     {
       std::set<std::string> const & varNames = getVarNames(templateAddr);
-      context->HelperSearchTemplate(
+       context->HelperSmartSearchTemplate(
             searchTemplate,
-            [templateParams, &result, &varNames](ScTemplateSearchResultItem const & item) -> void {
+            [templateParams, &result, &varNames](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
               // Add search result item to the answer container
               for (std::string const & varName : varNames)
               {
@@ -59,6 +60,7 @@ Replacements TemplateSearcherInStructures::searchTemplate(
                   result[varName].push_back(argument);
                 }
               }
+              return ScTemplateSearchRequest::STOP;
             },
             [&inputStructuresVector, this](ScAddr const & item) -> bool {
               // Filter result item belonging to any of the input structures
@@ -91,7 +93,7 @@ Replacements TemplateSearcherInStructures::searchTemplateWithContent(
 
   context->HelperSearchTemplate(
         searchTemplate,
-        [templateParams, &result, &varNames](ScTemplateSearchResultItem const & item) -> void {
+        [templateParams, &result, &varNames](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
           // Add search result item to the answer container
           for (std::string const & varName : varNames)
           {
@@ -105,6 +107,7 @@ Replacements TemplateSearcherInStructures::searchTemplateWithContent(
               result[varName].push_back(argument);
             }
           }
+          return ScTemplateSearchRequest::STOP;
         },
         [&inputStructuresVector, &linksContentMap, this](ScTemplateSearchResultItem const & item) -> bool {
           // Filter result item by the same content and belonging to any of the input structures
