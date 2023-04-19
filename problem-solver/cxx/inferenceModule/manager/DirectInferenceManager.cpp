@@ -73,8 +73,10 @@ ScAddr DirectInferenceManager::applyInference(
       SC_LOG_DEBUG(std::string("Logical formula is ") + (formulaResult.isGenerated ? "generated" : "not generated"));
       if (formulaResult.isGenerated)
       {
+        std::set<std::string> varNames;
+        ReplacementsUtils::getKeySet(formulaResult.replacements, varNames);
         solutionTreeManager->addNode(formula, ReplacementsUtils::getReplacementsToScTemplateParams(
-            formulaResult.replacements), ReplacementsUtils::getKeySet(formulaResult.replacements));
+            formulaResult.replacements), varNames);
         targetAchieved = isTargetAchieved(targetStructure, argumentVector);
         if (targetAchieved)
         {
@@ -158,10 +160,14 @@ bool DirectInferenceManager::isTargetAchieved(ScAddr const & targetStructure, Sc
 {
   std::vector<ScTemplateParams> const templateParamsVector =
       templateManager->createTemplateParams(targetStructure, argumentVector);
+  std::set<std::string> varNames;
+  templateSearcher->getVarNames(targetStructure, varNames);
   return std::any_of(
       templateParamsVector.cbegin(),
       templateParamsVector.cend(),
-      [this, &targetStructure](ScTemplateParams const & templateParams) {
-        return !templateSearcher->searchTemplate(targetStructure, templateParams).empty();
+      [this, &targetStructure, &varNames](ScTemplateParams const & templateParams) {
+        Replacements result;
+        templateSearcher->searchTemplate(targetStructure, templateParams, varNames, result);
+        return !result.empty();
       });
 }

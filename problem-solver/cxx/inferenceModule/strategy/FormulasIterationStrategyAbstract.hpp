@@ -58,5 +58,6 @@ protected:
   std::shared_ptr<SolutionTreeManager> solutionTreeManager;
 
   ScAddr arguments;
+  std::unordered_set<ScAddr, ScAddrHashFunc<::size_t>> outputStructureElements;
 };
 }

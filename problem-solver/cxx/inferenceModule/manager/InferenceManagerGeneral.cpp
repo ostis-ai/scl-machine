@@ -14,7 +14,9 @@
 using namespace inference;
 
 InferenceManagerGeneral::InferenceManagerGeneral(ScMemoryContext * ms_context)
-  : ms_context(ms_context) { }
+  : ms_context(ms_context)
+{
+}
 
 void InferenceManagerGeneral::setFormulasIterationStrategy(std::unique_ptr<FormulasIterationStrategyAbstract> strategy)
 {

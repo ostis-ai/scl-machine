@@ -24,14 +24,17 @@ public:
 
   explicit TemplateSearcherInStructures(ScMemoryContext * ms_context);
 
-  Replacements searchTemplate(
+  void searchTemplate(
         ScAddr const & templateAddr,
-        ScTemplateParams const & templateParams) override;
+        ScTemplateParams const & templateParams,
+        std::set<std::string> const & varNames,
+        Replacements & result) override;
 
-  Replacements searchTemplateWithContent(
+  void searchTemplateWithContent(
         ScTemplate const & searchTemplate,
         ScAddr const & templateAddr,
-        ScTemplateParams const & templateParams) override;
+        ScTemplateParams const & templateParams,
+        Replacements & result) override;
 
   std::map<std::string, std::string> getTemplateKeyLinksContent(const ScAddr & templateAddr) override;
 };

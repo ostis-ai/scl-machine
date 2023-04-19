@@ -33,15 +33,21 @@ public:
   virtual ScAddr getFormulaTemplate() const = 0;
   virtual ~LogicExpressionNode() = default;
 
-  virtual LogicFormulaResult generate(Replacements & replacements) const = 0;
+  virtual LogicFormulaResult generate(Replacements & replacements) = 0;
 
   void setArgumentVector(ScAddrVector const & otherArgumentVector)
   {
     argumentVector = otherArgumentVector;
   }
 
+  void setOutputStructureElements(std::unordered_set<ScAddr, ScAddrHashFunc<::size_t>> const & otherOutputStructureElements)
+  {
+    outputStructureElements = otherOutputStructureElements;
+  }
+
 protected:
   ScAddrVector argumentVector;
+  std::unordered_set<ScAddr, ScAddrHashFunc<::size_t>> outputStructureElements;
 };
 
 class OperatorLogicExpressionNode : public LogicExpressionNode

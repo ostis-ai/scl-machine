@@ -9,7 +9,6 @@
 #include <algorithm>
 
 #include <sc-agents-common/utils/CommonUtils.hpp>
-#include <sc-agents-common/keynodes/coreKeynodes.hpp>
 
 using namespace inference;
 
@@ -22,19 +21,19 @@ void TemplateSearcherAbstract::setInputStructures(ScAddr const & otherInputStruc
   inputStructures = otherInputStructures;
 }
 
-Replacements TemplateSearcherAbstract::searchTemplate(
+void TemplateSearcherAbstract::searchTemplate(
       ScAddr const & templateAddr,
-      vector<ScTemplateParams> const & scTemplateParamsVector)
+      vector<ScTemplateParams> const & scTemplateParamsVector,
+      std::set<std::string> const & varNames,
+      Replacements & result)
 {
-  Replacements result;
   Replacements searchResults;
   ScAddrVector varNameReplacementValues;
   ScAddr argument;
-  std::set<string> const & varNames = getVarNames(templateAddr);
 
   for (ScTemplateParams const & scTemplateParams : scTemplateParamsVector)
   {
-    searchResults = searchTemplate(templateAddr, scTemplateParams);
+    searchTemplate(templateAddr, scTemplateParams, varNames, searchResults);
     for (std::string const & varName : varNames)
     {
       if (searchResults.count(varName))
@@ -51,25 +50,24 @@ Replacements TemplateSearcherAbstract::searchTemplate(
       }
     }
   }
-
-  return result;
 }
 
-std::set<std::string> TemplateSearcherAbstract::getVarNames(ScAddr const & structure)
+void TemplateSearcherAbstract::getVarNames(ScAddr const & formula, std::set<std::string> & varNames)
 {
-  std::set<std::string> identifiers;
-  auto collectVarIdtfs = [this, structure](ScType const & varType, std::set<std::string> & identifiers) {
-    ScIterator3Ptr variablesIter3 = context->Iterator3(structure, ScType::EdgeAccessConstPosPerm, varType);
-    while (variablesIter3->Next())
+  ScIterator3Ptr const & formulaVariablesIterator = context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::Unknown);
+  ScAddr element;
+  std::string variableSystemIdtf;
+  while (formulaVariablesIterator->Next())
+  {
+    element = formulaVariablesIterator->Get(2);
+    // TODO(MksmOrlov): replace with ScType::Var after new memory realisation
+    if (context->GetElementType(element) == ScType::NodeVar || context->GetElementType(element) == ScType::LinkVar)
     {
-      std::string const variableSystemIdtf = context->HelperGetSystemIdtf(variablesIter3->Get(2));
+      variableSystemIdtf = context->HelperGetSystemIdtf(element);
       if (!variableSystemIdtf.empty())
-        identifiers.insert(variableSystemIdtf);
+        varNames.insert(variableSystemIdtf);
     }
-  };
-  collectVarIdtfs(ScType::NodeVar, identifiers);
-  collectVarIdtfs(ScType::LinkVar, identifiers);
-  return identifiers;
+  }
 }
 
 bool TemplateSearcherAbstract::isContentIdentical(ScTemplateSearchResultItem const & item, std::map<std::string, std::string> const & linksContentMap)

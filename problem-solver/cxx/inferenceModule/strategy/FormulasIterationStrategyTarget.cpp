@@ -66,8 +66,10 @@ bool FormulasIterationStrategyTarget::applyIterationStrategy(ScAddr const & form
       SC_LOG_DEBUG(std::string("Logical formula is ") + (formulaResult.isGenerated ? "generated" : "not generated"));
       if (formulaResult.isGenerated)
       {
+        std::set<std::string> varNames;
+        ReplacementsUtils::getKeySet(formulaResult.replacements, varNames);
         solutionTreeManager->addNode(formula, ReplacementsUtils::getReplacementsToScTemplateParams(
-              formulaResult.replacements), ReplacementsUtils::getKeySet(formulaResult.replacements));
+              formulaResult.replacements), varNames);
         targetAchieved = isTargetAchieved(argumentVector);
         if (targetAchieved)
         {
@@ -97,10 +99,14 @@ bool FormulasIterationStrategyTarget::isTargetAchieved(ScAddrVector const & argu
 {
   std::vector<ScTemplateParams> const templateParamsVector =
         templateManager->createTemplateParams(targetStructure, argumentVector);
+  std::set<std::string> varNames;
+  templateSearcher->getVarNames(targetStructure, varNames);
   return std::any_of(
         templateParamsVector.cbegin(),
         templateParamsVector.cend(),
-        [this](ScTemplateParams const & templateParams) {
-          return !templateSearcher->searchTemplate(targetStructure, templateParams).empty();
+        [this, &varNames](ScTemplateParams const & templateParams) {
+          Replacements result;
+          templateSearcher->searchTemplate(targetStructure, templateParams, varNames, result);
+          return !result.empty();
         });
 }

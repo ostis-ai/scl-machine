@@ -24,13 +24,16 @@ TemplateSearcherInStructures::TemplateSearcherInStructures(ScMemoryContext * con
 }
 
 TemplateSearcherInStructures::TemplateSearcherInStructures(ScMemoryContext * context)
-    : TemplateSearcherAbstract(context) { }
-
-Replacements TemplateSearcherInStructures::searchTemplate(
-    ScAddr const & templateAddr,
-    ScTemplateParams const & templateParams)
+    : TemplateSearcherAbstract(context)
 {
-  Replacements result;
+}
+
+void TemplateSearcherInStructures::searchTemplate(
+    ScAddr const & templateAddr,
+    ScTemplateParams const & templateParams,
+    std::set<std::string> const & varNames,
+    Replacements & result)
+{
   searchWithoutContentResult = std::make_unique<ScTemplateSearchResult>();
   ScAddrVector const & inputStructuresVector = utils::IteratorUtils::getAllWithType(context, inputStructures, ScType::Node);
   ScTemplate searchTemplate;
@@ -39,11 +42,10 @@ Replacements TemplateSearcherInStructures::searchTemplate(
     if (context->HelperCheckEdge(
           InferenceKeynodes::concept_template_with_links, templateAddr, ScType::EdgeAccessConstPosPerm))
     {
-      result = searchTemplateWithContent(searchTemplate, templateAddr, templateParams);
+      searchTemplateWithContent(searchTemplate, templateAddr, templateParams, result);
     }
     else
     {
-      std::set<std::string> const & varNames = getVarNames(templateAddr);
        context->HelperSmartSearchTemplate(
             searchTemplate,
             [templateParams, &result, &varNames](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
@@ -77,18 +79,17 @@ Replacements TemplateSearcherInStructures::searchTemplate(
   {
     throw std::runtime_error("Template is not built.");
   }
-
-  return result;
 }
 
-Replacements TemplateSearcherInStructures::searchTemplateWithContent(
+void TemplateSearcherInStructures::searchTemplateWithContent(
       ScTemplate const & searchTemplate,
       ScAddr const & templateAddr,
-      ScTemplateParams const & templateParams)
+      ScTemplateParams const & templateParams,
+      Replacements & result)
 {
-  Replacements result;
   ScAddrVector const & inputStructuresVector = utils::IteratorUtils::getAllWithType(context, inputStructures, ScType::Node);
-  std::set<std::string> const & varNames = getVarNames(templateAddr);
+  std::set<std::string> varNames;
+  getVarNames(templateAddr, varNames);
   std::map<std::string, std::string> linksContentMap = getTemplateKeyLinksContent(templateAddr);
 
   context->HelperSearchTemplate(
@@ -129,10 +130,7 @@ Replacements TemplateSearcherInStructures::searchTemplateWithContent(
                 });
           return contentIdentical && isElementInStructures;
         });
-
-  return result;
 }
-
 
 std::map<std::string, std::string> TemplateSearcherInStructures::getTemplateKeyLinksContent(const ScAddr & templateAddr)
 {

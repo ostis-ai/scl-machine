@@ -36,7 +36,7 @@ public:
   LogicExpressionResult check(ScTemplateParams & params) const override;
   LogicFormulaResult compute(LogicFormulaResult & result) const override;
   LogicFormulaResult find(Replacements & replacements) const;
-  LogicFormulaResult generate(Replacements & replacements) const override;
+  LogicFormulaResult generate(Replacements & replacements) override;
 
   ScAddr getFormulaTemplate() const override
   {
@@ -49,6 +49,7 @@ private:
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
   std::shared_ptr<TemplateManagerAbstract> templateManager;
   std::shared_ptr<SolutionTreeManager> solutionTreeManager;
+
   ScAddr outputStructure;
   ScAddr formula;
 };

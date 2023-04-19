@@ -101,6 +101,7 @@ LogicFormulaResult FormulasIterationStrategyAbstract::useFormula(
 
   std::shared_ptr<LogicExpressionNode> expressionRoot = logicExpression.build(formulaRoot);
   expressionRoot->setArgumentVector(argumentVector);
+  expressionRoot->setOutputStructureElements(outputStructureElements);
 
   LogicFormulaResult blankResult;
   LogicFormulaResult formulaResult = expressionRoot->compute(blankResult);

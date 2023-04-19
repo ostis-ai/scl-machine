@@ -101,7 +101,7 @@ LogicFormulaResult ConjunctionExpressionNode::compute(LogicFormulaResult & resul
   return result;
 }
 
-LogicFormulaResult ConjunctionExpressionNode::generate(Replacements & replacements) const
+LogicFormulaResult ConjunctionExpressionNode::generate(Replacements & replacements)
 {
   LogicFormulaResult fail = {false, false, {}};
   LogicFormulaResult globalResult = {true, false, replacements};

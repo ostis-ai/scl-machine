@@ -21,11 +21,12 @@ TemplateSearcher::TemplateSearcher(ScMemoryContext * context)
 {
 }
 
-Replacements TemplateSearcher::searchTemplate(
+void TemplateSearcher::searchTemplate(
     ScAddr const & templateAddr,
-    ScTemplateParams const & templateParams)
+    ScTemplateParams const & templateParams,
+    std::set<std::string> const & varNames,
+    Replacements & result)
 {
-  Replacements result;
   vector<ScTemplateSearchResultItem> searchResultItems;
   ScTemplate searchTemplate;
   if (context->HelperBuildTemplate(searchTemplate, templateAddr, templateParams))
@@ -33,11 +34,10 @@ Replacements TemplateSearcher::searchTemplate(
     if (context->HelperCheckEdge(
             InferenceKeynodes::concept_template_with_links, templateAddr, ScType::EdgeAccessConstPosPerm))
     {
-      result = searchTemplateWithContent(searchTemplate, templateAddr, templateParams);
+      searchTemplateWithContent(searchTemplate, templateAddr, templateParams, result);
     }
     else
     {
-      std::set<std::string> const & varNames = getVarNames(templateAddr);
       context->HelperSearchTemplate(
         searchTemplate,
         [&templateParams, &result, &varNames](ScTemplateSearchResultItem const & item) -> void {
@@ -61,18 +61,17 @@ Replacements TemplateSearcher::searchTemplate(
   {
     throw runtime_error("Template is not built.");
   }
-
-  return result;
 }
 
-Replacements TemplateSearcher::searchTemplateWithContent(
+void TemplateSearcher::searchTemplateWithContent(
     ScTemplate const & searchTemplate,
     ScAddr const & templateAddr,
-    ScTemplateParams const & templateParams)
+    ScTemplateParams const & templateParams,
+    Replacements & result)
 {
-  Replacements result;
   std::map<std::string, std::string> linksContentMap = getTemplateKeyLinksContent(templateAddr);
-  std::set<std::string> const & varNames = getVarNames(templateAddr);
+  std::set<std::string> varNames;
+  getVarNames(templateAddr, varNames);
 
   context->HelperSearchTemplate(
         searchTemplate,
@@ -95,8 +94,6 @@ Replacements TemplateSearcher::searchTemplateWithContent(
           // Filter result item by the same content
           return isContentIdentical(item, linksContentMap);
         });
-
-  return result;
 }
 
 std::map<std::string, std::string> TemplateSearcher::getTemplateKeyLinksContent(const ScAddr & templateAddr)
