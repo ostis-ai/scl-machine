@@ -1,5 +1,4 @@
 sc_node_class
-	-> concept_template_for_generation;
 	-> atomic_logical_formula;
 	-> target_node_class;
 	-> current_node_class;
@@ -31,12 +30,24 @@ atomic_logical_formula
 	-> if;
 	-> then;;
 
-concept_template_for_generation
-	-> then;;
-
 input_structures
 	-> input_structure1;
 	-> input_structure2;;
+
+arguments
+	-> argument;
+	-> argument2;
+	-> argument3;
+	-> argument4;
+	-> argument5;
+	-> fake_argument;;
+
+logic_rule
+	-> rrel_1: argument;
+	-> rrel_2: argument2;
+	-> rrel_3: argument3;
+	-> rrel_4: argument4;
+	-> rrel_5: argument5;;
 
 input_structure1 = [*
 	argument <- current_node_class;;

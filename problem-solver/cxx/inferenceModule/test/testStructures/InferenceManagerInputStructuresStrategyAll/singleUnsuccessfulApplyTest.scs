@@ -1,5 +1,4 @@
 sc_node_class
-	-> concept_template_for_generation;
 	-> atomic_logical_formula;
 	-> target_node_class;
 	-> current_node_class;
@@ -28,9 +27,6 @@ then = [*
 
 atomic_logical_formula
 	-> if;
-	-> then;;
-
-concept_template_for_generation
 	-> then;;
 
 input_structures

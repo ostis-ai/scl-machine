@@ -358,28 +358,32 @@ TEST_F(InferenceManagerBuilderTest, SnakesTailsApplyInference)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "snakeSingleArgumentApplyTest.scs");
   initialize();
 
-  ScAddr const & tail = context.HelperFindBySystemIdtf("tail");
-  generateTails(*m_ctx, tail, 1, 10000);
+  for (size_t i = 0; i <20; i++)
+  {
+    ScAddr const & tail = context.HelperFindBySystemIdtf("tail");
+    generateTails(*m_ctx, tail, 10, 1000);
 
-  ScAddr const & inputStructures = context.HelperResolveSystemIdtf(INPUT_STRUCTURES);
-  ScAddr const & arguments = context.HelperResolveSystemIdtf(ARGUMENTS);
+    ScAddr const & inputStructures = context.HelperResolveSystemIdtf(INPUT_STRUCTURES);
+    ScAddr const & arguments = context.HelperResolveSystemIdtf(ARGUMENTS);
 
-  auto start_time = std::chrono::high_resolution_clock::now();
-  std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
+    auto start_time = std::chrono::high_resolution_clock::now();
+    std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
         std::make_unique<inference::InferenceManagerInputStructuresBuilder>(&context, inputStructures, arguments);
 
-  std::unique_ptr<inference::InferenceManagerGeneral> inferenceManager =
+    std::unique_ptr<inference::InferenceManagerGeneral> inferenceManager =
         inference::InferenceManagerDirector::constructDirectInferenceManagerInputStructuresFixedArgumentsStrategyAll(&context, std::move(builder));
 
-  ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
-  ScAddr const & solution = inferenceManager->applyInference(rulesSet);
-  auto end_time = std::chrono::high_resolution_clock::now();
-  auto time = end_time - start_time;
-  SC_LOG_WARNING("Apply inference milliseconds: " << time/std::chrono::milliseconds(1));
+    ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
+    ScAddr const & solution = inferenceManager->applyInference(rulesSet);
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto time = end_time - start_time;
+    SC_LOG_WARNING("Apply inference milliseconds: " << time/std::chrono::milliseconds(1));
 
-  EXPECT_TRUE(solution.IsValid());
-  EXPECT_TRUE(
-      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
+    EXPECT_TRUE(solution.IsValid());
+    EXPECT_TRUE(
+        context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
+  }
+
 }
 
 TEST_F(InferenceManagerBuilderTest, SnakesTailsConjunctionApplyInference)
@@ -421,9 +425,10 @@ TEST_F(InferenceManagerBuilderTest, MultipleSuccessApplyInference)
   initialize();
 
   ScAddr const & inputStructures = context.HelperResolveSystemIdtf(INPUT_STRUCTURES);
+  ScAddr const & arguments = context.HelperResolveSystemIdtf(ARGUMENTS);
 
   std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
-        std::make_unique<inference::InferenceManagerInputStructuresBuilder>(&context, inputStructures);
+        std::make_unique<inference::InferenceManagerInputStructuresBuilder>(&context, inputStructures, arguments);
 
   std::unique_ptr<inference::InferenceManagerGeneral> inferenceManager =
         inference::InferenceManagerDirector::constructDirectInferenceManagerInputStructuresFixedArgumentsStrategyAll(&context, std::move(builder));

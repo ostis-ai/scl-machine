@@ -1,6 +1,5 @@
 sc_node_class
 	-> atomic_logical_formula;
-	-> concept_template_for_generation;
 	-> target_class;
 	-> class_1;
 	-> current_class;;

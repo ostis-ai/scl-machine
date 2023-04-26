@@ -1,5 +1,4 @@
 sc_node_class
-	-> concept_template_for_generation;
 	-> atomic_logical_formula;
 	-> class_tail;;
 
@@ -37,9 +36,6 @@ logic_rule
 
 atomic_logical_formula
 	-> if;
-	-> then;;
-
-concept_template_for_generation
 	-> then;;
 
 input_structures

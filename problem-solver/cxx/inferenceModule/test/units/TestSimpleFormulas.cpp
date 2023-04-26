@@ -331,7 +331,7 @@ TEST_F(InferenceSimpleFormulasTest, SubstitutionsTest)
   );
   ScTemplateSearchResult searchResult;
   context.HelperSearchTemplate(scTemplate, searchResult);
-  EXPECT_TRUE(searchResult.Size() == 1);
+  EXPECT_EQ(searchResult.Size(), 1);
   shutdown();
   context.Destroy();
 }
