@@ -33,6 +33,7 @@ InferenceManagerBuilderAbstract & InferenceManagerInputStructuresBuilder::setFor
   strategy->setTemplateSearcher(std::move(templateSearcher));
   strategy->setTemplateManager(std::move(templateManager));
   strategy->setArguments(arguments);
+  strategy->setGenerateSolutionTree(false);
 
   inferenceManager->setFormulasIterationStrategy(std::move(strategy));
 

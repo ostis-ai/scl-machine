@@ -59,13 +59,16 @@ bool FormulasIterationStrategyAll::applyIterationStrategy(ScAddr const & formula
       SC_LOG_DEBUG("Logical formula is " << (formulaResult.isGenerated ? "generated" : "not generated"));
       if (formulaResult.isGenerated)
       {
-        std::set<std::string> varNames;
-        ReplacementsUtils::getKeySet(formulaResult.replacements, varNames);
         result = true;
-        solutionTreeManager->addNode(
+        if (generateSolutionTree)
+        {
+          std::set<std::string> varNames;
+          ReplacementsUtils::getKeySet(formulaResult.replacements, varNames);
+          solutionTreeManager->addNode(
               formula,
               ReplacementsUtils::getReplacementsToScTemplateParams(formulaResult.replacements),
               varNames);
+        }
       }
 
       uncheckedFormulas.pop();

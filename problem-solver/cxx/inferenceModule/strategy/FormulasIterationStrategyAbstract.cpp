@@ -20,6 +20,7 @@ FormulasIterationStrategyAbstract::FormulasIterationStrategyAbstract(ScMemoryCon
 {
   // Now we don't have several implementations for SolutionTreeManager
   solutionTreeManager = std::make_unique<SolutionTreeManager>(context);
+  generateSolutionTree = true;
 }
 
 void FormulasIterationStrategyAbstract::setTemplateSearcher(std::shared_ptr<TemplateSearcherAbstract> searcher)
@@ -40,6 +41,11 @@ void FormulasIterationStrategyAbstract::setSolutionTreeManager(std::shared_ptr<S
 void FormulasIterationStrategyAbstract::setArguments(ScAddr const & otherArguments)
 {
   arguments = otherArguments;
+}
+
+void FormulasIterationStrategyAbstract::setGenerateSolutionTree(bool const otherGenerateSolutionTree)
+{
+  generateSolutionTree = otherGenerateSolutionTree;
 }
 
 std::shared_ptr<SolutionTreeManager> FormulasIterationStrategyAbstract::getSolutionTreeManager()

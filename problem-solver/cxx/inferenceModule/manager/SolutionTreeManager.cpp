@@ -9,7 +9,7 @@ SolutionTreeManager::SolutionTreeManager(ScMemoryContext * context)
   solutionTreeSearcher = std::make_unique<SolutionTreeSearcher>(context);
 }
 
-bool SolutionTreeManager::addNode(ScAddr const & formula, const std::vector<ScTemplateParams> & templateParamsVector, std::set<std::string> const & varNames)
+bool SolutionTreeManager::addNode(ScAddr const & formula, std::vector<ScTemplateParams> const & templateParamsVector, std::set<std::string> const & varNames)
 {
   bool result = true;
   for (ScTemplateParams const & templateParams : templateParamsVector)

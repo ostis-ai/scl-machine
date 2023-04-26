@@ -19,7 +19,7 @@ namespace inference
 {
 using ScAddrQueue = std::queue<ScAddr>;
 
-/// Class to control formulas iteration strategy: when to top applying rules and how to iterate over them
+/// Class to control formulas iteration strategy: when to stop applying rules and how to iterate over them
 class FormulasIterationStrategyAbstract
 {
 public:
@@ -32,6 +32,7 @@ public:
   void setSolutionTreeManager(std::shared_ptr<SolutionTreeManager> searcher);
 
   void setArguments(ScAddr const & otherArguments);
+  void setGenerateSolutionTree(bool otherGenerateSolutionTree);
 
   std::shared_ptr<SolutionTreeManager> getSolutionTreeManager();
 
@@ -58,6 +59,8 @@ protected:
   std::shared_ptr<SolutionTreeManager> solutionTreeManager;
 
   ScAddr arguments;
+  bool generateSolutionTree;
+
   std::unordered_set<ScAddr, ScAddrHashFunc<::size_t>> outputStructureElements;
 };
-}
+} // inference
