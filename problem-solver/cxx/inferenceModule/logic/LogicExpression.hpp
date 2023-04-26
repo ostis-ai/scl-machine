@@ -32,19 +32,18 @@ public:
       std::shared_ptr<TemplateSearcherAbstract> templateSearcher,
       std::shared_ptr<TemplateManagerAbstract> templateManager,
       std::shared_ptr<SolutionTreeManager> solutionTreeManager,
-      ScAddr const & outputStructure,
-      ScAddr const & formula);
+      ScAddr const & outputStructure);
 
-  std::shared_ptr<LogicExpressionNode> build(ScAddr const & node);
+  std::shared_ptr<LogicExpressionNode> build(ScAddr const & formula);
 
-  std::shared_ptr<LogicExpressionNode> buildAtomicFormula(ScAddr const & node);
-  std::shared_ptr<LogicExpressionNode> buildConjunctionFormula(ScAddr const & node);
-  std::shared_ptr<LogicExpressionNode> buildDisjunctionFormula(ScAddr const & node);
-  std::shared_ptr<LogicExpressionNode> buildNegationFormula(ScAddr const & node);
-  std::shared_ptr<LogicExpressionNode> buildImplicationEdgeFormula(ScAddr const & node);
-  std::shared_ptr<LogicExpressionNode> buildImplicationTupleFormula(ScAddr const & node);
-  std::shared_ptr<LogicExpressionNode> buildEquivalenceEdgeFormula(ScAddr const & node);
-  std::shared_ptr<LogicExpressionNode> buildEquivalenceTupleFormula(ScAddr const & node);
+  std::shared_ptr<LogicExpressionNode> buildAtomicFormula(ScAddr const & formula);
+  std::shared_ptr<LogicExpressionNode> buildConjunctionFormula(ScAddr const & formula);
+  std::shared_ptr<LogicExpressionNode> buildDisjunctionFormula(ScAddr const & formula);
+  std::shared_ptr<LogicExpressionNode> buildNegationFormula(ScAddr const & formula);
+  std::shared_ptr<LogicExpressionNode> buildImplicationEdgeFormula(ScAddr const & formula);
+  std::shared_ptr<LogicExpressionNode> buildImplicationTupleFormula(ScAddr const & formula);
+  std::shared_ptr<LogicExpressionNode> buildEquivalenceEdgeFormula(ScAddr const & formula);
+  std::shared_ptr<LogicExpressionNode> buildEquivalenceTupleFormula(ScAddr const & formula);
 
   OperatorLogicExpressionNode::OperandsVector resolveTupleOperands(ScAddr const & tuple);
   OperatorLogicExpressionNode::OperandsVector resolveEdgeOperands(ScAddr const & edge);
@@ -59,5 +58,4 @@ private:
   std::shared_ptr<SolutionTreeManager> solutionTreeManager;
 
   ScAddr outputStructure;
-  ScAddr formula;
 };

@@ -17,16 +17,10 @@ TemplateManager::TemplateManager(ScMemoryContext * ms_context) : TemplateManager
 /* For all classes of the all template variables create map <varName, arguments>
  * Where arguments are elements from argumentList, and each argument class is the same as variable varName class
  */
-// TODO: create another implementation that returns template params from argument list only (через соответствие по формуле)
-// может быть добавить формулу как параметр
-// argument list order is important
-// выделить класс формул для конкретных аргументов с переменным
-// Этот метод имеет смысл только если передаются непустые аргументы argumentList
 std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
     ScAddr const & scTemplate,
     ScAddrVector const & argumentList)
 {
-  SC_LOG_ERROR("createTemplateParams for " << context->HelperGetSystemIdtf(scTemplate));
   std::map<std::string, std::set<ScAddr, AddrComparator>> replacementsMultimap;
   std::vector<ScTemplateParams> templateParamsVector;
 
@@ -63,7 +57,6 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
         ScTemplateParams params;
         params.Add(varName, address);
         templateParamsVector.push_back(params);
-        SC_LOG_ERROR("Empty Add param: " << varName);
       }
     }
     else
@@ -86,7 +79,6 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
         for (size_t i = 0; i < oldParamsSize; ++i)
         {
           updatedParams[beginOfCopy + i].Add(varName, address);
-          SC_LOG_ERROR("Not Empty Add param: " << varName);
         }
 
         beginOfCopy = endOfCopy;
@@ -96,6 +88,5 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
       templateParamsVector = std::move(updatedParams);
     }
   }
-  SC_LOG_ERROR(templateParamsVector.size());
   return templateParamsVector;
 }

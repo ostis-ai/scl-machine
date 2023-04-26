@@ -8,7 +8,6 @@
 
 #include <memory>
 #include <algorithm>
-#include <chrono>
 
 #include <sc-agents-common/utils/CommonUtils.hpp>
 #include <sc-agents-common/utils/IteratorUtils.hpp>

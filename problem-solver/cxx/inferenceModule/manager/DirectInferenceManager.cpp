@@ -127,8 +127,7 @@ LogicFormulaResult DirectInferenceManager::useFormula(
         templateSearcher,
         templateManager,
         solutionTreeManager,
-        outputStructure,
-        rule);
+        outputStructure);
 
   std::shared_ptr<LogicExpressionNode> expressionRoot = logicExpression.build(formulaRoot);
   expressionRoot->setArgumentVector(argumentVector);

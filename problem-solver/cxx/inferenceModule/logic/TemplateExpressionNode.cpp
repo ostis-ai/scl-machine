@@ -101,20 +101,18 @@ LogicFormulaResult TemplateExpressionNode::find(Replacements & replacements) con
 LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
 {
   LogicFormulaResult result;
-  result.isGenerated = false;
 
   // Convert replacements to templateParams to generate by them
   std::vector<ScTemplateParams> paramsVector = ReplacementsUtils::getReplacementsToScTemplateParams(replacements);
+  if (paramsVector.empty())
+  {
+    SC_LOG_DEBUG("Atomic logical formula " << context->HelperGetSystemIdtf(formulaTemplate) << " is not generated");
+    return result;
+  }
 
   std::set<std::string> varNames;
   ReplacementsUtils::getKeySet(replacements, varNames);
   templateSearcher->getVarNames(formulaTemplate, varNames);
-
-  if (paramsVector.empty())
-  {
-    SC_LOG_DEBUG("Atomic logical formula " << context->HelperGetSystemIdtf(formulaTemplate) << " is not generated");
-    return compute(result);
-  }
 
   size_t count = 0;
   Replacements searchResult;
