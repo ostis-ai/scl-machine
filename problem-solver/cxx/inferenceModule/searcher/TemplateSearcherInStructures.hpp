@@ -20,7 +20,7 @@ namespace inference
 class TemplateSearcherInStructures : public TemplateSearcherAbstract
 {
 public:
-  explicit TemplateSearcherInStructures(ScMemoryContext * context, ScAddr const & otherInputStructures);
+  explicit TemplateSearcherInStructures(ScMemoryContext * context, ScAddrVector const & otherInputStructures);
 
   explicit TemplateSearcherInStructures(ScMemoryContext * ms_context);
 

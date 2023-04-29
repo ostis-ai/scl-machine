@@ -16,7 +16,7 @@
 
 using namespace inference;
 
-TemplateSearcherInStructures::TemplateSearcherInStructures(ScMemoryContext * context, ScAddr const & otherInputStructures)
+TemplateSearcherInStructures::TemplateSearcherInStructures(ScMemoryContext * context, ScAddrVector const & otherInputStructures)
     : TemplateSearcherAbstract(context)
 {
   inputStructures = otherInputStructures;
@@ -34,7 +34,6 @@ void TemplateSearcherInStructures::searchTemplate(
     Replacements & result)
 {
   searchWithoutContentResult = std::make_unique<ScTemplateSearchResult>();
-  ScAddrVector const & inputStructuresVector = utils::IteratorUtils::getAllWithType(context, inputStructures, ScType::Node);
   ScTemplate searchTemplate;
   if (context->HelperBuildTemplate(searchTemplate, templateAddr, templateParams))
   {
@@ -63,11 +62,11 @@ void TemplateSearcherInStructures::searchTemplate(
               }
               return ScTemplateSearchRequest::STOP;
             },
-            [&inputStructuresVector, this](ScAddr const & item) -> bool {
+            [this](ScAddr const & item) -> bool {
               // Filter result item belonging to any of the input structures
               return std::any_of(
-                    inputStructuresVector.cbegin(),
-                    inputStructuresVector.cend(),
+                    inputStructures.cbegin(),
+                   inputStructures.cend(),
                     [&item, this](ScAddr const & structure) -> bool {
                       return context->HelperCheckEdge(structure, item, ScType::EdgeAccessConstPosPerm);
                     });
@@ -86,7 +85,6 @@ void TemplateSearcherInStructures::searchTemplateWithContent(
       ScTemplateParams const & templateParams,
       Replacements & result)
 {
-  ScAddrVector const & inputStructuresVector = utils::IteratorUtils::getAllWithType(context, inputStructures, ScType::Node);
   std::set<std::string> varNames;
   getVarNames(templateAddr, varNames);
   std::map<std::string, std::string> linksContentMap = getTemplateKeyLinksContent(templateAddr);
@@ -109,12 +107,12 @@ void TemplateSearcherInStructures::searchTemplateWithContent(
           }
           return ScTemplateSearchRequest::STOP;
         },
-        [&inputStructuresVector, &linksContentMap, this](ScTemplateSearchResultItem const & item) -> bool {
+        [&linksContentMap, this](ScTemplateSearchResultItem const & item) -> bool {
           // Filter result item by the same content and belonging to any of the input structures
           bool contentIdentical = isContentIdentical(item, linksContentMap);
           bool isElementInStructures = std::any_of(
-                inputStructuresVector.cbegin(),
-                inputStructuresVector.cend(),
+                inputStructures.cbegin(),
+                inputStructures.cend(),
                 [&item, this](ScAddr const & structure) -> bool {
                   bool result = true;
                   for (size_t i = 0; i < item.Size(); i++)
@@ -135,7 +133,6 @@ std::map<std::string, std::string> TemplateSearcherInStructures::getTemplateKeyL
 {
   std::string const LINK_ALIAS = "_link";
 
-  ScAddrVector const & inputStructuresVector = utils::IteratorUtils::getAllWithType(context, inputStructures, ScType::Node);
   std::map<std::string, std::string> linksContent;
   ScTemplate scTemplate;
   scTemplate.TripleWithRelation(
@@ -158,11 +155,11 @@ std::map<std::string, std::string> TemplateSearcherInStructures::getTemplateKeyL
             linksContent.emplace(context->HelperGetSystemIdtf(linkAddr), stringContent);
           }
         },
-        [&inputStructuresVector, this](ScAddr const & item) -> bool {
+        [this](ScAddr const & item) -> bool {
           // Filter result item belonging to any of the input structures
           return std::any_of(
-                inputStructuresVector.cbegin(),
-                inputStructuresVector.cend(),
+                inputStructures.cbegin(),
+                inputStructures.cend(),
                 [&item, this](ScAddr const & structure) -> bool {
                   return context->HelperCheckEdge(structure, item, ScType::EdgeAccessConstPosPerm);
                 });

@@ -11,7 +11,7 @@
 using namespace inference;
 
 InferenceManagerInputStructuresBuilder::InferenceManagerInputStructuresBuilder(
-      ScMemoryContext * context, ScAddr const & otherInputStructures, ScAddr const & otherArguments) : InferenceManagerBuilderAbstract(context)
+      ScMemoryContext * context, ScAddrVector const & otherInputStructures, ScAddr const & otherArguments) : InferenceManagerBuilderAbstract(context)
 {
   inputStructures = otherInputStructures;
   arguments = otherArguments;

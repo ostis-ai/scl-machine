@@ -22,7 +22,8 @@ namespace inferenceManagerBuilderTest
 ScsLoader loader;
 std::string const TEST_FILES_DIR_PATH = TEMPLATE_SEARCH_MODULE_TEST_SRC_PATH "/testStructures/InferenceManagerInputStructuresStrategyAll/";
 
-std::string const INPUT_STRUCTURES = "input_structures";
+std::string const INPUT_STRUCTURE1 = "input_structure1";
+std::string const INPUT_STRUCTURE2 = "input_structure2";
 std::string const RULES_SET = "rules_set";
 std::string const ARGUMENT = "argument";
 std::string const ARGUMENTS = "arguments";
@@ -168,7 +169,10 @@ TEST_F(InferenceManagerBuilderTest, SingleSuccessApplyInference)
   initialize();
 
   // Get input structures set of two structures. One of them consists one triple from premise and the other -- the second triple.
-  ScAddr const & inputStructures = context.HelperResolveSystemIdtf(INPUT_STRUCTURES);
+  ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
+  ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
+  ScAddrVector inputStructures{inputStructure1, inputStructure2};
+
   // Get arguments set. It is a singleton
   ScAddr const & arguments = context.HelperResolveSystemIdtf(ARGUMENTS);
 
@@ -207,7 +211,9 @@ TEST_F(InferenceManagerBuilderTest, CycleSingleSuccessApplyInference)
   for (size_t i = 0; i < 1078; i++)
   {
     // Get input structures set of two structures. One of them consists one triple from premise and the other -- the second triple.
-    ScAddr const & inputStructures = context.HelperResolveSystemIdtf(INPUT_STRUCTURES);
+    ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
+    ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
+    ScAddrVector inputStructures{inputStructure1, inputStructure2};
     // Get arguments set. It is a singleton
     ScAddr const & arguments = context.HelperResolveSystemIdtf(ARGUMENTS);
 
@@ -244,7 +250,9 @@ TEST_F(InferenceManagerBuilderTest, SingleSuccessArgumentApplyInference)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "singleArgumentApplyTest.scs");
   initialize();
 
-  ScAddr const & inputStructures = context.HelperResolveSystemIdtf(INPUT_STRUCTURES);
+  ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
+  ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
+  ScAddrVector inputStructures{inputStructure1, inputStructure2};
   ScAddr const & arguments = context.HelperResolveSystemIdtf(ARGUMENTS);
 
   std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
@@ -276,7 +284,9 @@ TEST_F(InferenceManagerBuilderTest, SnakeApplyInference)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "snakeSingleArgumentApplyTest.scs");
   initialize();
 
-  ScAddr const & inputStructures = context.HelperResolveSystemIdtf(INPUT_STRUCTURES);
+  ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
+  ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
+  ScAddrVector inputStructures{inputStructure1, inputStructure2};
   ScAddr const & arguments = context.HelperResolveSystemIdtf(ARGUMENTS);
 
   auto start_time = std::chrono::high_resolution_clock::now();
@@ -318,7 +328,9 @@ TEST_F(InferenceManagerBuilderTest, SnakesApplyInference)
 
   generateSnakes(*m_ctx, 1000, 100);
 
-  ScAddr const & inputStructures = context.HelperResolveSystemIdtf(INPUT_STRUCTURES);
+  ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
+  ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
+  ScAddrVector inputStructures{inputStructure1, inputStructure2};
   ScAddr const & arguments = context.HelperResolveSystemIdtf(ARGUMENTS);
 
   auto start_time = std::chrono::high_resolution_clock::now();
@@ -363,7 +375,9 @@ TEST_F(InferenceManagerBuilderTest, SnakesTailsApplyInference)
     ScAddr const & tail = context.HelperFindBySystemIdtf("tail");
     generateTails(*m_ctx, tail, 10, 1000);
 
-    ScAddr const & inputStructures = context.HelperResolveSystemIdtf(INPUT_STRUCTURES);
+    ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
+    ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
+    ScAddrVector inputStructures{inputStructure1, inputStructure2};
     ScAddr const & arguments = context.HelperResolveSystemIdtf(ARGUMENTS);
 
     auto start_time = std::chrono::high_resolution_clock::now();
@@ -396,7 +410,9 @@ TEST_F(InferenceManagerBuilderTest, SnakesTailsConjunctionApplyInference)
   ScAddr const & tail = context.HelperFindBySystemIdtf("tail");
   generateTails(*m_ctx, tail, 10, 10000);
 
-  ScAddr const & inputStructures = context.HelperResolveSystemIdtf(INPUT_STRUCTURES);
+  ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
+  ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
+  ScAddrVector inputStructures{inputStructure1, inputStructure2};
   ScAddr const & arguments = context.HelperResolveSystemIdtf(ARGUMENTS);
 
   auto start_time = std::chrono::high_resolution_clock::now();
@@ -424,7 +440,9 @@ TEST_F(InferenceManagerBuilderTest, MultipleSuccessApplyInference)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "fiveTimesApplyTest.scs");
   initialize();
 
-  ScAddr const & inputStructures = context.HelperResolveSystemIdtf(INPUT_STRUCTURES);
+  ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
+  ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
+  ScAddrVector inputStructures{inputStructure1, inputStructure2};
   ScAddr const & arguments = context.HelperResolveSystemIdtf(ARGUMENTS);
 
   std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
@@ -468,7 +486,9 @@ TEST_F(InferenceManagerBuilderTest, SingleUnsuccessfulApplyInference)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "singleUnsuccessfulApplyTest.scs");
   initialize();
 
-  ScAddr const & inputStructures = context.HelperResolveSystemIdtf(INPUT_STRUCTURES);
+  ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
+  ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
+  ScAddrVector inputStructures{inputStructure1, inputStructure2};
 
   std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
         std::make_unique<inference::InferenceManagerInputStructuresBuilder>(&context, inputStructures);

@@ -16,7 +16,7 @@ TemplateSearcherAbstract::TemplateSearcherAbstract(ScMemoryContext * context) : 
 {
 }
 
-void TemplateSearcherAbstract::setInputStructures(ScAddr const & otherInputStructures)
+void TemplateSearcherAbstract::setInputStructures(ScAddrVector const & otherInputStructures)
 {
   inputStructures = otherInputStructures;
 }

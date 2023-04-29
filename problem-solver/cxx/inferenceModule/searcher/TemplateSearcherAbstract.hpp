@@ -47,7 +47,7 @@ public:
 
   void setArguments(ScAddr const & otherArguments);
 
-  void setInputStructures(ScAddr const & otherInputStructures);
+  void setInputStructures(ScAddrVector const & otherInputStructures);
 
 protected:
   virtual void searchTemplateWithContent(
@@ -62,6 +62,6 @@ protected:
   std::unique_ptr<ScTemplateSearchResult> searchWithoutContentResult;
   ScAddrVector params;
   ScAddr arguments;
-  ScAddr inputStructures;
+  ScAddrVector inputStructures;
 };
 }  // namespace inference

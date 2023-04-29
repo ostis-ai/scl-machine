@@ -32,10 +32,6 @@ atomic_logical_formula
 	-> if;
 	-> then;;
 
-input_structures
-	-> input_structure1;
-	-> input_structure2;;
-
 input_structure1 = [*
 	argument <- current_node_class;;
 	fake_argument <- class_1;;
