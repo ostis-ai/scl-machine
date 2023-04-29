@@ -25,14 +25,7 @@ void FormulasIterationStrategyTarget::setTargetStructure(ScAddr const & otherTar
 
 bool FormulasIterationStrategyTarget::applyIterationStrategy(ScAddr const & formulasSet, ScAddr const & outputStructure)
 {
-  ScAddrVector argumentVector = formArgumentsVector();
-  for (ScAddr const & argument : argumentVector)
-  {
-    templateSearcher->addParam(argument);
-  }
-  templateSearcher->setArguments(arguments);
-
-  bool targetAchieved = isTargetAchieved(argumentVector);
+  bool targetAchieved = isTargetAchieved(arguments);
   if (targetAchieved)
   {
     SC_LOG_DEBUG("Target is already achieved");
@@ -62,7 +55,7 @@ bool FormulasIterationStrategyTarget::applyIterationStrategy(ScAddr const & form
     {
       formula = uncheckedFormulas.front();
       SC_LOG_DEBUG("Trying to generate by formula: " + context->HelperGetSystemIdtf(formula));
-      formulaResult = useFormula(formula, argumentVector, outputStructure);
+      formulaResult = useFormula(formula, arguments, outputStructure);
       SC_LOG_DEBUG(std::string("Logical formula is ") + (formulaResult.isGenerated ? "generated" : "not generated"));
       if (formulaResult.isGenerated)
       {
@@ -70,7 +63,7 @@ bool FormulasIterationStrategyTarget::applyIterationStrategy(ScAddr const & form
         ReplacementsUtils::getKeySet(formulaResult.replacements, varNames);
         solutionTreeManager->addNode(formula, ReplacementsUtils::getReplacementsToScTemplateParams(
               formulaResult.replacements), varNames);
-        targetAchieved = isTargetAchieved(argumentVector);
+        targetAchieved = isTargetAchieved(arguments);
         if (targetAchieved)
         {
           SC_LOG_DEBUG("Target achieved");

@@ -31,7 +31,7 @@ public:
   void setTemplateManager(std::shared_ptr<TemplateManagerAbstract> manager);
   void setSolutionTreeManager(std::shared_ptr<SolutionTreeManager> searcher);
 
-  void setArguments(ScAddr const & otherArguments);
+  void setArguments(ScAddrVector const & otherArguments);
   void setGenerateSolutionTree(bool otherGenerateSolutionTree);
 
   std::shared_ptr<SolutionTreeManager> getSolutionTreeManager();
@@ -45,11 +45,11 @@ public:
 
   void fillFormulaFixedArgumentsIdentifiers(ScAddr const & formula) const;
 
-  ScAddrVector formArgumentsVector() const;
-
   vector<ScAddrQueue> createFormulasQueuesListByPriority(ScAddr const & formulasSet);
 
   ScAddrQueue createQueue(ScAddr const & set);
+
+  ScAddrVector getArguments() const;
 
 protected:
   ScMemoryContext * context;
@@ -58,7 +58,7 @@ protected:
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
   std::shared_ptr<SolutionTreeManager> solutionTreeManager;
 
-  ScAddr arguments;
+  ScAddrVector arguments;
   bool generateSolutionTree;
 
   std::unordered_set<ScAddr, ScAddrHashFunc<::size_t>> outputStructureElements;

@@ -13,13 +13,13 @@ namespace inference
 class InferenceManagerInputStructuresBuilder : public InferenceManagerBuilderAbstract
 {
 public:
-  explicit InferenceManagerInputStructuresBuilder(ScMemoryContext * context, ScAddrVector const & otherInputStructures, ScAddr const & otherArguments = {});
+  explicit InferenceManagerInputStructuresBuilder(ScMemoryContext * context, ScAddrVector const & otherInputStructures, ScAddrVector const & otherArguments = {});
 
   InferenceManagerBuilderAbstract & setTemplateSearcher(std::unique_ptr<TemplateSearcherAbstract> searcher) override;
   InferenceManagerBuilderAbstract & setFormulasIterationStrategy(std::unique_ptr<FormulasIterationStrategyAbstract> strategy) override;
 
 protected:
   ScAddrVector inputStructures;
-  ScAddr arguments;
+  ScAddrVector arguments;
 };
 }

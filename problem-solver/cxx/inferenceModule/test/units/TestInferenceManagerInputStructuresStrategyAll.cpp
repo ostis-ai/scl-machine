@@ -26,7 +26,6 @@ std::string const INPUT_STRUCTURE1 = "input_structure1";
 std::string const INPUT_STRUCTURE2 = "input_structure2";
 std::string const RULES_SET = "rules_set";
 std::string const ARGUMENT = "argument";
-std::string const ARGUMENTS = "arguments";
 std::string const TARGET_NODE_CLASS = "target_node_class";
 std::string const CURRENT_NODE_CLASS = "current_node_class";
 
@@ -174,7 +173,9 @@ TEST_F(InferenceManagerBuilderTest, SingleSuccessApplyInference)
   ScAddrVector inputStructures{inputStructure1, inputStructure2};
 
   // Get arguments set. It is a singleton
-  ScAddr const & arguments = context.HelperResolveSystemIdtf(ARGUMENTS);
+  ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
+  EXPECT_TRUE(argument.IsValid());
+  ScAddrVector arguments {argument};
 
   // Create inference builder with input structures
   std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
@@ -193,8 +194,6 @@ TEST_F(InferenceManagerBuilderTest, SingleSuccessApplyInference)
   EXPECT_TRUE(
       context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
 
-  ScAddr const & argument = context.HelperFindBySystemIdtf(ARGUMENT);
-  EXPECT_TRUE(argument.IsValid());
   ScAddr const & targetClass = context.HelperFindBySystemIdtf(TARGET_NODE_CLASS);
   EXPECT_TRUE(targetClass.IsValid());
 
@@ -215,7 +214,9 @@ TEST_F(InferenceManagerBuilderTest, CycleSingleSuccessApplyInference)
     ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
     ScAddrVector inputStructures{inputStructure1, inputStructure2};
     // Get arguments set. It is a singleton
-    ScAddr const & arguments = context.HelperResolveSystemIdtf(ARGUMENTS);
+    ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
+    EXPECT_TRUE(argument.IsValid());
+    ScAddrVector arguments {argument};
 
     // Create inference builder with input structures
     std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
@@ -234,8 +235,6 @@ TEST_F(InferenceManagerBuilderTest, CycleSingleSuccessApplyInference)
     EXPECT_TRUE(
           context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
 
-    ScAddr const & argument = context.HelperFindBySystemIdtf(ARGUMENT);
-    EXPECT_TRUE(argument.IsValid());
     ScAddr const & targetClass = context.HelperFindBySystemIdtf(TARGET_NODE_CLASS);
     EXPECT_TRUE(targetClass.IsValid());
 
@@ -253,7 +252,9 @@ TEST_F(InferenceManagerBuilderTest, SingleSuccessArgumentApplyInference)
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
   ScAddrVector inputStructures{inputStructure1, inputStructure2};
-  ScAddr const & arguments = context.HelperResolveSystemIdtf(ARGUMENTS);
+  ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
+  EXPECT_TRUE(argument.IsValid());
+  ScAddrVector arguments {argument};
 
   std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
         std::make_unique<inference::InferenceManagerInputStructuresBuilder>(&context, inputStructures, arguments);
@@ -269,8 +270,6 @@ TEST_F(InferenceManagerBuilderTest, SingleSuccessArgumentApplyInference)
   EXPECT_TRUE(
       context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
 
-  ScAddr const & argument = context.HelperFindBySystemIdtf(ARGUMENT);
-  EXPECT_TRUE(argument.IsValid());
   ScAddr const & targetClass = context.HelperFindBySystemIdtf(TARGET_NODE_CLASS);
   EXPECT_TRUE(targetClass.IsValid());
 
@@ -287,7 +286,9 @@ TEST_F(InferenceManagerBuilderTest, SnakeApplyInference)
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
   ScAddrVector inputStructures{inputStructure1, inputStructure2};
-  ScAddr const & arguments = context.HelperResolveSystemIdtf(ARGUMENTS);
+  ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
+  EXPECT_TRUE(argument.IsValid());
+  ScAddrVector arguments {argument};
 
   auto start_time = std::chrono::high_resolution_clock::now();
   std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
@@ -331,7 +332,9 @@ TEST_F(InferenceManagerBuilderTest, SnakesApplyInference)
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
   ScAddrVector inputStructures{inputStructure1, inputStructure2};
-  ScAddr const & arguments = context.HelperResolveSystemIdtf(ARGUMENTS);
+  ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
+  EXPECT_TRUE(argument.IsValid());
+  ScAddrVector arguments {argument};
 
   auto start_time = std::chrono::high_resolution_clock::now();
   std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
@@ -378,7 +381,9 @@ TEST_F(InferenceManagerBuilderTest, SnakesTailsApplyInference)
     ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
     ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
     ScAddrVector inputStructures{inputStructure1, inputStructure2};
-    ScAddr const & arguments = context.HelperResolveSystemIdtf(ARGUMENTS);
+    ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
+    EXPECT_TRUE(argument.IsValid());
+    ScAddrVector arguments {argument};
 
     auto start_time = std::chrono::high_resolution_clock::now();
     std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
@@ -413,7 +418,9 @@ TEST_F(InferenceManagerBuilderTest, SnakesTailsConjunctionApplyInference)
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
   ScAddrVector inputStructures{inputStructure1, inputStructure2};
-  ScAddr const & arguments = context.HelperResolveSystemIdtf(ARGUMENTS);
+  ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
+  EXPECT_TRUE(argument.IsValid());
+  ScAddrVector arguments {argument};
 
   auto start_time = std::chrono::high_resolution_clock::now();
   std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
@@ -443,7 +450,9 @@ TEST_F(InferenceManagerBuilderTest, MultipleSuccessApplyInference)
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
   ScAddrVector inputStructures{inputStructure1, inputStructure2};
-  ScAddr const & arguments = context.HelperResolveSystemIdtf(ARGUMENTS);
+  ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
+  EXPECT_TRUE(argument.IsValid());
+  ScAddrVector arguments {argument};
 
   std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
         std::make_unique<inference::InferenceManagerInputStructuresBuilder>(&context, inputStructures, arguments);

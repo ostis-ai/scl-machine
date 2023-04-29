@@ -117,7 +117,7 @@ OperatorLogicExpressionNode::OperandsVector LogicExpression::resolveOperandsForI
 std::shared_ptr<LogicExpressionNode> LogicExpression::buildAtomicFormula(ScAddr const & formula)
 {
   SC_LOG_DEBUG(context->HelperGetSystemIdtf(formula) + " is a template");
-  ScAddrVector const & argumentList = templateSearcher->getParams();
+  ScAddrVector const & argumentList = templateSearcher->getArguments();
   if (!argumentList.empty())
   {
     std::vector<ScTemplateParams> params = templateManager->createTemplateParams(formula, argumentList);

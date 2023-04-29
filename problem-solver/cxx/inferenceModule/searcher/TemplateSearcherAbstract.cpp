@@ -89,17 +89,12 @@ bool TemplateSearcherAbstract::isContentIdentical(ScTemplateSearchResultItem con
   return result;
 }
 
-const ScAddrVector & TemplateSearcherAbstract::getParams() const
-{
-  return params;
-}
-
-void TemplateSearcherAbstract::addParam(ScAddr const & param)
-{
-  params.push_back(param);
-}
-
-void TemplateSearcherAbstract::setArguments(ScAddr const & otherArguments)
+void TemplateSearcherAbstract::setArguments(ScAddrVector const & otherArguments)
 {
   arguments = otherArguments;
+}
+
+ScAddrVector TemplateSearcherAbstract::getArguments() const
+{
+  return arguments;
 }

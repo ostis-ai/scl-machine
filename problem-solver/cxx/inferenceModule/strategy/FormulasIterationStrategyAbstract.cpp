@@ -38,7 +38,7 @@ void FormulasIterationStrategyAbstract::setSolutionTreeManager(std::shared_ptr<S
   solutionTreeManager = std::move(manager);
 }
 
-void FormulasIterationStrategyAbstract::setArguments(ScAddr const & otherArguments)
+void FormulasIterationStrategyAbstract::setArguments(ScAddrVector const & otherArguments)
 {
   arguments = otherArguments;
 }
@@ -137,36 +137,7 @@ void FormulasIterationStrategyAbstract::fillFormulaFixedArgumentsIdentifiers(ScA
   }
 }
 
-ScAddrVector FormulasIterationStrategyAbstract::formArgumentsVector() const
+ScAddrVector FormulasIterationStrategyAbstract::getArguments() const
 {
-  // TODO(MksmOrlov): make nrel_basic_sequence oriented set processing
-  ScAddrVector argumentsVector;
-  if (!arguments.IsValid())
-  {
-    return argumentsVector;
-  }
-
-  ScAddr const & firstArgument = utils::IteratorUtils::getAnyByOutRelation(context, arguments, scAgentsCommon::CoreKeynodes::rrel_1);
-  if (!firstArgument.IsValid())
-  {
-    // `arguments` is not oriented set
-    return utils::IteratorUtils::getAllWithType(context, arguments, ScType::Node);
-  }
-
-  // `arguments` is oriented set
-  argumentsVector.push_back(firstArgument);
-  size_t const maxFixedArgumentsCount = 10;
-  ScAddr currentArgument;
-  ScAddr currentRoleRelation;
-  for (size_t i = 2; i <= maxFixedArgumentsCount; ++i)
-  {
-    currentRoleRelation = utils::IteratorUtils::getRoleRelation(context, i);
-    currentArgument = utils::IteratorUtils::getAnyByOutRelation(context, arguments, currentRoleRelation);
-    if (!currentArgument.IsValid())
-    {
-      break;
-    }
-    argumentsVector.push_back(currentArgument);
-  }
-  return argumentsVector;
+  return arguments;
 }

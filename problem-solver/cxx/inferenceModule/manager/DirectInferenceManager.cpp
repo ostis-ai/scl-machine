@@ -33,11 +33,7 @@ ScAddr DirectInferenceManager::applyInference(
 {
   ScAddr outputStructure = ms_context->CreateNode(ScType::NodeConstStruct);
   ScAddrVector argumentVector = utils::IteratorUtils::getAllWithType(ms_context, arguments, ScType::Node);
-  for (ScAddr const & argument : argumentVector)
-  {
-    templateSearcher->addParam(argument);
-  }
-  templateSearcher->setArguments(arguments);
+  templateSearcher->setArguments(argumentVector);
 
   bool targetAchieved = isTargetAchieved(targetStructure, argumentVector);
   if (targetAchieved)
