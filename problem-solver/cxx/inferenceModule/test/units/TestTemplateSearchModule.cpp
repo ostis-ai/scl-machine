@@ -90,6 +90,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_SingleResultTestCase)
   EXPECT_EQ(searchResults.at(node_alias)[0], context.HelperFindBySystemIdtf(first_constant_node));
 }
 
+// Fails because of smart search
 TEST_F(TemplateSearchManagerTest, SearchWithContent_MultipleResultTestCase)
 {
   std::string firstCorrectResultLinkIdentifier = "first_correct_result_link";
@@ -162,6 +163,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_SingleResultTestCase)
   EXPECT_EQ(searchResults.at(nodeAlias)[0], context.HelperFindBySystemIdtf(firstConstantNode));
 }
 
+// Fails because of smart search
 TEST_F(TemplateSearchManagerTest, SearchWithoutContent_MultipleResultTestCase)
 {
   std::string firstCorrectResultLinkIdentifier = "first_correct_result_link";

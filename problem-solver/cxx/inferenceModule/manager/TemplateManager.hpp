@@ -12,8 +12,6 @@
 
 #include <sc-memory/sc_memory.hpp>
 
-#include "comparator/AddrComparator.hpp"
-
 namespace inference
 {
 class TemplateManager : public TemplateManagerAbstract
