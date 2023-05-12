@@ -49,7 +49,7 @@ bool FormulasIterationStrategyAll::applyIterationStrategy(ScAddr const & formula
       formula = uncheckedFormulas.front();
       SC_LOG_DEBUG("Trying to generate by formula: " << context->HelperGetSystemIdtf(formula));
       formulaResult = useFormula(formula, outputStructure);
-      SC_LOG_ERROR("Logical formula is " << (formulaResult.isGenerated ? "generated" : "not generated"));
+      SC_LOG_DEBUG("Logical formula is " << (formulaResult.isGenerated ? "generated" : "not generated"));
       if (formulaResult.isGenerated)
       {
         result = true;
