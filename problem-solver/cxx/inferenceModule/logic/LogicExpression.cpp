@@ -117,17 +117,16 @@ OperatorLogicExpressionNode::OperandsVector LogicExpression::resolveOperandsForI
 std::shared_ptr<LogicExpressionNode> LogicExpression::buildAtomicFormula(ScAddr const & formula)
 {
   SC_LOG_DEBUG(context->HelperGetSystemIdtf(formula) + " is a template");
-  ScAddrVector const & argumentList = templateSearcher->getArguments();
-  if (!argumentList.empty())
+  if (!templateManager->getArguments().empty())
   {
-    std::vector<ScTemplateParams> params = templateManager->createTemplateParams(formula, argumentList);
+    std::vector<ScTemplateParams> params = templateManager->createTemplateParams(formula);
     if (!params.empty() && paramsSet.empty())
     {
       paramsSet = std::move(params);
     }
   }
 
-  return std::make_shared<TemplateExpressionNode>(context, formula, templateSearcher, templateManager, solutionTreeManager, outputStructure, formula);
+  return std::make_shared<TemplateExpressionNode>(context, templateSearcher, templateManager, solutionTreeManager, outputStructure, formula);
 }
 
 std::shared_ptr<LogicExpressionNode> LogicExpression::buildConjunctionFormula(ScAddr const & formula)

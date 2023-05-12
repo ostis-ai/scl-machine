@@ -22,6 +22,7 @@ namespace inference
 {
 using ScAddrQueue = std::queue<ScAddr>;
 
+// TODO(MksmOrlov): replace this manager by InferenceManagerGeneral configuration
 // TODO: Fix issue with using interface InferenceManager
 class DirectInferenceManager
 {

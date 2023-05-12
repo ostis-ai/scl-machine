@@ -27,7 +27,6 @@ void TemplateSearcher::searchTemplate(
     std::set<std::string> const & varNames,
     Replacements & result)
 {
-  vector<ScTemplateSearchResultItem> searchResultItems;
   ScTemplate searchTemplate;
   if (context->HelperBuildTemplate(searchTemplate, templateAddr, templateParams))
   {

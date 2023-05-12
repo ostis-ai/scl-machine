@@ -21,11 +21,10 @@ class TemplateExpressionNode : public LogicExpressionNode
 public:
   TemplateExpressionNode(
       ScMemoryContext * context,
-      ScAddr const & formulaTemplate,
-      std::shared_ptr<TemplateSearcherAbstract> templateSearcher);
+      std::shared_ptr<TemplateSearcherAbstract> templateSearcher,
+      ScAddr const & formula);
   TemplateExpressionNode(
       ScMemoryContext * context,
-      ScAddr const & formulaTemplate,
       std::shared_ptr<TemplateSearcherAbstract> templateSearcher,
       std::shared_ptr<TemplateManagerAbstract> templateManager,
       std::shared_ptr<SolutionTreeManager> solutionTreeManager,
@@ -38,14 +37,14 @@ public:
   LogicFormulaResult find(Replacements & replacements) const;
   LogicFormulaResult generate(Replacements & replacements) override;
 
-  ScAddr getFormulaTemplate() const override
+  ScAddr getFormula() const override
   {
-    return formulaTemplate;
+    return formula;
   }
 
 private:
   ScMemoryContext * context;
-  ScAddr formulaTemplate;
+
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
   std::shared_ptr<TemplateManagerAbstract> templateManager;
   std::shared_ptr<SolutionTreeManager> solutionTreeManager;

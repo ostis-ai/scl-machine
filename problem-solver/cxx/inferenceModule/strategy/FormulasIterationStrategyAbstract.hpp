@@ -29,9 +29,6 @@ public:
 
   void setTemplateSearcher(std::shared_ptr<TemplateSearcherAbstract> searcher);
   void setTemplateManager(std::shared_ptr<TemplateManagerAbstract> manager);
-  void setSolutionTreeManager(std::shared_ptr<SolutionTreeManager> searcher);
-
-  void setArguments(ScAddrVector const & otherArguments);
   void setGenerateSolutionTree(bool otherGenerateSolutionTree);
 
   std::shared_ptr<SolutionTreeManager> getSolutionTreeManager();
@@ -40,7 +37,6 @@ public:
 
   LogicFormulaResult useFormula(
         ScAddr const & formula,
-        ScAddrVector & argumentVector,
         ScAddr const & outputStructure);
 
   void fillFormulaFixedArgumentsIdentifiers(ScAddr const & formula) const;
@@ -49,8 +45,6 @@ public:
 
   ScAddrQueue createQueue(ScAddr const & set);
 
-  ScAddrVector getArguments() const;
-
 protected:
   ScMemoryContext * context;
 
@@ -58,9 +52,7 @@ protected:
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
   std::shared_ptr<SolutionTreeManager> solutionTreeManager;
 
-  ScAddrVector arguments;
   bool generateSolutionTree;
-
   std::unordered_set<ScAddr, ScAddrHashFunc<::size_t>> outputStructureElements;
 };
 } // inference

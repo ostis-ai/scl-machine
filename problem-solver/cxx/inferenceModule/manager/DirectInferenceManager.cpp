@@ -33,7 +33,7 @@ ScAddr DirectInferenceManager::applyInference(
 {
   ScAddr outputStructure = ms_context->CreateNode(ScType::NodeConstStruct);
   ScAddrVector argumentVector = utils::IteratorUtils::getAllWithType(ms_context, arguments, ScType::Node);
-  templateSearcher->setArguments(argumentVector);
+  templateManager->setArguments(argumentVector);
 
   bool targetAchieved = isTargetAchieved(targetStructure, argumentVector);
   if (targetAchieved)
@@ -154,7 +154,7 @@ vector<ScAddrQueue> DirectInferenceManager::createFormulasQueuesListByPriority(S
 bool DirectInferenceManager::isTargetAchieved(ScAddr const & targetStructure, ScAddrVector const & argumentVector)
 {
   std::vector<ScTemplateParams> const templateParamsVector =
-      templateManager->createTemplateParams(targetStructure, argumentVector);
+      templateManager->createTemplateParams(targetStructure);
   std::set<std::string> varNames;
   templateSearcher->getVarNames(targetStructure, varNames);
   return std::any_of(

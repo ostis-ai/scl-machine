@@ -33,16 +33,6 @@ void FormulasIterationStrategyAbstract::setTemplateManager(std::shared_ptr<Templ
   templateManager = std::move(manager);
 }
 
-void FormulasIterationStrategyAbstract::setSolutionTreeManager(std::shared_ptr<SolutionTreeManager> manager)
-{
-  solutionTreeManager = std::move(manager);
-}
-
-void FormulasIterationStrategyAbstract::setArguments(ScAddrVector const & otherArguments)
-{
-  arguments = otherArguments;
-}
-
 void FormulasIterationStrategyAbstract::setGenerateSolutionTree(bool const otherGenerateSolutionTree)
 {
   generateSolutionTree = otherGenerateSolutionTree;
@@ -86,7 +76,6 @@ ScAddrQueue FormulasIterationStrategyAbstract::createQueue(ScAddr const & set)
  */
 LogicFormulaResult FormulasIterationStrategyAbstract::useFormula(
       ScAddr const & formula,
-      ScAddrVector & argumentVector,
       ScAddr const & outputStructure)
 {
   ScAddr const & formulaRoot =
@@ -105,7 +94,7 @@ LogicFormulaResult FormulasIterationStrategyAbstract::useFormula(
         outputStructure);
 
   std::shared_ptr<LogicExpressionNode> expressionRoot = logicExpression.build(formulaRoot);
-  expressionRoot->setArgumentVector(argumentVector);
+  expressionRoot->setArgumentVector(templateManager->getArguments());
   expressionRoot->setOutputStructureElements(outputStructureElements);
 
   LogicFormulaResult formulaResult;
@@ -135,9 +124,4 @@ void FormulasIterationStrategyAbstract::fillFormulaFixedArgumentsIdentifiers(ScA
       templateManager->addFixedArgumentIdentifier(currentFixedArgumentIdentifier);
     }
   }
-}
-
-ScAddrVector FormulasIterationStrategyAbstract::getArguments() const
-{
-  return arguments;
 }

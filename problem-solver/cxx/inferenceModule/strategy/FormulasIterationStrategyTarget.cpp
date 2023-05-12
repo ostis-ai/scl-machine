@@ -18,14 +18,11 @@ FormulasIterationStrategyTarget::FormulasIterationStrategyTarget(ScMemoryContext
 {
 }
 
-void FormulasIterationStrategyTarget::setTargetStructure(ScAddr const & otherTargetStructure)
-{
-  targetStructure = otherTargetStructure;
-}
-
 bool FormulasIterationStrategyTarget::applyIterationStrategy(ScAddr const & formulasSet, ScAddr const & outputStructure)
 {
-  bool targetAchieved = isTargetAchieved(arguments);
+  std::vector<ScTemplateParams> const templateParamsVector =
+      templateManager->createTemplateParams(targetStructure);
+  bool targetAchieved = isTargetAchieved(templateParamsVector);
   if (targetAchieved)
   {
     SC_LOG_DEBUG("Target is already achieved");
@@ -55,15 +52,18 @@ bool FormulasIterationStrategyTarget::applyIterationStrategy(ScAddr const & form
     {
       formula = uncheckedFormulas.front();
       SC_LOG_DEBUG("Trying to generate by formula: " + context->HelperGetSystemIdtf(formula));
-      formulaResult = useFormula(formula, arguments, outputStructure);
-      SC_LOG_DEBUG(std::string("Logical formula is ") + (formulaResult.isGenerated ? "generated" : "not generated"));
+      formulaResult = useFormula(formula, outputStructure);
+      SC_LOG_WARNING(std::string("Logical formula is ") + (formulaResult.isGenerated ? "generated" : "not generated"));
       if (formulaResult.isGenerated)
       {
-        std::set<std::string> varNames;
-        ReplacementsUtils::getKeySet(formulaResult.replacements, varNames);
-        solutionTreeManager->addNode(formula, ReplacementsUtils::getReplacementsToScTemplateParams(
-              formulaResult.replacements), varNames);
-        targetAchieved = isTargetAchieved(arguments);
+        if (generateSolutionTree)
+        {
+          std::set<std::string> varNames;
+          ReplacementsUtils::getKeySet(formulaResult.replacements, varNames);
+          solutionTreeManager->addNode(formula, ReplacementsUtils::getReplacementsToScTemplateParams(
+                                                    formulaResult.replacements), varNames);
+        }
+        targetAchieved = isTargetAchieved(templateParamsVector);
         if (targetAchieved)
         {
           SC_LOG_DEBUG("Target achieved");
@@ -88,10 +88,8 @@ bool FormulasIterationStrategyTarget::applyIterationStrategy(ScAddr const & form
   return targetAchieved;
 }
 
-bool FormulasIterationStrategyTarget::isTargetAchieved(ScAddrVector const & argumentVector)
+bool FormulasIterationStrategyTarget::isTargetAchieved(std::vector<ScTemplateParams> const & templateParamsVector)
 {
-  std::vector<ScTemplateParams> const templateParamsVector =
-        templateManager->createTemplateParams(targetStructure, argumentVector);
   std::set<std::string> varNames;
   templateSearcher->getVarNames(targetStructure, varNames);
   return std::any_of(

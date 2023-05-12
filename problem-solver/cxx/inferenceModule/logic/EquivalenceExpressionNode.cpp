@@ -38,13 +38,13 @@ LogicFormulaResult EquivalenceExpressionNode::compute(LogicFormulaResult & resul
     auto atom = dynamic_cast<TemplateExpressionNode *>(operand.get());
     if (atom)
     {
-      if (!FormulaClassifier::isFormulaWithConst(context, atom->getFormulaTemplate()))
+      if (!FormulaClassifier::isFormulaWithConst(context, atom->getFormula()))
       {
         SC_LOG_DEBUG("Found formula without constants in equivalence");
         formulasWithoutConstants.push_back(atom);
         continue;
       }
-      if (FormulaClassifier::isFormulaToGenerate(context, atom->getFormulaTemplate()))
+      if (FormulaClassifier::isFormulaToGenerate(context, atom->getFormula()))
       {
         SC_LOG_DEBUG("Found formula to generate in equivalence");
         formulasToGenerate.push_back(atom);
@@ -80,15 +80,15 @@ LogicFormulaResult EquivalenceExpressionNode::compute(LogicFormulaResult & resul
   return result;
 
   auto leftAtom = dynamic_cast<TemplateExpressionNode *>(operands[0].get());
-  bool isLeftGenerated = (leftAtom) && FormulaClassifier::isFormulaToGenerate(context, leftAtom->getFormulaTemplate());
+  bool isLeftGenerated = (leftAtom) && FormulaClassifier::isFormulaToGenerate(context, leftAtom->getFormula());
 
   auto rightAtom = dynamic_cast<TemplateExpressionNode *>(operands[1].get());
   bool isRightGenerated =
-      (rightAtom) && FormulaClassifier::isFormulaToGenerate(context, rightAtom->getFormulaTemplate());
+      (rightAtom) && FormulaClassifier::isFormulaToGenerate(context, rightAtom->getFormula());
 
-  bool leftHasConstants = (leftAtom) && FormulaClassifier::isFormulaWithConst(context, leftAtom->getFormulaTemplate());
+  bool leftHasConstants = (leftAtom) && FormulaClassifier::isFormulaWithConst(context, leftAtom->getFormula());
   bool rightHasConstants =
-      (rightAtom) && FormulaClassifier::isFormulaWithConst(context, rightAtom->getFormulaTemplate());
+      (rightAtom) && FormulaClassifier::isFormulaWithConst(context, rightAtom->getFormula());
 
   SC_LOG_DEBUG("Left has constants = " + to_string(leftHasConstants));
   SC_LOG_DEBUG("Right has constants = " + to_string(rightHasConstants));

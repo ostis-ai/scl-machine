@@ -29,7 +29,6 @@ FormulasIterationStrategyAll::FormulasIterationStrategyAll(ScMemoryContext * con
 bool FormulasIterationStrategyAll::applyIterationStrategy(ScAddr const & formulasSet, ScAddr const & outputStructure)
 {
   bool result = false;
-  templateSearcher->setArguments(arguments);
 
   vector<ScAddrQueue> formulasQueuesByPriority = createFormulasQueuesListByPriority(formulasSet);
   if (formulasQueuesByPriority.empty())
@@ -49,7 +48,7 @@ bool FormulasIterationStrategyAll::applyIterationStrategy(ScAddr const & formula
     {
       formula = uncheckedFormulas.front();
       SC_LOG_DEBUG("Trying to generate by formula: " << context->HelperGetSystemIdtf(formula));
-      formulaResult = useFormula(formula, arguments, outputStructure);
+      formulaResult = useFormula(formula, outputStructure);
       SC_LOG_ERROR("Logical formula is " << (formulaResult.isGenerated ? "generated" : "not generated"));
       if (formulaResult.isGenerated)
       {

@@ -15,17 +15,15 @@
 
 namespace inference
 {
-// Стратегия обхода формул с проверкой условия достижения цели (стандартная реализация, которая была всегда)
+/// Formulas iteration strategy stops iteration if target is achieved
 class FormulasIterationStrategyTarget : public FormulasIterationStrategyAbstract
 {
 public:
   explicit FormulasIterationStrategyTarget(ScMemoryContext * context);
 
-  void setTargetStructure(ScAddr const & otherTargetStructure);
-
   bool applyIterationStrategy(ScAddr const & formulasSet, ScAddr const & outputStructure) override;
 
-  bool isTargetAchieved(ScAddrVector const & argumentVector);
+  bool isTargetAchieved(std::vector<ScTemplateParams> const & templateParamsVector);
 
 protected:
   ScAddr targetStructure;

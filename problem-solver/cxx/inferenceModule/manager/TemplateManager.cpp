@@ -17,9 +17,7 @@ TemplateManager::TemplateManager(ScMemoryContext * ms_context) : TemplateManager
 /* For all classes of the all template variables create map <varName, arguments>
  * Where arguments are elements from argumentList, and each argument class is the same as variable varName class
  */
-std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
-    ScAddr const & scTemplate,
-    ScAddrVector const & argumentList)
+std::vector<ScTemplateParams> TemplateManager::createTemplateParams(ScAddr const & scTemplate)
 {
   std::map<std::string, std::set<ScAddr, AddrComparator>> replacementsMultimap;
   std::vector<ScTemplateParams> templateParamsVector;
@@ -37,12 +35,11 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(
     ScIterator5Ptr classesIterator = context->Iterator5(
           // TODO(MksmOrlov): why not ScType::NodeConst ?
         ScType::NodeConstClass, ScType::EdgeAccessVarPosPerm, var, ScType::EdgeAccessConstPosPerm, scTemplate);
-    // TODO(MksmOrlov): Почему итерируемся по классам и для них ищем есть ли аргумент, а не от аргумента ищем, есть ли соответствующий класс
     while (classesIterator->Next())
     {
       ScAddr varClass = classesIterator->Get(0);
       // TODO(MksmOrlov): make cycle for argumentList main. If it is empty, a lot of useless operations are done
-      for (ScAddr const & argument : argumentList)
+      for (ScAddr const & argument : arguments)
       {
         if (context->HelperCheckEdge(varClass, argument, ScType::EdgeAccessConstPosPerm))
           replacementsMultimap[varName].insert(argument);

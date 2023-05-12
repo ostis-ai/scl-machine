@@ -10,24 +10,22 @@
 
 TemplateExpressionNode::TemplateExpressionNode(
     ScMemoryContext * context,
-    ScAddr const & formulaTemplate,
-    std::shared_ptr<TemplateSearcherAbstract> templateSearcher)
+    std::shared_ptr<TemplateSearcherAbstract> templateSearcher,
+    ScAddr const & formula)
   : context(context)
-  , formulaTemplate(formulaTemplate)
   , templateSearcher(std::move(templateSearcher))
+  , formula(formula)
 {
 }
 
 TemplateExpressionNode::TemplateExpressionNode(
     ScMemoryContext * context,
-    ScAddr const & formulaTemplate,
     std::shared_ptr<TemplateSearcherAbstract> templateSearcher,
     std::shared_ptr<TemplateManagerAbstract> templateManager,
     std::shared_ptr<SolutionTreeManager> solutionTreeManager,
     ScAddr const & outputStructure,
     ScAddr const & formula)
   : context(context)
-  , formulaTemplate(formulaTemplate)
   , templateSearcher(std::move(templateSearcher))
   , templateManager(std::move(templateManager))
   , solutionTreeManager(std::move(solutionTreeManager))
@@ -40,31 +38,31 @@ LogicExpressionResult TemplateExpressionNode::check(ScTemplateParams & params) c
 {
   Replacements searchResult;
   std::set<std::string> varNames;
-  templateSearcher->getVarNames(formulaTemplate, varNames);
-  templateSearcher->searchTemplate(formulaTemplate, params, varNames, searchResult);
+  templateSearcher->getVarNames(formula, varNames);
+  templateSearcher->searchTemplate(formula, params, varNames, searchResult);
   std::string result = (!searchResult.empty() ? "true" : "false");
-  SC_LOG_DEBUG("Atomic logical formula " + context->HelperGetSystemIdtf(formulaTemplate) + " " + result);
+  SC_LOG_DEBUG("Atomic logical formula " + context->HelperGetSystemIdtf(formula) + " " + result);
 
-  return {true, true, searchResult, formulaTemplate};
+  return {true, true, searchResult, formula};
 }
 
 LogicFormulaResult TemplateExpressionNode::compute(LogicFormulaResult & result) const
 {
-  std::string const formulaIdentifier = context->HelperGetSystemIdtf(formulaTemplate);
+  std::string const formulaIdentifier = context->HelperGetSystemIdtf(formula);
   SC_LOG_DEBUG("Checking atomic logical formula " + formulaIdentifier);
 
   Replacements replacements;
   std::set<std::string> varNames;
-  templateSearcher->getVarNames(formulaTemplate, varNames);
+  templateSearcher->getVarNames(formula, varNames);
   // Template params should be created only if argument vector is not empty. Else search with any possible replacements
   if (!argumentVector.empty())
   {
-    std::vector<ScTemplateParams> const & templateParamsVector = templateManager->createTemplateParams(formulaTemplate, argumentVector);
-    templateSearcher->searchTemplate(formulaTemplate, templateParamsVector, varNames, replacements);
+    std::vector<ScTemplateParams> const & templateParamsVector = templateManager->createTemplateParams(formula);
+    templateSearcher->searchTemplate(formula, templateParamsVector, varNames, replacements);
   }
   else
   {
-    templateSearcher->searchTemplate(formulaTemplate, ScTemplateParams(), varNames, replacements);
+    templateSearcher->searchTemplate(formula, ScTemplateParams(), varNames, replacements);
   }
 
   result.replacements = replacements;
@@ -81,12 +79,12 @@ LogicFormulaResult TemplateExpressionNode::find(Replacements & replacements) con
   std::vector<ScTemplateParams> paramsVector = ReplacementsUtils::getReplacementsToScTemplateParams(replacements);
   Replacements resultReplacements;
   std::set<std::string> varNames;
-  templateSearcher->getVarNames(formulaTemplate, varNames);
-  templateSearcher->searchTemplate(formulaTemplate, paramsVector, varNames, resultReplacements);
+  templateSearcher->getVarNames(formula, varNames);
+  templateSearcher->searchTemplate(formula, paramsVector, varNames, resultReplacements);
   result.replacements = resultReplacements;
   result.value = !result.replacements.empty();
 
-  std::string const idtf = context->HelperGetSystemIdtf(formulaTemplate);
+  std::string const idtf = context->HelperGetSystemIdtf(formula);
   std::string ending = (result.value ? " true" : " false");
   SC_LOG_DEBUG("Find Statement " + idtf + ending);
 
@@ -106,13 +104,13 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
   std::vector<ScTemplateParams> paramsVector = ReplacementsUtils::getReplacementsToScTemplateParams(replacements);
   if (paramsVector.empty())
   {
-    SC_LOG_DEBUG("Atomic logical formula " << context->HelperGetSystemIdtf(formulaTemplate) << " is not generated");
+    SC_LOG_DEBUG("Atomic logical formula " << context->HelperGetSystemIdtf(formula) << " is not generated");
     return result;
   }
 
   std::set<std::string> varNames;
   ReplacementsUtils::getKeySet(replacements, varNames);
-  templateSearcher->getVarNames(formulaTemplate, varNames);
+  templateSearcher->getVarNames(formula, varNames);
 
   size_t count = 0;
   Replacements searchResult;
@@ -123,13 +121,13 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
 
     if (templateManager->getGenerateOnlyUnique())
     {
-      templateSearcher->searchTemplate(formulaTemplate, scTemplateParams, varNames, searchResult);
+      templateSearcher->searchTemplate(formula, scTemplateParams, varNames, searchResult);
     }
 
     if (!templateManager->getGenerateOnlyUnique() || searchResult.empty())
     {
       ScTemplate generatedTemplate;
-      context->HelperBuildTemplate(generatedTemplate, formulaTemplate, scTemplateParams);
+      context->HelperBuildTemplate(generatedTemplate, formula, scTemplateParams);
 
       ScTemplateGenResult generationResult;
       ScTemplate::Result const & genTemplate = context->HelperGenTemplate(generatedTemplate, generationResult);
@@ -159,8 +157,6 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
 
       for (size_t i = 0; i < generationResult.Size(); ++i)
       {
-        // TODO(MksmOrlov): support two implementations: with and without addition generated constructions to params
-        // templateSearcher->addParamIfNotPresent(generationResult[i]);
         ScAddr const & generatedElement = generationResult[i];
         if (outputStructureElements.find(generatedElement) == outputStructureElements.cend())
         {
@@ -171,7 +167,7 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
     }
   }
 
-  SC_LOG_DEBUG("Atomic logical formula " << context->HelperGetSystemIdtf(formulaTemplate) << " is generated " << count << " times");
+  SC_LOG_DEBUG("Atomic logical formula " << context->HelperGetSystemIdtf(formula) << " is generated " << count << " times");
 
   return result;
 }

@@ -24,7 +24,7 @@ public:
     return {false, false, {}};
   }
 
-  ScAddr getFormulaTemplate() const override
+  ScAddr getFormula() const override
   {
     return {};
   }

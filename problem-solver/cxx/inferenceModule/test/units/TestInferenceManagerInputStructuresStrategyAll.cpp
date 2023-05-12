@@ -13,7 +13,6 @@
 
 #include "keynodes/InferenceKeynodes.hpp"
 #include "director/InferenceManagerDirector.hpp"
-#include "builder/InferenceManagerInputStructuresBuilder.hpp"
 
 using namespace inference;
 
@@ -26,6 +25,7 @@ std::string const INPUT_STRUCTURE1 = "input_structure1";
 std::string const INPUT_STRUCTURE2 = "input_structure2";
 std::string const RULES_SET = "rules_set";
 std::string const ARGUMENT = "argument";
+std::string const TAIL = "tail";
 std::string const TARGET_NODE_CLASS = "target_node_class";
 std::string const CURRENT_NODE_CLASS = "current_node_class";
 
@@ -177,96 +177,19 @@ TEST_F(InferenceManagerBuilderTest, SingleSuccessApplyInference)
   EXPECT_TRUE(argument.IsValid());
   ScAddrVector arguments {argument};
 
-  // Create inference builder with input structures
-  std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
-        std::make_unique<inference::InferenceManagerInputStructuresBuilder>(&context, inputStructures, arguments);
-
   // Create inference manager with `strategy all` using director with builder
-  std::unique_ptr<inference::InferenceManagerGeneral> inferenceManager =
-        inference::InferenceManagerDirector::constructDirectInferenceManagerInputStructuresFixedArgumentsStrategyAll(&context, std::move(builder));
+  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
+      inference::InferenceManagerDirector::constructInputStructuresFixedArgumentsIterationStrategyAll(
+          &context, inputStructures, arguments);
 
   ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
 
   // Apply inference with configured manager
-  ScAddr const & solution = inferenceManager->applyInference(rulesSet);
+  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  bool result = iterationStrategy->applyIterationStrategy(rulesSet, outputStructure);
 
-  EXPECT_TRUE(solution.IsValid());
-  EXPECT_TRUE(
-      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
-
-  ScAddr const & targetClass = context.HelperFindBySystemIdtf(TARGET_NODE_CLASS);
-  EXPECT_TRUE(targetClass.IsValid());
-
-  EXPECT_TRUE(context.HelperCheckEdge(targetClass, argument, ScType::EdgeAccessConstPosPerm));
-}
-
-TEST_F(InferenceManagerBuilderTest, CycleSingleSuccessApplyInference)
-{
-  ScMemoryContext & context = *m_ctx;
-
-  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "singleApplyTest.scs");
-  initialize();
-
-  for (size_t i = 0; i < 1078; i++)
-  {
-    // Get input structures set of two structures. One of them consists one triple from premise and the other -- the second triple.
-    ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
-    ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
-    ScAddrVector inputStructures{inputStructure1, inputStructure2};
-    // Get arguments set. It is a singleton
-    ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
-    EXPECT_TRUE(argument.IsValid());
-    ScAddrVector arguments {argument};
-
-    // Create inference builder with input structures
-    std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
-          std::make_unique<inference::InferenceManagerInputStructuresBuilder>(&context, inputStructures, arguments);
-
-    // Create inference manager with `strategy all` using director with builder
-    std::unique_ptr<inference::InferenceManagerGeneral> inferenceManager =
-          inference::InferenceManagerDirector::constructDirectInferenceManagerInputStructuresFixedArgumentsStrategyAll(&context, std::move(builder));
-
-    ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
-
-    // Apply inference with configured manager
-    ScAddr const & solution = inferenceManager->applyInference(rulesSet);
-
-    EXPECT_TRUE(solution.IsValid());
-    EXPECT_TRUE(
-          context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
-
-    ScAddr const & targetClass = context.HelperFindBySystemIdtf(TARGET_NODE_CLASS);
-    EXPECT_TRUE(targetClass.IsValid());
-
-    EXPECT_TRUE(context.HelperCheckEdge(targetClass, argument, ScType::EdgeAccessConstPosPerm));
-  }
-}
-
-TEST_F(InferenceManagerBuilderTest, SingleSuccessArgumentApplyInference)
-{
-  ScMemoryContext & context = *m_ctx;
-
-  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "singleArgumentApplyTest.scs");
-  initialize();
-
-  ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
-  ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
-  ScAddrVector inputStructures{inputStructure1, inputStructure2};
-  ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
-  EXPECT_TRUE(argument.IsValid());
-  ScAddrVector arguments {argument};
-
-  std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
-        std::make_unique<inference::InferenceManagerInputStructuresBuilder>(&context, inputStructures, arguments);
-
-  std::unique_ptr<inference::InferenceManagerGeneral> inferenceManager =
-        inference::InferenceManagerDirector::constructDirectInferenceManagerInputStructuresFixedArgumentsStrategyAll(&context, std::move(builder));
-
-  ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
-
-  ScAddr const & solution = inferenceManager->applyInference(rulesSet);
-
-  EXPECT_TRUE(solution.IsValid());
+  EXPECT_TRUE(result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
   EXPECT_TRUE(
       context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
 
@@ -286,23 +209,20 @@ TEST_F(InferenceManagerBuilderTest, SnakeApplyInference)
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
   ScAddrVector inputStructures{inputStructure1, inputStructure2};
-  ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
+  ScAddr const & argument = context.HelperResolveSystemIdtf(TAIL);
   EXPECT_TRUE(argument.IsValid());
   ScAddrVector arguments {argument};
 
-  auto start_time = std::chrono::high_resolution_clock::now();
-  std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
-        std::make_unique<inference::InferenceManagerInputStructuresBuilder>(&context, inputStructures, arguments);
-
-  std::unique_ptr<inference::InferenceManagerGeneral> inferenceManager =
-        inference::InferenceManagerDirector::constructDirectInferenceManagerInputStructuresFixedArgumentsStrategyAll(&context, std::move(builder));
+  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
+      inference::InferenceManagerDirector::constructInputStructuresFixedArgumentsIterationStrategyAll(
+          &context, inputStructures, arguments);
 
   ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
-  ScAddr const & solution = inferenceManager->applyInference(rulesSet);
-  auto end_time = std::chrono::high_resolution_clock::now();
-  auto time = end_time - start_time;
-  SC_LOG_WARNING("Apply inference milliseconds: " << time/std::chrono::milliseconds(1));
+  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  bool result = iterationStrategy->applyIterationStrategy(rulesSet, outputStructure);
 
+  EXPECT_TRUE(result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(
       context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
@@ -332,22 +252,20 @@ TEST_F(InferenceManagerBuilderTest, SnakesApplyInference)
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
   ScAddrVector inputStructures{inputStructure1, inputStructure2};
-  ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
+  ScAddr const & argument = context.HelperResolveSystemIdtf(TAIL);
   EXPECT_TRUE(argument.IsValid());
   ScAddrVector arguments {argument};
 
-  auto start_time = std::chrono::high_resolution_clock::now();
-  std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
-        std::make_unique<inference::InferenceManagerInputStructuresBuilder>(&context, inputStructures, arguments);
-
-  std::unique_ptr<inference::InferenceManagerGeneral> inferenceManager =
-        inference::InferenceManagerDirector::constructDirectInferenceManagerInputStructuresFixedArgumentsStrategyAll(&context, std::move(builder));
+  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
+      inference::InferenceManagerDirector::constructInputStructuresFixedArgumentsIterationStrategyAll(
+          &context, inputStructures, arguments);
 
   ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
-  ScAddr const & solution = inferenceManager->applyInference(rulesSet);
-  auto end_time = std::chrono::high_resolution_clock::now();
-  auto time = end_time - start_time;
-  SC_LOG_WARNING("Apply inference milliseconds: " << time/std::chrono::milliseconds(1));
+  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  bool result = iterationStrategy->applyIterationStrategy(rulesSet, outputStructure);
+
+  EXPECT_TRUE(result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(
@@ -381,22 +299,20 @@ TEST_F(InferenceManagerBuilderTest, SnakesTailsApplyInference)
     ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
     ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
     ScAddrVector inputStructures{inputStructure1, inputStructure2};
-    ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
+    ScAddr const & argument = context.HelperResolveSystemIdtf(TAIL);
     EXPECT_TRUE(argument.IsValid());
     ScAddrVector arguments {argument};
 
-    auto start_time = std::chrono::high_resolution_clock::now();
-    std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
-        std::make_unique<inference::InferenceManagerInputStructuresBuilder>(&context, inputStructures, arguments);
-
-    std::unique_ptr<inference::InferenceManagerGeneral> inferenceManager =
-        inference::InferenceManagerDirector::constructDirectInferenceManagerInputStructuresFixedArgumentsStrategyAll(&context, std::move(builder));
+    std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
+        inference::InferenceManagerDirector::constructInputStructuresFixedArgumentsIterationStrategyAll(
+            &context, inputStructures, arguments);
 
     ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
-    ScAddr const & solution = inferenceManager->applyInference(rulesSet);
-    auto end_time = std::chrono::high_resolution_clock::now();
-    auto time = end_time - start_time;
-    SC_LOG_WARNING("Apply inference milliseconds: " << time/std::chrono::milliseconds(1));
+    ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+    bool result = iterationStrategy->applyIterationStrategy(rulesSet, outputStructure);
+
+    EXPECT_TRUE(result);
+    ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
 
     EXPECT_TRUE(solution.IsValid());
     EXPECT_TRUE(
@@ -412,28 +328,26 @@ TEST_F(InferenceManagerBuilderTest, SnakesTailsConjunctionApplyInference)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "snakeSingleArgumentConjunctionApplyTest.scs");
   initialize();
 
-  ScAddr const & tail = context.HelperFindBySystemIdtf("tail");
+  ScAddr const & tail = context.HelperFindBySystemIdtf(TAIL);
   generateTails(*m_ctx, tail, 10, 10000);
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
   ScAddrVector inputStructures{inputStructure1, inputStructure2};
-  ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
+  ScAddr const & argument = context.HelperResolveSystemIdtf(TAIL);
   EXPECT_TRUE(argument.IsValid());
   ScAddrVector arguments {argument};
 
-  auto start_time = std::chrono::high_resolution_clock::now();
-  std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
-        std::make_unique<inference::InferenceManagerInputStructuresBuilder>(&context, inputStructures, arguments);
-
-  std::unique_ptr<inference::InferenceManagerGeneral> inferenceManager =
-        inference::InferenceManagerDirector::constructDirectInferenceManagerInputStructuresFixedArgumentsStrategyAll(&context, std::move(builder));
+  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
+      inference::InferenceManagerDirector::constructInputStructuresFixedArgumentsIterationStrategyAll(
+          &context, inputStructures, arguments);
 
   ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
-  ScAddr const & solution = inferenceManager->applyInference(rulesSet);
-  auto end_time = std::chrono::high_resolution_clock::now();
-  auto time = end_time - start_time;
-  SC_LOG_WARNING("Apply inference milliseconds: " << time/std::chrono::milliseconds(1));
+  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  bool result = iterationStrategy->applyIterationStrategy(rulesSet, outputStructure);
+
+  EXPECT_TRUE(result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(
@@ -453,16 +367,21 @@ TEST_F(InferenceManagerBuilderTest, MultipleSuccessApplyInference)
   ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
   EXPECT_TRUE(argument.IsValid());
   ScAddrVector arguments {argument};
+  for (size_t i = 1; i < 6; i++)
+  {
+    arguments.push_back(context.HelperResolveSystemIdtf(ARGUMENT + to_string(i)));
+  }
 
-  std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
-        std::make_unique<inference::InferenceManagerInputStructuresBuilder>(&context, inputStructures, arguments);
-
-  std::unique_ptr<inference::InferenceManagerGeneral> inferenceManager =
-        inference::InferenceManagerDirector::constructDirectInferenceManagerInputStructuresFixedArgumentsStrategyAll(&context, std::move(builder));
+  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
+      inference::InferenceManagerDirector::constructInputStructuresFixedArgumentsIterationStrategyAll(
+          &context, inputStructures, arguments);
 
   ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
+  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  bool result = iterationStrategy->applyIterationStrategy(rulesSet, outputStructure);
 
-  ScAddr const & solution = inferenceManager->applyInference(rulesSet);
+  EXPECT_TRUE(result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(
@@ -499,15 +418,16 @@ TEST_F(InferenceManagerBuilderTest, SingleUnsuccessfulApplyInference)
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
   ScAddrVector inputStructures{inputStructure1, inputStructure2};
 
-  std::unique_ptr<inference::InferenceManagerBuilderAbstract> builder =
-        std::make_unique<inference::InferenceManagerInputStructuresBuilder>(&context, inputStructures);
-
-  std::unique_ptr<inference::InferenceManagerGeneral> inferenceManager =
-        inference::InferenceManagerDirector::constructDirectInferenceManagerInputStructuresFixedArgumentsStrategyAll(&context, std::move(builder));
+  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
+      inference::InferenceManagerDirector::constructInputStructuresFixedArgumentsIterationStrategyAll(
+          &context, inputStructures);
 
   ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
+  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  bool result = iterationStrategy->applyIterationStrategy(rulesSet, outputStructure);
 
-  ScAddr const & solution = inferenceManager->applyInference(rulesSet);
+  EXPECT_FALSE(result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(

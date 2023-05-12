@@ -23,7 +23,7 @@ public:
 
   virtual ~TemplateManagerAbstract() = default;
 
-  virtual std::vector<ScTemplateParams> createTemplateParams(ScAddr const & scTemplate, ScAddrVector const & argumentList) = 0;
+  virtual std::vector<ScTemplateParams> createTemplateParams(ScAddr const & scTemplate) = 0;
 
   void addFixedArgumentIdentifier(std::string const & fixedArgumentIdentifier)
   {
@@ -45,6 +45,16 @@ public:
     generateOnlyFirst = otherGenerateOnlyFirst;
   }
 
+  ScAddrVector getArguments() const
+  {
+    return arguments;
+  }
+
+  void setArguments(ScAddrVector const & otherArguments)
+  {
+    arguments = otherArguments;
+  }
+
   void setGenerateOnlyUnique(bool const otherGenerateOnlyUnique)
   {
     generateOnlyUnique = otherGenerateOnlyUnique;
@@ -53,6 +63,7 @@ public:
 protected:
   ScMemoryContext * context;
 
+  ScAddrVector arguments;
   bool generateOnlyFirst;
   bool generateOnlyUnique;
   std::vector<std::string> fixedArgumentIdentifiers;

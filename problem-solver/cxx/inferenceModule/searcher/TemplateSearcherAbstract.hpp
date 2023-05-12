@@ -41,11 +41,7 @@ public:
 
   bool isContentIdentical(ScTemplateSearchResultItem const & item, std::map<std::string, std::string> const & linksContentMap);
 
-  void setArguments(ScAddrVector const & otherArguments);
-
   void setInputStructures(ScAddrVector const & otherInputStructures);
-
-  ScAddrVector getArguments() const;
 
 protected:
   virtual void searchTemplateWithContent(
@@ -58,7 +54,6 @@ protected:
 
   ScMemoryContext * context;
   std::unique_ptr<ScTemplateSearchResult> searchWithoutContentResult;
-  ScAddrVector arguments;
   ScAddrVector inputStructures;
 };
 }  // namespace inference

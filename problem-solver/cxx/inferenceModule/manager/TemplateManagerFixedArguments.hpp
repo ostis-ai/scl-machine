@@ -19,6 +19,6 @@ class TemplateManagerFixedArguments : public TemplateManagerAbstract
 public:
   explicit TemplateManagerFixedArguments(ScMemoryContext * context);
 
-  std::vector<ScTemplateParams> createTemplateParams(ScAddr const & scTemplate, ScAddrVector const & argumentList) override;
+  std::vector<ScTemplateParams> createTemplateParams(ScAddr const & scTemplate) override;
 };
 }  // namespace inference
