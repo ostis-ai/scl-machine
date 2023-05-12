@@ -20,12 +20,6 @@ EquivalenceExpressionNode::EquivalenceExpressionNode(
   this->context = context;
 }
 
-// TODO(MksmOrlov): Need to implement
-LogicExpressionResult EquivalenceExpressionNode::check(ScTemplateParams & params) const
-{
-  return {};
-}
-
 LogicFormulaResult EquivalenceExpressionNode::compute(LogicFormulaResult & result) const
 {
   vector<LogicFormulaResult> subFormulaResults;

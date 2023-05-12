@@ -16,7 +16,6 @@ public:
   explicit NegationExpressionNode(std::shared_ptr<LogicExpressionNode> op);
   explicit NegationExpressionNode(ScMemoryContext * context, std::shared_ptr<LogicExpressionNode> op);
 
-  LogicExpressionResult check(ScTemplateParams & params) const override;
   LogicFormulaResult compute(LogicFormulaResult & result) const override;
 
   LogicFormulaResult generate(Replacements & replacements) override

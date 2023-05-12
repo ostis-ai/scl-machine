@@ -17,19 +17,6 @@ NegationExpressionNode::NegationExpressionNode(ScMemoryContext * context, std::s
   this->context = context;
 }
 
-LogicExpressionResult NegationExpressionNode::check(ScTemplateParams & params) const
-{
-  if (operands.size() != 1)
-  {
-    SC_LOG_ERROR("Negation should have 1 operand but it has " + to_string(operands.size()));
-    return {false, false, {}, ScAddr()};
-  }
-  LogicExpressionResult operandResult = operands[0]->check(params);
-  operandResult.value = !operandResult.value;
-
-  return operandResult;
-}
-
 LogicFormulaResult NegationExpressionNode::compute(LogicFormulaResult & result) const
 {
   LogicFormulaResult const & formulaResult = operands[0]->compute(result);

@@ -16,7 +16,6 @@ public:
   explicit DisjunctionExpressionNode(OperandsVector & operands);
   explicit DisjunctionExpressionNode(ScMemoryContext * context, OperandsVector & operands);
 
-  LogicExpressionResult check(ScTemplateParams & params) const override;
   LogicFormulaResult compute(LogicFormulaResult & result) const override;
 
   LogicFormulaResult generate(Replacements & replacements) override

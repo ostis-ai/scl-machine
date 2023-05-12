@@ -16,7 +16,6 @@ public:
   explicit EquivalenceExpressionNode(OperandsVector & operands);
   explicit EquivalenceExpressionNode(ScMemoryContext * context, OperandsVector & operands);
 
-  LogicExpressionResult check(ScTemplateParams & params) const override;
   LogicFormulaResult compute(LogicFormulaResult & result) const override;
 
   LogicFormulaResult generate(Replacements & replacements) override

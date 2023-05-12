@@ -20,17 +20,6 @@ ImplicationExpressionNode::ImplicationExpressionNode(
   this->context = context;
 }
 
-LogicExpressionResult ImplicationExpressionNode::check(ScTemplateParams & params) const
-{
-  if (operands.size() != 2)
-  {
-    SC_LOG_ERROR("Implication should have 2 operands but it has " + to_string(operands.size()));
-    return {false, false, {}, ScAddr()};
-  }
-  LogicExpressionResult premiseResult = operands[0]->check(params);
-  LogicExpressionResult conclusionResult = operands[1]->check(params);
-}
-
 /**
  * @brief Search premise and get it's replacements. Generate conclusion with found replacements
  * @param result is a LogicFormulaResult{bool: value, value: isGenerated, Replacements: replacements}

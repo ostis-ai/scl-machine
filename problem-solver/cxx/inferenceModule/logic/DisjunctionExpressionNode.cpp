@@ -20,29 +20,6 @@ DisjunctionExpressionNode::DisjunctionExpressionNode(
   this->context = context;
 }
 
-LogicExpressionResult DisjunctionExpressionNode::check(ScTemplateParams & params) const
-{
-  LogicExpressionResult disjunctionResult;
-  disjunctionResult.value = false;
-
-  for (auto & operand : operands)
-  {
-    LogicExpressionResult operandResult = operand->check(params);
-    disjunctionResult.formulaTemplate = operandResult.formulaTemplate;
-
-    if (operandResult.hasSearchResult)
-      disjunctionResult.replacements = operandResult.replacements;
-
-    if (operandResult.value)
-    {
-      disjunctionResult.value = true;
-      return disjunctionResult;
-    }
-  }
-
-  return disjunctionResult;
-}
-
 LogicFormulaResult DisjunctionExpressionNode::compute(LogicFormulaResult & result) const
 {
   LogicFormulaResult fail = {false, false, {}};

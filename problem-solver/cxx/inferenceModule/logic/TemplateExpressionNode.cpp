@@ -34,18 +34,6 @@ TemplateExpressionNode::TemplateExpressionNode(
 {
 }
 
-LogicExpressionResult TemplateExpressionNode::check(ScTemplateParams & params) const
-{
-  Replacements searchResult;
-  std::set<std::string> varNames;
-  templateSearcher->getVarNames(formula, varNames);
-  templateSearcher->searchTemplate(formula, params, varNames, searchResult);
-  std::string result = (!searchResult.empty() ? "true" : "false");
-  SC_LOG_DEBUG("Atomic logical formula " + context->HelperGetSystemIdtf(formula) + " " + result);
-
-  return {true, true, searchResult, formula};
-}
-
 LogicFormulaResult TemplateExpressionNode::compute(LogicFormulaResult & result) const
 {
   std::string const formulaIdentifier = context->HelperGetSystemIdtf(formula);

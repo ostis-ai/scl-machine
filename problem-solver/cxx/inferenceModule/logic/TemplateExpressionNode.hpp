@@ -31,8 +31,6 @@ public:
       ScAddr const & outputStructure,
       ScAddr const & formula);
 
-  // TODO(MksmOrlov): check method is never used
-  LogicExpressionResult check(ScTemplateParams & params) const override;
   LogicFormulaResult compute(LogicFormulaResult & result) const override;
   LogicFormulaResult find(Replacements & replacements) const;
   LogicFormulaResult generate(Replacements & replacements) override;

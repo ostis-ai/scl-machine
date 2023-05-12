@@ -20,28 +20,6 @@ ConjunctionExpressionNode::ConjunctionExpressionNode(
   this->context = context;
 }
 
-LogicExpressionResult ConjunctionExpressionNode::check(ScTemplateParams & params) const
-{
-  LogicExpressionResult conjunctionResult;
-  conjunctionResult.value = true;
-
-  for (auto & operand : operands)
-  {
-    LogicExpressionResult operandResult = operand->check(params);
-    conjunctionResult.formulaTemplate = operandResult.formulaTemplate;
-    if (operandResult.hasSearchResult)
-      conjunctionResult.replacements = operandResult.replacements;
-
-    if (!operandResult.value)
-    {
-      conjunctionResult.value = false;
-      return conjunctionResult;
-    }
-  }
-
-  return conjunctionResult;
-}
-
 LogicFormulaResult ConjunctionExpressionNode::compute(LogicFormulaResult & result) const
 {
   result.value = false;
