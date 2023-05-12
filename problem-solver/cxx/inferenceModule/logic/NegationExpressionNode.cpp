@@ -20,7 +20,6 @@ NegationExpressionNode::NegationExpressionNode(ScMemoryContext * context, std::s
 LogicFormulaResult NegationExpressionNode::compute(LogicFormulaResult & result) const
 {
   LogicFormulaResult const & formulaResult = operands[0]->compute(result);
-  std::string formulaValue = (formulaResult.value ? "true" : "false");
-  SC_LOG_DEBUG("Sub formula in negation returned " + formulaValue);
+  SC_LOG_DEBUG("Sub formula in negation returned " << (formulaResult.value ? "true" : "false"));
   return {!formulaResult.value, formulaResult.isGenerated, formulaResult.replacements};
 }

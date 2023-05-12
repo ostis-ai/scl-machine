@@ -55,8 +55,7 @@ LogicFormulaResult TemplateExpressionNode::compute(LogicFormulaResult & result) 
 
   result.replacements = replacements;
   result.value = !result.replacements.empty();
-  std::string formulaValue = (result.value ? " true" : " false");
-  SC_LOG_DEBUG("Compute atomic logical formula " + formulaIdentifier + formulaValue);
+  SC_LOG_DEBUG("Compute atomic logical formula " << formulaIdentifier << (result.value ? " true" : " false"));
 
   return result;
 }
@@ -73,8 +72,7 @@ LogicFormulaResult TemplateExpressionNode::find(Replacements & replacements) con
   result.value = !result.replacements.empty();
 
   std::string const idtf = context->HelperGetSystemIdtf(formula);
-  std::string ending = (result.value ? " true" : " false");
-  SC_LOG_DEBUG("Find Statement " + idtf + ending);
+  SC_LOG_DEBUG("Find Statement " << idtf << (result.value ? " true" : " false"));
 
   return result;
 }

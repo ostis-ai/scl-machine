@@ -40,20 +40,19 @@ bool FormulasIterationStrategyTarget::applyIterationStrategy(ScAddr const & form
 
   ScAddr formula;
   LogicFormulaResult formulaResult;
-  SC_LOG_DEBUG("Start rule applying. There is " + to_string(formulasQueuesByPriority.size()) + " formulas sets");
+  SC_LOG_DEBUG("Start rule applying. There is " << formulasQueuesByPriority.size() << " formulas sets");
   for (size_t formulasQueueIndex = 0; formulasQueueIndex < formulasQueuesByPriority.size() && !targetAchieved;
        formulasQueueIndex++)
   {
     uncheckedFormulas = formulasQueuesByPriority[formulasQueueIndex];
     SC_LOG_DEBUG(
-          "There is " + to_string(uncheckedFormulas.size()) + " formulas in " + to_string(formulasQueueIndex + 1) +
-          " set");
+          "There is " << uncheckedFormulas.size() << " formulas in " << (formulasQueueIndex + 1) << " set");
     while (!uncheckedFormulas.empty())
     {
       formula = uncheckedFormulas.front();
-      SC_LOG_DEBUG("Trying to generate by formula: " + context->HelperGetSystemIdtf(formula));
+      SC_LOG_DEBUG("Trying to generate by formula: " << context->HelperGetSystemIdtf(formula));
       formulaResult = useFormula(formula, outputStructure);
-      SC_LOG_WARNING(std::string("Logical formula is ") + (formulaResult.isGenerated ? "generated" : "not generated"));
+      SC_LOG_WARNING("Logical formula is " << (formulaResult.isGenerated ? "generated" : "not generated"));
       if (formulaResult.isGenerated)
       {
         if (generateSolutionTree)

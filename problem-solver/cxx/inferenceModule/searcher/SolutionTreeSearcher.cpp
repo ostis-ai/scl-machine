@@ -56,8 +56,8 @@ bool SolutionTreeSearcher::checkIfSolutionNodeExists(ScAddr const & rule, ScTemp
     }
     else
       SC_THROW_EXCEPTION(utils::ScException,
-                         "SolutionTreeSearcher: rule " + context->HelperGetSystemIdtf(rule) + " has var " +
-                         varName + " but templateParams don't have replacement for this var");
+                         "SolutionTreeSearcher: rule " << context->HelperGetSystemIdtf(rule) << " has var " <<
+                         varName << " but templateParams don't have replacement for this var");
   }
   context->HelperSearchTemplate(solutionNodeTemplate, searchResult);
   return !searchResult.IsEmpty();

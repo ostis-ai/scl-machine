@@ -47,7 +47,7 @@ LogicFormulaResult EquivalenceExpressionNode::compute(LogicFormulaResult & resul
     }
     subFormulaResults.push_back(operand->compute(result));
   }
-  SC_LOG_DEBUG("Processed " + to_string(subFormulaResults.size()) + " formulas in equivalence");
+  SC_LOG_DEBUG("Processed " << subFormulaResults.size() << " formulas in equivalence");
   if (subFormulaResults.empty())
   {
     SC_LOG_ERROR("All sub formulas in equivalence are either don't have constants or supposed to be generated");
@@ -84,8 +84,8 @@ LogicFormulaResult EquivalenceExpressionNode::compute(LogicFormulaResult & resul
   bool rightHasConstants =
       (rightAtom) && FormulaClassifier::isFormulaWithConst(context, rightAtom->getFormula());
 
-  SC_LOG_DEBUG("Left has constants = " + to_string(leftHasConstants));
-  SC_LOG_DEBUG("Right has constants = " + to_string(rightHasConstants));
+  SC_LOG_DEBUG("Left has constants = " << leftHasConstants);
+  SC_LOG_DEBUG("Right has constants = " << rightHasConstants);
 
   LogicFormulaResult leftResult;
   LogicFormulaResult rightResult;
