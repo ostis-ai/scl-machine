@@ -79,7 +79,7 @@ LogicFormulaResult FormulasIterationStrategyAbstract::useFormula(
       ScAddr const & outputStructure)
 {
   ScAddr const & formulaRoot =
-        utils::IteratorUtils::getAnyByOutRelation(context, formula, InferenceKeynodes::rrel_main_key_sc_element);
+        utils::IteratorUtils::getAnyByOutRelation(context, formula, scAgentsCommon::CoreKeynodes::rrel_main_key_sc_element);
   if (!formulaRoot.IsValid())
   {
     return {false, false, {}};

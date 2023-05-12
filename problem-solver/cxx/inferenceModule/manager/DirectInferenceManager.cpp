@@ -114,7 +114,7 @@ LogicFormulaResult DirectInferenceManager::useFormula(
 {
   LogicFormulaResult formulaResult = {false, false, {}};
   ScAddr const formulaRoot =
-      utils::IteratorUtils::getAnyByOutRelation(ms_context, rule, InferenceKeynodes::rrel_main_key_sc_element);
+      utils::IteratorUtils::getAnyByOutRelation(ms_context, rule, scAgentsCommon::CoreKeynodes::rrel_main_key_sc_element);
   if (!formulaRoot.IsValid())
     return {false, false, {}};
 
