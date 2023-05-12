@@ -37,9 +37,9 @@ void TemplateSearcher::searchTemplate(
     }
     else
     {
-      context->HelperSearchTemplate(
+      context->HelperSmartSearchTemplate(
         searchTemplate,
-        [&templateParams, &result, &varNames](ScTemplateSearchResultItem const & item) -> void {
+        [&templateParams, &result, &varNames](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
           // Add search result items to the result Replacements
           for (std::string const & varName : varNames)
           {
@@ -53,6 +53,7 @@ void TemplateSearcher::searchTemplate(
               result[varName].push_back(argument);
             }
           }
+          return ScTemplateSearchRequest::STOP;
       });
     }
   }
@@ -72,9 +73,9 @@ void TemplateSearcher::searchTemplateWithContent(
   std::set<std::string> varNames;
   getVarNames(templateAddr, varNames);
 
-  context->HelperSearchTemplate(
+  context->HelperSmartSearchTemplate(
         searchTemplate,
-        [templateParams, &result, &varNames](ScTemplateSearchResultItem const & item) -> void {
+        [templateParams, &result, &varNames](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
           // Add search result items to the result Replacements
           for (std::string const & varName : varNames)
           {
@@ -88,6 +89,7 @@ void TemplateSearcher::searchTemplateWithContent(
               result[varName].push_back(argument);
             }
           }
+          return ScTemplateSearchRequest::STOP;
         },
         [&linksContentMap, this](ScTemplateSearchResultItem const & item) -> bool {
           // Filter result item by the same content

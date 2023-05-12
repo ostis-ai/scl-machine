@@ -25,6 +25,7 @@ public:
 
   virtual ~TemplateSearcherAbstract() = default;
 
+  // TODO(MksmOrlov): implement searcher with default search template, configure searcher to use smart search or default
   virtual void searchTemplate(
       ScAddr const & templateAddr,
       ScTemplateParams const & templateParams,
