@@ -6,18 +6,13 @@
 
 #include "EquivalenceExpressionNode.hpp"
 
-EquivalenceExpressionNode::EquivalenceExpressionNode(OperandsVector & operands)
-{
-  for (auto & operand : operands)
-    this->operands.emplace_back(std::move(operand));
-}
-
 EquivalenceExpressionNode::EquivalenceExpressionNode(
     ScMemoryContext * context,
     OperatorLogicExpressionNode::OperandsVector & operands)
-  : EquivalenceExpressionNode(operands)
+  : context(context)
 {
-  this->context = context;
+  for (auto & operand : operands)
+    this->operands.emplace_back(std::move(operand));
 }
 
 LogicFormulaResult EquivalenceExpressionNode::compute(LogicFormulaResult & result) const

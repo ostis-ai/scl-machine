@@ -80,7 +80,7 @@ ScAddr SolutionTreeGenerator::createSolutionNode(ScAddr const & formula, ScTempl
       ms_context->CreateEdge(ScType::EdgeAccessConstPosTemp, varNode, replacement);
     }
     else
-      SC_THROW_EXCEPTION(utils::ScException,
+      SC_THROW_EXCEPTION(utils::ExceptionItemNotFound,
                          "SolutionTreeGenerator: formula " << ms_context->HelperGetSystemIdtf(formula) << " has var " <<
                          varName << " but scTemplateParams don't have replacement for this var");
   }

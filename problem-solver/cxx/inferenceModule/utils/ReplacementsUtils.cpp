@@ -55,7 +55,7 @@ Replacements inference::ReplacementsUtils::intersectReplacements(
 Replacements inference::ReplacementsUtils::uniteReplacements(Replacements const & first, Replacements const & second)
 {
   Replacements result;
-  int resultSize = 0;
+  size_t resultSize = 0;
   set<string> firstKeys;
   getKeySet(first, firstKeys);
   set<string> secondKeys;
@@ -151,9 +151,4 @@ vector<ScTemplateParams> inference::ReplacementsUtils::getReplacementsToScTempla
 size_t inference::ReplacementsUtils::getColumnsAmount(Replacements const & replacements)
 {
   return (replacements.empty() ? 0 : replacements.begin()->second.size());
-}
-
-size_t inference::ReplacementsUtils::getRowsAmount(Replacements const & replacements)
-{
-  return replacements.size();
 }

@@ -8,14 +8,6 @@
 
 #include "utils/ReplacementsUtils.hpp"
 
-struct LogicExpressionResult
-{
-  bool value = false;
-  bool hasSearchResult = false;
-  Replacements replacements{};
-  ScAddr formulaTemplate{};
-};
-
 struct LogicFormulaResult
 {
   bool value = false;

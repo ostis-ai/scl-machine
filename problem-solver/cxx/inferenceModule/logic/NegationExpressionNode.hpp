@@ -13,8 +13,7 @@ using namespace inference;
 class NegationExpressionNode : public OperatorLogicExpressionNode
 {
 public:
-  explicit NegationExpressionNode(std::shared_ptr<LogicExpressionNode> op);
-  explicit NegationExpressionNode(ScMemoryContext * context, std::shared_ptr<LogicExpressionNode> op);
+  explicit NegationExpressionNode(std::shared_ptr<LogicExpressionNode> operand);
 
   LogicFormulaResult compute(LogicFormulaResult & result) const override;
 
@@ -27,7 +26,4 @@ public:
   {
     return {};
   }
-
-private:
-  ScMemoryContext * context;
 };

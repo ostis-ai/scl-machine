@@ -6,8 +6,6 @@
 
 #include "TemplateSearcherAbstract.hpp"
 
-#include <algorithm>
-
 #include <sc-agents-common/utils/CommonUtils.hpp>
 
 using namespace inference;

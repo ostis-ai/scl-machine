@@ -6,18 +6,13 @@
 
 #include "ImplicationExpressionNode.hpp"
 
-ImplicationExpressionNode::ImplicationExpressionNode(OperandsVector & operands)
-{
-  for (auto & operand : operands)
-    this->operands.emplace_back(std::move(operand));
-}
-
 ImplicationExpressionNode::ImplicationExpressionNode(
     ScMemoryContext * context,
     OperatorLogicExpressionNode::OperandsVector & operands)
-  : ImplicationExpressionNode(operands)
+  : context(context)
 {
-  this->context = context;
+  for (auto & operand : operands)
+    this->operands.emplace_back(std::move(operand));
 }
 
 /**

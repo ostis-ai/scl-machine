@@ -6,18 +6,13 @@
 
 #include "DisjunctionExpressionNode.hpp"
 
-DisjunctionExpressionNode::DisjunctionExpressionNode(OperandsVector & operands)
-{
-  for (auto & operand : operands)
-    this->operands.emplace_back(std::move(operand));
-}
-
 DisjunctionExpressionNode::DisjunctionExpressionNode(
     ScMemoryContext * context,
     OperatorLogicExpressionNode::OperandsVector & operands)
-  : DisjunctionExpressionNode(operands)
+  : context(context)
 {
-  this->context = context;
+  for (auto & operand : operands)
+    this->operands.emplace_back(std::move(operand));
 }
 
 LogicFormulaResult DisjunctionExpressionNode::compute(LogicFormulaResult & result) const

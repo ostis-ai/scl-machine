@@ -24,7 +24,6 @@ public:
   static Replacements uniteReplacements(Replacements const & first, Replacements const & second);
   static vector<ScTemplateParams> getReplacementsToScTemplateParams(Replacements const & replacements);
   static size_t getColumnsAmount(Replacements const & replacements);
-  static size_t getRowsAmount(Replacements const & replacements);
   static void getKeySet(Replacements const & map, std::set<std::string> & keySet);
 
 private:

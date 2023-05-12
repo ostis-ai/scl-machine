@@ -6,15 +6,9 @@
 
 #include "NegationExpressionNode.hpp"
 
-NegationExpressionNode::NegationExpressionNode(std::shared_ptr<LogicExpressionNode> op)
+NegationExpressionNode::NegationExpressionNode(std::shared_ptr<LogicExpressionNode> operand)
 {
-  operands.emplace_back(std::move(op));
-}
-
-NegationExpressionNode::NegationExpressionNode(ScMemoryContext * context, std::shared_ptr<LogicExpressionNode> op)
-  : NegationExpressionNode(std::move(op))
-{
-  this->context = context;
+  operands.emplace_back(std::move(operand));
 }
 
 LogicFormulaResult NegationExpressionNode::compute(LogicFormulaResult & result) const

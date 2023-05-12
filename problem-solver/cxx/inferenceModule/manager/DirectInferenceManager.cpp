@@ -130,7 +130,7 @@ LogicFormulaResult DirectInferenceManager::useFormula(
   LogicFormulaResult result = expressionRoot->compute(formulaResult);
 
   if (result.isGenerated && (ReplacementsUtils::getColumnsAmount(result.replacements)) != 1)
-    SC_THROW_EXCEPTION(utils::ScException, "replacements have " << ReplacementsUtils::getColumnsAmount(result.replacements) << " replacements");
+    SC_THROW_EXCEPTION(utils::ExceptionInvalidState, "replacements have " << ReplacementsUtils::getColumnsAmount(result.replacements) << " replacements");
 
   return result;
 }

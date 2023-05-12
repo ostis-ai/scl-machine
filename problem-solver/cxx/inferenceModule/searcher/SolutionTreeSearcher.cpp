@@ -55,7 +55,7 @@ bool SolutionTreeSearcher::checkIfSolutionNodeExists(ScAddr const & rule, ScTemp
       solutionNodeTemplate.Triple(varName, ScType::EdgeAccessVarPosTemp, replacement);
     }
     else
-      SC_THROW_EXCEPTION(utils::ScException,
+      SC_THROW_EXCEPTION(utils::ExceptionItemNotFound,
                          "SolutionTreeSearcher: rule " << context->HelperGetSystemIdtf(rule) << " has var " <<
                          varName << " but templateParams don't have replacement for this var");
   }

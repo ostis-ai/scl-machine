@@ -13,7 +13,6 @@ using namespace inference;
 class DisjunctionExpressionNode : public OperatorLogicExpressionNode
 {
 public:
-  explicit DisjunctionExpressionNode(OperandsVector & operands);
   explicit DisjunctionExpressionNode(ScMemoryContext * context, OperandsVector & operands);
 
   LogicFormulaResult compute(LogicFormulaResult & result) const override;

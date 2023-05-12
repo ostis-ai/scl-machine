@@ -6,18 +6,13 @@
 
 #include "ConjunctionExpressionNode.hpp"
 
-ConjunctionExpressionNode::ConjunctionExpressionNode(OperandsVector & operands)
-{
-  for (auto & operand : operands)
-    this->operands.emplace_back(std::move(operand));
-}
-
 ConjunctionExpressionNode::ConjunctionExpressionNode(
     ScMemoryContext * context,
     OperatorLogicExpressionNode::OperandsVector & operands)
-  : ConjunctionExpressionNode(operands)
+  : context(context)
 {
-  this->context = context;
+  for (auto & operand : operands)
+    this->operands.emplace_back(std::move(operand));
 }
 
 LogicFormulaResult ConjunctionExpressionNode::compute(LogicFormulaResult & result) const

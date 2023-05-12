@@ -70,7 +70,7 @@ OperatorLogicExpressionNode::OperandsVector LogicExpression::resolveTupleOperand
     operandsVector.emplace_back(std::move(op));
   }
   SC_LOG_DEBUG(
-      "Amount of operands in " << context->HelperGetSystemIdtf(tuple) + ": " << operandsVector.size());
+      "Amount of operands in " << context->HelperGetSystemIdtf(tuple) << ": " << operandsVector.size());
 
   return operandsVector;
 }
@@ -154,7 +154,7 @@ std::shared_ptr<LogicExpressionNode> LogicExpression::buildNegationFormula(ScAdd
   SC_LOG_DEBUG(context->HelperGetSystemIdtf(formula) << " is a negation tuple");
   OperatorLogicExpressionNode::OperandsVector operands = resolveTupleOperands(formula);
   if (operands.size() == 1)
-    return std::make_shared<NegationExpressionNode>(context, operands[0]);
+    return std::make_shared<NegationExpressionNode>(operands[0]);
   else
     SC_THROW_EXCEPTION(
         utils::ExceptionItemNotFound,
