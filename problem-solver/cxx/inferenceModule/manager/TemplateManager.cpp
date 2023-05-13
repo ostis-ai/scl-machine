@@ -32,12 +32,11 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(ScAddr const
       continue;
     }
     ScAddr argumentOfVar;
-    ScIterator5Ptr classesIterator = context->Iterator5(
-          // TODO(MksmOrlov): why not ScType::NodeConst ?
-        ScType::NodeConstClass, ScType::EdgeAccessVarPosPerm, var, ScType::EdgeAccessConstPosPerm, scTemplate);
-    while (classesIterator->Next())
+    ScIterator5Ptr constantsIterator = context->Iterator5(
+        ScType::NodeConst, ScType::EdgeAccessVarPosPerm, var, ScType::EdgeAccessConstPosPerm, scTemplate);
+    while (constantsIterator->Next())
     {
-      ScAddr varClass = classesIterator->Get(0);
+      ScAddr varClass = constantsIterator->Get(0);
       // TODO(MksmOrlov): make cycle for argumentList main. If it is empty, a lot of useless operations are done
       for (ScAddr const & argument : arguments)
       {
