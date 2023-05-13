@@ -23,6 +23,8 @@ public:
 
   bool applyIterationStrategy(ScAddr const & formulasSet, ScAddr const & outputStructure) override;
 
+  void setTargetStructure(ScAddr const & otherTargetStructure);
+
   bool isTargetAchieved(std::vector<ScTemplateParams> const & templateParamsVector);
 
 protected:

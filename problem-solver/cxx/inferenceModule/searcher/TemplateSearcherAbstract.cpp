@@ -19,6 +19,11 @@ void TemplateSearcherAbstract::setInputStructures(ScAddrVector const & otherInpu
   inputStructures = otherInputStructures;
 }
 
+ScAddrVector TemplateSearcherAbstract::getInputStructures() const
+{
+  return inputStructures;
+}
+
 void TemplateSearcherAbstract::searchTemplate(
       ScAddr const & templateAddr,
       vector<ScTemplateParams> const & scTemplateParamsVector,

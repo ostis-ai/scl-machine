@@ -10,6 +10,7 @@
 #include <sc-memory/kpm/sc_agent.hpp>
 #include <sc-agents-common/keynodes/coreKeynodes.hpp>
 #include <sc-agents-common/utils/AgentUtils.hpp>
+#include <sc-agents-common/utils/IteratorUtils.hpp>
 
 #include "keynodes/InferenceKeynodes.hpp"
 
@@ -86,14 +87,14 @@ TEST_F(InferenceLogicTest, AllArgumentsValid)
 }
 
 // Input structure is invalid
-TEST_F(InferenceLogicTest, InvalidInputStructure)
+TEST_F(InferenceLogicTest, InvalidArguments)
 {
   ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "logicModuleArgumentsTest.scs");
   initialize();
 
-  ScAddr action = context.HelperResolveSystemIdtf("invalid_input_structure_action");
+  ScAddr action = context.HelperResolveSystemIdtf("invalid_arguments_action");
   EXPECT_TRUE(action.IsValid());
 
   ScAddr argument = context.HelperFindBySystemIdtf("argument");
@@ -123,14 +124,15 @@ TEST_F(InferenceLogicTest, EmptyInputStructure)
   ScAddr action = context.HelperResolveSystemIdtf("empty_input_structure_action");
   EXPECT_TRUE(action.IsValid());
 
-  ScAddr argument = context.HelperFindBySystemIdtf("argument");
-  EXPECT_TRUE(argument.IsValid());
-
   context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
 
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully, action, ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
+  ScAddr answer = utils::IteratorUtils::getAnyByOutRelation(&context, action, scAgentsCommon::CoreKeynodes::nrel_answer);
+  ScAddr solution = utils::IteratorUtils::getAnyFromSet(&context, answer);
+  EXPECT_TRUE(context.HelperCheckEdge(
+      InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstNegPerm));
 
   shutdown();
   context.Destroy();

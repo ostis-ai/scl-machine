@@ -35,6 +35,11 @@ bool FormulasIterationStrategyTarget::applyIterationStrategy(ScAddr const & form
     SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, "No rule sets found.");
   }
 
+  // Extend input structures vector with outputStructure to find target with generated elements
+  ScAddrVector inputStructures = templateSearcher->getInputStructures();
+  inputStructures.push_back(outputStructure);
+  templateSearcher->setInputStructures(inputStructures);
+
   ScAddrVector checkedFormulas;
   ScAddrQueue uncheckedFormulas;
 
@@ -52,7 +57,7 @@ bool FormulasIterationStrategyTarget::applyIterationStrategy(ScAddr const & form
       formula = uncheckedFormulas.front();
       SC_LOG_DEBUG("Trying to generate by formula: " << context->HelperGetSystemIdtf(formula));
       formulaResult = useFormula(formula, outputStructure);
-      SC_LOG_WARNING("Logical formula is " << (formulaResult.isGenerated ? "generated" : "not generated"));
+      SC_LOG_DEBUG("Logical formula is " << (formulaResult.isGenerated ? "generated" : "not generated"));
       if (formulaResult.isGenerated)
       {
         if (generateSolutionTree)
@@ -62,7 +67,8 @@ bool FormulasIterationStrategyTarget::applyIterationStrategy(ScAddr const & form
           solutionTreeManager->addNode(formula, ReplacementsUtils::getReplacementsToScTemplateParams(
                                                     formulaResult.replacements), varNames);
         }
-        targetAchieved = isTargetAchieved(templateParamsVector);
+        // We need to check target with result generated replacements, not with input
+        targetAchieved = isTargetAchieved(ReplacementsUtils::getReplacementsToScTemplateParams(formulaResult.replacements));
         if (targetAchieved)
         {
           SC_LOG_DEBUG("Target achieved");
@@ -87,6 +93,11 @@ bool FormulasIterationStrategyTarget::applyIterationStrategy(ScAddr const & form
   return targetAchieved;
 }
 
+void FormulasIterationStrategyTarget::setTargetStructure(ScAddr const & otherTargetStructure)
+{
+  targetStructure = otherTargetStructure;
+}
+
 bool FormulasIterationStrategyTarget::isTargetAchieved(std::vector<ScTemplateParams> const & templateParamsVector)
 {
   std::set<std::string> varNames;
@@ -94,7 +105,7 @@ bool FormulasIterationStrategyTarget::isTargetAchieved(std::vector<ScTemplatePar
   return std::any_of(
         templateParamsVector.cbegin(),
         templateParamsVector.cend(),
-        [this, &varNames](ScTemplateParams const & templateParams) {
+        [this, &varNames](ScTemplateParams const & templateParams) -> bool {
           Replacements result;
           templateSearcher->searchTemplate(targetStructure, templateParams, varNames, result);
           return !result.empty();

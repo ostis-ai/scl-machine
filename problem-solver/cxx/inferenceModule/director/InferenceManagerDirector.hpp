@@ -17,6 +17,6 @@ public:
         ScMemoryContext * context, ScAddrVector const & inputStructures = {}, ScAddrVector const & arguments = {});
 
   static std::unique_ptr<FormulasIterationStrategyAbstract> constructIterationStrategyTarget(
-        ScMemoryContext * context, ScAddrVector const & inputStructures = {}, ScAddrVector const & arguments = {});
+        ScMemoryContext * context, ScAddr const & targetStructure, ScAddrVector const & inputStructures = {}, ScAddrVector const & arguments = {});
 };
 }

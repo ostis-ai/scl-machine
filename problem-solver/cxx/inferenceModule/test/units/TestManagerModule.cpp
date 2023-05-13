@@ -21,6 +21,7 @@ std::string const TEST_FILES_DIR_PATH = TEMPLATE_SEARCH_MODULE_TEST_SRC_PATH "/t
 std::string const TARGET_TEMPLATE = "target_template";
 std::string const RULES_SET = "rules_set";
 std::string const ARGUMENT_SET = "argument_set";
+std::string const INPUT_STRUCTURE = "input_structure";
 
 using InferenceManagerTest = ScMemoryTest;
 
@@ -46,9 +47,9 @@ TEST_F(InferenceManagerTest, SuccessApplyInference)
   ScAddr argumentSet = context.HelperResolveSystemIdtf(ARGUMENT_SET);
   EXPECT_TRUE(argumentSet.IsValid());
 
-  ScAddr outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
   DirectInferenceManager inferenceManager(&context);
-  ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet, outputStructure);
+  ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet, inputStructure);
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
       context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm));
@@ -77,9 +78,9 @@ TEST_F(InferenceManagerTest, SuccessGenerateInferenceConclusion)
   ScAddr argumentSet = context.HelperResolveSystemIdtf(ARGUMENT_SET);
   EXPECT_TRUE(argumentSet.IsValid());
 
-  ScAddr outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
   DirectInferenceManager inferenceManager(&context);
-  ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet, outputStructure);
+  ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet, inputStructure);
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
       context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm));
@@ -105,9 +106,9 @@ TEST_F(InferenceManagerTest, RuleNotUsed)
   ScAddr argumentSet = context.HelperResolveSystemIdtf(ARGUMENT_SET);
   EXPECT_TRUE(argumentSet.IsValid());
 
-  ScAddr outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
   DirectInferenceManager inferenceManager(&context);
-  ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet, outputStructure);
+  ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet, inputStructure);
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
       context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
@@ -129,9 +130,9 @@ TEST_F(InferenceManagerTest, TargetNotAchieved)
   ScAddr argumentSet = context.HelperResolveSystemIdtf(ARGUMENT_SET);
   EXPECT_TRUE(argumentSet.IsValid());
 
-  ScAddr outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
   DirectInferenceManager inferenceManager(&context);
-  ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet, outputStructure);
+  ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet, inputStructure);
 
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
@@ -154,9 +155,9 @@ TEST_F(InferenceManagerTest, ReplacementsTest)
   ScAddr argumentSet = context.HelperResolveSystemIdtf(ARGUMENT_SET);
   EXPECT_TRUE(argumentSet.IsValid());
 
-  ScAddr outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
   DirectInferenceManager inferenceManager(&context);
-  ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet, outputStructure);
+  ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet, inputStructure);
 
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
@@ -181,9 +182,9 @@ TEST_F(InferenceManagerTest, DISABLED_ConclusionArgumentsTest)
   ScAddr argumentSet = context.HelperResolveSystemIdtf(ARGUMENT_SET);
   EXPECT_TRUE(argumentSet.IsValid());
 
-  ScAddr outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
   DirectInferenceManager inferenceManager(&context);
-  ScAddr answer = inferenceManager.applyInference(targetStructure, formulasSet, argumentSet, outputStructure);
+  ScAddr answer = inferenceManager.applyInference(targetStructure, formulasSet, argumentSet, inputStructure);
 
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
@@ -213,8 +214,9 @@ TEST_F(InferenceManagerTest, SolutionOutputStrcuture)
   ScAddr argumentSet = context.HelperResolveSystemIdtf(ARGUMENT_SET);
   EXPECT_TRUE(argumentSet.IsValid());
 
+  ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
   DirectInferenceManager inferenceManager(&context);
-  ScAddr solution = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet, ScAddr());
+  ScAddr solution = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet, inputStructure);
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(
       context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));

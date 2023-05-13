@@ -32,7 +32,7 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
   ScAddr const arguments =
       utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), actionNode, CoreKeynodes::rrel_3);
   ScAddr const rrel_4 = utils::IteratorUtils::getRoleRelation(ms_context.get(), 4);
-  ScAddr inputStructure = utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), actionNode, rrel_4);
+  ScAddr const inputStructure = utils::IteratorUtils::getAnyByOutRelation(ms_context.get(), actionNode, rrel_4);
 
   if (!targetStructure.IsValid() || !utils::IteratorUtils::getAnyFromSet(ms_context.get(), targetStructure).IsValid())
   {
@@ -44,15 +44,11 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
     utils::AgentUtils::finishAgentWork(ms_context.get(), actionNode, false);
     return SC_RESULT_ERROR;
   }
-  if (!arguments.IsValid() || !utils::IteratorUtils::getAnyFromSet(ms_context.get(), arguments).IsValid())
+  if (!arguments.IsValid())
   {
-    SC_LOG_ERROR("Input structure is not valid or empty.");
+    SC_LOG_ERROR("Arguments are not valid.");
     utils::AgentUtils::finishAgentWork(ms_context.get(), actionNode, false);
     return SC_RESULT_ERROR;
-  }
-  if (!inputStructure.IsValid())
-  {
-    SC_LOG_WARNING("Intput structure is not valid use whole knowledge base");
   }
 
   ScAddrVector answerElements;

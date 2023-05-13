@@ -69,5 +69,5 @@ inference_logic_test_question
     <- action_direct_inference;
     -> rrel_1: target_template;
     -> rrel_2: rules_set;
-    -> rrel_3: input_structure;
-    -> rrel_4: output_structure;;
+    -> rrel_3: {argument};
+    -> rrel_4: input_structure;;

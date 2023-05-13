@@ -49,8 +49,8 @@ inference_logic_test_question
     <- action_direct_inference;
     -> rrel_1: test_direct_inference_target;
     -> rrel_2: rules_set;
-    -> rrel_3: input_structure;
-    -> rrel_4: output_structure;;
+    -> rrel_3: ...;
+    -> rrel_4: input_structure;;
 
 input_structure = [*
 	argument <- current_class;;

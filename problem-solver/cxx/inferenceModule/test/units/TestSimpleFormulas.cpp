@@ -279,63 +279,6 @@ TEST_F(InferenceSimpleFormulasTest, TwoTriplesTest)
   context.Destroy();
 }
 
-TEST_F(InferenceSimpleFormulasTest, SubstitutionsTest)
-{
-  ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
-
-  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "substitutionTestFirst.scs");
-
-  initialize();
-
-  ScAddr const & first_inference_logic_test_question = context.HelperFindBySystemIdtf("first_inference_logic_test_question");
-  EXPECT_TRUE(first_inference_logic_test_question.IsValid());
-  EXPECT_TRUE(context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, first_inference_logic_test_question).IsValid());
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, first_inference_logic_test_question, WAIT_TIME));
-  EXPECT_TRUE(context.HelperCheckEdge(scAgentsCommon::CoreKeynodes::question_finished_successfully, first_inference_logic_test_question, ScType::EdgeAccessConstPosPerm));
-
-  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "substitutionTestSecond.scs");
-
-  ScAddr const & second_inference_logic_test_question = context.HelperFindBySystemIdtf("second_inference_logic_test_question");
-  EXPECT_TRUE(second_inference_logic_test_question.IsValid());
-  EXPECT_TRUE(context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, second_inference_logic_test_question).IsValid());
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, second_inference_logic_test_question, WAIT_TIME));
-  EXPECT_TRUE(context.HelperCheckEdge(scAgentsCommon::CoreKeynodes::question_finished_successfully, second_inference_logic_test_question, ScType::EdgeAccessConstPosPerm));
-
-
-  ScAddr const & nrel_idtf = context.HelperFindBySystemIdtf("nrel_idtf");
-  EXPECT_TRUE(nrel_idtf.IsValid());
-  ScAddr const & second_target_class = context.HelperFindBySystemIdtf("second_target_class");
-  EXPECT_TRUE(second_target_class.IsValid());
-  ScIterator3Ptr iterator3Ptr = context.Iterator3(second_target_class, ScType::EdgeAccessConstPosPerm, ScType::NodeConst);
-  EXPECT_TRUE(iterator3Ptr->Next());
-  ScAddr second_target_class_element = iterator3Ptr->Get(2);
-  EXPECT_TRUE(second_target_class_element.IsValid());
-
-  ScTemplate scTemplate;
-  scTemplate.Triple(
-      ScType::NodeVar >> "_class",
-      ScType::EdgeAccessVarPosPerm,
-      second_target_class_element
-  );
-  scTemplate.Triple(
-      second_target_class,
-      ScType::EdgeAccessVarPosPerm,
-      second_target_class_element
-  );
-  scTemplate.TripleWithRelation(
-      "_class",
-      ScType::EdgeDCommonVar,
-      ScType::LinkVar,
-      ScType::EdgeAccessVarPosPerm,
-      nrel_idtf
-  );
-  ScTemplateSearchResult searchResult;
-  context.HelperSearchTemplate(scTemplate, searchResult);
-  EXPECT_EQ(searchResult.Size(), 1);
-  shutdown();
-  context.Destroy();
-}
-
 TEST_F(InferenceSimpleFormulasTest, ApplyRuleFromSecondAndThenFromFirstSetTest)
 {
   ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");

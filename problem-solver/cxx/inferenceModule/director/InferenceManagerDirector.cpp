@@ -43,9 +43,10 @@ std::unique_ptr<FormulasIterationStrategyAbstract> InferenceManagerDirector::
 }
 
 std::unique_ptr<FormulasIterationStrategyAbstract> InferenceManagerDirector::constructIterationStrategyTarget(
-      ScMemoryContext * context, ScAddrVector const & inputStructures, ScAddrVector const & arguments)
+      ScMemoryContext * context, ScAddr const & targetStructure, ScAddrVector const & inputStructures, ScAddrVector const & arguments)
 {
   std::unique_ptr<FormulasIterationStrategyTarget> strategyTarget = std::make_unique<FormulasIterationStrategyTarget>(context);
+  strategyTarget->setTargetStructure(targetStructure);
   strategyTarget->setGenerateSolutionTree(false);
 
   std::shared_ptr<TemplateManagerAbstract> templateManager = std::make_shared<TemplateManager>(context);

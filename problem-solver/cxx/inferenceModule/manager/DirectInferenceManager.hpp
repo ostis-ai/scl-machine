@@ -22,7 +22,6 @@ namespace inference
 {
 using ScAddrQueue = std::queue<ScAddr>;
 
-// TODO(MksmOrlov): replace this manager by InferenceManagerGeneral configuration
 // TODO: Fix issue with using interface InferenceManager
 class DirectInferenceManager
 {
@@ -36,17 +35,6 @@ public:
       ScAddr const & inputStructure);
 
 private:
-  std::vector<ScAddrQueue> createFormulasQueuesListByPriority(ScAddr const & formulasSet);
-
-  ScAddrQueue createQueue(ScAddr const & set);
-
-  LogicFormulaResult useFormula(ScAddr const & rule, ScAddrVector & argumentVector, ScAddr const & outputStructure);
-
-  bool isTargetAchieved(ScAddr const & targetStructure, ScAddrVector const & argumentVector);
-
   ScMemoryContext * ms_context;
-  std::shared_ptr<TemplateManagerAbstract> templateManager;
-  std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
-  std::shared_ptr<SolutionTreeManager> solutionTreeManager;
 };
 }  // namespace inference

@@ -44,6 +44,8 @@ public:
 
   void setInputStructures(ScAddrVector const & otherInputStructures);
 
+  ScAddrVector getInputStructures() const;
+
 protected:
   virtual void searchTemplateWithContent(
       ScTemplate const & searchTemplate,
