@@ -35,7 +35,7 @@ std::shared_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & formu
   int formulaType = FormulaClassifier::typeOfFormula(context, formula);
   switch (formulaType)
   {
-  case FormulaClassifier::ATOM:
+  case FormulaClassifier::ATOMIC:
     return buildAtomicFormula(formula);
   case FormulaClassifier::CONJUNCTION:
     return buildConjunctionFormula(formula);

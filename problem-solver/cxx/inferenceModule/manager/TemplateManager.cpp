@@ -37,7 +37,6 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(ScAddr const
     while (constantsIterator->Next())
     {
       ScAddr varClass = constantsIterator->Get(0);
-      // TODO(MksmOrlov): make cycle for argumentList main. If it is empty, a lot of useless operations are done
       for (ScAddr const & argument : arguments)
       {
         if (context->HelperCheckEdge(varClass, argument, ScType::EdgeAccessConstPosPerm))

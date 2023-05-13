@@ -18,51 +18,53 @@ int FormulaClassifier::typeOfFormula(ScMemoryContext * ms_context, ScAddr const 
     return NONE;
   }
 
-  // TODO(MksmOrlov): maybe we need just to check element type (struct) with/without variables
+  // TODO(MksmOrlov): implement the agent of logical formulas verification, check types and number of operands
   bool isAtomicFormula =
       ms_context->HelperCheckEdge(InferenceKeynodes::atomic_logical_formula, formula, ScType::EdgeAccessConstPosPerm);
+  if (!isAtomicFormula)
+  {
+    if (ms_context->GetElementType(formula) == ScType::NodeConstStruct && isFormulaWithVar(ms_context, formula))
+    {
+      isAtomicFormula = true;
+    }
+  }
   if (isAtomicFormula)
-    return ATOM;
+    return ATOMIC;
 
-  bool isNegation =
-      ms_context->HelperCheckEdge(InferenceKeynodes::nrel_negation, formula, ScType::EdgeAccessConstPosPerm);
-  if (isNegation)
-    return NEGATION;
-
-  bool isConjunction =
-      ms_context->HelperCheckEdge(InferenceKeynodes::nrel_conjunction, formula, ScType::EdgeAccessConstPosPerm);
-  if (isConjunction)
-    return CONJUNCTION;
-
-  bool isDisjunction =
-      ms_context->HelperCheckEdge(InferenceKeynodes::nrel_disjunction, formula, ScType::EdgeAccessConstPosPerm);
-  if (isDisjunction)
-    return DISJUNCTION;
-
-  bool isImplication =
+  bool const isImplication =
       ms_context->HelperCheckEdge(InferenceKeynodes::nrel_implication, formula, ScType::EdgeAccessConstPosPerm);
   if (isImplication)
   {
-    bool isEdge = (utils::CommonUtils::checkType(ms_context, formula, ScType::EdgeDCommon));
-    if (isEdge)
+    if (ms_context->GetElementType(formula) == ScType::EdgeDCommonConst)
       return IMPLICATION_EDGE;
-    bool isTuple = (utils::CommonUtils::checkType(ms_context, formula, ScType::NodeTuple));
-    if (isTuple)
+    if (ms_context->GetElementType(formula) == ScType::NodeConstTuple)
       return IMPLICATION_TUPLE;
     return NONE;
   }
 
-  bool isEquivalence =
+  bool const isNegation =
+      ms_context->HelperCheckEdge(InferenceKeynodes::nrel_negation, formula, ScType::EdgeAccessConstPosPerm);
+  if (isNegation)
+    return NEGATION;
+
+  bool const isConjunction =
+      ms_context->HelperCheckEdge(InferenceKeynodes::nrel_conjunction, formula, ScType::EdgeAccessConstPosPerm);
+  if (isConjunction)
+    return CONJUNCTION;
+
+  bool const isDisjunction =
+      ms_context->HelperCheckEdge(InferenceKeynodes::nrel_disjunction, formula, ScType::EdgeAccessConstPosPerm);
+  if (isDisjunction)
+    return DISJUNCTION;
+
+  bool const isEquivalence =
       ms_context->HelperCheckEdge(InferenceKeynodes::nrel_equivalence, formula, ScType::EdgeAccessConstPosPerm);
   if (isEquivalence)
   {
-    bool isEdge = (utils::CommonUtils::checkType(ms_context, formula, ScType::EdgeUCommonConst));
-    if (isEdge)
+    if (ms_context->GetElementType(formula) == ScType::EdgeUCommonConst)
       return EQUIVALENCE_EDGE;
-    bool isTuple = (utils::CommonUtils::checkType(ms_context, formula, ScType::NodeTuple));
-    if (isTuple)
+    if (ms_context->GetElementType(formula) == ScType::NodeConstTuple)
       return EQUIVALENCE_TUPLE;
-    return NONE;
   }
 
   return NONE;
@@ -75,6 +77,15 @@ bool FormulaClassifier::isFormulaWithConst(ScMemoryContext * ms_context, ScAddr 
     return true;
   ScIterator3Ptr constLinksIterator = ms_context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::LinkConst);
   return constLinksIterator->Next();
+}
+
+bool FormulaClassifier::isFormulaWithVar(ScMemoryContext * ms_context, ScAddr const & formula)
+{
+  ScIterator3Ptr varNodesIterator = ms_context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::NodeVar);
+  if (varNodesIterator->Next())
+    return true;
+  ScIterator3Ptr varLinksIterator = ms_context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::LinkVar);
+  return varLinksIterator->Next();
 }
 
 bool FormulaClassifier::isFormulaToGenerate(ScMemoryContext * ms_context, ScAddr const & formula)
