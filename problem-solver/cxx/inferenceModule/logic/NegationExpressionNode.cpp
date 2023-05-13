@@ -11,9 +11,9 @@ NegationExpressionNode::NegationExpressionNode(std::shared_ptr<LogicExpressionNo
   operands.emplace_back(std::move(operand));
 }
 
-LogicFormulaResult NegationExpressionNode::compute(LogicFormulaResult & result) const
+void NegationExpressionNode::compute(LogicFormulaResult & result) const
 {
-  LogicFormulaResult const & formulaResult = operands[0]->compute(result);
-  SC_LOG_DEBUG("Sub formula in negation returned " << (formulaResult.value ? "true" : "false"));
-  return {!formulaResult.value, formulaResult.isGenerated, formulaResult.replacements};
+  operands[0]->compute(result);
+  SC_LOG_DEBUG("Sub formula in negation returned " << (result.value ? "true" : "false"));
+  result.value = !result.value;
 }

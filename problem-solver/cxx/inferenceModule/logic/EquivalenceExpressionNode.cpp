@@ -15,7 +15,7 @@ EquivalenceExpressionNode::EquivalenceExpressionNode(
     this->operands.emplace_back(std::move(operand));
 }
 
-LogicFormulaResult EquivalenceExpressionNode::compute(LogicFormulaResult & result) const
+void EquivalenceExpressionNode::compute(LogicFormulaResult & result) const
 {
   vector<LogicFormulaResult> subFormulaResults;
   result.value = false;
@@ -40,7 +40,9 @@ LogicFormulaResult EquivalenceExpressionNode::compute(LogicFormulaResult & resul
         continue;
       }
     }
-    subFormulaResults.push_back(operand->compute(result));
+    LogicFormulaResult subFormulaResult;
+    operand->compute(subFormulaResult);
+    subFormulaResults.push_back(subFormulaResult);
   }
   SC_LOG_DEBUG("Processed " << subFormulaResults.size() << " formulas in equivalence");
   if (subFormulaResults.empty())
@@ -66,7 +68,7 @@ LogicFormulaResult EquivalenceExpressionNode::compute(LogicFormulaResult & resul
   if (result.value)
     result.replacements =
         ReplacementsUtils::intersectReplacements(subFormulaResults[0].replacements, subFormulaResults[1].replacements);
-  return result;
+  return;
 
   auto leftAtom = dynamic_cast<TemplateExpressionNode *>(operands[0].get());
   bool isLeftGenerated = (leftAtom) && FormulaClassifier::isFormulaToGenerate(context, leftAtom->getFormula());
@@ -88,20 +90,27 @@ LogicFormulaResult EquivalenceExpressionNode::compute(LogicFormulaResult & resul
   if (!isLeftGenerated)
   {
     SC_LOG_DEBUG("*** Left part of equivalence shouldn't be generated");
-    leftResult = operands[0]->compute(result);
-    rightResult = (isRightGenerated ? rightAtom->generate(leftResult.replacements) : operands[1]->compute(result));
+    operands[0]->compute(leftResult);
+    if (isRightGenerated)
+    {
+      rightResult = rightAtom->generate(leftResult.replacements);
+    }
+    else
+    {
+      operands[1]->compute(rightResult);
+    }
   }
   else
   {
     if (isRightGenerated)
     {
       SC_LOG_DEBUG("*** Right part should be generated");
-      return {true, {}};
+      return;
     }
     else
     {
       SC_LOG_DEBUG("*** Right part shouldn't be generated");
-      rightResult = operands[1]->compute(result);
+      operands[1]->compute(rightResult);
       leftResult = leftAtom->generate(rightResult.replacements);
     }
   }
@@ -109,5 +118,4 @@ LogicFormulaResult EquivalenceExpressionNode::compute(LogicFormulaResult & resul
   result.value = leftResult.value == rightResult.value;
   if (rightResult.value)
     result.replacements = ReplacementsUtils::intersectReplacements(leftResult.replacements, rightResult.replacements);
-  return result;
 }

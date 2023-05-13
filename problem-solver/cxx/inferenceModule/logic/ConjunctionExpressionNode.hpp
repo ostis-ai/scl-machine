@@ -15,7 +15,7 @@ class ConjunctionExpressionNode : public OperatorLogicExpressionNode
 public:
   explicit ConjunctionExpressionNode(ScMemoryContext * context, OperandsVector & operands);
 
-  LogicFormulaResult compute(LogicFormulaResult & result) const override;
+  void compute(LogicFormulaResult & result) const override;
 
   LogicFormulaResult generate(Replacements & replacements) override;
 

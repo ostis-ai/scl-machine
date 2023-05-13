@@ -15,7 +15,7 @@ class ImplicationExpressionNode : public OperatorLogicExpressionNode
 public:
   explicit ImplicationExpressionNode(ScMemoryContext * context, OperandsVector & operands);
 
-  LogicFormulaResult compute(LogicFormulaResult & result) const override;
+  void compute(LogicFormulaResult & result) const override;
 
   LogicFormulaResult generate(Replacements & replacements) override
   {

@@ -15,9 +15,8 @@ DisjunctionExpressionNode::DisjunctionExpressionNode(
     this->operands.emplace_back(std::move(operand));
 }
 
-LogicFormulaResult DisjunctionExpressionNode::compute(LogicFormulaResult & result) const
+void DisjunctionExpressionNode::compute(LogicFormulaResult & result) const
 {
-  LogicFormulaResult fail = {false, false, {}};
   result.value = false;
   vector<TemplateExpressionNode *> formulasWithoutConstants;
   vector<TemplateExpressionNode *> formulasToGenerate;
@@ -47,7 +46,12 @@ LogicFormulaResult DisjunctionExpressionNode::compute(LogicFormulaResult & resul
     result.replacements = ReplacementsUtils::uniteReplacements(result.replacements, lastResult.replacements);
   }
   if (result.replacements.empty())
-    return fail;
+  {
+    result.value = false;
+    result.isGenerated = false;
+    result.replacements = {};
+    return;
+  }
   for (auto const & atom : formulasWithoutConstants)
   {
     LogicFormulaResult lastResult = atom->find(result.replacements);
@@ -60,5 +64,4 @@ LogicFormulaResult DisjunctionExpressionNode::compute(LogicFormulaResult & resul
     result.value |= lastResult.value;
     result.replacements = ReplacementsUtils::uniteReplacements(result.replacements, lastResult.replacements);
   }
-  return result;
 }

@@ -15,7 +15,7 @@ class EquivalenceExpressionNode : public OperatorLogicExpressionNode
 public:
   explicit EquivalenceExpressionNode(ScMemoryContext * context, OperandsVector & operands);
 
-  LogicFormulaResult compute(LogicFormulaResult & result) const override;
+  void compute(LogicFormulaResult & result) const override;
 
   LogicFormulaResult generate(Replacements & replacements) override
   {

@@ -20,7 +20,7 @@ ImplicationExpressionNode::ImplicationExpressionNode(
  * @param result is a LogicFormulaResult{bool: value, value: isGenerated, Replacements: replacements}
  * @return result from param
  */
-LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & result) const
+void ImplicationExpressionNode::compute(LogicFormulaResult & result) const
 {
   LogicExpressionNode * premiseAtom = operands[0].get();
   premiseAtom->setArgumentVector(argumentVector);
@@ -29,7 +29,8 @@ LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & resul
   conclusionAtom->setArgumentVector(argumentVector);
 
   // Compute premise formula, get replacements with found constructions
-  LogicFormulaResult premiseResult = premiseAtom->compute(result);
+  LogicFormulaResult premiseResult;
+  premiseAtom->compute(premiseResult);
 
   // Generate conclusion using computed premise replacements
   LogicFormulaResult conclusionResult = conclusionAtom->generate(premiseResult.replacements);
@@ -42,7 +43,4 @@ LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & resul
     result.replacements =
           ReplacementsUtils::intersectReplacements(premiseResult.replacements, conclusionResult.replacements);
   }
-
-  // TODO(MksmOrlov): we don't need to return an object that is passed as a reference parameter
-  return result;
 }

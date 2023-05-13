@@ -35,6 +35,7 @@ public:
 
   virtual bool applyIterationStrategy(ScAddr const & formulasSet, ScAddr const & outputStructure) = 0;
 
+  // TODO: Need to implement common logic of inference rules (e.g. modus ponens)
   LogicFormulaResult useFormula(
         ScAddr const & formula,
         ScAddr const & outputStructure);

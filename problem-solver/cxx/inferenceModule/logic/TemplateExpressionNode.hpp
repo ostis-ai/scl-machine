@@ -27,7 +27,7 @@ public:
       ScAddr const & outputStructure,
       ScAddr const & formula);
 
-  LogicFormulaResult compute(LogicFormulaResult & result) const override;
+  void compute(LogicFormulaResult & result) const override;
   LogicFormulaResult find(Replacements & replacements) const;
   LogicFormulaResult generate(Replacements & replacements) override;
 

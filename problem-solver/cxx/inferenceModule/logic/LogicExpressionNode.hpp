@@ -20,7 +20,7 @@ class LogicExpressionNode
 public:
   LogicExpressionNode() = default;
 
-  virtual LogicFormulaResult compute(LogicFormulaResult & result) const = 0;
+  virtual void compute(LogicFormulaResult & result) const = 0;
   virtual ScAddr getFormula() const = 0;
   virtual ~LogicExpressionNode() = default;
 

@@ -15,10 +15,9 @@ ConjunctionExpressionNode::ConjunctionExpressionNode(
     this->operands.emplace_back(std::move(operand));
 }
 
-LogicFormulaResult ConjunctionExpressionNode::compute(LogicFormulaResult & result) const
+void ConjunctionExpressionNode::compute(LogicFormulaResult & result) const
 {
   result.value = false;
-  LogicFormulaResult fail = {false, false, {}};
   vector<TemplateExpressionNode *> formulasWithoutConstants;
   vector<TemplateExpressionNode *> formulasToGenerate;
 
@@ -41,37 +40,67 @@ LogicFormulaResult ConjunctionExpressionNode::compute(LogicFormulaResult & resul
         continue;
       }
     }
-    LogicFormulaResult lastResult = operand->compute(result);
+    LogicFormulaResult lastResult;
+    operand->compute(lastResult);
     if (!lastResult.value)
-      return fail;
+    {
+      result.value = false;
+      result.isGenerated = false;
+      result.replacements = {};
+      return;
+    }
     if (!result.value)  // this is true only when processing the first operand
       result = lastResult;
     else
     {
       result.replacements = ReplacementsUtils::intersectReplacements(result.replacements, lastResult.replacements);
       if (result.replacements.empty())
-        return fail;
+      {
+        result.value = false;
+        result.isGenerated = false;
+        result.replacements = {};
+        return;
+      }
     }
   }
   for (auto const & atom : formulasWithoutConstants)  // atoms without constants are processed here
   {
     LogicFormulaResult lastResult = atom->find(result.replacements);
     if (!lastResult.value)
-      return fail;
+    {
+      result.value = false;
+      result.isGenerated = false;
+      result.replacements = {};
+      return;
+    }
     result.replacements = ReplacementsUtils::intersectReplacements(result.replacements, lastResult.replacements);
     if (result.replacements.empty())
-      return fail;
+    {
+      result.value = false;
+      result.isGenerated = false;
+      result.replacements = {};
+      return;
+    }
   }
   for (auto const & formulaToGenerate : formulasToGenerate)  // atoms which should be generated are processed here
   {
     LogicFormulaResult lastResult = formulaToGenerate->generate(result.replacements);
     if (!lastResult.value)
-      return fail;
+    {
+      result.value = false;
+      result.isGenerated = false;
+      result.replacements = {};
+      return;
+    }
     result.replacements = ReplacementsUtils::intersectReplacements(result.replacements, lastResult.replacements);
     if (result.replacements.empty())
-      return fail;
+    {
+      result.value = false;
+      result.isGenerated = false;
+      result.replacements = {};
+      return;
+    }
   }
-  return result;
 }
 
 LogicFormulaResult ConjunctionExpressionNode::generate(Replacements & replacements)

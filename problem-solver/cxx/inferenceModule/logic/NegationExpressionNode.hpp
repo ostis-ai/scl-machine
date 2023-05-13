@@ -15,7 +15,7 @@ class NegationExpressionNode : public OperatorLogicExpressionNode
 public:
   explicit NegationExpressionNode(std::shared_ptr<LogicExpressionNode> operand);
 
-  LogicFormulaResult compute(LogicFormulaResult & result) const override;
+  void compute(LogicFormulaResult & result) const override;
 
   LogicFormulaResult generate(Replacements & replacements) override
   {
