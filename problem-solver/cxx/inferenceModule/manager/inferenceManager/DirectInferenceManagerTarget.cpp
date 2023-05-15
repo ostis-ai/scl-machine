@@ -4,7 +4,7 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "FormulasIterationStrategyTarget.hpp"
+#include "DirectInferenceManagerTarget.hpp"
 
 #include "sc-agents-common/utils/IteratorUtils.hpp"
 
@@ -13,12 +13,12 @@
 
 using namespace inference;
 
-FormulasIterationStrategyTarget::FormulasIterationStrategyTarget(ScMemoryContext * context)
-      : FormulasIterationStrategyAbstract(context)
+DirectInferenceManagerTarget::DirectInferenceManagerTarget(ScMemoryContext * context)
+      : InferenceManagerAbstract(context)
 {
 }
 
-bool FormulasIterationStrategyTarget::applyIterationStrategy(InferenceParamsConfig const & inferenceParamsConfig)
+bool DirectInferenceManagerTarget::applyIterationStrategy(InferenceParamsConfig const & inferenceParamsConfig)
 {
   templateManager->setArguments(inferenceParamsConfig.arguments);
   templateSearcher->setInputStructures(inferenceParamsConfig.inputStructures);
@@ -91,12 +91,12 @@ bool FormulasIterationStrategyTarget::applyIterationStrategy(InferenceParamsConf
   return targetAchieved;
 }
 
-void FormulasIterationStrategyTarget::setTargetStructure(ScAddr const & otherTargetStructure)
+void DirectInferenceManagerTarget::setTargetStructure(ScAddr const & otherTargetStructure)
 {
   targetStructure = otherTargetStructure;
 }
 
-bool FormulasIterationStrategyTarget::isTargetAchieved(std::vector<ScTemplateParams> const & templateParamsVector)
+bool DirectInferenceManagerTarget::isTargetAchieved(std::vector<ScTemplateParams> const & templateParamsVector)
 {
   std::set<std::string> varNames;
   templateSearcher->getVarNames(targetStructure, varNames);

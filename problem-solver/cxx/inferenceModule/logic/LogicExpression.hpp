@@ -17,9 +17,9 @@
 #include "LogicExpressionNode.hpp"
 
 #include "utils/ReplacementsUtils.hpp"
-#include "manager/SolutionTreeManager.hpp"
-#include "manager/TemplateManager.hpp"
-#include "searcher/TemplateSearcher.hpp"
+#include "manager/solutionTreeManager/SolutionTreeManager.hpp"
+#include "manager/templateManager/TemplateManager.hpp"
+#include "searcher/templateSearcher/TemplateSearcherAbstract.hpp"
 #include "classifier/FormulaClassifier.hpp"
 
 using namespace inference;

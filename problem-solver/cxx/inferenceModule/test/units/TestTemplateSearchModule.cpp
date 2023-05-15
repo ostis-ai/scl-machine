@@ -8,7 +8,7 @@
 #include "scs_loader.hpp"
 #include "sc-agents-common/keynodes/coreKeynodes.hpp"
 
-#include "searcher/TemplateSearcher.hpp"
+#include "searcher/templateSearcher/TemplateSearcher.hpp"
 #include "keynodes/InferenceKeynodes.hpp"
 
 #include <algorithm>

@@ -8,11 +8,12 @@
 
 #include <vector>
 
-#include <sc-memory/sc_memory.hpp>
-#include <sc-memory/sc_addr.hpp>
+#include "sc-memory/sc_memory.hpp"
+#include "sc-memory/sc_addr.hpp"
 
 #include "generator/SolutionTreeGenerator.hpp"
-#include "searcher/SolutionTreeSearcher.hpp"
+#include "searcher/solutionTreeSearcher/SolutionTreeSearcher.hpp"
+#include "utils/ReplacementsUtils.hpp"
 
 namespace inference
 {

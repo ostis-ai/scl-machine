@@ -10,9 +10,9 @@
 
 #include "LogicExpression.hpp"
 
-#include "searcher/TemplateSearcher.hpp"
-#include "manager/TemplateManager.hpp"
-#include "manager/SolutionTreeManager.hpp"
+#include "searcher/templateSearcher/TemplateSearcherAbstract.hpp"
+#include "manager/templateManager/TemplateManagerAbstract.hpp"
+#include "manager/solutionTreeManager/SolutionTreeManagerAbstract.hpp"
 
 using namespace inference;
 

@@ -10,14 +10,14 @@
 
 #include <vector>
 
-#include <sc-memory/sc_memory.hpp>
+#include "sc-memory/sc_memory.hpp"
 
 namespace inference
 {
-class TemplateManager : public TemplateManagerAbstract
+class TemplateManagerFixedArguments : public TemplateManagerAbstract
 {
 public:
-  explicit TemplateManager(ScMemoryContext * ms_context);
+  explicit TemplateManagerFixedArguments(ScMemoryContext * context);
 
   std::vector<ScTemplateParams> createTemplateParams(ScAddr const & scTemplate) override;
 };

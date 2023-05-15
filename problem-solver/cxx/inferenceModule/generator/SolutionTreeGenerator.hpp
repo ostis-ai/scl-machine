@@ -10,7 +10,6 @@
 #include <vector>
 
 #include <sc-memory/kpm/sc_agent.hpp>
-#include "searcher/TemplateSearcher.hpp"
 
 namespace inference
 {

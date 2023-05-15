@@ -9,20 +9,19 @@
 #include "sc-memory/sc_memory.hpp"
 #include "sc-memory/sc_addr.hpp"
 
-#include "manager/TemplateManager.hpp"
+#include "manager/templateManager/TemplateManager.hpp"
 #include "logic/LogicExpressionNode.hpp"
 
-#include "FormulasIterationStrategyAbstract.hpp"
+#include "InferenceManagerAbstract.hpp"
 
 namespace inference
 {
 using ScAddrQueue = std::queue<ScAddr>;
 
-// TODO: InferenceManager
-class FormulasIterationStrategyAll : public FormulasIterationStrategyAbstract
+class DirectInferenceManagerAll : public InferenceManagerAbstract
 {
 public:
-  explicit FormulasIterationStrategyAll(ScMemoryContext * context);
+  explicit DirectInferenceManagerAll(ScMemoryContext * context);
 
   bool applyIterationStrategy(InferenceParamsConfig const & inferenceParamsConfig) override;
 };

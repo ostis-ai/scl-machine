@@ -9,9 +9,9 @@
 #include "sc-memory/sc_memory.hpp"
 #include "sc-memory/sc_addr.hpp"
 
-#include "searcher/TemplateSearcherAbstract.hpp"
-#include "manager/SolutionTreeManager.hpp"
-#include "manager/TemplateManager.hpp"
+#include "searcher/templateSearcher/TemplateSearcherAbstract.hpp"
+#include "manager/solutionTreeManager/SolutionTreeManager.hpp"
+#include "manager/templateManager/TemplateManager.hpp"
 #include "logic/LogicExpressionNode.hpp"
 #include "inferenceConfig/InferenceConfig.hpp"
 
@@ -20,12 +20,12 @@ namespace inference
 using ScAddrQueue = std::queue<ScAddr>;
 
 /// Class to control formulas iteration strategy: when to stop applying rules and how to iterate over them
-class FormulasIterationStrategyAbstract
+class InferenceManagerAbstract
 {
 public:
-  explicit FormulasIterationStrategyAbstract(ScMemoryContext * context);
+  explicit InferenceManagerAbstract(ScMemoryContext * context);
 
-  virtual ~FormulasIterationStrategyAbstract() = default;
+  virtual ~InferenceManagerAbstract() = default;
 
   void setTemplateSearcher(std::shared_ptr<TemplateSearcherAbstract> searcher);
   void setTemplateManager(std::shared_ptr<TemplateManagerAbstract> manager);

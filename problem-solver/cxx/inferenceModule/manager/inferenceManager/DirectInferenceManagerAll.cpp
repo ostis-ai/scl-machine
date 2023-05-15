@@ -4,14 +4,14 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "FormulasIterationStrategyAll.hpp"
+#include "DirectInferenceManagerAll.hpp"
 
 #include "keynodes/InferenceKeynodes.hpp"
 
 using namespace inference;
 
-FormulasIterationStrategyAll::FormulasIterationStrategyAll(ScMemoryContext * context)
-      : FormulasIterationStrategyAbstract(context)
+DirectInferenceManagerAll::DirectInferenceManagerAll(ScMemoryContext * context)
+      : InferenceManagerAbstract(context)
 {
 }
 
@@ -26,7 +26,7 @@ FormulasIterationStrategyAll::FormulasIterationStrategyAll(ScMemoryContext * con
  * @returns true if something was generated (any rule was applied), otherwise return false
  * @throws utils::ExceptionItemNotFound Thrown if `formulasSet` is an empty set
 */
-bool FormulasIterationStrategyAll::applyIterationStrategy(InferenceParamsConfig const & inferenceParamsConfig)
+bool DirectInferenceManagerAll::applyIterationStrategy(InferenceParamsConfig const & inferenceParamsConfig)
 {
   bool result = false;
 

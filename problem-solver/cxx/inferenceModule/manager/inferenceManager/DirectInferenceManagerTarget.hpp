@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "FormulasIterationStrategyAbstract.hpp"
+#include "InferenceManagerAbstract.hpp"
 
 #include "sc-memory/sc_memory.hpp"
 #include "sc-memory/sc_addr.hpp"
@@ -16,10 +16,10 @@
 namespace inference
 {
 /// Formulas iteration strategy stops iteration if target is achieved
-class FormulasIterationStrategyTarget : public FormulasIterationStrategyAbstract
+class DirectInferenceManagerTarget : public InferenceManagerAbstract
 {
 public:
-  explicit FormulasIterationStrategyTarget(ScMemoryContext * context);
+  explicit DirectInferenceManagerTarget(ScMemoryContext * context);
 
   bool applyIterationStrategy(InferenceParamsConfig const & inferenceParamsConfig) override;
 

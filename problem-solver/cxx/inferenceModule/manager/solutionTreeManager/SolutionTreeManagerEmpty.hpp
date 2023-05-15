@@ -8,18 +8,18 @@
 
 #include <vector>
 
-#include <sc-memory/sc_memory.hpp>
-#include <sc-memory/sc_addr.hpp>
+#include "sc-memory/sc_memory.hpp"
+#include "sc-memory/sc_addr.hpp"
 
 #include "SolutionTreeManagerAbstract.hpp"
 
 namespace inference
 {
 
-class SolutionTreeManager : public SolutionTreeManagerAbstract
+class SolutionTreeManagerEmpty : public SolutionTreeManagerAbstract
 {
 public:
-  explicit SolutionTreeManager(ScMemoryContext * context);
+  explicit SolutionTreeManagerEmpty(ScMemoryContext * context);
 
   bool addNode(ScAddr const & formula, Replacements const & replacements) override;
 };

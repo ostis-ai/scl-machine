@@ -12,7 +12,7 @@
 #include "sc-agents-common/utils/GenerationUtils.hpp"
 
 #include "keynodes/InferenceKeynodes.hpp"
-#include "director/InferenceManagerDirector.hpp"
+#include "factory/InferenceManagerFactory.hpp"
 
 using namespace inference;
 
@@ -69,8 +69,8 @@ TEST_F(InferenceManagerBuilderTest, SingleSuccessApplyInference)
 
   // Create inference manager with `strategy all` using director
   InferenceFlowConfig const & inferenceFlowConfig{false, false, false};
-  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
-      inference::InferenceManagerDirector::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
+  std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
+      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
 
   // Apply inference with configured manager and params config
   bool result = iterationStrategy->applyIterationStrategy(inferenceParamsConfig);
@@ -102,8 +102,8 @@ TEST_F(InferenceManagerBuilderTest, SnakeApplyInference)
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
 
   InferenceFlowConfig const & inferenceFlowConfig {false, false, false};
-  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
-      inference::InferenceManagerDirector::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
+  std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
+      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
 
   InferenceParamsConfig const & inferenceParamsConfig {rulesSet, arguments, inputStructures, outputStructure};
   bool result = iterationStrategy->applyIterationStrategy(inferenceParamsConfig);
@@ -145,8 +145,8 @@ TEST_F(InferenceManagerBuilderTest, SnakesApplyInference)
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
 
   InferenceFlowConfig const & inferenceFlowConfig {false, false, false};
-  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
-      inference::InferenceManagerDirector::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
+  std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
+      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
 
   InferenceParamsConfig const & inferenceParamsConfig {rulesSet, arguments, inputStructures, outputStructure};
   bool result = iterationStrategy->applyIterationStrategy(inferenceParamsConfig);
@@ -192,8 +192,8 @@ TEST_F(InferenceManagerBuilderTest, SnakesTailsApplyInference)
     ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
 
     InferenceFlowConfig const & inferenceFlowConfig {false, false, false};
-    std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
-        inference::InferenceManagerDirector::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
+    std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
+        inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
 
     InferenceParamsConfig const & inferenceParamsConfig {rulesSet, arguments, inputStructures, outputStructure};
     bool result = iterationStrategy->applyIterationStrategy(inferenceParamsConfig);
@@ -228,8 +228,8 @@ TEST_F(InferenceManagerBuilderTest, SnakesTailsConjunctionApplyInference)
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
 
   InferenceFlowConfig const & inferenceFlowConfig {false, false, false};
-  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
-      inference::InferenceManagerDirector::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
+  std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
+      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
 
   InferenceParamsConfig const & inferenceParamsConfig {rulesSet, arguments, inputStructures, outputStructure};
   bool result = iterationStrategy->applyIterationStrategy(inferenceParamsConfig);
@@ -262,8 +262,8 @@ TEST_F(InferenceManagerBuilderTest, MultipleSuccessApplyInference)
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
 
   InferenceFlowConfig const & inferenceFlowConfig {false, false, false};
-  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
-      inference::InferenceManagerDirector::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
+  std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
+      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
 
   InferenceParamsConfig const & inferenceParamsConfig {rulesSet, arguments, inputStructures, outputStructure};
   bool result = iterationStrategy->applyIterationStrategy(inferenceParamsConfig);
@@ -309,8 +309,8 @@ TEST_F(InferenceManagerBuilderTest, SingleUnsuccessfulApplyInference)
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
 
   InferenceFlowConfig const & inferenceFlowConfig {false, false, false};
-  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
-      inference::InferenceManagerDirector::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
+  std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
+      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
 
   InferenceParamsConfig const & inferenceParamsConfig {rulesSet, {}, inputStructures, outputStructure};
   bool result = iterationStrategy->applyIterationStrategy(inferenceParamsConfig);

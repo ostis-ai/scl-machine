@@ -4,21 +4,22 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "InferenceManagerDirector.hpp"
+#include "InferenceManagerFactory.hpp"
 
-#include "searcher/TemplateSearcherInStructures.hpp"
-#include "manager/TemplateManagerFixedArguments.hpp"
-#include "manager/SolutionTreeManagerEmpty.hpp"
-#include "manager/SolutionTreeManager.hpp"
-#include "strategy/FormulasIterationStrategyAll.hpp"
-#include "strategy/FormulasIterationStrategyTarget.hpp"
+#include "searcher/templateSearcher/TemplateSearcherInStructures.hpp"
+#include "searcher/templateSearcher/TemplateSearcher.hpp"
+#include "manager/templateManager/TemplateManagerFixedArguments.hpp"
+#include "manager/solutionTreeManager/SolutionTreeManagerEmpty.hpp"
+#include "manager/solutionTreeManager/SolutionTreeManager.hpp"
+#include "manager/inferenceManager/DirectInferenceManagerAll.hpp"
+#include "manager/inferenceManager/DirectInferenceManagerTarget.hpp"
 
 using namespace inference;
 
-std::unique_ptr<FormulasIterationStrategyAbstract> InferenceManagerDirector::constructDirectInferenceManagerAll(
+std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDirectInferenceManagerAll(
       ScMemoryContext * context, InferenceFlowConfig const & inferenceFlowConfig, ScAddrVector const & inputStructures)
 {
-  std::unique_ptr<FormulasIterationStrategyAll> strategyAll = std::make_unique<FormulasIterationStrategyAll>(context);
+  std::unique_ptr<DirectInferenceManagerAll> strategyAll = std::make_unique<DirectInferenceManagerAll>(context);
   std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager;
   if (inferenceFlowConfig.generateSolutionTree)
   {
@@ -49,10 +50,10 @@ std::unique_ptr<FormulasIterationStrategyAbstract> InferenceManagerDirector::con
   return strategyAll;
 }
 
-std::unique_ptr<FormulasIterationStrategyAbstract> InferenceManagerDirector::constructDirectInferenceManagerTarget(
+std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDirectInferenceManagerTarget(
       ScMemoryContext * context, InferenceFlowConfig const & inferenceFlowConfig, ScAddrVector const & inputStructures)
 {
-  std::unique_ptr<FormulasIterationStrategyTarget> strategyTarget = std::make_unique<FormulasIterationStrategyTarget>(context);
+  std::unique_ptr<DirectInferenceManagerTarget> strategyTarget = std::make_unique<DirectInferenceManagerTarget>(context);
 
   std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager;
   if (inferenceFlowConfig.generateSolutionTree)

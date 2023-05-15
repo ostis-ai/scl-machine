@@ -4,44 +4,44 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "FormulasIterationStrategyAbstract.hpp"
+#include "InferenceManagerAbstract.hpp"
 
 #include <utility>
 
 #include "sc-agents-common/utils/IteratorUtils.hpp"
 
-#include "manager/TemplateManagerFixedArguments.hpp"
+#include "manager/templateManager/TemplateManagerFixedArguments.hpp"
 #include "utils/ContainersUtils.hpp"
 #include "logic/LogicExpression.hpp"
 
 using namespace inference;
 
-FormulasIterationStrategyAbstract::FormulasIterationStrategyAbstract(ScMemoryContext * context)
+InferenceManagerAbstract::InferenceManagerAbstract(ScMemoryContext * context)
       : context(context)
 {
 }
 
-void FormulasIterationStrategyAbstract::setTemplateSearcher(std::shared_ptr<TemplateSearcherAbstract> searcher)
+void InferenceManagerAbstract::setTemplateSearcher(std::shared_ptr<TemplateSearcherAbstract> searcher)
 {
   templateSearcher = std::move(searcher);
 }
 
-void FormulasIterationStrategyAbstract::setTemplateManager(std::shared_ptr<TemplateManagerAbstract> manager)
+void InferenceManagerAbstract::setTemplateManager(std::shared_ptr<TemplateManagerAbstract> manager)
 {
   templateManager = std::move(manager);
 }
 
-void FormulasIterationStrategyAbstract::setSolutionTreeManager(std::shared_ptr<SolutionTreeManagerAbstract> manager)
+void InferenceManagerAbstract::setSolutionTreeManager(std::shared_ptr<SolutionTreeManagerAbstract> manager)
 {
   solutionTreeManager = std::move(manager);
 }
 
-std::shared_ptr<SolutionTreeManagerAbstract> FormulasIterationStrategyAbstract::getSolutionTreeManager()
+std::shared_ptr<SolutionTreeManagerAbstract> InferenceManagerAbstract::getSolutionTreeManager()
 {
   return solutionTreeManager;
 }
 
-vector<ScAddrQueue> FormulasIterationStrategyAbstract::createFormulasQueuesListByPriority(ScAddr const & formulasSet)
+vector<ScAddrQueue> InferenceManagerAbstract::createFormulasQueuesListByPriority(ScAddr const & formulasSet)
 {
   vector<ScAddrQueue> formulasQueuesList;
 
@@ -56,7 +56,7 @@ vector<ScAddrQueue> FormulasIterationStrategyAbstract::createFormulasQueuesListB
   return formulasQueuesList;
 }
 
-ScAddrQueue FormulasIterationStrategyAbstract::createQueue(ScAddr const & set)
+ScAddrQueue InferenceManagerAbstract::createQueue(ScAddr const & set)
 {
   ScAddrQueue queue;
   ScAddrVector elementList = utils::IteratorUtils::getAllWithType(context, set, ScType::Node);
@@ -72,7 +72,7 @@ ScAddrQueue FormulasIterationStrategyAbstract::createQueue(ScAddr const & set)
  * @param outputStructure is a structure to generate new knowledge in
  * @returns LogicFormulaResult {bool: value, bool: isGenerated, Replacements: replacements}
  */
-LogicFormulaResult FormulasIterationStrategyAbstract::useFormula(
+LogicFormulaResult InferenceManagerAbstract::useFormula(
       ScAddr const & formula,
       ScAddr const & outputStructure)
 {
@@ -112,7 +112,7 @@ LogicFormulaResult FormulasIterationStrategyAbstract::useFormula(
   return formulaResult;
 }
 
-void FormulasIterationStrategyAbstract::fillFormulaFixedArgumentsIdentifiers(ScAddr const & formula, ScAddr const & firstFixedArgument) const
+void InferenceManagerAbstract::fillFormulaFixedArgumentsIdentifiers(ScAddr const & formula, ScAddr const & firstFixedArgument) const
 {
   std::string const firstFixedArgumentIdentifier = context->HelperGetSystemIdtf(firstFixedArgument);
   if (!firstFixedArgumentIdentifier.empty())
@@ -141,13 +141,13 @@ void FormulasIterationStrategyAbstract::fillFormulaFixedArgumentsIdentifiers(ScA
   }
 }
 
-void FormulasIterationStrategyAbstract::formTemplateManagerFixedArguments(ScAddr const & formula, ScAddr const & firstFixedArgument)
+void InferenceManagerAbstract::formTemplateManagerFixedArguments(ScAddr const & formula, ScAddr const & firstFixedArgument)
 {
   resetTemplateManager(std::make_shared<TemplateManagerFixedArguments>(context));
   fillFormulaFixedArgumentsIdentifiers(formula, firstFixedArgument);
 }
 
-void FormulasIterationStrategyAbstract::resetTemplateManager(std::shared_ptr<TemplateManagerAbstract> otherTemplateManager)
+void InferenceManagerAbstract::resetTemplateManager(std::shared_ptr<TemplateManagerAbstract> otherTemplateManager)
 {
   otherTemplateManager->setArguments(templateManager->getArguments());
   otherTemplateManager->setGenerateOnlyFirst(templateManager->getGenerateOnlyFirst());

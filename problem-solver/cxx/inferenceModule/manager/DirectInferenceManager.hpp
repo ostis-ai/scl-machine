@@ -12,9 +12,8 @@
 #include <sc-memory/sc_memory.hpp>
 #include <sc-memory/sc_addr.hpp>
 
-#include "manager/SolutionTreeManager.hpp"
-#include "manager/TemplateManager.hpp"
-#include "searcher/TemplateSearcher.hpp"
+#include "manager/solutionTreeManager/SolutionTreeManager.hpp"
+#include "manager/templateManager/TemplateManager.hpp"
 #include "classifier/FormulaClassifier.hpp"
 #include "logic/LogicExpressionNode.hpp"
 

@@ -6,7 +6,7 @@
 
 #include "TemplateSearcherAbstract.hpp"
 
-#include <sc-agents-common/utils/CommonUtils.hpp>
+#include "sc-agents-common/utils/CommonUtils.hpp"
 
 using namespace inference;
 

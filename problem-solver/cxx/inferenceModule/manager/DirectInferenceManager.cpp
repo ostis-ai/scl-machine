@@ -10,8 +10,8 @@
 #include <sc-agents-common/utils/GenerationUtils.hpp>
 #include <sc-agents-common/utils/IteratorUtils.hpp>
 
-#include "strategy/FormulasIterationStrategyAbstract.hpp"
-#include "director/InferenceManagerDirector.hpp"
+#include "manager/inferenceManager/InferenceManagerAbstract.hpp"
+#include "factory/InferenceManagerFactory.hpp"
 
 using namespace inference;
 
@@ -33,8 +33,8 @@ ScAddr DirectInferenceManager::applyInference(
     inputStructures.push_back(inputStructure);
   }
   InferenceFlowConfig const & inferenceFlowConfig {true, true, false};
-  std::unique_ptr<FormulasIterationStrategyAbstract> strategy =
-      InferenceManagerDirector::constructDirectInferenceManagerTarget(
+  std::unique_ptr<InferenceManagerAbstract> strategy =
+      InferenceManagerFactory::constructDirectInferenceManagerTarget(
           ms_context, inferenceFlowConfig, inputStructures);
 
   ScAddr const & outputStructure = ms_context->CreateNode(ScType::NodeConstStruct);

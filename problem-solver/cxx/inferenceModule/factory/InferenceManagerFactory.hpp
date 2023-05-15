@@ -6,17 +6,17 @@
 
 #pragma once
 
-#include "strategy/FormulasIterationStrategyAbstract.hpp"
+#include "manager/inferenceManager/InferenceManagerAbstract.hpp"
 
 namespace inference
 {
-class InferenceManagerDirector
+class InferenceManagerFactory
 {
 public:
-  static std::unique_ptr<FormulasIterationStrategyAbstract> constructDirectInferenceManagerAll(
+  static std::unique_ptr<InferenceManagerAbstract> constructDirectInferenceManagerAll(
         ScMemoryContext * context, InferenceFlowConfig const & inferenceFlowConfig, ScAddrVector const & inputStructures = {});
 
-  static std::unique_ptr<FormulasIterationStrategyAbstract> constructDirectInferenceManagerTarget(
+  static std::unique_ptr<InferenceManagerAbstract> constructDirectInferenceManagerTarget(
       ScMemoryContext * context, InferenceFlowConfig const & inferenceFlowConfig, ScAddrVector const & inputStructures = {});
 };
 }
