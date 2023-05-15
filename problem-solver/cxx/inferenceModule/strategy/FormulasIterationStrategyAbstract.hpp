@@ -12,8 +12,8 @@
 #include "searcher/TemplateSearcherAbstract.hpp"
 #include "manager/SolutionTreeManager.hpp"
 #include "manager/TemplateManager.hpp"
-
 #include "logic/LogicExpressionNode.hpp"
+#include "inferenceConfig/InferenceConfig.hpp"
 
 namespace inference
 {
@@ -33,13 +33,7 @@ public:
 
   std::shared_ptr<SolutionTreeManagerAbstract> getSolutionTreeManager();
 
-  virtual bool applyIterationStrategy(ScAddr const & formulasSet, ScAddr const & outputStructure) = 0;
-
-  // подумать про обратный логический вывод
-  // virtual bool applyIterationStrategy(InferenceConfig const & inferenceConfig, InferenceParams const & inferenceParams) = 0;
-  // inferenceConfig всегда одинаковый, делается при создании. inferenceParams могут меняться при каждом вызове
-  // inferenceParams = {target, arguments, inputStructures, formulasSet}
-  // inferenceConfig = {generateUnique, generateFirst, generateSolutionTree}
+  virtual bool applyIterationStrategy(InferenceParamsConfig const & inferenceParamsConfig) = 0;
 
   // TODO: Need to implement common logic of inference rules (e.g. modus ponens)
   LogicFormulaResult useFormula(

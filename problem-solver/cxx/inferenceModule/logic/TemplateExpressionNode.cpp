@@ -26,9 +26,6 @@ TemplateExpressionNode::TemplateExpressionNode(
 
 void TemplateExpressionNode::compute(LogicFormulaResult & result) const
 {
-  std::string const formulaIdentifier = context->HelperGetSystemIdtf(formula);
-  SC_LOG_DEBUG("Checking atomic logical formula " + formulaIdentifier);
-
   Replacements replacements;
   std::set<std::string> varNames;
   templateSearcher->getVarNames(formula, varNames);
@@ -45,7 +42,7 @@ void TemplateExpressionNode::compute(LogicFormulaResult & result) const
 
   result.replacements = replacements;
   result.value = !result.replacements.empty();
-  SC_LOG_DEBUG("Compute atomic logical formula " << formulaIdentifier << (result.value ? " true" : " false"));
+  SC_LOG_DEBUG("Compute atomic logical formula " << context->HelperGetSystemIdtf(formula) << (result.value ? " true" : " false"));
 }
 
 LogicFormulaResult TemplateExpressionNode::find(Replacements & replacements) const

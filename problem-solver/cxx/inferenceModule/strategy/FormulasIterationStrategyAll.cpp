@@ -26,20 +26,23 @@ FormulasIterationStrategyAll::FormulasIterationStrategyAll(ScMemoryContext * con
  * @returns true if something was generated (any rule was applied), otherwise return false
  * @throws utils::ExceptionItemNotFound Thrown if `formulasSet` is an empty set
 */
-bool FormulasIterationStrategyAll::applyIterationStrategy(ScAddr const & formulasSet, ScAddr const & outputStructure)
+bool FormulasIterationStrategyAll::applyIterationStrategy(InferenceParamsConfig const & inferenceParamsConfig)
 {
   bool result = false;
 
-  vector<ScAddrQueue> formulasQueuesByPriority = createFormulasQueuesListByPriority(formulasSet);
+  templateManager->setArguments(inferenceParamsConfig.arguments);
+  templateSearcher->setInputStructures(inferenceParamsConfig.inputStructures);
+
+  vector<ScAddrQueue> formulasQueuesByPriority = createFormulasQueuesListByPriority(inferenceParamsConfig.formulasSet);
   if (formulasQueuesByPriority.empty())
   {
-    SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, "No rule sets found.");
+    SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, "No formulas sets found.");
   }
 
   ScAddrQueue uncheckedFormulas;
   ScAddr formula;
   LogicFormulaResult formulaResult;
-  SC_LOG_DEBUG("Start rule applying. There is " << formulasQueuesByPriority.size() << " formulas sets");
+  SC_LOG_DEBUG("Start formulas applying. There is " << formulasQueuesByPriority.size() << " formulas sets");
   for (size_t formulasQueueIndex = 0; formulasQueueIndex < formulasQueuesByPriority.size(); formulasQueueIndex++)
   {
     uncheckedFormulas = formulasQueuesByPriority[formulasQueueIndex];
@@ -48,7 +51,7 @@ bool FormulasIterationStrategyAll::applyIterationStrategy(ScAddr const & formula
     {
       formula = uncheckedFormulas.front();
       SC_LOG_DEBUG("Trying to generate by formula: " << context->HelperGetSystemIdtf(formula));
-      formulaResult = useFormula(formula, outputStructure);
+      formulaResult = useFormula(formula, inferenceParamsConfig.outputStructure);
       SC_LOG_DEBUG("Logical formula is " << (formulaResult.isGenerated ? "generated" : "not generated"));
       if (formulaResult.isGenerated)
       {

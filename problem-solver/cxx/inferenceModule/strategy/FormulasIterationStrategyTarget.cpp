@@ -18,8 +18,12 @@ FormulasIterationStrategyTarget::FormulasIterationStrategyTarget(ScMemoryContext
 {
 }
 
-bool FormulasIterationStrategyTarget::applyIterationStrategy(ScAddr const & formulasSet, ScAddr const & outputStructure)
+bool FormulasIterationStrategyTarget::applyIterationStrategy(InferenceParamsConfig const & inferenceParamsConfig)
 {
+  templateManager->setArguments(inferenceParamsConfig.arguments);
+  templateSearcher->setInputStructures(inferenceParamsConfig.inputStructures);
+  setTargetStructure(inferenceParamsConfig.targetStructure);
+
   std::vector<ScTemplateParams> const templateParamsVector =
       templateManager->createTemplateParams(targetStructure);
   bool targetAchieved = isTargetAchieved(templateParamsVector);
@@ -29,15 +33,15 @@ bool FormulasIterationStrategyTarget::applyIterationStrategy(ScAddr const & form
     return false;
   }
 
-  vector<ScAddrQueue> formulasQueuesByPriority = createFormulasQueuesListByPriority(formulasSet);
+  vector<ScAddrQueue> formulasQueuesByPriority = createFormulasQueuesListByPriority(inferenceParamsConfig.formulasSet);
   if (formulasQueuesByPriority.empty())
   {
-    SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, "No rule sets found.");
+    SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, "No formulas sets found.");
   }
 
   // Extend input structures vector with outputStructure to find target with generated elements
   ScAddrVector inputStructures = templateSearcher->getInputStructures();
-  inputStructures.push_back(outputStructure);
+  inputStructures.push_back(inferenceParamsConfig.outputStructure);
   templateSearcher->setInputStructures(inputStructures);
 
   ScAddrVector checkedFormulas;
@@ -45,7 +49,7 @@ bool FormulasIterationStrategyTarget::applyIterationStrategy(ScAddr const & form
 
   ScAddr formula;
   LogicFormulaResult formulaResult;
-  SC_LOG_DEBUG("Start rule applying. There is " << formulasQueuesByPriority.size() << " formulas sets");
+  SC_LOG_DEBUG("Start formulas applying. There is " << formulasQueuesByPriority.size() << " formulas sets");
   for (size_t formulasQueueIndex = 0; formulasQueueIndex < formulasQueuesByPriority.size() && !targetAchieved;
        formulasQueueIndex++)
   {
@@ -56,7 +60,7 @@ bool FormulasIterationStrategyTarget::applyIterationStrategy(ScAddr const & form
     {
       formula = uncheckedFormulas.front();
       SC_LOG_DEBUG("Trying to generate by formula: " << context->HelperGetSystemIdtf(formula));
-      formulaResult = useFormula(formula, outputStructure);
+      formulaResult = useFormula(formula, inferenceParamsConfig.outputStructure);
       SC_LOG_DEBUG("Logical formula is " << (formulaResult.isGenerated ? "generated" : "not generated"));
       if (formulaResult.isGenerated)
       {
@@ -65,7 +69,7 @@ bool FormulasIterationStrategyTarget::applyIterationStrategy(ScAddr const & form
         targetAchieved = isTargetAchieved(ReplacementsUtils::getReplacementsToScTemplateParams(formulaResult.replacements));
         if (targetAchieved)
         {
-          SC_LOG_DEBUG("Target achieved");
+          SC_LOG_DEBUG("Target is achieved");
           break;
         }
         else

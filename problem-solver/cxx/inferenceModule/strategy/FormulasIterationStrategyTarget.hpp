@@ -21,7 +21,7 @@ class FormulasIterationStrategyTarget : public FormulasIterationStrategyAbstract
 public:
   explicit FormulasIterationStrategyTarget(ScMemoryContext * context);
 
-  bool applyIterationStrategy(ScAddr const & formulasSet, ScAddr const & outputStructure) override;
+  bool applyIterationStrategy(InferenceParamsConfig const & inferenceParamsConfig) override;
 
   void setTargetStructure(ScAddr const & otherTargetStructure);
 

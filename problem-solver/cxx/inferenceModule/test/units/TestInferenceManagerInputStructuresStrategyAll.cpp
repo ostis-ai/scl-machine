@@ -37,6 +37,299 @@ void initialize()
   scAgentsCommon::CoreKeynodes::InitGlobal();
 }
 
+void generateTripleInStructure(ScMemoryContext & context, ScAddr const & set, ScAddr const & element, ScAddr const & structure);
+void generateBodyHeadInStructure(ScMemoryContext & context, ScAddr const & tailElement, ScAddr const & nrelBodyElements, ScAddr const & nrelHead, ScAddr const & structure);
+void generateSnakes(ScMemoryContext & context, size_t snakesCount, size_t tailsElementsCount);
+void generateTails(ScMemoryContext & context, ScAddr const & tail, size_t tailsCount, size_t tailsElementsCount);
+
+TEST_F(InferenceManagerBuilderTest, SingleSuccessApplyInference)
+{
+  ScMemoryContext & context = *m_ctx;
+
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "singleApplyTest.scs");
+  initialize();
+
+  // Form input structures set of two structures. One of them consists one triple from premise and the other -- the second triple.
+  ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
+  ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
+  ScAddrVector inputStructures {inputStructure1, inputStructure2};
+
+  // Get arguments set. It is a singleton
+  ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
+  ScAddrVector arguments {argument};
+
+  // Create output structure to generate structures in
+  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+
+  // Get formulas set to apply
+  ScAddr const & formulasSet = context.HelperResolveSystemIdtf(RULES_SET);
+
+  // Form inference params config
+  InferenceParamsConfig const & inferenceParamsConfig {formulasSet, arguments, inputStructures, outputStructure};
+
+  // Create inference manager with `strategy all` using director
+  InferenceFlowConfig const & inferenceFlowConfig{false, false, false};
+  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
+      inference::InferenceManagerDirector::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
+
+  // Apply inference with configured manager and params config
+  bool result = iterationStrategy->applyIterationStrategy(inferenceParamsConfig);
+  EXPECT_TRUE(result);
+
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
+  EXPECT_TRUE(
+      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
+
+  ScAddr const & targetClass = context.HelperFindBySystemIdtf(TARGET_NODE_CLASS);
+  EXPECT_TRUE(targetClass.IsValid());
+
+  EXPECT_TRUE(context.HelperCheckEdge(targetClass, argument, ScType::EdgeAccessConstPosPerm));
+}
+
+TEST_F(InferenceManagerBuilderTest, SnakeApplyInference)
+{
+  ScMemoryContext & context = *m_ctx;
+
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "snakeSingleArgumentApplyTest.scs");
+  initialize();
+
+  ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
+  ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
+  ScAddrVector inputStructures{inputStructure1, inputStructure2};
+  ScAddr const & argument = context.HelperResolveSystemIdtf(TAIL);
+  ScAddrVector arguments {argument};
+  ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
+  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+
+  InferenceFlowConfig const & inferenceFlowConfig {false, false, false};
+  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
+      inference::InferenceManagerDirector::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
+
+  InferenceParamsConfig const & inferenceParamsConfig {rulesSet, arguments, inputStructures, outputStructure};
+  bool result = iterationStrategy->applyIterationStrategy(inferenceParamsConfig);
+
+  EXPECT_TRUE(result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
+  EXPECT_TRUE(solution.IsValid());
+  EXPECT_TRUE(
+      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
+
+  ScAddr const & tail = context.HelperFindBySystemIdtf("tail");
+  ScAddr const & head = context.HelperFindBySystemIdtf("head");
+  ScAddr const & nrelTailHead = context.HelperFindBySystemIdtf("nrel_tail_head");
+  ScIterator5Ptr const & conclusionIterator = context.Iterator5(
+        tail,
+        ScType::EdgeDCommonConst,
+        head,
+        ScType::EdgeAccessConstPosPerm,
+        nrelTailHead);
+
+  EXPECT_TRUE(conclusionIterator->Next());
+}
+
+TEST_F(InferenceManagerBuilderTest, SnakesApplyInference)
+{
+  ScMemoryContext & context = *m_ctx;
+
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "snakeSingleArgumentApplyTest.scs");
+  initialize();
+
+  generateSnakes(*m_ctx, 1000, 100);
+
+  ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
+  ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
+  ScAddrVector inputStructures{inputStructure1, inputStructure2};
+  ScAddr const & argument = context.HelperResolveSystemIdtf(TAIL);
+  ScAddrVector arguments {argument};
+  ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
+  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+
+  InferenceFlowConfig const & inferenceFlowConfig {false, false, false};
+  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
+      inference::InferenceManagerDirector::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
+
+  InferenceParamsConfig const & inferenceParamsConfig {rulesSet, arguments, inputStructures, outputStructure};
+  bool result = iterationStrategy->applyIterationStrategy(inferenceParamsConfig);
+
+  EXPECT_TRUE(result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
+
+  EXPECT_TRUE(solution.IsValid());
+  EXPECT_TRUE(
+      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
+
+  ScAddr const & tail = context.HelperFindBySystemIdtf("tail");
+  ScAddr const & head = context.HelperFindBySystemIdtf("head");
+  ScAddr const & nrelTailHead = context.HelperFindBySystemIdtf("nrel_tail_head");
+  ScIterator5Ptr const & conclusionIterator = context.Iterator5(
+        tail,
+        ScType::EdgeDCommonConst,
+        head,
+        ScType::EdgeAccessConstPosPerm,
+        nrelTailHead);
+
+  EXPECT_TRUE(conclusionIterator->Next());
+}
+
+TEST_F(InferenceManagerBuilderTest, SnakesTailsApplyInference)
+{
+  ScMemoryContext & context = *m_ctx;
+
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "snakeSingleArgumentApplyTest.scs");
+  initialize();
+
+  for (size_t i = 0; i <20; i++)
+  {
+    ScAddr const & tail = context.HelperFindBySystemIdtf("tail");
+    generateTails(*m_ctx, tail, 10, 1000);
+
+    ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
+    ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
+    ScAddrVector inputStructures{inputStructure1, inputStructure2};
+    ScAddr const & argument = context.HelperResolveSystemIdtf(TAIL);
+    ScAddrVector arguments {argument};
+    ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
+    ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+
+    InferenceFlowConfig const & inferenceFlowConfig {false, false, false};
+    std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
+        inference::InferenceManagerDirector::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
+
+    InferenceParamsConfig const & inferenceParamsConfig {rulesSet, arguments, inputStructures, outputStructure};
+    bool result = iterationStrategy->applyIterationStrategy(inferenceParamsConfig);
+
+    EXPECT_TRUE(result);
+    ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
+
+    EXPECT_TRUE(solution.IsValid());
+    EXPECT_TRUE(
+        context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
+  }
+
+}
+
+TEST_F(InferenceManagerBuilderTest, SnakesTailsConjunctionApplyInference)
+{
+  ScMemoryContext & context = *m_ctx;
+
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "snakeSingleArgumentConjunctionApplyTest.scs");
+  initialize();
+
+  ScAddr const & tail = context.HelperFindBySystemIdtf(TAIL);
+  generateTails(*m_ctx, tail, 10, 10000);
+
+  ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
+  ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
+  ScAddrVector inputStructures{inputStructure1, inputStructure2};
+  ScAddr const & argument = context.HelperResolveSystemIdtf(TAIL);
+  ScAddrVector arguments {argument};
+
+  ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
+  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+
+  InferenceFlowConfig const & inferenceFlowConfig {false, false, false};
+  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
+      inference::InferenceManagerDirector::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
+
+  InferenceParamsConfig const & inferenceParamsConfig {rulesSet, arguments, inputStructures, outputStructure};
+  bool result = iterationStrategy->applyIterationStrategy(inferenceParamsConfig);
+
+  EXPECT_TRUE(result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
+
+  EXPECT_TRUE(solution.IsValid());
+  EXPECT_TRUE(
+      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
+}
+
+TEST_F(InferenceManagerBuilderTest, MultipleSuccessApplyInference)
+{
+  ScMemoryContext & context = *m_ctx;
+
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "fiveTimesApplyTest.scs");
+  initialize();
+
+  ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
+  ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
+  ScAddrVector inputStructures{inputStructure1, inputStructure2};
+  ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
+  ScAddrVector arguments {argument};
+  for (size_t i = 1; i < 6; i++)
+  {
+    arguments.push_back(context.HelperResolveSystemIdtf(ARGUMENT + to_string(i)));
+  }
+  ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
+  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+
+  InferenceFlowConfig const & inferenceFlowConfig {false, false, false};
+  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
+      inference::InferenceManagerDirector::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
+
+  InferenceParamsConfig const & inferenceParamsConfig {rulesSet, arguments, inputStructures, outputStructure};
+  bool result = iterationStrategy->applyIterationStrategy(inferenceParamsConfig);
+
+  EXPECT_TRUE(result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
+
+  EXPECT_TRUE(solution.IsValid());
+  EXPECT_TRUE(
+      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
+
+  ScAddr const & targetClass = context.HelperFindBySystemIdtf(TARGET_NODE_CLASS);
+  EXPECT_TRUE(targetClass.IsValid());
+
+  // Test if all structures was generated during `inference strategy all` flow
+  ScAddr const & argumentsClass = context.HelperResolveSystemIdtf(CURRENT_NODE_CLASS);
+  ScAddrVector const & expectedElements = utils::IteratorUtils::getAllWithType(&context, argumentsClass, ScType::NodeConst);
+  ScAddrVector foundElements;
+  ScIterator3Ptr const & targetClassIterator = context.Iterator3(
+        targetClass,
+        ScType::EdgeAccessConstPosPerm,
+        ScType::NodeConst);
+  for (size_t count = 0; count < 5; count++)
+  {
+    EXPECT_TRUE(targetClassIterator->Next());
+    foundElements.push_back(targetClassIterator->Get(2));
+  }
+
+  EXPECT_EQ(foundElements.size(), expectedElements.size());
+}
+
+TEST_F(InferenceManagerBuilderTest, SingleUnsuccessfulApplyInference)
+{
+  ScMemoryContext & context = *m_ctx;
+
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "singleUnsuccessfulApplyTest.scs");
+  initialize();
+
+  ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
+  ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
+  ScAddrVector inputStructures{inputStructure1, inputStructure2};
+  ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
+  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+
+  InferenceFlowConfig const & inferenceFlowConfig {false, false, false};
+  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
+      inference::InferenceManagerDirector::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
+
+  InferenceParamsConfig const & inferenceParamsConfig {rulesSet, {}, inputStructures, outputStructure};
+  bool result = iterationStrategy->applyIterationStrategy(inferenceParamsConfig);
+
+  EXPECT_FALSE(result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
+
+  EXPECT_TRUE(solution.IsValid());
+  EXPECT_TRUE(
+        context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstNegPerm));
+
+  ScAddr const & argument = context.HelperFindBySystemIdtf(ARGUMENT);
+  EXPECT_TRUE(argument.IsValid());
+  ScAddr const & targetClass = context.HelperFindBySystemIdtf(TARGET_NODE_CLASS);
+  EXPECT_TRUE(targetClass.IsValid());
+
+  EXPECT_FALSE(context.HelperCheckEdge(targetClass, argument, ScType::EdgeAccessConstPosPerm));
+}
+
 void generateTripleInStructure(ScMemoryContext & context, ScAddr const & set, ScAddr const & element, ScAddr const & structure)
 {
   context.CreateEdge(ScType::EdgeAccessConstPosPerm, structure, element);
@@ -158,287 +451,6 @@ void generateTails(ScMemoryContext & context, ScAddr const & tail, size_t const 
 
     generateBodyHeadInStructure(context, tailElement, nrelBodyElements, nrelHead, inputStructure);
   }
-}
-
-TEST_F(InferenceManagerBuilderTest, SingleSuccessApplyInference)
-{
-  ScMemoryContext & context = *m_ctx;
-
-  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "singleApplyTest.scs");
-  initialize();
-
-  // Get input structures set of two structures. One of them consists one triple from premise and the other -- the second triple.
-  ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
-  ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
-  ScAddrVector inputStructures{inputStructure1, inputStructure2};
-
-  // Get arguments set. It is a singleton
-  ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
-  EXPECT_TRUE(argument.IsValid());
-  ScAddrVector arguments {argument};
-
-  // Create inference manager with `strategy all` using director with builder
-  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
-      inference::InferenceManagerDirector::constructInputStructuresFixedArgumentsIterationStrategyAll(
-          &context, inputStructures, arguments);
-
-  ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
-
-  // Apply inference with configured manager
-  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
-  bool result = iterationStrategy->applyIterationStrategy(rulesSet, outputStructure);
-
-  EXPECT_TRUE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
-  EXPECT_TRUE(
-      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
-
-  ScAddr const & targetClass = context.HelperFindBySystemIdtf(TARGET_NODE_CLASS);
-  EXPECT_TRUE(targetClass.IsValid());
-
-  EXPECT_TRUE(context.HelperCheckEdge(targetClass, argument, ScType::EdgeAccessConstPosPerm));
-}
-
-TEST_F(InferenceManagerBuilderTest, SnakeApplyInference)
-{
-  ScMemoryContext & context = *m_ctx;
-
-  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "snakeSingleArgumentApplyTest.scs");
-  initialize();
-
-  ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
-  ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
-  ScAddrVector inputStructures{inputStructure1, inputStructure2};
-  ScAddr const & argument = context.HelperResolveSystemIdtf(TAIL);
-  EXPECT_TRUE(argument.IsValid());
-  ScAddrVector arguments {argument};
-
-  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
-      inference::InferenceManagerDirector::constructInputStructuresFixedArgumentsIterationStrategyAll(
-          &context, inputStructures, arguments);
-
-  ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
-  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
-  bool result = iterationStrategy->applyIterationStrategy(rulesSet, outputStructure);
-
-  EXPECT_TRUE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
-  EXPECT_TRUE(solution.IsValid());
-  EXPECT_TRUE(
-      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
-
-  ScAddr const & tail = context.HelperFindBySystemIdtf("tail");
-  ScAddr const & head = context.HelperFindBySystemIdtf("head");
-  ScAddr const & nrelTailHead = context.HelperFindBySystemIdtf("nrel_tail_head");
-  ScIterator5Ptr const & conclusionIterator = context.Iterator5(
-        tail,
-        ScType::EdgeDCommonConst,
-        head,
-        ScType::EdgeAccessConstPosPerm,
-        nrelTailHead);
-
-  EXPECT_TRUE(conclusionIterator->Next());
-}
-
-TEST_F(InferenceManagerBuilderTest, SnakesApplyInference)
-{
-  ScMemoryContext & context = *m_ctx;
-
-  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "snakeSingleArgumentApplyTest.scs");
-  initialize();
-
-  generateSnakes(*m_ctx, 1000, 100);
-
-  ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
-  ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
-  ScAddrVector inputStructures{inputStructure1, inputStructure2};
-  ScAddr const & argument = context.HelperResolveSystemIdtf(TAIL);
-  EXPECT_TRUE(argument.IsValid());
-  ScAddrVector arguments {argument};
-
-  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
-      inference::InferenceManagerDirector::constructInputStructuresFixedArgumentsIterationStrategyAll(
-          &context, inputStructures, arguments);
-
-  ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
-  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
-  bool result = iterationStrategy->applyIterationStrategy(rulesSet, outputStructure);
-
-  EXPECT_TRUE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
-
-  EXPECT_TRUE(solution.IsValid());
-  EXPECT_TRUE(
-      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
-
-  ScAddr const & tail = context.HelperFindBySystemIdtf("tail");
-  ScAddr const & head = context.HelperFindBySystemIdtf("head");
-  ScAddr const & nrelTailHead = context.HelperFindBySystemIdtf("nrel_tail_head");
-  ScIterator5Ptr const & conclusionIterator = context.Iterator5(
-        tail,
-        ScType::EdgeDCommonConst,
-        head,
-        ScType::EdgeAccessConstPosPerm,
-        nrelTailHead);
-
-  EXPECT_TRUE(conclusionIterator->Next());
-}
-
-TEST_F(InferenceManagerBuilderTest, SnakesTailsApplyInference)
-{
-  ScMemoryContext & context = *m_ctx;
-
-  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "snakeSingleArgumentApplyTest.scs");
-  initialize();
-
-  for (size_t i = 0; i <20; i++)
-  {
-    ScAddr const & tail = context.HelperFindBySystemIdtf("tail");
-    generateTails(*m_ctx, tail, 10, 1000);
-
-    ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
-    ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
-    ScAddrVector inputStructures{inputStructure1, inputStructure2};
-    ScAddr const & argument = context.HelperResolveSystemIdtf(TAIL);
-    EXPECT_TRUE(argument.IsValid());
-    ScAddrVector arguments {argument};
-
-    std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
-        inference::InferenceManagerDirector::constructInputStructuresFixedArgumentsIterationStrategyAll(
-            &context, inputStructures, arguments);
-
-    ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
-    ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
-    bool result = iterationStrategy->applyIterationStrategy(rulesSet, outputStructure);
-
-    EXPECT_TRUE(result);
-    ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
-
-    EXPECT_TRUE(solution.IsValid());
-    EXPECT_TRUE(
-        context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
-  }
-
-}
-
-TEST_F(InferenceManagerBuilderTest, SnakesTailsConjunctionApplyInference)
-{
-  ScMemoryContext & context = *m_ctx;
-
-  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "snakeSingleArgumentConjunctionApplyTest.scs");
-  initialize();
-
-  ScAddr const & tail = context.HelperFindBySystemIdtf(TAIL);
-  generateTails(*m_ctx, tail, 10, 10000);
-
-  ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
-  ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
-  ScAddrVector inputStructures{inputStructure1, inputStructure2};
-  ScAddr const & argument = context.HelperResolveSystemIdtf(TAIL);
-  EXPECT_TRUE(argument.IsValid());
-  ScAddrVector arguments {argument};
-
-  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
-      inference::InferenceManagerDirector::constructInputStructuresFixedArgumentsIterationStrategyAll(
-          &context, inputStructures, arguments);
-
-  ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
-  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
-  bool result = iterationStrategy->applyIterationStrategy(rulesSet, outputStructure);
-
-  EXPECT_TRUE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
-
-  EXPECT_TRUE(solution.IsValid());
-  EXPECT_TRUE(
-      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
-}
-
-TEST_F(InferenceManagerBuilderTest, MultipleSuccessApplyInference)
-{
-  ScMemoryContext & context = *m_ctx;
-
-  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "fiveTimesApplyTest.scs");
-  initialize();
-
-  ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
-  ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
-  ScAddrVector inputStructures{inputStructure1, inputStructure2};
-  ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
-  EXPECT_TRUE(argument.IsValid());
-  ScAddrVector arguments {argument};
-  for (size_t i = 1; i < 6; i++)
-  {
-    arguments.push_back(context.HelperResolveSystemIdtf(ARGUMENT + to_string(i)));
-  }
-
-  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
-      inference::InferenceManagerDirector::constructInputStructuresFixedArgumentsIterationStrategyAll(
-          &context, inputStructures, arguments);
-
-  ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
-  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
-  bool result = iterationStrategy->applyIterationStrategy(rulesSet, outputStructure);
-
-  EXPECT_TRUE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
-
-  EXPECT_TRUE(solution.IsValid());
-  EXPECT_TRUE(
-      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
-
-  ScAddr const & targetClass = context.HelperFindBySystemIdtf(TARGET_NODE_CLASS);
-  EXPECT_TRUE(targetClass.IsValid());
-
-  // Test if all structures was generated during `inference strategy all` flow
-  ScAddr const & argumentsClass = context.HelperResolveSystemIdtf(CURRENT_NODE_CLASS);
-  ScAddrVector const & expectedElements = utils::IteratorUtils::getAllWithType(&context, argumentsClass, ScType::NodeConst);
-  ScAddrVector foundElements;
-  ScIterator3Ptr const & targetClassIterator = context.Iterator3(
-        targetClass,
-        ScType::EdgeAccessConstPosPerm,
-        ScType::NodeConst);
-  for (size_t count = 0; count < 5; count++)
-  {
-    EXPECT_TRUE(targetClassIterator->Next());
-    foundElements.push_back(targetClassIterator->Get(2));
-  }
-
-  EXPECT_EQ(foundElements.size(), expectedElements.size());
-}
-
-TEST_F(InferenceManagerBuilderTest, SingleUnsuccessfulApplyInference)
-{
-  ScMemoryContext & context = *m_ctx;
-
-  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "singleUnsuccessfulApplyTest.scs");
-  initialize();
-
-  ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
-  ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
-  ScAddrVector inputStructures{inputStructure1, inputStructure2};
-
-  std::unique_ptr<inference::FormulasIterationStrategyAbstract> iterationStrategy =
-      inference::InferenceManagerDirector::constructInputStructuresFixedArgumentsIterationStrategyAll(
-          &context, inputStructures);
-
-  ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
-  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
-  bool result = iterationStrategy->applyIterationStrategy(rulesSet, outputStructure);
-
-  EXPECT_FALSE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
-
-  EXPECT_TRUE(solution.IsValid());
-  EXPECT_TRUE(
-        context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstNegPerm));
-
-  ScAddr const & argument = context.HelperFindBySystemIdtf(ARGUMENT);
-  EXPECT_TRUE(argument.IsValid());
-  ScAddr const & targetClass = context.HelperFindBySystemIdtf(TARGET_NODE_CLASS);
-  EXPECT_TRUE(targetClass.IsValid());
-
-  EXPECT_FALSE(context.HelperCheckEdge(targetClass, argument, ScType::EdgeAccessConstPosPerm));
 }
 
 }  // namespace inferenceManagerBuilderTest

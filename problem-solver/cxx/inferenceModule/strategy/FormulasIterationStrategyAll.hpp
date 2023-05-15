@@ -24,6 +24,6 @@ class FormulasIterationStrategyAll : public FormulasIterationStrategyAbstract
 public:
   explicit FormulasIterationStrategyAll(ScMemoryContext * context);
 
-  bool applyIterationStrategy(ScAddr const & formulasSet, ScAddr const & outputStructure) override;
+  bool applyIterationStrategy(InferenceParamsConfig const & inferenceParamsConfig) override;
 };
 }

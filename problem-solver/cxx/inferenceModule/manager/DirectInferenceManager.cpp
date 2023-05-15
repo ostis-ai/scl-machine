@@ -32,10 +32,14 @@ ScAddr DirectInferenceManager::applyInference(
   {
     inputStructures.push_back(inputStructure);
   }
+  InferenceFlowConfig const & inferenceFlowConfig {true, true, false};
   std::unique_ptr<FormulasIterationStrategyAbstract> strategy =
-      InferenceManagerDirector::constructIterationStrategyTarget(ms_context, targetStructure, inputStructures, argumentVector);
-  ScAddr outputStructure = ms_context->CreateNode(ScType::NodeConstStruct);
-  bool const targetAchieved = strategy->applyIterationStrategy(formulasSet, outputStructure);
+      InferenceManagerDirector::constructDirectInferenceManagerTarget(
+          ms_context, inferenceFlowConfig, inputStructures);
+
+  ScAddr const & outputStructure = ms_context->CreateNode(ScType::NodeConstStruct);
+  InferenceParamsConfig const & inferenceParamsConfig {formulasSet, argumentVector, inputStructures, outputStructure, targetStructure};
+  bool const targetAchieved = strategy->applyIterationStrategy(inferenceParamsConfig);
 
   return strategy->getSolutionTreeManager()->createSolution(outputStructure, targetAchieved);
 }

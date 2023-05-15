@@ -13,10 +13,10 @@ namespace inference
 class InferenceManagerDirector
 {
 public:
-  static std::unique_ptr<FormulasIterationStrategyAbstract> constructInputStructuresFixedArgumentsIterationStrategyAll(
-        ScMemoryContext * context, ScAddrVector const & inputStructures = {}, ScAddrVector const & arguments = {});
+  static std::unique_ptr<FormulasIterationStrategyAbstract> constructDirectInferenceManagerAll(
+        ScMemoryContext * context, InferenceFlowConfig const & inferenceFlowConfig, ScAddrVector const & inputStructures = {});
 
-  static std::unique_ptr<FormulasIterationStrategyAbstract> constructIterationStrategyTarget(
-        ScMemoryContext * context, ScAddr const & targetStructure, ScAddrVector const & inputStructures = {}, ScAddrVector const & arguments = {});
+  static std::unique_ptr<FormulasIterationStrategyAbstract> constructDirectInferenceManagerTarget(
+      ScMemoryContext * context, InferenceFlowConfig const & inferenceFlowConfig, ScAddrVector const & inputStructures = {});
 };
 }

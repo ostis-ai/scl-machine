@@ -28,6 +28,7 @@ public:
       ScAddr const & formula);
 
   void compute(LogicFormulaResult & result) const override;
+  // TODO: remove useless method. Use compute instead of find
   LogicFormulaResult find(Replacements & replacements) const;
   LogicFormulaResult generate(Replacements & replacements) override;
 
