@@ -51,6 +51,8 @@ std::shared_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & formu
     return buildEquivalenceEdgeFormula(formula);
   case FormulaClassifier::EQUIVALENCE_TUPLE:
     return buildEquivalenceTupleFormula(formula);
+  case FormulaClassifier::NONE:
+    SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, "Formula is invalid");
   default:
     SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, context->HelperGetSystemIdtf(formula) << " is not defined formula type");
   }

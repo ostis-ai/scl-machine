@@ -10,6 +10,7 @@
 
 #include "sc-agents-common/utils/IteratorUtils.hpp"
 
+#include "manager/TemplateManagerFixedArguments.hpp"
 #include "utils/ContainersUtils.hpp"
 #include "logic/LogicExpression.hpp"
 
@@ -82,7 +83,18 @@ LogicFormulaResult FormulasIterationStrategyAbstract::useFormula(
     return {false, false, {}};
   }
 
-  fillFormulaFixedArgumentsIdentifiers(formula);
+  // Choose template manager according to the formula specification (if fixed arguments exist)
+  ScAddr const & firstFixedArgument = utils::IteratorUtils::getAnyByOutRelation(
+      context, formula, scAgentsCommon::CoreKeynodes::rrel_1);
+  if (firstFixedArgument.IsValid())
+  {
+    formTemplateManagerFixedArguments(formula, firstFixedArgument);
+  }
+  else
+  {
+    resetTemplateManager(std::make_shared<TemplateManager>(context));
+  }
+
   LogicExpression logicExpression(
         context,
         templateSearcher,
@@ -100,14 +112,20 @@ LogicFormulaResult FormulasIterationStrategyAbstract::useFormula(
   return formulaResult;
 }
 
-void FormulasIterationStrategyAbstract::fillFormulaFixedArgumentsIdentifiers(ScAddr const & formula) const
+void FormulasIterationStrategyAbstract::fillFormulaFixedArgumentsIdentifiers(ScAddr const & formula, ScAddr const & firstFixedArgument) const
 {
+  std::string const firstFixedArgumentIdentifier = context->HelperGetSystemIdtf(firstFixedArgument);
+  if (!firstFixedArgumentIdentifier.empty())
+  {
+    templateManager->addFixedArgumentIdentifier(firstFixedArgumentIdentifier);
+  }
+
   // TODO(MksmOrlov): make nrel_basic_sequence oriented set processing
   size_t const maxFixedArgumentsCount = 10;
   ScAddr currentFixedArgument;
   ScAddr currentRoleRelation;
   std::string currentFixedArgumentIdentifier;
-  for (size_t i = 1; i <= maxFixedArgumentsCount; i++)
+  for (size_t i = 2; i <= maxFixedArgumentsCount; i++)
   {
     currentRoleRelation = utils::IteratorUtils::getRoleRelation(context, i);
     currentFixedArgument = utils::IteratorUtils::getAnyByOutRelation(context, formula, currentRoleRelation);
@@ -121,4 +139,18 @@ void FormulasIterationStrategyAbstract::fillFormulaFixedArgumentsIdentifiers(ScA
       templateManager->addFixedArgumentIdentifier(currentFixedArgumentIdentifier);
     }
   }
+}
+
+void FormulasIterationStrategyAbstract::formTemplateManagerFixedArguments(ScAddr const & formula, ScAddr const & firstFixedArgument)
+{
+  resetTemplateManager(std::make_shared<TemplateManagerFixedArguments>(context));
+  fillFormulaFixedArgumentsIdentifiers(formula, firstFixedArgument);
+}
+
+void FormulasIterationStrategyAbstract::resetTemplateManager(std::shared_ptr<TemplateManagerAbstract> otherTemplateManager)
+{
+  otherTemplateManager->setArguments(templateManager->getArguments());
+  otherTemplateManager->setGenerateOnlyFirst(templateManager->getGenerateOnlyFirst());
+  otherTemplateManager->setGenerateOnlyUnique(templateManager->getGenerateOnlyUnique());
+  templateManager = std::move(otherTemplateManager);
 }

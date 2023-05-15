@@ -40,7 +40,10 @@ public:
         ScAddr const & formula,
         ScAddr const & outputStructure);
 
-  void fillFormulaFixedArgumentsIdentifiers(ScAddr const & formula) const;
+  void fillFormulaFixedArgumentsIdentifiers(ScAddr const & formula, ScAddr const & firstFixedArgument) const;
+
+  void formTemplateManagerFixedArguments(ScAddr const & formula, ScAddr const & firstFixedArgument);
+  void resetTemplateManager(std::shared_ptr<TemplateManagerAbstract> otherTemplateManager);
 
   vector<ScAddrQueue> createFormulasQueuesListByPriority(ScAddr const & formulasSet);
 
