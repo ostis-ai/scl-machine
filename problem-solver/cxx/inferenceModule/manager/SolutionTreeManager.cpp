@@ -1,29 +1,26 @@
+/*
+* This source file is part of an OSTIS project. For the latest info, see http://ostis.net
+* Distributed under the MIT License
+* (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
+*/
+
 #include "SolutionTreeManager.hpp"
 
 namespace inference
 {
-SolutionTreeManager::SolutionTreeManager(ScMemoryContext * context)
-    : context(context)
+SolutionTreeManager::SolutionTreeManager(ScMemoryContext * context) : SolutionTreeManagerAbstract(context)
 {
-  solutionTreeGenerator = std::make_unique<SolutionTreeGenerator>(context);
-  solutionTreeSearcher = std::make_unique<SolutionTreeSearcher>(context);
 }
 
-bool SolutionTreeManager::addNode(ScAddr const & formula, std::vector<ScTemplateParams> const & templateParamsVector, std::set<std::string> const & varNames)
+bool SolutionTreeManager::addNode(ScAddr const & formula, Replacements const & replacements)
 {
+  std::vector<ScTemplateParams> const & templateParamsVector = ReplacementsUtils::getReplacementsToScTemplateParams(replacements);
+  std::set<std::string> varNames;
+  ReplacementsUtils::getKeySet(replacements, varNames);
   bool result = true;
   for (ScTemplateParams const & templateParams : templateParamsVector)
     result &= solutionTreeGenerator->addNode(formula, templateParams, varNames);
   return result;
 }
 
-ScAddr SolutionTreeManager::createSolution(ScAddr const & outputStructure, bool targetAchieved)
-{
-  return solutionTreeGenerator->createSolution(outputStructure, targetAchieved);
-}
-
-bool SolutionTreeManager::checkIfSolutionNodeExists(ScAddr const & rule, ScTemplateParams const & templateParams, std::set<std::string> const & varNames)
-{
-  return solutionTreeSearcher->checkIfSolutionNodeExists(rule, templateParams, varNames);
-}
 } // inference

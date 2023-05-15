@@ -18,9 +18,6 @@ using namespace inference;
 FormulasIterationStrategyAbstract::FormulasIterationStrategyAbstract(ScMemoryContext * context)
       : context(context)
 {
-  // Now we don't have several implementations for SolutionTreeManager
-  solutionTreeManager = std::make_unique<SolutionTreeManager>(context);
-  generateSolutionTree = true;
 }
 
 void FormulasIterationStrategyAbstract::setTemplateSearcher(std::shared_ptr<TemplateSearcherAbstract> searcher)
@@ -33,12 +30,12 @@ void FormulasIterationStrategyAbstract::setTemplateManager(std::shared_ptr<Templ
   templateManager = std::move(manager);
 }
 
-void FormulasIterationStrategyAbstract::setGenerateSolutionTree(bool const otherGenerateSolutionTree)
+void FormulasIterationStrategyAbstract::setSolutionTreeManager(std::shared_ptr<SolutionTreeManagerAbstract> manager)
 {
-  generateSolutionTree = otherGenerateSolutionTree;
+  solutionTreeManager = std::move(manager);
 }
 
-std::shared_ptr<SolutionTreeManager> FormulasIterationStrategyAbstract::getSolutionTreeManager()
+std::shared_ptr<SolutionTreeManagerAbstract> FormulasIterationStrategyAbstract::getSolutionTreeManager()
 {
   return solutionTreeManager;
 }

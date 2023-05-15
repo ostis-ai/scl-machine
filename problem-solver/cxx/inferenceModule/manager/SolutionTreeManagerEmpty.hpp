@@ -16,10 +16,10 @@
 namespace inference
 {
 
-class SolutionTreeManager : public SolutionTreeManagerAbstract
+class SolutionTreeManagerEmpty : public SolutionTreeManagerAbstract
 {
 public:
-  explicit SolutionTreeManager(ScMemoryContext * context);
+  explicit SolutionTreeManagerEmpty(ScMemoryContext * context);
 
   bool addNode(ScAddr const & formula, Replacements const & replacements) override;
 };

@@ -20,7 +20,7 @@ LogicExpression::LogicExpression(
     ScMemoryContext * context,
     std::shared_ptr<TemplateSearcherAbstract> templateSearcher,
     std::shared_ptr<TemplateManagerAbstract> templateManager,
-    std::shared_ptr<SolutionTreeManager> solutionTreeManager,
+    std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager,
     ScAddr const & outputStructure)
   : context(context)
   , templateSearcher(std::move(templateSearcher))

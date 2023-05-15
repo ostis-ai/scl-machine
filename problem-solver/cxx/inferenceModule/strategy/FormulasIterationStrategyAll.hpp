@@ -18,6 +18,7 @@ namespace inference
 {
 using ScAddrQueue = std::queue<ScAddr>;
 
+// TODO: InferenceManager
 class FormulasIterationStrategyAll : public FormulasIterationStrategyAbstract
 {
 public:

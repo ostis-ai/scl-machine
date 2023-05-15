@@ -53,15 +53,7 @@ bool FormulasIterationStrategyAll::applyIterationStrategy(ScAddr const & formula
       if (formulaResult.isGenerated)
       {
         result = true;
-        if (generateSolutionTree)
-        {
-          std::set<std::string> varNames;
-          ReplacementsUtils::getKeySet(formulaResult.replacements, varNames);
-          solutionTreeManager->addNode(
-              formula,
-              ReplacementsUtils::getReplacementsToScTemplateParams(formulaResult.replacements),
-              varNames);
-        }
+        solutionTreeManager->addNode(formula, formulaResult.replacements);
       }
 
       uncheckedFormulas.pop();

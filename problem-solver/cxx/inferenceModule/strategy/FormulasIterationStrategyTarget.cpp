@@ -60,13 +60,7 @@ bool FormulasIterationStrategyTarget::applyIterationStrategy(ScAddr const & form
       SC_LOG_DEBUG("Logical formula is " << (formulaResult.isGenerated ? "generated" : "not generated"));
       if (formulaResult.isGenerated)
       {
-        if (generateSolutionTree)
-        {
-          std::set<std::string> varNames;
-          ReplacementsUtils::getKeySet(formulaResult.replacements, varNames);
-          solutionTreeManager->addNode(formula, ReplacementsUtils::getReplacementsToScTemplateParams(
-                                                    formulaResult.replacements), varNames);
-        }
+        solutionTreeManager->addNode(formula,formulaResult.replacements);
         // We need to check target with result generated replacements, not with input
         targetAchieved = isTargetAchieved(ReplacementsUtils::getReplacementsToScTemplateParams(formulaResult.replacements));
         if (targetAchieved)

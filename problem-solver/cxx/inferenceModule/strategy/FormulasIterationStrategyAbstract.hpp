@@ -29,11 +29,17 @@ public:
 
   void setTemplateSearcher(std::shared_ptr<TemplateSearcherAbstract> searcher);
   void setTemplateManager(std::shared_ptr<TemplateManagerAbstract> manager);
-  void setGenerateSolutionTree(bool otherGenerateSolutionTree);
+  void setSolutionTreeManager(std::shared_ptr<SolutionTreeManagerAbstract> manager);
 
-  std::shared_ptr<SolutionTreeManager> getSolutionTreeManager();
+  std::shared_ptr<SolutionTreeManagerAbstract> getSolutionTreeManager();
 
   virtual bool applyIterationStrategy(ScAddr const & formulasSet, ScAddr const & outputStructure) = 0;
+
+  // подумать про обратный логический вывод
+  // virtual bool applyIterationStrategy(InferenceConfig const & inferenceConfig, InferenceParams const & inferenceParams) = 0;
+  // inferenceConfig всегда одинаковый, делается при создании. inferenceParams могут меняться при каждом вызове
+  // inferenceParams = {target, arguments, inputStructures, formulasSet}
+  // inferenceConfig = {generateUnique, generateFirst, generateSolutionTree}
 
   // TODO: Need to implement common logic of inference rules (e.g. modus ponens)
   LogicFormulaResult useFormula(
@@ -51,9 +57,8 @@ protected:
 
   std::shared_ptr<TemplateManagerAbstract> templateManager;
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
-  std::shared_ptr<SolutionTreeManager> solutionTreeManager;
+  std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager;
 
-  bool generateSolutionTree;
   std::unordered_set<ScAddr, ScAddrHashFunc<::size_t>> outputStructureElements;
 };
 } // inference

@@ -8,6 +8,7 @@
 
 #include "searcher/TemplateSearcherInStructures.hpp"
 #include "manager/TemplateManagerFixedArguments.hpp"
+#include "manager/SolutionTreeManagerEmpty.hpp"
 #include "strategy/FormulasIterationStrategyAll.hpp"
 #include "strategy/FormulasIterationStrategyTarget.hpp"
 
@@ -18,9 +19,13 @@ std::unique_ptr<FormulasIterationStrategyAbstract> InferenceManagerDirector::
       ScMemoryContext * context, ScAddrVector const & inputStructures, ScAddrVector const & arguments)
 {
   std::unique_ptr<FormulasIterationStrategyAll> strategyAll = std::make_unique<FormulasIterationStrategyAll>(context);
-  strategyAll->setGenerateSolutionTree(false);
+  std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager = std::make_unique<SolutionTreeManagerEmpty>(context);
+  strategyAll->setSolutionTreeManager(solutionTreeManager);
 
+  // TODO: зависит от формулы, определяется без пользователя. Делать класс таким формулам. Найти первую без фиксированных аргументов
+  // !!!! выбирать нужный менеджер прямо перед применением формулы. Стратегия имеет оба менеджера
   std::shared_ptr<TemplateManagerAbstract> templateManager = std::make_shared<TemplateManagerFixedArguments>(context);
+
   templateManager->setGenerateOnlyFirst(false);
   templateManager->setGenerateOnlyUnique(false);
   templateManager->setArguments(arguments);
@@ -47,7 +52,9 @@ std::unique_ptr<FormulasIterationStrategyAbstract> InferenceManagerDirector::con
 {
   std::unique_ptr<FormulasIterationStrategyTarget> strategyTarget = std::make_unique<FormulasIterationStrategyTarget>(context);
   strategyTarget->setTargetStructure(targetStructure);
-  strategyTarget->setGenerateSolutionTree(false);
+
+  std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager = std::make_unique<SolutionTreeManagerEmpty>(context);
+  strategyTarget->setSolutionTreeManager(solutionTreeManager);
 
   std::shared_ptr<TemplateManagerAbstract> templateManager = std::make_shared<TemplateManager>(context);
   templateManager->setGenerateOnlyFirst(true);

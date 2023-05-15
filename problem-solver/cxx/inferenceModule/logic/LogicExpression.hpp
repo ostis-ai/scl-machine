@@ -31,7 +31,7 @@ public:
       ScMemoryContext * context,
       std::shared_ptr<TemplateSearcherAbstract> templateSearcher,
       std::shared_ptr<TemplateManagerAbstract> templateManager,
-      std::shared_ptr<SolutionTreeManager> solutionTreeManager,
+      std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager,
       ScAddr const & outputStructure);
 
   std::shared_ptr<LogicExpressionNode> build(ScAddr const & formula);
@@ -55,7 +55,7 @@ private:
 
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
   std::shared_ptr<TemplateManagerAbstract> templateManager;
-  std::shared_ptr<SolutionTreeManager> solutionTreeManager;
+  std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager;
 
   ScAddr outputStructure;
 };
