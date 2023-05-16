@@ -73,7 +73,7 @@ TEST_F(InferenceManagerBuilderTest, SingleSuccessApplyInference)
       inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
 
   // Apply inference with configured manager and params config
-  bool result = iterationStrategy->applyIterationStrategy(inferenceParamsConfig);
+  bool result = iterationStrategy->applyInference(inferenceParamsConfig);
   EXPECT_TRUE(result);
 
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
@@ -106,7 +106,7 @@ TEST_F(InferenceManagerBuilderTest, SnakeApplyInference)
       inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
 
   InferenceParamsConfig const & inferenceParamsConfig {rulesSet, arguments, inputStructures, outputStructure};
-  bool result = iterationStrategy->applyIterationStrategy(inferenceParamsConfig);
+  bool result = iterationStrategy->applyInference(inferenceParamsConfig);
 
   EXPECT_TRUE(result);
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
@@ -149,7 +149,7 @@ TEST_F(InferenceManagerBuilderTest, SnakesApplyInference)
       inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
 
   InferenceParamsConfig const & inferenceParamsConfig {rulesSet, arguments, inputStructures, outputStructure};
-  bool result = iterationStrategy->applyIterationStrategy(inferenceParamsConfig);
+  bool result = iterationStrategy->applyInference(inferenceParamsConfig);
 
   EXPECT_TRUE(result);
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
@@ -196,7 +196,7 @@ TEST_F(InferenceManagerBuilderTest, SnakesTailsApplyInference)
         inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
 
     InferenceParamsConfig const & inferenceParamsConfig {rulesSet, arguments, inputStructures, outputStructure};
-    bool result = iterationStrategy->applyIterationStrategy(inferenceParamsConfig);
+    bool result = iterationStrategy->applyInference(inferenceParamsConfig);
 
     EXPECT_TRUE(result);
     ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
@@ -232,7 +232,7 @@ TEST_F(InferenceManagerBuilderTest, SnakesTailsConjunctionApplyInference)
       inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
 
   InferenceParamsConfig const & inferenceParamsConfig {rulesSet, arguments, inputStructures, outputStructure};
-  bool result = iterationStrategy->applyIterationStrategy(inferenceParamsConfig);
+  bool result = iterationStrategy->applyInference(inferenceParamsConfig);
 
   EXPECT_TRUE(result);
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
@@ -266,7 +266,7 @@ TEST_F(InferenceManagerBuilderTest, MultipleSuccessApplyInference)
       inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
 
   InferenceParamsConfig const & inferenceParamsConfig {rulesSet, arguments, inputStructures, outputStructure};
-  bool result = iterationStrategy->applyIterationStrategy(inferenceParamsConfig);
+  bool result = iterationStrategy->applyInference(inferenceParamsConfig);
 
   EXPECT_TRUE(result);
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
@@ -313,7 +313,7 @@ TEST_F(InferenceManagerBuilderTest, SingleUnsuccessfulApplyInference)
       inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceFlowConfig, inputStructures);
 
   InferenceParamsConfig const & inferenceParamsConfig {rulesSet, {}, inputStructures, outputStructure};
-  bool result = iterationStrategy->applyIterationStrategy(inferenceParamsConfig);
+  bool result = iterationStrategy->applyInference(inferenceParamsConfig);
 
   EXPECT_FALSE(result);
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);

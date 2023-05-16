@@ -19,7 +19,7 @@ namespace inference
 {
 using ScAddrQueue = std::queue<ScAddr>;
 
-/// Class to control formulas iteration strategy: when to stop applying rules and how to iterate over them
+/// Class to control inference flow: when to stop applying rules and how to iterate over them
 class InferenceManagerAbstract
 {
 public:
@@ -33,7 +33,7 @@ public:
 
   std::shared_ptr<SolutionTreeManagerAbstract> getSolutionTreeManager();
 
-  virtual bool applyIterationStrategy(InferenceParamsConfig const & inferenceParamsConfig) = 0;
+  virtual bool applyInference(InferenceParamsConfig const & inferenceParamsConfig) = 0;
 
   // TODO: Need to implement common logic of inference rules (e.g. modus ponens)
   LogicFormulaResult useFormula(

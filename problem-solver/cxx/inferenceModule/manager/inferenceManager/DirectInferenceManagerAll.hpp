@@ -23,6 +23,6 @@ class DirectInferenceManagerAll : public InferenceManagerAbstract
 public:
   explicit DirectInferenceManagerAll(ScMemoryContext * context);
 
-  bool applyIterationStrategy(InferenceParamsConfig const & inferenceParamsConfig) override;
+  bool applyInference(InferenceParamsConfig const & inferenceParamsConfig) override;
 };
 }

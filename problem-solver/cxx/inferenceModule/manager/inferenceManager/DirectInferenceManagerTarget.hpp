@@ -21,7 +21,7 @@ class DirectInferenceManagerTarget : public InferenceManagerAbstract
 public:
   explicit DirectInferenceManagerTarget(ScMemoryContext * context);
 
-  bool applyIterationStrategy(InferenceParamsConfig const & inferenceParamsConfig) override;
+  bool applyInference(InferenceParamsConfig const & inferenceParamsConfig) override;
 
   void setTargetStructure(ScAddr const & otherTargetStructure);
 

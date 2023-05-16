@@ -39,7 +39,7 @@ ScAddr DirectInferenceManager::applyInference(
 
   ScAddr const & outputStructure = ms_context->CreateNode(ScType::NodeConstStruct);
   InferenceParamsConfig const & inferenceParamsConfig {formulasSet, argumentVector, inputStructures, outputStructure, targetStructure};
-  bool const targetAchieved = strategy->applyIterationStrategy(inferenceParamsConfig);
+  bool const targetAchieved = strategy->applyInference(inferenceParamsConfig);
 
   return strategy->getSolutionTreeManager()->createSolution(outputStructure, targetAchieved);
 }

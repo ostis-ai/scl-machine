@@ -26,7 +26,7 @@ DirectInferenceManagerAll::DirectInferenceManagerAll(ScMemoryContext * context)
  * @returns true if something was generated (any rule was applied), otherwise return false
  * @throws utils::ExceptionItemNotFound Thrown if `formulasSet` is an empty set
 */
-bool DirectInferenceManagerAll::applyIterationStrategy(InferenceParamsConfig const & inferenceParamsConfig)
+bool DirectInferenceManagerAll::applyInference(InferenceParamsConfig const & inferenceParamsConfig)
 {
   bool result = false;
 
