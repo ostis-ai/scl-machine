@@ -13,18 +13,6 @@
     \scnitem{Интерфейс scl-machine}
 \end{scnrelfromset}
 
-\begin{scnrelfromset}{реализованные логические связки}
-    \scnitem{импликация*}
-    \scnitem{дизъюнкция*}
-    \scnitem{конъюнкция*}
-    \scnitem{отрицание*}
-\end{scnrelfromset}
-
-\begin{scnrelfromset}{не реализованные логические связки}
-    \scnitem{эквиваленция*}
-    \scnitem{строгая дизъюнкция*}
-\end{scnrelfromset}
-
 \scnheader{Решатель задач scl-machine}
 \begin{scnrelfromset}{обобщённая декомпозиция}
     \scnitem{Агент прямого логического вывода}
@@ -40,7 +28,184 @@
     \begin{scnindent}
         \scntext{примечание}{Не реализовано.}
     \end{scnindent}
+    \begin{scnrelfromset}{реализованные логические связки}
+        \scnitem{импликация*}
+        \scnitem{дизъюнкция*}
+        \scnitem{конъюнкция*}
+        \scnitem{отрицание*}
+    \end{scnrelfromset}
+    \begin{scnrelfromset}{не реализованные логические связки}
+        \scnitem{эквиваленция*}
+        \scnitem{строгая дизъюнкция*}
+    \end{scnrelfromset}
 \end{scnrelfromset}
+
+\scnheader{менеджер логического вывода}
+\scnidtf{InferenceManagerAbstract}
+\scntext{примечание}{менеджер логического вывода определяет, каким образом производиться обход и применение логических формул.}
+\scnrelfrom{программный интерфейс}{Программный интерфейс менеджера логического вывода}
+\begin{scnrelfromset}{обязательные понятия для спецификации заданной сущности}
+    \scnitem{искатель атомарных логических формул}
+    \begin{scnindent}
+        \scnidtf{TemplateSearcherAbstract}
+    \end{scnindent}
+    \scnitem{менеджер обработки атомарных логических формул}
+    \begin{scnindent}
+        \scnidtf{TemplateManagerAbstract}
+    \end{scnindent}
+    \scnitem{менеджер дерева решений}
+    \begin{scnindent}
+        \scnidtf{SolutionTreeManagerAbstract}
+    \end{scnindent}
+\end{scnrelfromset}
+\begin{scnrelfromset}{декомпозиция}
+    \scnitem{менеджер прямого логического вывода по цели}
+    \begin{scnindent}
+        \scnidtf{DirectInferenceManagerTarget}
+    \end{scnindent}
+    \scnitem{менеджер прямого логического вывода по всем логических формулам}
+    \begin{scnindent}
+        \scnidtf{DirectInferenceManagerAll}
+    \end{scnindent}
+\end{scnrelfromset}
+
+\scnheader{Программный интерфейс менеджера логического вывода}
+\scnhaselement{Метод применения логического вывода}
+\begin{scnindent}
+    \scntext{заголовок метода}{virtual bool applyInference(InferenceParamsConfig const \& inferenceParamsConfig) = 0;}
+    \scntext{примечание}{Главный метод менеджера логического вывода, который определяет порядок обхода и формул.}
+\end{scnindent}
+\scnhaselement{Метод применения логической формулы}
+\begin{scnindent}
+    \scntext{заголовок метода}{LogicFormulaResult useFormula(ScAddr const \& formula, ScAddr const \& outputStructure);}
+    \scntext{примечание}{Метод менеджера логического вывода, который анализирует логическую формулу и генерирует атомарные логические формулы по импликации.}
+\end{scnindent}
+
+\scnheader{искатель атомарных логических формул}
+\scnrelfrom{программный интерфейс}{Программный интерфейс искателя атомарных логических формул}
+\begin{scnindent}
+    \begin{scneqtoset}
+        \scnitem{метод поиска атомарных логических формул по параметрам}
+        \begin{scnindent}
+            \scntext{заголовок метода}{virtual void searchTemplate(ScAddr const \& templateAddr, ScTemplateParams const
+            \& templateParams, std::set<std::string> const \& varNames, Replacements \& result) = 0;}
+            \scntext{примечание}{Метод ищет конструкции в базе знаний по графу-образцу (логической атомарной формулы)
+                с учётом переданных параметров графа-образца и создаёт соответствие между sc-переменными формулы и
+                соответствующими ей константными sc-элементами.}
+        \end{scnindent}
+        \scnitem{метод поиска атомарных логических формул по множеству параметров}
+        \begin{scnindent}
+            \scntext{заголовок метода}{virtual void searchTemplate(
+                ScAddr const \& templateAddr,
+                vector<ScTemplateParams> const \& scTemplateParamsVector,
+                std::set<std::string> const \& varNames,
+                Replacements \& result);}
+            \scntext{примечание}{Метод вызывает \scnkeyword{метод поиска атомарных логических формул по параметрам} в цикле для переданного множества параметров поиска.}
+        \end{scnindent}
+    \end{scneqtoset}
+\end{scnindent}
+\begin{scnrelfromset}{декомпозиция}
+    \scnitem{искатель атомарных логических формул по всей базе знаний}
+    \begin{scnindent}
+        \scnidtf{TemplateSearcher}
+        \scntext{примечание}{Поиск конструкций осуществляется по всей базе знаний.}
+    \end{scnindent}
+    \scnitem{искатель атомарных логических формул в структурах}
+    \begin{scnindent}
+        \scnidtf{TemplateSearcherInStructures}
+        \scntext{примечание}{Все найденные конструкции должны принадлежать любой структуре из множества входных структур.}
+    \end{scnindent}
+\end{scnrelfromset}
+
+\scnheader{менеджер обработки атомарных логических формул}
+\scnrelfrom{программный интерфейс}{Программный интерфейс менеджера обработки атомарных логических формул}
+\begin{scnindent}
+    \begin{scneqtoset}
+        \scnitem{метод создания параметров поиска атомарной логической формулы}
+        \begin{scnindent}
+            \scntext{заголовок метода}{virtual std::vector<ScTemplateParams> createTemplateParams(ScAddr const \& scTemplate) = 0;}
+            \scntext{примечание}{Метод формирует множество параметров атомарной логической формулы.}
+        \end{scnindent}
+    \end{scneqtoset}
+\end{scnindent}
+\begin{scnrelfromset}{декомпозиция}
+    \scnitem{менеджер обработки атомарных логических формул}
+    \begin{scnindent}
+        \scnidtf{TemplateManager}
+        \scntext{примечание}{Формирование параметров осуществляется по всей базе знаний. Происходит поиск переменных
+        sc-узлов в атомарной логической формулы с их классами и формируется соответствие их с константными sc-узлами с такими же классами в базе знаний.}
+    \end{scnindent}
+    \scnitem{менеджер обработки атомарных логических формул с фиксированными аргументами}
+    \begin{scnindent}
+        \scnidtf{TemplateManagerFixedArguments}
+        \scntext{примечание}{Формирование параметров осуществляется по переданным аргументами и спецификации формулы.
+        Переменная, формуле под первой ролью, соответствует первому аргументу из множества аргументов логического вывода.}
+    \end{scnindent}
+\end{scnrelfromset}
+
+\scnheader{менеджер дерева решений}
+\scnrelfrom{программный интерфейс}{Программный интерфейс менеджера дерева решений}
+\begin{scnindent}
+    \begin{scneqtoset}
+        \scnitem{метод создания узла дерева решения}
+        \begin{scnindent}
+            \scntext{заголовок метода}{virtual bool addNode(ScAddr const \& formula, Replacements const \& replacements) = 0;}
+            \scntext{примечание}{Данный метод определяет структуру и создание узлов дерева решения.}
+        \end{scnindent}
+    \end{scneqtoset}
+\end{scnindent}
+\begin{scnrelfromset}{декомпозиция}
+    \scnitem{менеджер дерева решений с подстановками}
+    \begin{scnindent}
+        \scnidtf{SolutionTreeManager}
+        \scntext{примечание}{Узел такого дерева решения состоит из применённой логической формулы и соответствий sc-переменных sc-константам, которые были использованы в атомарных формулах.}
+    \end{scnindent}
+    \scnitem{пустой менеджер дерева решений}
+    \begin{scnindent}
+        \scnidtf{SolutionTreeManagerEmpty}
+        \scntext{примечание}{В такой реализации менеджера дерева решений узлы не создаются. Такая реализация сделана из соображений оптимизации.}
+    \end{scnindent}
+\end{scnrelfromset}
+
+\scnheader{конфиг менеджера логического вывода}
+\scnidtf{InferenceConfig}
+\begin{scnrelfromset}{декомпозиция}
+    \scnitem{Конфиг процесса логического вывода}
+    \begin{scnindent}
+        \scnidtf{InferenceFlowConfig}
+        \scntext{примечание}{Такой конфиг используется при создании менеджера логического вывода.}
+        \scnhaselement{generateOnlyUnique}
+        \begin{scnindent}
+            \scntext{примечание}{Определяет, нужно ли генерировать уже существующие конструкции в базе знаний.
+            От этого зависит, нужно ли перед генерацией атомарной логической формулы искать её в базе знаний.
+            Если не искать, это даёт большой прирост в производительности логического вывода.}
+        \end{scnindent}
+        \scnhaselement{generateOnlyFirst}
+        \begin{scnindent}
+            \scntext{примечание}{Определяет, нужно ли прерывать генерацию атомарной логической формулы по множеству аргументов после первой успешной генерации.}
+        \end{scnindent}
+        \scnhaselement{generateSolutionTree}
+        \begin{scnindent}
+            \scntext{примечание}{Определяет, нужно ли создавать узлы в дереве решений.
+            Если не нужно, то в процессе логического вывода используется \scnkeyword{пустой менеджер дерева решений}.}
+        \end{scnindent}
+    \end{scnindent}
+    \scnitem{Конфиг параметров логического вывода}
+    \begin{scnindent}
+        \scnidtf{InferenceParamsConfig}
+        \scntext{примечание}{Такой конфиг передаётся при каждой использовании логического вывода с уже созданным \scnkeyword{менеджером логического вывода}.}
+        \scnhaselement{formulasSet}
+        \scnhaselement{arguments}
+        \scnhaselement{inputStructures}
+        \scnhaselement{outputStructure}
+        \scnhaselement{targetStructure}
+    \end{scnindent}
+\end{scnrelfromset}
+
+\scnheader{объект создания менеджера логического вывода}
+\scnidtf{InferenceManagerFactory}
+\scnidtf{фабрика менеджера логического вывода}
+\scntext{примечание}{С помощью него создаётся менеджер логического вывода в соответствии с переданным \scnkeyword{Конфигом процесса логического вывода}.}
 
 \scnheader{Агент прямого логического вывода}
 \scnidtf{sc-агент прямого логического вывода}
