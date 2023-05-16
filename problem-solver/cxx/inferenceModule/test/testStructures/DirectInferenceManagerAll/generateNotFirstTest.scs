@@ -2,6 +2,7 @@ sc_node_class
 	-> atomic_logical_formula;
 	-> target_node_class;
 	-> current_node_class;
+	-> class_fake;
 	-> class_1;;
 
 sc_node_role_relation
@@ -12,12 +13,12 @@ sc_node_norole_relation
 	-> nrel_implication;;
 
 if = [*
-    current_node_class _-> _arg;;
-    class_1 _-> _arg;;
+    _arg _<- current_node_class;;
+    _arg _<- class_1;;
 *];;
 
 then = [*
-    target_node_class _-> _arg;;
+    _arg _<- target_node_class;;
 *];;
 
 @p1 = (if => then);;
@@ -33,19 +34,38 @@ input_structures
 	-> input_structure1;
 	-> input_structure2;;
 
+arguments
+	-> argument;
+	-> argument2;
+	-> argument3;
+	-> argument4;
+	-> argument5;
+	-> fake_argument;;
+
+logic_rule
+	-> rrel_1: argument;
+	-> rrel_2: argument2;
+	-> rrel_3: argument3;
+	-> rrel_4: argument4;
+	-> rrel_5: argument5;;
+
 input_structure1 = [*
 	argument <- current_node_class;;
+	argument2 <- current_node_class;;
+	argument3 <- current_node_class;;
+	argument4 <- current_node_class;;
+	argument5 <- current_node_class;;
 	fake_argument <- class_1;;
 *];;
 
 input_structure2 = [*
-	fake_argument <- class_1;;
-*];;
-
-input_structure_fake = [*
 	argument <- class_1;;
-	fake_argument <- class_1;;
+	argument2 <- class_1;;
+	argument3 <- class_1;;
+	argument4 <- class_1;;
+	argument5 <- class_1;;
+	fake_argument <- class_fake;;
 *];;
 
-rules_set
+formulas_set
     -> rrel_1: { logic_rule };;

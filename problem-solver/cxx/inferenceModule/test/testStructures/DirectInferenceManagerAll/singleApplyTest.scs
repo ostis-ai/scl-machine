@@ -42,7 +42,7 @@ input_structure2 = [*
 	fake_argument <- class_1;;
 *];;
 
-rules_set
+formulas_set
     -> rrel_1: { logic_rule };;
 
 arguments

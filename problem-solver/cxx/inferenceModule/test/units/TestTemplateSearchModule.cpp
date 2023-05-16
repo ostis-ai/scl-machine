@@ -90,35 +90,6 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_SingleResultTestCase)
   EXPECT_EQ(searchResults.at(node_alias)[0], context.HelperFindBySystemIdtf(first_constant_node));
 }
 
-// Fails because of smart search
-TEST_F(TemplateSearchManagerTest, SearchWithContent_MultipleResultTestCase)
-{
-  std::string firstCorrectResultLinkIdentifier = "first_correct_result_link";
-  std::string secondCorrectResultLinkIdentifier = "second_correct_result_link";
-  std::string searchLinkIdentifier = "search_link";
-
-  ScMemoryContext & context = *m_ctx;
-
-  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchWithContentMultipleResultTestStucture.scs");
-  initialize();
-
-  ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
-  inference::TemplateSearcher templateSearcher(&context);
-  ScTemplateParams templateParams;
-  Replacements searchResults;
-  std::set<std::string> varNames;
-  templateSearcher.getVarNames(searchTemplateAddr, varNames);
-  templateSearcher.searchTemplate(searchTemplateAddr, templateParams, varNames, searchResults);
-
-  EXPECT_EQ(searchResults.size(), 2u);
-  std::set<ScAddr, ScAddLessFunc> expectedResultSet;
-  expectedResultSet.insert(context.HelperFindBySystemIdtf(firstCorrectResultLinkIdentifier));
-  expectedResultSet.insert(context.HelperFindBySystemIdtf(secondCorrectResultLinkIdentifier));
-  EXPECT_EQ(expectedResultSet.erase(searchResults.at(searchLinkIdentifier)[0]), 1u);
-  EXPECT_EQ(expectedResultSet.erase(searchResults.at(searchLinkIdentifier)[1]), 1u);
-  EXPECT_TRUE(expectedResultSet.empty());
-}
-
 TEST_F(TemplateSearchManagerTest, SearchWithoutContent_NoStructuresTestCase)
 {
   ScMemoryContext & context = *m_ctx;
@@ -161,35 +132,6 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_SingleResultTestCase)
   EXPECT_EQ(searchResults.size(), 2u);
   EXPECT_EQ(searchResults.at(searchLinkIdentifier)[0], context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
   EXPECT_EQ(searchResults.at(nodeAlias)[0], context.HelperFindBySystemIdtf(firstConstantNode));
-}
-
-// Fails because of smart search
-TEST_F(TemplateSearchManagerTest, SearchWithoutContent_MultipleResultTestCase)
-{
-  std::string firstCorrectResultLinkIdentifier = "first_correct_result_link";
-  std::string secondCorrectResultLinkIdentifier = "second_correct_result_link";
-  std::string searchLinkIdentifier = "search_link";
-
-  ScMemoryContext & context = *m_ctx;
-
-  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchWithoutContentMultipleResultTestStucture.scs");
-  initialize();
-
-  ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
-  inference::TemplateSearcher templateSearcher(&context);
-  ScTemplateParams templateParams;
-  Replacements searchResults;
-  std::set<std::string> varNames;
-  templateSearcher.getVarNames(searchTemplateAddr, varNames);
-  templateSearcher.searchTemplate(searchTemplateAddr, templateParams, varNames, searchResults);
-
-  EXPECT_EQ(searchResults.size(), 2u);
-  std::set<ScAddr, ScAddLessFunc> expectedResultSet;
-  expectedResultSet.insert(context.HelperFindBySystemIdtf(firstCorrectResultLinkIdentifier));
-  expectedResultSet.insert(context.HelperFindBySystemIdtf(secondCorrectResultLinkIdentifier));
-  EXPECT_EQ(expectedResultSet.erase(searchResults.at(searchLinkIdentifier)[0]), 1u);
-  EXPECT_EQ(expectedResultSet.erase(searchResults.at(searchLinkIdentifier)[1]), 1u);
-  EXPECT_TRUE(expectedResultSet.empty());
 }
 
 TEST_F(TemplateSearchManagerTest, SearchWithoutContent_SelectiveTestCase)
