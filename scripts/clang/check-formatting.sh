@@ -6,4 +6,4 @@ cd "$(dirname "$0")"
 
 set -eo pipefail
 
-python3 ${APP_ROOT_PATH}/scripts/clang/format-code.py --check ${APP_ROOT_PATH}/scl/cxx/
+python3 ${APP_ROOT_PATH}/scripts/clang/format-code.py --check ${APP_ROOT_PATH}/problem-solver/cxx/
