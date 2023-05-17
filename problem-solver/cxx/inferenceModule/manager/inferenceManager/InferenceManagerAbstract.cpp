@@ -68,7 +68,6 @@ ScAddrQueue InferenceManagerAbstract::createQueue(ScAddr const & set)
 /**
  * @brief Build logic expression tree and compute it
  * @param formula is a logical formula to use (more often non-atomic formula is an implication, generating conclusion)
- * @param argumentVector is a vector of ScAddrs to use in atomic sub formulas of `formula`. May be empty to use all existing sc-elements
  * @param outputStructure is a structure to generate new knowledge in
  * @returns LogicFormulaResult {bool: value, bool: isGenerated, Replacements: replacements}
  */
@@ -112,6 +111,7 @@ LogicFormulaResult InferenceManagerAbstract::useFormula(
   return formulaResult;
 }
 
+/// Form formula fixed arguments from rrel_1, rrel_2 etc. to create template params. Used only in 'TemplateManagerFixedArguments'
 void InferenceManagerAbstract::fillFormulaFixedArgumentsIdentifiers(ScAddr const & formula, ScAddr const & firstFixedArgument) const
 {
   std::string const firstFixedArgumentIdentifier = context->HelperGetSystemIdtf(firstFixedArgument);

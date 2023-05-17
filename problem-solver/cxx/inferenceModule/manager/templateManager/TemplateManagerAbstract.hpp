@@ -12,6 +12,9 @@
 
 namespace inference
 {
+
+/// Class to create template params to search and generate atomic logical formulas.
+/// Control generation with flow with `generateOnlyFirst` and `generateOnlyUnique` flags
 class TemplateManagerAbstract
 {
 public:

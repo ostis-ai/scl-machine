@@ -15,7 +15,7 @@
 
 namespace inference
 {
-/// Formulas iteration strategy stops iteration if target is achieved
+/// Inference manager that stops iteration if the target is achieved
 class DirectInferenceManagerTarget : public InferenceManagerAbstract
 {
 public:

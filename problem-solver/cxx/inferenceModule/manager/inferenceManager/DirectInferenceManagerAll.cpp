@@ -15,17 +15,6 @@ DirectInferenceManagerAll::DirectInferenceManagerAll(ScMemoryContext * context)
 {
 }
 
-/**
- * @brief Iterate over formulas set and use formulas to generate knowledge
- *
- * Use all formulas for all suitable knowledge base constructions.
- * Don't stop at first success applying. Don't reiterate if something was generated
- *
- * @param formulasSet is an oriented set of formulas sets to apply
- * @param outputStructure is a structure to write in generated constructions
- * @returns true if something was generated (any rule was applied), otherwise return false
- * @throws utils::ExceptionItemNotFound Thrown if `formulasSet` is an empty set
-*/
 bool DirectInferenceManagerAll::applyInference(InferenceParamsConfig const & inferenceParamsConfig)
 {
   bool result = false;

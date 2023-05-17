@@ -16,6 +16,7 @@
 namespace inference
 {
 
+/// Solution tree that doesn't generate nodes, only output structure. Need to optimize inference
 class SolutionTreeManagerEmpty : public SolutionTreeManagerAbstract
 {
 public:

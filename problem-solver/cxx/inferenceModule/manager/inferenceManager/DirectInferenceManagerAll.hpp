@@ -18,6 +18,12 @@ namespace inference
 {
 using ScAddrQueue = std::queue<ScAddr>;
 
+/**
+ * Inference manager that stops iteration when all formulas were tried to apply.
+ * Uses all formulas for all suitable knowledge base constructions.
+ * Don't stop at first success applying.
+ * Don't reiterate if something was generated.
+*/
 class DirectInferenceManagerAll : public InferenceManagerAbstract
 {
 public:

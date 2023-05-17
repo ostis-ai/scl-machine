@@ -18,6 +18,7 @@
 namespace inference
 {
 
+/// Class to create solution tree of the inference
 class SolutionTreeManagerAbstract
 {
 public:

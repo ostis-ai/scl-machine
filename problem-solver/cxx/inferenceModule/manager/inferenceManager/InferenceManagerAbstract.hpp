@@ -33,6 +33,13 @@ public:
 
   std::shared_ptr<SolutionTreeManagerAbstract> getSolutionTreeManager();
 
+ /**
+ * @brief Iterate over formulas set and use formulas to generate knowledge
+ * @param formulasSet is an oriented set of formulas sets to apply
+ * @param outputStructure is a structure to write in generated constructions
+ * @returns true if something was generated (any rule was applied), otherwise return false
+ * @throws utils::ExceptionItemNotFound Thrown if `formulasSet` is an empty set
+   */
   virtual bool applyInference(InferenceParamsConfig const & inferenceParamsConfig) = 0;
 
   // TODO: Need to implement common logic of inference rules (e.g. modus ponens)

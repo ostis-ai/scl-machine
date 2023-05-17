@@ -16,6 +16,7 @@
 namespace inference
 {
 
+/// Solution tree that generates nodes with formulas and used replacements
 class SolutionTreeManager : public SolutionTreeManagerAbstract
 {
 public:

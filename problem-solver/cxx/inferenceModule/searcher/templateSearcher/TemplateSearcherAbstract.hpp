@@ -18,6 +18,8 @@
 
 namespace inference
 {
+
+/// Class to search atomic logical formulas and get replacements
 class TemplateSearcherAbstract
 {
 public:
