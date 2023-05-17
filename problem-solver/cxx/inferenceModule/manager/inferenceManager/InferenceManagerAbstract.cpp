@@ -17,7 +17,7 @@
 using namespace inference;
 
 InferenceManagerAbstract::InferenceManagerAbstract(ScMemoryContext * context)
-      : context(context)
+  : context(context)
 {
 }
 
@@ -46,7 +46,7 @@ vector<ScAddrQueue> InferenceManagerAbstract::createFormulasQueuesListByPriority
   vector<ScAddrQueue> formulasQueuesList;
 
   ScAddr setOfFormulas =
-        utils::IteratorUtils::getAnyByOutRelation(context, formulasSet, scAgentsCommon::CoreKeynodes::rrel_1);
+      utils::IteratorUtils::getAnyByOutRelation(context, formulasSet, scAgentsCommon::CoreKeynodes::rrel_1);
   while (setOfFormulas.IsValid())
   {
     formulasQueuesList.push_back(createQueue(setOfFormulas));
@@ -71,20 +71,18 @@ ScAddrQueue InferenceManagerAbstract::createQueue(ScAddr const & set)
  * @param outputStructure is a structure to generate new knowledge in
  * @returns LogicFormulaResult {bool: value, bool: isGenerated, Replacements: replacements}
  */
-LogicFormulaResult InferenceManagerAbstract::useFormula(
-      ScAddr const & formula,
-      ScAddr const & outputStructure)
+LogicFormulaResult InferenceManagerAbstract::useFormula(ScAddr const & formula, ScAddr const & outputStructure)
 {
-  ScAddr const & formulaRoot =
-        utils::IteratorUtils::getAnyByOutRelation(context, formula, scAgentsCommon::CoreKeynodes::rrel_main_key_sc_element);
+  ScAddr const & formulaRoot = utils::IteratorUtils::getAnyByOutRelation(
+      context, formula, scAgentsCommon::CoreKeynodes::rrel_main_key_sc_element);
   if (!formulaRoot.IsValid())
   {
     return {false, false, {}};
   }
 
   // Choose template manager according to the formula specification (if fixed arguments exist)
-  ScAddr const & firstFixedArgument = utils::IteratorUtils::getAnyByOutRelation(
-      context, formula, scAgentsCommon::CoreKeynodes::rrel_1);
+  ScAddr const & firstFixedArgument =
+      utils::IteratorUtils::getAnyByOutRelation(context, formula, scAgentsCommon::CoreKeynodes::rrel_1);
   if (firstFixedArgument.IsValid())
   {
     formTemplateManagerFixedArguments(formula, firstFixedArgument);
@@ -94,12 +92,7 @@ LogicFormulaResult InferenceManagerAbstract::useFormula(
     resetTemplateManager(std::make_shared<TemplateManager>(context));
   }
 
-  LogicExpression logicExpression(
-        context,
-        templateSearcher,
-        templateManager,
-        solutionTreeManager,
-        outputStructure);
+  LogicExpression logicExpression(context, templateSearcher, templateManager, solutionTreeManager, outputStructure);
 
   std::shared_ptr<LogicExpressionNode> expressionRoot = logicExpression.build(formulaRoot);
   expressionRoot->setArgumentVector(templateManager->getArguments());
@@ -111,8 +104,11 @@ LogicFormulaResult InferenceManagerAbstract::useFormula(
   return formulaResult;
 }
 
-/// Form formula fixed arguments from rrel_1, rrel_2 etc. to create template params. Used only in 'TemplateManagerFixedArguments'
-void InferenceManagerAbstract::fillFormulaFixedArgumentsIdentifiers(ScAddr const & formula, ScAddr const & firstFixedArgument) const
+/// Form formula fixed arguments from rrel_1, rrel_2 etc. to create template params. Used only in
+/// 'TemplateManagerFixedArguments'
+void InferenceManagerAbstract::fillFormulaFixedArgumentsIdentifiers(
+    ScAddr const & formula,
+    ScAddr const & firstFixedArgument) const
 {
   std::string const firstFixedArgumentIdentifier = context->HelperGetSystemIdtf(firstFixedArgument);
   if (!firstFixedArgumentIdentifier.empty())
@@ -141,7 +137,9 @@ void InferenceManagerAbstract::fillFormulaFixedArgumentsIdentifiers(ScAddr const
   }
 }
 
-void InferenceManagerAbstract::formTemplateManagerFixedArguments(ScAddr const & formula, ScAddr const & firstFixedArgument)
+void InferenceManagerAbstract::formTemplateManagerFixedArguments(
+    ScAddr const & formula,
+    ScAddr const & firstFixedArgument)
 {
   resetTemplateManager(std::make_shared<TemplateManagerFixedArguments>(context));
   fillFormulaFixedArgumentsIdentifiers(formula, firstFixedArgument);

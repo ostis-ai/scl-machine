@@ -86,7 +86,7 @@ TEST_F(InferenceManagerTest, SuccessGenerateInferenceConclusion)
       context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm));
   ScTemplate conclusionTemplate;
   ScTemplateSearchResult conclusionSearchResult;
-  context.HelperBuildTemplate(conclusionTemplate,targetTemplate);
+  context.HelperBuildTemplate(conclusionTemplate, targetTemplate);
   EXPECT_TRUE(context.HelperSearchTemplate(conclusionTemplate, conclusionSearchResult));
 }
 
@@ -188,7 +188,7 @@ TEST_F(InferenceManagerTest, DISABLED_ConclusionArgumentsTest)
 
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
-        context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm));
+      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm));
 
   ScAddr dialog = context.HelperFindBySystemIdtf("dialog");
   ScAddr dialogClass = context.HelperFindBySystemIdtf("concept_dialog_class");
@@ -234,10 +234,8 @@ TEST_F(InferenceManagerTest, SolutionOutputStrcuture)
   EXPECT_TRUE(outputStructure.IsValid());
 
   // Check class in output structure, expect target_node_class
-  ScIterator3Ptr outputStructureClassIterator = context.Iterator3(
-      outputStructure,
-      ScType::EdgeAccessConstPosPerm,
-      ScType::NodeConstClass);
+  ScIterator3Ptr outputStructureClassIterator =
+      context.Iterator3(outputStructure, ScType::EdgeAccessConstPosPerm, ScType::NodeConstClass);
   EXPECT_TRUE(outputStructureClassIterator->Next());
 
   ScAddr outputStructureClass = outputStructureClassIterator->Get(2);

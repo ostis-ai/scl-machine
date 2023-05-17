@@ -1,20 +1,22 @@
 /*
-* This source file is part of an OSTIS project. For the latest info, see http://ostis.net
-* Distributed under the MIT License
-* (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
-*/
+ * This source file is part of an OSTIS project. For the latest info, see http://ostis.net
+ * Distributed under the MIT License
+ * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
+ */
 
 #include "SolutionTreeManager.hpp"
 
 namespace inference
 {
-SolutionTreeManager::SolutionTreeManager(ScMemoryContext * context) : SolutionTreeManagerAbstract(context)
+SolutionTreeManager::SolutionTreeManager(ScMemoryContext * context)
+  : SolutionTreeManagerAbstract(context)
 {
 }
 
 bool SolutionTreeManager::addNode(ScAddr const & formula, Replacements const & replacements)
 {
-  std::vector<ScTemplateParams> const & templateParamsVector = ReplacementsUtils::getReplacementsToScTemplateParams(replacements);
+  std::vector<ScTemplateParams> const & templateParamsVector =
+      ReplacementsUtils::getReplacementsToScTemplateParams(replacements);
   std::set<std::string> varNames;
   ReplacementsUtils::getKeySet(replacements, varNames);
   bool result = true;
@@ -23,4 +25,4 @@ bool SolutionTreeManager::addNode(ScAddr const & formula, Replacements const & r
   return result;
 }
 
-} // inference
+}  // namespace inference

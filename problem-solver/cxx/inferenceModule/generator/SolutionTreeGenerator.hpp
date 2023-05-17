@@ -25,7 +25,10 @@ public:
   ScAddr createSolution(ScAddr const & outputStructure, bool targetAchieved);
 
 private:
-  ScAddr createSolutionNode(ScAddr const & formula, ScTemplateParams const & templateParams, std::set<std::string> const & varNames);
+  ScAddr createSolutionNode(
+      ScAddr const & formula,
+      ScTemplateParams const & templateParams,
+      std::set<std::string> const & varNames);
 
   ScMemoryContext * ms_context;
   ScAddr solution;

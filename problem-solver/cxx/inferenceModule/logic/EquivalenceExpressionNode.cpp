@@ -74,12 +74,10 @@ void EquivalenceExpressionNode::compute(LogicFormulaResult & result) const
   bool isLeftGenerated = (leftAtom) && FormulaClassifier::isFormulaToGenerate(context, leftAtom->getFormula());
 
   auto rightAtom = dynamic_cast<TemplateExpressionNode *>(operands[1].get());
-  bool isRightGenerated =
-      (rightAtom) && FormulaClassifier::isFormulaToGenerate(context, rightAtom->getFormula());
+  bool isRightGenerated = (rightAtom) && FormulaClassifier::isFormulaToGenerate(context, rightAtom->getFormula());
 
   bool leftHasConstants = (leftAtom) && FormulaClassifier::isFormulaWithConst(context, leftAtom->getFormula());
-  bool rightHasConstants =
-      (rightAtom) && FormulaClassifier::isFormulaWithConst(context, rightAtom->getFormula());
+  bool rightHasConstants = (rightAtom) && FormulaClassifier::isFormulaWithConst(context, rightAtom->getFormula());
 
   SC_LOG_DEBUG("Left has constants = " << leftHasConstants);
   SC_LOG_DEBUG("Right has constants = " << rightHasConstants);

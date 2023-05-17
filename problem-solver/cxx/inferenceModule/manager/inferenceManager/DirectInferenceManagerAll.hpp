@@ -23,7 +23,7 @@ using ScAddrQueue = std::queue<ScAddr>;
  * Uses all formulas for all suitable knowledge base constructions.
  * Don't stop at first success applying.
  * Don't reiterate if something was generated.
-*/
+ */
 class DirectInferenceManagerAll : public InferenceManagerAbstract
 {
 public:
@@ -31,4 +31,4 @@ public:
 
   bool applyInference(InferenceParamsConfig const & inferenceParamsConfig) override;
 };
-}
+}  // namespace inference

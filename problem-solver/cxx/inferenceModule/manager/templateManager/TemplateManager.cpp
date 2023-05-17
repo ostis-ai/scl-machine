@@ -10,7 +10,8 @@
 
 using namespace inference;
 
-TemplateManager::TemplateManager(ScMemoryContext * ms_context) : TemplateManagerAbstract(ms_context)
+TemplateManager::TemplateManager(ScMemoryContext * ms_context)
+  : TemplateManagerAbstract(ms_context)
 {
 }
 

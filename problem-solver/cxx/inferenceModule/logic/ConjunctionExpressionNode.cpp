@@ -113,7 +113,8 @@ LogicFormulaResult ConjunctionExpressionNode::generate(Replacements & replacemen
     if (!lastResult.value)
       return fail;
     globalResult.isGenerated |= lastResult.isGenerated;
-    globalResult.replacements = ReplacementsUtils::intersectReplacements(globalResult.replacements, lastResult.replacements);
+    globalResult.replacements =
+        ReplacementsUtils::intersectReplacements(globalResult.replacements, lastResult.replacements);
     if (ReplacementsUtils::getColumnsAmount(globalResult.replacements) == 0)
       return fail;
   }

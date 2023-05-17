@@ -6,17 +6,18 @@
 
 namespace inference
 {
-
 class SolutionTreeSearcher
 {
 public:
   explicit SolutionTreeSearcher(ScMemoryContext * context);
 
-  bool checkIfSolutionNodeExists(ScAddr const & formula, ScTemplateParams const & templateParams, std::set<std::string> const & varNames);
+  bool checkIfSolutionNodeExists(
+      ScAddr const & formula,
+      ScTemplateParams const & templateParams,
+      std::set<std::string> const & varNames);
 
 private:
   ScMemoryContext * context;
-
 };
 
-} // inference
+}  // namespace inference

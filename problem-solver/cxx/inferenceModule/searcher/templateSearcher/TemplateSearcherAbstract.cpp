@@ -10,7 +10,8 @@
 
 using namespace inference;
 
-TemplateSearcherAbstract::TemplateSearcherAbstract(ScMemoryContext * context) : context(context)
+TemplateSearcherAbstract::TemplateSearcherAbstract(ScMemoryContext * context)
+  : context(context)
 {
 }
 
@@ -25,10 +26,10 @@ ScAddrVector TemplateSearcherAbstract::getInputStructures() const
 }
 
 void TemplateSearcherAbstract::searchTemplate(
-      ScAddr const & templateAddr,
-      vector<ScTemplateParams> const & scTemplateParamsVector,
-      std::set<std::string> const & varNames,
-      Replacements & result)
+    ScAddr const & templateAddr,
+    vector<ScTemplateParams> const & scTemplateParamsVector,
+    std::set<std::string> const & varNames,
+    Replacements & result)
 {
   Replacements searchResults;
   ScAddrVector varNameReplacementValues;
@@ -57,7 +58,8 @@ void TemplateSearcherAbstract::searchTemplate(
 
 void TemplateSearcherAbstract::getVarNames(ScAddr const & formula, std::set<std::string> & varNames)
 {
-  ScIterator3Ptr const & formulaVariablesIterator = context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::Unknown);
+  ScIterator3Ptr const & formulaVariablesIterator =
+      context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::Unknown);
   ScAddr element;
   std::string variableSystemIdtf;
   while (formulaVariablesIterator->Next())
@@ -73,7 +75,9 @@ void TemplateSearcherAbstract::getVarNames(ScAddr const & formula, std::set<std:
   }
 }
 
-bool TemplateSearcherAbstract::isContentIdentical(ScTemplateSearchResultItem const & item, std::map<std::string, std::string> const & linksContentMap)
+bool TemplateSearcherAbstract::isContentIdentical(
+    ScTemplateSearchResultItem const & item,
+    std::map<std::string, std::string> const & linksContentMap)
 {
   bool result = true;
   ScAddr link;

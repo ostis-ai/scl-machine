@@ -14,7 +14,7 @@
 using namespace inference;
 
 DirectInferenceManagerTarget::DirectInferenceManagerTarget(ScMemoryContext * context)
-      : InferenceManagerAbstract(context)
+  : InferenceManagerAbstract(context)
 {
 }
 
@@ -24,8 +24,7 @@ bool DirectInferenceManagerTarget::applyInference(InferenceParamsConfig const & 
   templateSearcher->setInputStructures(inferenceParamsConfig.inputStructures);
   setTargetStructure(inferenceParamsConfig.targetStructure);
 
-  std::vector<ScTemplateParams> const templateParamsVector =
-      templateManager->createTemplateParams(targetStructure);
+  std::vector<ScTemplateParams> const templateParamsVector = templateManager->createTemplateParams(targetStructure);
   bool targetAchieved = isTargetAchieved(templateParamsVector);
   if (targetAchieved)
   {
@@ -54,8 +53,7 @@ bool DirectInferenceManagerTarget::applyInference(InferenceParamsConfig const & 
        formulasQueueIndex++)
   {
     uncheckedFormulas = formulasQueuesByPriority[formulasQueueIndex];
-    SC_LOG_DEBUG(
-          "There is " << uncheckedFormulas.size() << " formulas in " << (formulasQueueIndex + 1) << " set");
+    SC_LOG_DEBUG("There is " << uncheckedFormulas.size() << " formulas in " << (formulasQueueIndex + 1) << " set");
     while (!uncheckedFormulas.empty())
     {
       formula = uncheckedFormulas.front();
@@ -64,9 +62,10 @@ bool DirectInferenceManagerTarget::applyInference(InferenceParamsConfig const & 
       SC_LOG_DEBUG("Logical formula is " << (formulaResult.isGenerated ? "generated" : "not generated"));
       if (formulaResult.isGenerated)
       {
-        solutionTreeManager->addNode(formula,formulaResult.replacements);
+        solutionTreeManager->addNode(formula, formulaResult.replacements);
         // We need to check target with result generated replacements, not with input
-        targetAchieved = isTargetAchieved(ReplacementsUtils::getReplacementsToScTemplateParams(formulaResult.replacements));
+        targetAchieved =
+            isTargetAchieved(ReplacementsUtils::getReplacementsToScTemplateParams(formulaResult.replacements));
         if (targetAchieved)
         {
           SC_LOG_DEBUG("Target is achieved");
@@ -101,11 +100,11 @@ bool DirectInferenceManagerTarget::isTargetAchieved(std::vector<ScTemplateParams
   std::set<std::string> varNames;
   templateSearcher->getVarNames(targetStructure, varNames);
   return std::any_of(
-        templateParamsVector.cbegin(),
-        templateParamsVector.cend(),
-        [this, &varNames](ScTemplateParams const & templateParams) -> bool {
-          Replacements result;
-          templateSearcher->searchTemplate(targetStructure, templateParams, varNames, result);
-          return !result.empty();
-        });
+      templateParamsVector.cbegin(),
+      templateParamsVector.cend(),
+      [this, &varNames](ScTemplateParams const & templateParams) -> bool {
+        Replacements result;
+        templateSearcher->searchTemplate(targetStructure, templateParams, varNames, result);
+        return !result.empty();
+      });
 }

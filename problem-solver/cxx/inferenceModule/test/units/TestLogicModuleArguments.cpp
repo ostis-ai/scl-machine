@@ -129,10 +129,11 @@ TEST_F(InferenceLogicTest, EmptyInputStructure)
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
       scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
-  ScAddr answer = utils::IteratorUtils::getAnyByOutRelation(&context, action, scAgentsCommon::CoreKeynodes::nrel_answer);
+  ScAddr answer =
+      utils::IteratorUtils::getAnyByOutRelation(&context, action, scAgentsCommon::CoreKeynodes::nrel_answer);
   ScAddr solution = utils::IteratorUtils::getAnyFromSet(&context, answer);
-  EXPECT_TRUE(context.HelperCheckEdge(
-      InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstNegPerm));
+  EXPECT_TRUE(
+      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstNegPerm));
 
   shutdown();
   context.Destroy();

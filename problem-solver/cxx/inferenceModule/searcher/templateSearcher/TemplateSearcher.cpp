@@ -38,23 +38,23 @@ void TemplateSearcher::searchTemplate(
     else
     {
       context->HelperSmartSearchTemplate(
-        searchTemplate,
-        [&templateParams, &result, &varNames](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
-          // Add search result items to the result Replacements
-          for (std::string const & varName : varNames)
-          {
-            ScAddr argument;
-            if (item.Has(varName))
+          searchTemplate,
+          [&templateParams, &result, &varNames](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
+            // Add search result items to the result Replacements
+            for (std::string const & varName : varNames)
             {
-              result[varName].push_back(item[varName]);
+              ScAddr argument;
+              if (item.Has(varName))
+              {
+                result[varName].push_back(item[varName]);
+              }
+              if (templateParams.Get(varName, argument))
+              {
+                result[varName].push_back(argument);
+              }
             }
-            if (templateParams.Get(varName, argument))
-            {
-              result[varName].push_back(argument);
-            }
-          }
-          return ScTemplateSearchRequest::STOP;
-      });
+            return ScTemplateSearchRequest::STOP;
+          });
     }
   }
   else
@@ -74,27 +74,27 @@ void TemplateSearcher::searchTemplateWithContent(
   getVarNames(templateAddr, varNames);
 
   context->HelperSmartSearchTemplate(
-        searchTemplate,
-        [templateParams, &result, &varNames](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
-          // Add search result items to the result Replacements
-          for (std::string const & varName : varNames)
+      searchTemplate,
+      [templateParams, &result, &varNames](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
+        // Add search result items to the result Replacements
+        for (std::string const & varName : varNames)
+        {
+          ScAddr argument;
+          if (item.Has(varName))
           {
-            ScAddr argument;
-            if (item.Has(varName))
-            {
-              result[varName].push_back(item[varName]);
-            }
-            if (templateParams.Get(varName, argument))
-            {
-              result[varName].push_back(argument);
-            }
+            result[varName].push_back(item[varName]);
           }
-          return ScTemplateSearchRequest::STOP;
-        },
-        [&linksContentMap, this](ScTemplateSearchResultItem const & item) -> bool {
-          // Filter result item by the same content
-          return isContentIdentical(item, linksContentMap);
-        });
+          if (templateParams.Get(varName, argument))
+          {
+            result[varName].push_back(argument);
+          }
+        }
+        return ScTemplateSearchRequest::STOP;
+      },
+      [&linksContentMap, this](ScTemplateSearchResultItem const & item) -> bool {
+        // Filter result item by the same content
+        return isContentIdentical(item, linksContentMap);
+      });
 }
 
 std::map<std::string, std::string> TemplateSearcher::getTemplateKeyLinksContent(const ScAddr & templateAddr)
@@ -104,11 +104,11 @@ std::map<std::string, std::string> TemplateSearcher::getTemplateKeyLinksContent(
   std::map<std::string, std::string> linksContent;
   ScTemplate scTemplate;
   scTemplate.TripleWithRelation(
-        templateAddr,
-        ScType::EdgeAccessVarPosPerm,
-        ScType::Link >> LINK_ALIAS,
-        ScType::EdgeAccessVarPosPerm,
-        scAgentsCommon::CoreKeynodes::rrel_key_sc_element);
+      templateAddr,
+      ScType::EdgeAccessVarPosPerm,
+      ScType::Link >> LINK_ALIAS,
+      ScType::EdgeAccessVarPosPerm,
+      scAgentsCommon::CoreKeynodes::rrel_key_sc_element);
   ScTemplateSearchResult searchResult;
   context->HelperSearchTemplate(scTemplate, searchResult);
   for (size_t i = 0; i < searchResult.Size(); i++)

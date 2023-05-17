@@ -11,7 +11,7 @@
 using namespace inference;
 
 DirectInferenceManagerAll::DirectInferenceManagerAll(ScMemoryContext * context)
-      : InferenceManagerAbstract(context)
+  : InferenceManagerAbstract(context)
 {
 }
 

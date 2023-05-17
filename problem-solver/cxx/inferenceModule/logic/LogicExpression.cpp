@@ -54,7 +54,8 @@ std::shared_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & formu
   case FormulaClassifier::NONE:
     SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, "Formula is invalid");
   default:
-    SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, context->HelperGetSystemIdtf(formula) << " is not defined formula type");
+    SC_THROW_EXCEPTION(
+        utils::ExceptionItemNotFound, context->HelperGetSystemIdtf(formula) << " is not defined formula type");
   }
 }
 
@@ -71,8 +72,7 @@ OperatorLogicExpressionNode::OperandsVector LogicExpression::resolveTupleOperand
     std::shared_ptr<LogicExpressionNode> op = build(operandsIterator->Get(2));
     operandsVector.emplace_back(std::move(op));
   }
-  SC_LOG_DEBUG(
-      "Amount of operands in " << context->HelperGetSystemIdtf(tuple) << ": " << operandsVector.size());
+  SC_LOG_DEBUG("Amount of operands in " << context->HelperGetSystemIdtf(tuple) << ": " << operandsVector.size());
 
   return operandsVector;
 }
@@ -128,7 +128,8 @@ std::shared_ptr<LogicExpressionNode> LogicExpression::buildAtomicFormula(ScAddr 
     }
   }
 
-  return std::make_shared<TemplateExpressionNode>(context, templateSearcher, templateManager, solutionTreeManager, outputStructure, formula);
+  return std::make_shared<TemplateExpressionNode>(
+      context, templateSearcher, templateManager, solutionTreeManager, outputStructure, formula);
 }
 
 std::shared_ptr<LogicExpressionNode> LogicExpression::buildConjunctionFormula(ScAddr const & formula)
@@ -159,8 +160,7 @@ std::shared_ptr<LogicExpressionNode> LogicExpression::buildNegationFormula(ScAdd
     return std::make_shared<NegationExpressionNode>(operands[0]);
   else
     SC_THROW_EXCEPTION(
-        utils::ExceptionItemNotFound,
-        "There is " << operands.size() << " operands in negation, but should be one");
+        utils::ExceptionItemNotFound, "There is " << operands.size() << " operands in negation, but should be one");
 }
 
 std::shared_ptr<LogicExpressionNode> LogicExpression::buildImplicationEdgeFormula(ScAddr const & formula)

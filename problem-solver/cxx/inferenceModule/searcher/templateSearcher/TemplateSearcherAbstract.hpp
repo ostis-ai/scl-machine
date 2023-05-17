@@ -18,7 +18,6 @@
 
 namespace inference
 {
-
 /// Class to search atomic logical formulas and get replacements
 class TemplateSearcherAbstract
 {
@@ -35,14 +34,16 @@ public:
       Replacements & result) = 0;
 
   virtual void searchTemplate(
-        ScAddr const & templateAddr,
-        vector<ScTemplateParams> const & scTemplateParamsVector,
-        std::set<std::string> const & varNames,
-        Replacements & result);
+      ScAddr const & templateAddr,
+      vector<ScTemplateParams> const & scTemplateParamsVector,
+      std::set<std::string> const & varNames,
+      Replacements & result);
 
   void getVarNames(ScAddr const & formula, std::set<std::string> & varNames);
 
-  bool isContentIdentical(ScTemplateSearchResultItem const & item, std::map<std::string, std::string> const & linksContentMap);
+  bool isContentIdentical(
+      ScTemplateSearchResultItem const & item,
+      std::map<std::string, std::string> const & linksContentMap);
 
   void setInputStructures(ScAddrVector const & otherInputStructures);
 

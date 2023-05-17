@@ -41,6 +41,6 @@ void ImplicationExpressionNode::compute(LogicFormulaResult & result) const
   if (conclusionResult.value)
   {
     result.replacements =
-          ReplacementsUtils::intersectReplacements(premiseResult.replacements, conclusionResult.replacements);
+        ReplacementsUtils::intersectReplacements(premiseResult.replacements, conclusionResult.replacements);
   }
 }

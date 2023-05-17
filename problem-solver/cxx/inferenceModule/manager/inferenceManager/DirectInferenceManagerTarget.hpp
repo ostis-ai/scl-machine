@@ -30,4 +30,4 @@ public:
 protected:
   ScAddr targetStructure;
 };
-}
+}  // namespace inference

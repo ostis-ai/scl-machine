@@ -17,13 +17,16 @@ using namespace utils;
 using namespace scAgentsCommon;
 
 SolutionTreeGenerator::SolutionTreeGenerator(ScMemoryContext * ms_context)
-      : ms_context(ms_context)
+  : ms_context(ms_context)
 {
   solution = ms_context->CreateNode(ScType::NodeConst);
   ms_context->CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::concept_solution, solution);
 }
 
-bool SolutionTreeGenerator::addNode(ScAddr const & formula, ScTemplateParams const & templateParams, std::set<std::string> const & varNames)
+bool SolutionTreeGenerator::addNode(
+    ScAddr const & formula,
+    ScTemplateParams const & templateParams,
+    std::set<std::string> const & varNames)
 {
   ScAddr newSolutionNode = createSolutionNode(formula, templateParams, varNames);
   bool result = newSolutionNode.IsValid();
@@ -35,19 +38,14 @@ bool SolutionTreeGenerator::addNode(ScAddr const & formula, ScTemplateParams con
     }
     else
     {
-      ScIterator3Ptr lastSolutionNodeArcIterator = ms_context->Iterator3(
-            solution,
-            ScType::EdgeAccessConstPosPerm,
-            lastSolutionNode);
+      ScIterator3Ptr lastSolutionNodeArcIterator =
+          ms_context->Iterator3(solution, ScType::EdgeAccessConstPosPerm, lastSolutionNode);
       if (lastSolutionNodeArcIterator->Next())
       {
         ScAddr lastSolutionNodeArc = lastSolutionNodeArcIterator->Get(1);
         ScAddr newSolutionNodeArc = ms_context->CreateEdge(ScType::EdgeAccessConstPosPerm, solution, newSolutionNode);
         GenerationUtils::generateRelationBetween(
-              ms_context,
-              lastSolutionNodeArc,
-              newSolutionNodeArc,
-              CoreKeynodes::nrel_basic_sequence);
+            ms_context, lastSolutionNodeArc, newSolutionNodeArc, CoreKeynodes::nrel_basic_sequence);
       }
       else
       {
@@ -60,7 +58,10 @@ bool SolutionTreeGenerator::addNode(ScAddr const & formula, ScTemplateParams con
   return result;
 }
 
-ScAddr SolutionTreeGenerator::createSolutionNode(ScAddr const & formula, ScTemplateParams const & templateParams, std::set<std::string> const & varNames)
+ScAddr SolutionTreeGenerator::createSolutionNode(
+    ScAddr const & formula,
+    ScTemplateParams const & templateParams,
+    std::set<std::string> const & varNames)
 {
   ScAddr const & solutionNode = ms_context->CreateNode(ScType::NodeConst);
   GenerationUtils::generateRelationBetween(ms_context, solutionNode, formula, CoreKeynodes::rrel_1);
@@ -80,9 +81,10 @@ ScAddr SolutionTreeGenerator::createSolutionNode(ScAddr const & formula, ScTempl
       ms_context->CreateEdge(ScType::EdgeAccessConstPosTemp, varNode, replacement);
     }
     else
-      SC_THROW_EXCEPTION(utils::ExceptionItemNotFound,
-                         "SolutionTreeGenerator: formula " << ms_context->HelperGetSystemIdtf(formula) << " has var " <<
-                         varName << " but scTemplateParams don't have replacement for this var");
+      SC_THROW_EXCEPTION(
+          utils::ExceptionItemNotFound,
+          "SolutionTreeGenerator: formula " << ms_context->HelperGetSystemIdtf(formula) << " has var " << varName
+                                            << " but scTemplateParams don't have replacement for this var");
   }
 
   return solutionNode;
@@ -92,7 +94,8 @@ ScAddr SolutionTreeGenerator::createSolution(ScAddr const & outputStructure, boo
 {
   ScType arcType = targetAchieved ? ScType::EdgeAccessConstPosPerm : ScType::EdgeAccessConstNegPerm;
   ms_context->CreateEdge(arcType, InferenceKeynodes::concept_success_solution, solution);
-  GenerationUtils::generateRelationBetween(ms_context, solution, outputStructure, InferenceKeynodes::nrel_output_structure);
+  GenerationUtils::generateRelationBetween(
+      ms_context, solution, outputStructure, InferenceKeynodes::nrel_output_structure);
 
   return solution;
 }

@@ -56,8 +56,7 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
   ScAddr solutionNode;
   try
   {
-    solutionNode =
-        this->inferenceManager->applyInference(targetStructure, formulasSet, arguments, inputStructure);
+    solutionNode = this->inferenceManager->applyInference(targetStructure, formulasSet, arguments, inputStructure);
   }
   catch (utils::ScException const & exception)
   {
