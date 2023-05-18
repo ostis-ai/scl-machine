@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "sc-memory/sc_memory.hpp"
+#include "inferenceConfig/InferenceConfig.hpp"
 
 namespace inference
 {
@@ -20,8 +21,8 @@ public:
   explicit TemplateManagerAbstract(ScMemoryContext * context)
     : context(context)
   {
-    generateOnlyFirst = true;
-    generateOnlyUnique = false;
+    replacementsUsingType = REPLACEMENTS_ALL;
+    generationType = GENERATE_ALL_FORMULAS;
   }
 
   virtual ~TemplateManagerAbstract() = default;
@@ -33,19 +34,19 @@ public:
     fixedArgumentIdentifiers.push_back(fixedArgumentIdentifier);
   }
 
-  bool getGenerateOnlyFirst() const
+  ReplacementsUsingType getReplacementsUsingType() const
   {
-    return generateOnlyFirst;
+    return replacementsUsingType;
   }
 
-  bool getGenerateOnlyUnique() const
+  GenerationType getGenerationType() const
   {
-    return generateOnlyUnique;
+    return generationType;
   }
 
-  void setGenerateOnlyFirst(bool const otherGenerateOnlyFirst)
+  void setReplacementsUsingType(ReplacementsUsingType const otherReplacementsUsingType)
   {
-    generateOnlyFirst = otherGenerateOnlyFirst;
+    replacementsUsingType = otherReplacementsUsingType;
   }
 
   ScAddrVector getArguments() const
@@ -58,17 +59,17 @@ public:
     arguments = otherArguments;
   }
 
-  void setGenerateOnlyUnique(bool const otherGenerateOnlyUnique)
+  void setGenerationType(GenerationType otherGenType)
   {
-    generateOnlyUnique = otherGenerateOnlyUnique;
+    generationType = otherGenType;
   }
 
 protected:
   ScMemoryContext * context;
 
   ScAddrVector arguments;
-  bool generateOnlyFirst;
-  bool generateOnlyUnique;
+  ReplacementsUsingType replacementsUsingType;
+  GenerationType generationType;
   std::vector<std::string> fixedArgumentIdentifiers;
 };
 }  // namespace inference

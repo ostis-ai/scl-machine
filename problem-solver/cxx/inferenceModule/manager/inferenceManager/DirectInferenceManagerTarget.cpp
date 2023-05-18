@@ -18,7 +18,7 @@ DirectInferenceManagerTarget::DirectInferenceManagerTarget(ScMemoryContext * con
 {
 }
 
-bool DirectInferenceManagerTarget::applyInference(InferenceParamsConfig const & inferenceParamsConfig)
+bool DirectInferenceManagerTarget::applyInference(InferenceParams const & inferenceParamsConfig)
 {
   templateManager->setArguments(inferenceParamsConfig.arguments);
   templateSearcher->setInputStructures(inferenceParamsConfig.inputStructures);

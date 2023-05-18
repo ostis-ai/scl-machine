@@ -8,8 +8,10 @@
 #include "scs_loader.hpp"
 #include "sc-agents-common/keynodes/coreKeynodes.hpp"
 
-#include "manager/DirectInferenceManager.hpp"
+#include "manager/inferenceManager/DirectInferenceManagerTarget.hpp"
 #include "keynodes/InferenceKeynodes.hpp"
+#include "factory/InferenceManagerFactory.hpp"
+#include "sc-agents-common/utils/IteratorUtils.hpp"
 
 using namespace inference;
 
@@ -48,8 +50,17 @@ TEST_F(InferenceManagerTest, SuccessApplyInference)
   EXPECT_TRUE(argumentSet.IsValid());
 
   ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
-  DirectInferenceManager inferenceManager(&context);
-  ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet, inputStructure);
+  EXPECT_TRUE(inputStructure.IsValid());
+
+  InferenceConfig const & inferenceConfig{GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE};
+  ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
+  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  InferenceParams const & inferenceParams{ruleSet, argumentVector, {inputStructure}, outputStructure, targetTemplate};
+  std::unique_ptr<InferenceManagerAbstract> inferenceManager =
+      InferenceManagerFactory::constructDirectInferenceManagerTarget(&context, inferenceConfig, {inputStructure});
+  bool targetAchieved = inferenceManager->applyInference(inferenceParams);
+  ScAddr answer = inferenceManager->getSolutionTreeManager()->createSolution(outputStructure, targetAchieved);
+
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
       context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm));
@@ -78,9 +89,15 @@ TEST_F(InferenceManagerTest, SuccessGenerateInferenceConclusion)
   ScAddr argumentSet = context.HelperResolveSystemIdtf(ARGUMENT_SET);
   EXPECT_TRUE(argumentSet.IsValid());
 
-  ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
-  DirectInferenceManager inferenceManager(&context);
-  ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet, inputStructure);
+  InferenceConfig const & inferenceConfig{GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE};
+  ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
+  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  InferenceParams const & inferenceParams{ruleSet, argumentVector, {}, outputStructure, targetTemplate};
+  std::unique_ptr<InferenceManagerAbstract> inferenceManager =
+      InferenceManagerFactory::constructDirectInferenceManagerTarget(&context, inferenceConfig, {});
+  bool targetAchieved = inferenceManager->applyInference(inferenceParams);
+  ScAddr answer = inferenceManager->getSolutionTreeManager()->createSolution(outputStructure, targetAchieved);
+
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
       context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm));
@@ -107,8 +124,17 @@ TEST_F(InferenceManagerTest, RuleNotUsed)
   EXPECT_TRUE(argumentSet.IsValid());
 
   ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
-  DirectInferenceManager inferenceManager(&context);
-  ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet, inputStructure);
+  EXPECT_TRUE(inputStructure.IsValid());
+
+  InferenceConfig const & inferenceConfig{GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE};
+  ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
+  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  InferenceParams const & inferenceParams{ruleSet, argumentVector, {inputStructure}, outputStructure, targetTemplate};
+  std::unique_ptr<InferenceManagerAbstract> inferenceManager =
+      InferenceManagerFactory::constructDirectInferenceManagerTarget(&context, inferenceConfig, {inputStructure});
+  bool targetAchieved = inferenceManager->applyInference(inferenceParams);
+  ScAddr answer = inferenceManager->getSolutionTreeManager()->createSolution(outputStructure, targetAchieved);
+
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
       context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
@@ -131,8 +157,16 @@ TEST_F(InferenceManagerTest, TargetNotAchieved)
   EXPECT_TRUE(argumentSet.IsValid());
 
   ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
-  DirectInferenceManager inferenceManager(&context);
-  ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet, inputStructure);
+  EXPECT_TRUE(inputStructure.IsValid());
+
+  InferenceConfig const & inferenceConfig{GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE};
+  ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
+  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  InferenceParams const & inferenceParams{ruleSet, argumentVector, {inputStructure}, outputStructure, targetTemplate};
+  std::unique_ptr<InferenceManagerAbstract> inferenceManager =
+      InferenceManagerFactory::constructDirectInferenceManagerTarget(&context, inferenceConfig, {inputStructure});
+  bool targetAchieved = inferenceManager->applyInference(inferenceParams);
+  ScAddr answer = inferenceManager->getSolutionTreeManager()->createSolution(outputStructure, targetAchieved);
 
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
@@ -155,9 +189,14 @@ TEST_F(InferenceManagerTest, ReplacementsTest)
   ScAddr argumentSet = context.HelperResolveSystemIdtf(ARGUMENT_SET);
   EXPECT_TRUE(argumentSet.IsValid());
 
-  ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
-  DirectInferenceManager inferenceManager(&context);
-  ScAddr answer = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet, inputStructure);
+  InferenceConfig const & inferenceConfig{GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE};
+  ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
+  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  InferenceParams const & inferenceParams{ruleSet, argumentVector, {}, outputStructure, targetTemplate};
+  std::unique_ptr<InferenceManagerAbstract> inferenceManager =
+      InferenceManagerFactory::constructDirectInferenceManagerTarget(&context, inferenceConfig, {});
+  bool targetAchieved = inferenceManager->applyInference(inferenceParams);
+  ScAddr answer = inferenceManager->getSolutionTreeManager()->createSolution(outputStructure, targetAchieved);
 
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
@@ -183,8 +222,17 @@ TEST_F(InferenceManagerTest, DISABLED_ConclusionArgumentsTest)
   EXPECT_TRUE(argumentSet.IsValid());
 
   ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
-  DirectInferenceManager inferenceManager(&context);
-  ScAddr answer = inferenceManager.applyInference(targetStructure, formulasSet, argumentSet, inputStructure);
+  EXPECT_TRUE(inputStructure.IsValid());
+
+  InferenceConfig const & inferenceConfig{GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE};
+  ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
+  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  InferenceParams const & inferenceParams{
+      formulasSet, argumentVector, {inputStructure}, outputStructure, targetStructure};
+  std::unique_ptr<InferenceManagerAbstract> inferenceManager =
+      InferenceManagerFactory::constructDirectInferenceManagerTarget(&context, inferenceConfig, {inputStructure});
+  bool targetAchieved = inferenceManager->applyInference(inferenceParams);
+  ScAddr answer = inferenceManager->getSolutionTreeManager()->createSolution(outputStructure, targetAchieved);
 
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
@@ -215,8 +263,17 @@ TEST_F(InferenceManagerTest, SolutionOutputStrcuture)
   EXPECT_TRUE(argumentSet.IsValid());
 
   ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
-  DirectInferenceManager inferenceManager(&context);
-  ScAddr solution = inferenceManager.applyInference(targetTemplate, ruleSet, argumentSet, inputStructure);
+  EXPECT_TRUE(inputStructure.IsValid());
+
+  InferenceConfig const & inferenceConfig{GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE};
+  ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
+  ScAddr const & output = context.CreateNode(ScType::NodeConstStruct);
+  InferenceParams const & inferenceParams{ruleSet, argumentVector, {inputStructure}, output, targetTemplate};
+  std::unique_ptr<InferenceManagerAbstract> inferenceManager =
+      InferenceManagerFactory::constructDirectInferenceManagerTarget(&context, inferenceConfig, {inputStructure});
+  bool targetAchieved = inferenceManager->applyInference(inferenceParams);
+  ScAddr solution = inferenceManager->getSolutionTreeManager()->createSolution(output, targetAchieved);
+
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(
       context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));

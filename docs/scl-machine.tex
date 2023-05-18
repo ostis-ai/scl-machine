@@ -168,39 +168,23 @@
 \end{scnrelfromset}
 
 \scnheader{конфиг менеджера логического вывода}
-\scnidtf{InferenceConfig}
-\begin{scnrelfromset}{декомпозиция}
-    \scnitem{Конфиг процесса логического вывода}
-    \begin{scnindent}
-        \scnidtf{InferenceFlowConfig}
-        \scntext{примечание}{Такой конфиг используется при создании менеджера логического вывода.}
-        \scnhaselement{generateOnlyUnique}
-        \begin{scnindent}
-            \scntext{примечание}{Определяет, нужно ли генерировать уже существующие конструкции в базе знаний.
-            От этого зависит, нужно ли перед генерацией атомарной логической формулы искать её в базе знаний.
-            Если не искать, это даёт большой прирост в производительности логического вывода.}
-        \end{scnindent}
-        \scnhaselement{generateOnlyFirst}
-        \begin{scnindent}
-            \scntext{примечание}{Определяет, нужно ли прерывать генерацию атомарной логической формулы по множеству аргументов после первой успешной генерации.}
-        \end{scnindent}
-        \scnhaselement{generateSolutionTree}
-        \begin{scnindent}
-            \scntext{примечание}{Определяет, нужно ли создавать узлы в дереве решений.
-            Если не нужно, то в процессе логического вывода используется \scnkeyword{пустой менеджер дерева решений}.}
-        \end{scnindent}
-    \end{scnindent}
-    \scnitem{Конфиг параметров логического вывода}
-    \begin{scnindent}
-        \scnidtf{InferenceParamsConfig}
-        \scntext{примечание}{Такой конфиг передаётся при каждой использовании логического вывода с уже созданным \scnkeyword{менеджером логического вывода}.}
-        \scnhaselement{formulasSet}
-        \scnhaselement{arguments}
-        \scnhaselement{inputStructures}
-        \scnhaselement{outputStructure}
-        \scnhaselement{targetStructure}
-    \end{scnindent}
-\end{scnrelfromset}
+\scnidtf{InferenceFlowConfig}
+\scntext{примечание}{Такой конфиг используется при создании менеджера логического вывода.}
+\scnhaselement{generationType}
+\begin{scnindent}
+    \scntext{примечание}{Определяет, нужно ли генерировать уже существующие конструкции в базе знаний.
+    От этого зависит, нужно ли перед генерацией атомарной логической формулы искать её в базе знаний.
+    Если не искать, это даёт большой прирост в производительности логического вывода.}
+\end{scnindent}
+\scnhaselement{replacementsUsingType}
+\begin{scnindent}
+    \scntext{примечание}{Определяет, нужно ли прерывать генерацию атомарной логической формулы по множеству аргументов после первой успешной генерации.}
+\end{scnindent}
+\scnhaselement{solutionTreeType}
+\begin{scnindent}
+    \scntext{примечание}{Определяет, нужно ли создавать узлы в дереве решений.
+    Если не нужно, то в процессе логического вывода используется \scnkeyword{пустой менеджер дерева решений}.}
+\end{scnindent}
 
 \scnheader{объект создания менеджера логического вывода}
 \scnidtf{InferenceManagerFactory}

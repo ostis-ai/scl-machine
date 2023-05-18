@@ -40,7 +40,7 @@ public:
    * @returns true if something was generated (any rule was applied), otherwise return false
    * @throws utils::ExceptionItemNotFound Thrown if `formulasSet` is an empty set
    */
-  virtual bool applyInference(InferenceParamsConfig const & inferenceParamsConfig) = 0;
+  virtual bool applyInference(InferenceParams const & inferenceParamsConfig) = 0;
 
   // TODO: Need to implement common logic of inference rules (e.g. modus ponens)
   LogicFormulaResult useFormula(ScAddr const & formula, ScAddr const & outputStructure);

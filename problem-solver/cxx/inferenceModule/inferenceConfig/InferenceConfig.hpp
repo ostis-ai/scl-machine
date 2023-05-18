@@ -8,14 +8,33 @@
 
 #include <sc-memory/sc_addr.hpp>
 
-struct InferenceFlowConfig
+enum GenerationType
 {
-  bool generateOnlyUnique = false;
-  bool generateOnlyFirst = false;
-  bool generateSolutionTree = false;
+  GENERATE_UNIQUE_FORMULAS = 1,
+  GENERATE_ALL_FORMULAS = 2
 };
 
-struct InferenceParamsConfig
+enum ReplacementsUsingType
+{
+  REPLACEMENTS_FIRST = 1,
+  REPLACEMENTS_ALL = 2
+};
+
+enum SolutionTreeType
+{
+  TREE_FULL = 1,
+  TREE_ONLY_SUCCESS_BRANCH = 2,
+  TREE_ONLY_OUTPUT_STRUCTURE = 3
+};
+
+struct InferenceConfig
+{
+  GenerationType generationType;
+  ReplacementsUsingType replacementsUsingType;
+  SolutionTreeType solutionTreeType;
+};
+
+struct InferenceParams
 {
   ScAddr formulasSet;
   ScAddrVector arguments;

@@ -29,6 +29,6 @@ class DirectInferenceManagerAll : public InferenceManagerAbstract
 public:
   explicit DirectInferenceManagerAll(ScMemoryContext * context);
 
-  bool applyInference(InferenceParamsConfig const & inferenceParamsConfig) override;
+  bool applyInference(InferenceParams const & inferenceParamsConfig) override;
 };
 }  // namespace inference

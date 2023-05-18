@@ -21,13 +21,13 @@ class DirectInferenceManagerTarget : public InferenceManagerAbstract
 public:
   explicit DirectInferenceManagerTarget(ScMemoryContext * context);
 
-  bool applyInference(InferenceParamsConfig const & inferenceParamsConfig) override;
+  bool applyInference(InferenceParams const & inferenceParamsConfig) override;
+
+protected:
+  ScAddr targetStructure;
 
   void setTargetStructure(ScAddr const & otherTargetStructure);
 
   bool isTargetAchieved(std::vector<ScTemplateParams> const & templateParamsVector);
-
-protected:
-  ScAddr targetStructure;
 };
 }  // namespace inference

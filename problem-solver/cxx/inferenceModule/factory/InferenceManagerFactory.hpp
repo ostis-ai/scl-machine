@@ -15,12 +15,12 @@ class InferenceManagerFactory
 public:
   static std::unique_ptr<InferenceManagerAbstract> constructDirectInferenceManagerAll(
       ScMemoryContext * context,
-      InferenceFlowConfig const & inferenceFlowConfig,
+      InferenceConfig const & inferenceFlowConfig,
       ScAddrVector const & inputStructures = {});
 
   static std::unique_ptr<InferenceManagerAbstract> constructDirectInferenceManagerTarget(
       ScMemoryContext * context,
-      InferenceFlowConfig const & inferenceFlowConfig,
+      InferenceConfig const & inferenceFlowConfig,
       ScAddrVector const & inputStructures = {});
 };
 }  // namespace inference

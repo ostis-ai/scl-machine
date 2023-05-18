@@ -148,7 +148,7 @@ void InferenceManagerAbstract::formTemplateManagerFixedArguments(
 void InferenceManagerAbstract::resetTemplateManager(std::shared_ptr<TemplateManagerAbstract> otherTemplateManager)
 {
   otherTemplateManager->setArguments(templateManager->getArguments());
-  otherTemplateManager->setGenerateOnlyFirst(templateManager->getGenerateOnlyFirst());
-  otherTemplateManager->setGenerateOnlyUnique(templateManager->getGenerateOnlyUnique());
+  otherTemplateManager->setGenerationType(templateManager->getGenerationType());
+  otherTemplateManager->setReplacementsUsingType(templateManager->getReplacementsUsingType());
   templateManager = std::move(otherTemplateManager);
 }

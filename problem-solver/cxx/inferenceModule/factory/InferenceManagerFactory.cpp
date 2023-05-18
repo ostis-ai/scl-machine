@@ -18,24 +18,24 @@ using namespace inference;
 
 std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDirectInferenceManagerAll(
     ScMemoryContext * context,
-    InferenceFlowConfig const & inferenceFlowConfig,
+    InferenceConfig const & inferenceFlowConfig,
     ScAddrVector const & inputStructures)
 {
   std::unique_ptr<DirectInferenceManagerAll> strategyAll = std::make_unique<DirectInferenceManagerAll>(context);
   std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager;
-  if (inferenceFlowConfig.generateSolutionTree)
+  if (inferenceFlowConfig.solutionTreeType == TREE_FULL)
   {
     solutionTreeManager = std::make_unique<SolutionTreeManager>(context);
   }
-  else
+  else if (inferenceFlowConfig.solutionTreeType == TREE_ONLY_OUTPUT_STRUCTURE)
   {
     solutionTreeManager = std::make_unique<SolutionTreeManagerEmpty>(context);
   }
   strategyAll->setSolutionTreeManager(solutionTreeManager);
 
   std::shared_ptr<TemplateManagerAbstract> templateManager = std::make_shared<TemplateManagerFixedArguments>(context);
-  templateManager->setGenerateOnlyFirst(inferenceFlowConfig.generateOnlyFirst);
-  templateManager->setGenerateOnlyUnique(inferenceFlowConfig.generateOnlyUnique);
+  templateManager->setReplacementsUsingType(inferenceFlowConfig.replacementsUsingType);
+  templateManager->setGenerationType(inferenceFlowConfig.generationType);
   strategyAll->setTemplateManager(templateManager);
 
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
@@ -54,26 +54,26 @@ std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDire
 
 std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDirectInferenceManagerTarget(
     ScMemoryContext * context,
-    InferenceFlowConfig const & inferenceFlowConfig,
+    InferenceConfig const & inferenceFlowConfig,
     ScAddrVector const & inputStructures)
 {
   std::unique_ptr<DirectInferenceManagerTarget> strategyTarget =
       std::make_unique<DirectInferenceManagerTarget>(context);
 
   std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager;
-  if (inferenceFlowConfig.generateSolutionTree)
+  if (inferenceFlowConfig.solutionTreeType == TREE_FULL)
   {
     solutionTreeManager = std::make_unique<SolutionTreeManager>(context);
   }
-  else
+  else if (inferenceFlowConfig.solutionTreeType == TREE_ONLY_OUTPUT_STRUCTURE)
   {
     solutionTreeManager = std::make_unique<SolutionTreeManagerEmpty>(context);
   }
   strategyTarget->setSolutionTreeManager(solutionTreeManager);
 
   std::shared_ptr<TemplateManagerAbstract> templateManager = std::make_shared<TemplateManager>(context);
-  templateManager->setGenerateOnlyFirst(inferenceFlowConfig.generateOnlyFirst);
-  templateManager->setGenerateOnlyUnique(inferenceFlowConfig.generateOnlyUnique);
+  templateManager->setReplacementsUsingType(inferenceFlowConfig.replacementsUsingType);
+  templateManager->setGenerationType(inferenceFlowConfig.generationType);
   strategyTarget->setTemplateManager(templateManager);
 
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;

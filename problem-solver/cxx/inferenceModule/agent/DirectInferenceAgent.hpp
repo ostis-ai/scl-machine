@@ -8,8 +8,8 @@
 
 #include <sc-memory/kpm/sc_agent.hpp>
 
+#include "manager/inferenceManager/InferenceManagerAbstract.hpp"
 #include "keynodes/InferenceKeynodes.hpp"
-#include "manager/DirectInferenceManager.hpp"
 
 #include "DirectInferenceAgent.generated.hpp"
 
@@ -21,8 +21,6 @@ class DirectInferenceAgent : public ScAgent
   SC_GENERATED_BODY()
 
 private:
-  std::unique_ptr<DirectInferenceManager> inferenceManager;
-
   static bool checkActionClass(ScAddr const & actionNode);
 };
 

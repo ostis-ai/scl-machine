@@ -15,7 +15,7 @@ DirectInferenceManagerAll::DirectInferenceManagerAll(ScMemoryContext * context)
 {
 }
 
-bool DirectInferenceManagerAll::applyInference(InferenceParamsConfig const & inferenceParamsConfig)
+bool DirectInferenceManagerAll::applyInference(InferenceParams const & inferenceParamsConfig)
 {
   bool result = false;
 

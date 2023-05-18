@@ -9,6 +9,7 @@
 #include <sc-agents-common/keynodes/coreKeynodes.hpp>
 
 #include "DirectInferenceAgent.hpp"
+#include "factory/InferenceManagerFactory.hpp"
 
 using namespace scAgentsCommon;
 
@@ -52,11 +53,24 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
   }
 
   ScAddrVector answerElements;
-  this->inferenceManager = std::make_unique<DirectInferenceManager>(ms_context.get());
-  ScAddr solutionNode;
+
+  InferenceConfig const & inferenceConfig{GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE};
+  ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(ms_context.get(), arguments, ScType::Node);
+  ScAddrVector inputStructures;
+  if (inputStructure.IsValid())
+  {
+    inputStructures.push_back(inputStructure);
+  }
+  ScAddr const & outputStructure = ms_context->CreateNode(ScType::NodeConstStruct);
+  InferenceParams const & inferenceParams{
+      formulasSet, argumentVector, inputStructures, outputStructure, targetStructure};
+  std::unique_ptr<InferenceManagerAbstract> inferenceManager =
+      InferenceManagerFactory::constructDirectInferenceManagerTarget(
+          ms_context.get(), inferenceConfig, inputStructures);
+  bool targetAchieved;
   try
   {
-    solutionNode = this->inferenceManager->applyInference(targetStructure, formulasSet, arguments, inputStructure);
+    targetAchieved = inferenceManager->applyInference(inferenceParams);
   }
   catch (utils::ScException const & exception)
   {
@@ -64,6 +78,7 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
     utils::AgentUtils::finishAgentWork(ms_context.get(), actionNode, false);
     return SC_RESULT_ERROR;
   }
+  ScAddr solutionNode = inferenceManager->getSolutionTreeManager()->createSolution(outputStructure, targetAchieved);
 
   answerElements.push_back(solutionNode);
   utils::AgentUtils::finishAgentWork(ms_context.get(), actionNode, answerElements, true);

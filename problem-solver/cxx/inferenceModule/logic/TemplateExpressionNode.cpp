@@ -6,6 +6,8 @@
 
 #include "TemplateExpressionNode.hpp"
 
+#include "inferenceConfig/InferenceConfig.hpp"
+
 #include "sc-agents-common/utils/GenerationUtils.hpp"
 
 TemplateExpressionNode::TemplateExpressionNode(
@@ -89,15 +91,15 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
   Replacements searchResult;
   for (ScTemplateParams const & scTemplateParams : paramsVector)
   {
-    if (templateManager->getGenerateOnlyFirst() && result.isGenerated)
+    if (templateManager->getReplacementsUsingType() == REPLACEMENTS_FIRST && result.isGenerated)
       break;
 
-    if (templateManager->getGenerateOnlyUnique())
+    if (templateManager->getGenerationType() == GENERATE_UNIQUE_FORMULAS)
     {
       templateSearcher->searchTemplate(formula, scTemplateParams, varNames, searchResult);
     }
 
-    if (!templateManager->getGenerateOnlyUnique() || searchResult.empty())
+    if (templateManager->getGenerationType() != GENERATE_UNIQUE_FORMULAS || searchResult.empty())
     {
       ScTemplate generatedTemplate;
       context->HelperBuildTemplate(generatedTemplate, formula, scTemplateParams);
