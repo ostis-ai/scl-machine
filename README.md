@@ -1,5 +1,13 @@
-# SCL-machine
-Inference module for [OSTIS project](https://github.com/ostis-ai/ostis-project)
+# scl-machine
+**_scl-machine_** is a logical formulas interpreter (inference machine) based on the [OSTIS Technology](https://github.com/ostis-project).
+
+**_scl-machine_** process logical formulas like as implications, conjunctions, disjunctions, equivalences and any combinations of them.
+
+You can learn more about scl-machine in the documentation.
+
+The simple example of a logical formula: _If Socrates is a human than Socrates is mortal._
+
+![scl_machine_intro.png](docs/images/scl_machine_intro.png)
 
 # Installation
 ```sh
