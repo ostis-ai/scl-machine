@@ -5,6 +5,8 @@
  */
 
 #include "LogicExpression.hpp"
+
+#include <utility>
 #include "LogicExpressionNode.hpp"
 
 #include "ConjunctionExpressionNode.hpp"
@@ -16,43 +18,44 @@
 
 LogicExpression::LogicExpression(
     ScMemoryContext * context,
-    TemplateSearcher * templateSearcher,
-    TemplateManager * templateManager,
-    SolutionTreeManager * solutionTreeManager,
-    ScAddr const & outputStructure,
-    ScAddr const & rule)
+    std::shared_ptr<TemplateSearcherAbstract> templateSearcher,
+    std::shared_ptr<TemplateManagerAbstract> templateManager,
+    std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager,
+    ScAddr const & outputStructure)
   : context(context)
-  , templateSearcher(templateSearcher)
-  , templateManager(templateManager)
-  , solutionTreeManager(solutionTreeManager)
+  , templateSearcher(std::move(templateSearcher))
+  , templateManager(std::move(templateManager))
+  , solutionTreeManager(std::move(solutionTreeManager))
   , outputStructure(outputStructure)
-  , rule(rule)
 {
 }
 
-std::unique_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & node)
+std::shared_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & formula)
 {
-  int formulaType = FormulaClassifier::typeOfFormula(context, node);
+  int formulaType = FormulaClassifier::typeOfFormula(context, formula);
   switch (formulaType)
   {
-  case FormulaClassifier::ATOM:
-    return buildAtomicFormula(node);
+  case FormulaClassifier::ATOMIC:
+    return buildAtomicFormula(formula);
   case FormulaClassifier::CONJUNCTION:
-    return buildConjunctionFormula(node);
+    return buildConjunctionFormula(formula);
   case FormulaClassifier::DISJUNCTION:
-    return buildDisjunctionFormula(node);
+    return buildDisjunctionFormula(formula);
   case FormulaClassifier::NEGATION:
-    return buildNegationFormula(node);
+    return buildNegationFormula(formula);
   case FormulaClassifier::IMPLICATION_EDGE:
-    return buildImplicationEdgeFormula(node);
+    return buildImplicationEdgeFormula(formula);
   case FormulaClassifier::IMPLICATION_TUPLE:
-    return buildImplicationTupleFormula(node);
+    return buildImplicationTupleFormula(formula);
   case FormulaClassifier::EQUIVALENCE_EDGE:
-    return buildEquivalenceEdgeFormula(node);
+    return buildEquivalenceEdgeFormula(formula);
   case FormulaClassifier::EQUIVALENCE_TUPLE:
-    return buildEquivalenceTupleFormula(node);
+    return buildEquivalenceTupleFormula(formula);
+  case FormulaClassifier::NONE:
+    SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, "Formula is invalid");
   default:
-    SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, context->HelperGetSystemIdtf(node) + " is not defined tuple");
+    SC_THROW_EXCEPTION(
+        utils::ExceptionItemNotFound, context->HelperGetSystemIdtf(formula) << " is not defined formula type");
   }
 }
 
@@ -66,11 +69,10 @@ OperatorLogicExpressionNode::OperandsVector LogicExpression::resolveTupleOperand
   {
     if (!operandsIterator->Get(2).IsValid())
       continue;
-    std::unique_ptr<LogicExpressionNode> op = build(operandsIterator->Get(2));
+    std::shared_ptr<LogicExpressionNode> op = build(operandsIterator->Get(2));
     operandsVector.emplace_back(std::move(op));
   }
-  SC_LOG_DEBUG(
-      "[Amount of operands in " + context->HelperGetSystemIdtf(tuple) + "]: " + to_string(operandsVector.size()));
+  SC_LOG_DEBUG("Amount of operands in " << context->HelperGetSystemIdtf(tuple) << ": " << operandsVector.size());
 
   return operandsVector;
 }
@@ -84,12 +86,12 @@ OperatorLogicExpressionNode::OperandsVector LogicExpression::resolveEdgeOperands
 
   if (begin.IsValid())
   {
-    std::unique_ptr<LogicExpressionNode> beginOperand = build(begin);
+    std::shared_ptr<LogicExpressionNode> beginOperand = build(begin);
     operandsVector.emplace_back(std::move(beginOperand));
   }
   if (end.IsValid())
   {
-    std::unique_ptr<LogicExpressionNode> endOperand = build(end);
+    std::shared_ptr<LogicExpressionNode> endOperand = build(end);
     operandsVector.emplace_back(std::move(endOperand));
   }
   return operandsVector;
@@ -103,106 +105,108 @@ OperatorLogicExpressionNode::OperandsVector LogicExpression::resolveOperandsForI
   OperatorLogicExpressionNode::OperandsVector operandsVector;
   if (begin.IsValid())
   {
-    std::unique_ptr<LogicExpressionNode> premiseOperand = build(begin);
+    std::shared_ptr<LogicExpressionNode> premiseOperand = build(begin);
     operandsVector.emplace_back(std::move(premiseOperand));
   }
   if (end.IsValid())
   {
-    std::unique_ptr<LogicExpressionNode> conclusionOperand = build(end);
+    std::shared_ptr<LogicExpressionNode> conclusionOperand = build(end);
     operandsVector.emplace_back(std::move(conclusionOperand));
   }
   return operandsVector;
 }
 
-std::unique_ptr<LogicExpressionNode> LogicExpression::buildAtomicFormula(ScAddr const & node)
+std::shared_ptr<LogicExpressionNode> LogicExpression::buildAtomicFormula(ScAddr const & formula)
 {
-  SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is a template");
-  std::vector<ScTemplateParams> params = templateManager->createTemplateParams(node, templateSearcher->getParams());
-
-  if (!params.empty() && paramsSet.empty())
+  SC_LOG_DEBUG(context->HelperGetSystemIdtf(formula) << " is atomic logical formula");
+  if (!templateManager->getArguments().empty())
   {
-    paramsSet = std::move(params);
+    std::vector<ScTemplateParams> params = templateManager->createTemplateParams(formula);
+    if (!params.empty() && paramsSet.empty())
+    {
+      paramsSet = std::move(params);
+    }
   }
 
-  return std::make_unique<TemplateExpressionNode>(context, node, templateSearcher, templateManager, solutionTreeManager, outputStructure, rule);
+  return std::make_shared<TemplateExpressionNode>(
+      context, templateSearcher, templateManager, solutionTreeManager, outputStructure, formula);
 }
 
-std::unique_ptr<LogicExpressionNode> LogicExpression::buildConjunctionFormula(ScAddr const & node)
+std::shared_ptr<LogicExpressionNode> LogicExpression::buildConjunctionFormula(ScAddr const & formula)
 {
-  SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is a conjunction tuple");
-  OperatorLogicExpressionNode::OperandsVector operands = resolveTupleOperands(node);
+  SC_LOG_DEBUG(context->HelperGetSystemIdtf(formula) << " is a conjunction tuple");
+  OperatorLogicExpressionNode::OperandsVector operands = resolveTupleOperands(formula);
   if (!operands.empty())
     return std::make_unique<ConjunctionExpressionNode>(context, operands);
   else
     SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, "Conjunction must have operands");
 }
 
-std::unique_ptr<LogicExpressionNode> LogicExpression::buildDisjunctionFormula(ScAddr const & node)
+std::shared_ptr<LogicExpressionNode> LogicExpression::buildDisjunctionFormula(ScAddr const & formula)
 {
-  SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is a disjunction tuple");
-  OperatorLogicExpressionNode::OperandsVector operands = resolveTupleOperands(node);
+  SC_LOG_DEBUG(context->HelperGetSystemIdtf(formula) << " is a disjunction tuple");
+  OperatorLogicExpressionNode::OperandsVector operands = resolveTupleOperands(formula);
   if (!operands.empty())
     return std::make_unique<DisjunctionExpressionNode>(context, operands);
   else
     SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, "Disjunction must have operands");
 }
 
-std::unique_ptr<LogicExpressionNode> LogicExpression::buildNegationFormula(ScAddr const & node)
+std::shared_ptr<LogicExpressionNode> LogicExpression::buildNegationFormula(ScAddr const & formula)
 {
-  SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is a negation tuple");
-  OperatorLogicExpressionNode::OperandsVector operands = resolveTupleOperands(node);
+  SC_LOG_DEBUG(context->HelperGetSystemIdtf(formula) << " is a negation tuple");
+  OperatorLogicExpressionNode::OperandsVector operands = resolveTupleOperands(formula);
   if (operands.size() == 1)
-    return std::make_unique<NegationExpressionNode>(context, std::move(operands[0]));
+    return std::make_shared<NegationExpressionNode>(operands[0]);
   else
     SC_THROW_EXCEPTION(
-        utils::ExceptionItemNotFound,
-        "There is " + to_string(operands.size()) + " operands in negation, but should be one");
+        utils::ExceptionItemNotFound, "There is " << operands.size() << " operands in negation, but should be one");
 }
 
-std::unique_ptr<LogicExpressionNode> LogicExpression::buildImplicationEdgeFormula(ScAddr const & node)
+std::shared_ptr<LogicExpressionNode> LogicExpression::buildImplicationEdgeFormula(ScAddr const & formula)
 {
-  SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is an implication edge");
-  OperatorLogicExpressionNode::OperandsVector operands = resolveEdgeOperands(node);
+  SC_LOG_DEBUG(context->HelperGetSystemIdtf(formula) << " is an implication edge");
+  OperatorLogicExpressionNode::OperandsVector operands = resolveEdgeOperands(formula);
   if (operands.size() == 2)
     return std::make_unique<ImplicationExpressionNode>(context, operands);
   else
     SC_THROW_EXCEPTION(
         utils::ExceptionItemNotFound,
-        "There is " + to_string(operands.size()) + " operands in implication edge, but should be two");
+        "There is " << operands.size() << " operands in implication edge, but should be two");
 }
 
-std::unique_ptr<LogicExpressionNode> LogicExpression::buildImplicationTupleFormula(const ScAddr & node)
+std::shared_ptr<LogicExpressionNode> LogicExpression::buildImplicationTupleFormula(ScAddr const & formula)
 {
-  SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is an implication tuple");
-  OperatorLogicExpressionNode::OperandsVector operands = resolveOperandsForImplicationTuple(node);
+  SC_LOG_DEBUG(context->HelperGetSystemIdtf(formula) << " is an implication tuple");
+  OperatorLogicExpressionNode::OperandsVector operands = resolveOperandsForImplicationTuple(formula);
   if (operands.size() == 2)
     return std::make_unique<ImplicationExpressionNode>(context, operands);
   else
     SC_THROW_EXCEPTION(
         utils::ExceptionItemNotFound,
-        "There is " + to_string(operands.size()) + " operands in implication tuple, but should be two");
+        "There is " << operands.size() << " operands in implication tuple, but should be two");
 }
 
-std::unique_ptr<LogicExpressionNode> LogicExpression::buildEquivalenceEdgeFormula(const ScAddr & node)
+std::shared_ptr<LogicExpressionNode> LogicExpression::buildEquivalenceEdgeFormula(ScAddr const & formula)
 {
-  SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is an equivalence edge");
-  OperatorLogicExpressionNode::OperandsVector operands = resolveEdgeOperands(node);
+  SC_LOG_DEBUG(context->HelperGetSystemIdtf(formula) << " is an equivalence edge");
+  OperatorLogicExpressionNode::OperandsVector operands = resolveEdgeOperands(formula);
   if (operands.size() == 2)
     return std::make_unique<EquivalenceExpressionNode>(context, operands);
   else
     SC_THROW_EXCEPTION(
         utils::ExceptionItemNotFound,
-        "There is " + to_string(operands.size()) + " operands in equivalence edge, but should be two");
+        "There is " << operands.size() << " operands in equivalence edge, but should be two");
 }
 
-std::unique_ptr<LogicExpressionNode> LogicExpression::buildEquivalenceTupleFormula(const ScAddr & node)
+std::shared_ptr<LogicExpressionNode> LogicExpression::buildEquivalenceTupleFormula(ScAddr const & formula)
 {
-  SC_LOG_DEBUG(context->HelperGetSystemIdtf(node) + " is an equivalence tuple");
-  OperatorLogicExpressionNode::OperandsVector operands = resolveTupleOperands(node);
+  SC_LOG_DEBUG(context->HelperGetSystemIdtf(formula) << " is an equivalence tuple");
+  OperatorLogicExpressionNode::OperandsVector operands = resolveTupleOperands(formula);
   if (operands.size() == 2)
     return std::make_unique<EquivalenceExpressionNode>(context, operands);
   else
     SC_THROW_EXCEPTION(
         utils::ExceptionItemNotFound,
-        "There is " + to_string(operands.size()) + " operands in equivalence tuple, but should be two");
+        "There is " << operands.size() << " operands in equivalence tuple, but should be two");
 }

@@ -10,9 +10,9 @@
 
 #include "LogicExpression.hpp"
 
-#include "searcher/TemplateSearcher.hpp"
-#include "manager/TemplateManager.hpp"
-#include "manager/SolutionTreeManager.hpp"
+#include "searcher/templateSearcher/TemplateSearcherAbstract.hpp"
+#include "manager/templateManager/TemplateManagerAbstract.hpp"
+#include "manager/solutionTreeManager/SolutionTreeManagerAbstract.hpp"
 
 using namespace inference;
 
@@ -21,33 +21,29 @@ class TemplateExpressionNode : public LogicExpressionNode
 public:
   TemplateExpressionNode(
       ScMemoryContext * context,
-      ScAddr const & formulaTemplate,
-      TemplateSearcher * templateSearcher);
-  TemplateExpressionNode(
-      ScMemoryContext * context,
-      ScAddr const & formulaTemplate,
-      TemplateSearcher * templateSearcher,
-      TemplateManager * templateManager,
-      SolutionTreeManager * solutionTreeManager,
+      std::shared_ptr<TemplateSearcherAbstract> templateSearcher,
+      std::shared_ptr<TemplateManagerAbstract> templateManager,
+      std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager,
       ScAddr const & outputStructure,
-      ScAddr const & rule);
+      ScAddr const & formula);
 
-  LogicExpressionResult check(ScTemplateParams & params) const override;
-  LogicFormulaResult compute(LogicFormulaResult & result) const override;
+  void compute(LogicFormulaResult & result) const override;
+  // TODO: remove useless method. Use compute instead of find
   LogicFormulaResult find(Replacements & replacements) const;
-  LogicFormulaResult generate(Replacements & replacements) const override;
+  LogicFormulaResult generate(Replacements & replacements) override;
 
-  ScAddr getFormulaTemplate() const override
+  ScAddr getFormula() const override
   {
-    return formulaTemplate;
+    return formula;
   }
 
 private:
   ScMemoryContext * context;
-  ScAddr formulaTemplate;
-  TemplateSearcher * templateSearcher;
-  TemplateManager * templateManager;
-  SolutionTreeManager * solutionTreeManager;
+
+  std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
+  std::shared_ptr<TemplateManagerAbstract> templateManager;
+  std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager;
+
   ScAddr outputStructure;
-  ScAddr rule;
+  ScAddr formula;
 };

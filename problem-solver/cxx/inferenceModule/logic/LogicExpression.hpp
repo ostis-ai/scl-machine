@@ -17,9 +17,9 @@
 #include "LogicExpressionNode.hpp"
 
 #include "utils/ReplacementsUtils.hpp"
-#include "manager/SolutionTreeManager.hpp"
-#include "manager/TemplateManager.hpp"
-#include "searcher/TemplateSearcher.hpp"
+#include "manager/solutionTreeManager/SolutionTreeManager.hpp"
+#include "manager/templateManager/TemplateManager.hpp"
+#include "searcher/templateSearcher/TemplateSearcherAbstract.hpp"
 #include "classifier/FormulaClassifier.hpp"
 
 using namespace inference;
@@ -29,22 +29,21 @@ class LogicExpression
 public:
   LogicExpression(
       ScMemoryContext * context,
-      TemplateSearcher * templateSearcher,
-      TemplateManager * templateManager,
-      SolutionTreeManager * solutionTreeManager,
-      ScAddr const & outputStructure,
-      ScAddr const & rule);
+      std::shared_ptr<TemplateSearcherAbstract> templateSearcher,
+      std::shared_ptr<TemplateManagerAbstract> templateManager,
+      std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager,
+      ScAddr const & outputStructure);
 
-  std::unique_ptr<LogicExpressionNode> build(ScAddr const & node);
+  std::shared_ptr<LogicExpressionNode> build(ScAddr const & formula);
 
-  std::unique_ptr<LogicExpressionNode> buildAtomicFormula(ScAddr const & node);
-  std::unique_ptr<LogicExpressionNode> buildConjunctionFormula(ScAddr const & node);
-  std::unique_ptr<LogicExpressionNode> buildDisjunctionFormula(ScAddr const & node);
-  std::unique_ptr<LogicExpressionNode> buildNegationFormula(ScAddr const & node);
-  std::unique_ptr<LogicExpressionNode> buildImplicationEdgeFormula(ScAddr const & node);
-  std::unique_ptr<LogicExpressionNode> buildImplicationTupleFormula(ScAddr const & node);
-  std::unique_ptr<LogicExpressionNode> buildEquivalenceEdgeFormula(ScAddr const & node);
-  std::unique_ptr<LogicExpressionNode> buildEquivalenceTupleFormula(ScAddr const & node);
+  std::shared_ptr<LogicExpressionNode> buildAtomicFormula(ScAddr const & formula);
+  std::shared_ptr<LogicExpressionNode> buildConjunctionFormula(ScAddr const & formula);
+  std::shared_ptr<LogicExpressionNode> buildDisjunctionFormula(ScAddr const & formula);
+  std::shared_ptr<LogicExpressionNode> buildNegationFormula(ScAddr const & formula);
+  std::shared_ptr<LogicExpressionNode> buildImplicationEdgeFormula(ScAddr const & formula);
+  std::shared_ptr<LogicExpressionNode> buildImplicationTupleFormula(ScAddr const & formula);
+  std::shared_ptr<LogicExpressionNode> buildEquivalenceEdgeFormula(ScAddr const & formula);
+  std::shared_ptr<LogicExpressionNode> buildEquivalenceTupleFormula(ScAddr const & formula);
 
   OperatorLogicExpressionNode::OperandsVector resolveTupleOperands(ScAddr const & tuple);
   OperatorLogicExpressionNode::OperandsVector resolveEdgeOperands(ScAddr const & edge);
@@ -54,10 +53,9 @@ private:
   ScMemoryContext * context;
   std::vector<ScTemplateParams> paramsSet;
 
-  TemplateSearcher * templateSearcher;
-  TemplateManager * templateManager;
-  SolutionTreeManager * solutionTreeManager;
+  std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
+  std::shared_ptr<TemplateManagerAbstract> templateManager;
+  std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager;
 
   ScAddr outputStructure;
-  ScAddr rule;
 };

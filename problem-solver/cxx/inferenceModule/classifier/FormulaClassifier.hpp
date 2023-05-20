@@ -16,7 +16,7 @@ public:
   enum FormulaClasses
   {
     NONE = 0,
-    ATOM = 1,
+    ATOMIC = 1,
     NEGATION = 2,
     CONJUNCTION = 3,
     DISJUNCTION = 4,
@@ -28,10 +28,8 @@ public:
 
   static int typeOfFormula(ScMemoryContext * ms_context, ScAddr const & formula);
   static bool isFormulaWithConst(ScMemoryContext * ms_context, ScAddr const & formula);
+  static bool isFormulaWithVar(ScMemoryContext * ms_context, ScAddr const & formula);
   static bool isFormulaToGenerate(ScMemoryContext * ms_context, ScAddr const & formula);
-
-private:
-  ScMemoryContext * ms_context;
 };
 
 }  // namespace inference

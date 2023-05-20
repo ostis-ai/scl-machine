@@ -6,46 +6,18 @@
 
 #include "ConjunctionExpressionNode.hpp"
 
-ConjunctionExpressionNode::ConjunctionExpressionNode(OperandsVector & operands)
+ConjunctionExpressionNode::ConjunctionExpressionNode(
+    ScMemoryContext * context,
+    OperatorLogicExpressionNode::OperandsVector & operands)
+  : context(context)
 {
   for (auto & operand : operands)
     this->operands.emplace_back(std::move(operand));
 }
 
-ConjunctionExpressionNode::ConjunctionExpressionNode(
-    ScMemoryContext * context,
-    OperatorLogicExpressionNode::OperandsVector & operands)
-  : ConjunctionExpressionNode(operands)
-{
-  this->context = context;
-}
-
-LogicExpressionResult ConjunctionExpressionNode::check(ScTemplateParams & params) const
-{
-  LogicExpressionResult conjunctionResult;
-  conjunctionResult.value = true;
-
-  for (auto & operand : operands)
-  {
-    LogicExpressionResult operandResult = operand->check(params);
-    conjunctionResult.formulaTemplate = operandResult.formulaTemplate;
-    if (operandResult.hasSearchResult)
-      conjunctionResult.templateSearchResult = operandResult.templateSearchResult;
-
-    if (!operandResult.value)
-    {
-      conjunctionResult.value = false;
-      return conjunctionResult;
-    }
-  }
-
-  return conjunctionResult;
-}
-
-LogicFormulaResult ConjunctionExpressionNode::compute(LogicFormulaResult & result) const
+void ConjunctionExpressionNode::compute(LogicFormulaResult & result) const
 {
   result.value = false;
-  LogicFormulaResult fail = {false, false, {}};
   vector<TemplateExpressionNode *> formulasWithoutConstants;
   vector<TemplateExpressionNode *> formulasToGenerate;
 
@@ -55,53 +27,83 @@ LogicFormulaResult ConjunctionExpressionNode::compute(LogicFormulaResult & resul
     auto atom = dynamic_cast<TemplateExpressionNode *>(operand.get());
     if (atom)
     {
-      if (!FormulaClassifier::isFormulaWithConst(context, atom->getFormulaTemplate()))
+      if (!FormulaClassifier::isFormulaWithConst(context, atom->getFormula()))
       {
         SC_LOG_DEBUG("Found formula without constants in conjunction");
         formulasWithoutConstants.push_back(atom);
         continue;
       }
-      if (FormulaClassifier::isFormulaToGenerate(context, atom->getFormulaTemplate()))
+      if (FormulaClassifier::isFormulaToGenerate(context, atom->getFormula()))
       {
         SC_LOG_DEBUG("Found formula to generate in conjunction");
         formulasToGenerate.push_back(atom);
         continue;
       }
     }
-    LogicFormulaResult lastResult = operand->compute(result);
+    LogicFormulaResult lastResult;
+    operand->compute(lastResult);
     if (!lastResult.value)
-      return fail;
+    {
+      result.value = false;
+      result.isGenerated = false;
+      result.replacements = {};
+      return;
+    }
     if (!result.value)  // this is true only when processing the first operand
       result = lastResult;
     else
     {
       result.replacements = ReplacementsUtils::intersectReplacements(result.replacements, lastResult.replacements);
       if (result.replacements.empty())
-        return fail;
+      {
+        result.value = false;
+        result.isGenerated = false;
+        result.replacements = {};
+        return;
+      }
     }
   }
   for (auto const & atom : formulasWithoutConstants)  // atoms without constants are processed here
   {
     LogicFormulaResult lastResult = atom->find(result.replacements);
     if (!lastResult.value)
-      return fail;
+    {
+      result.value = false;
+      result.isGenerated = false;
+      result.replacements = {};
+      return;
+    }
     result.replacements = ReplacementsUtils::intersectReplacements(result.replacements, lastResult.replacements);
     if (result.replacements.empty())
-      return fail;
+    {
+      result.value = false;
+      result.isGenerated = false;
+      result.replacements = {};
+      return;
+    }
   }
   for (auto const & formulaToGenerate : formulasToGenerate)  // atoms which should be generated are processed here
   {
     LogicFormulaResult lastResult = formulaToGenerate->generate(result.replacements);
     if (!lastResult.value)
-      return fail;
+    {
+      result.value = false;
+      result.isGenerated = false;
+      result.replacements = {};
+      return;
+    }
     result.replacements = ReplacementsUtils::intersectReplacements(result.replacements, lastResult.replacements);
     if (result.replacements.empty())
-      return fail;
+    {
+      result.value = false;
+      result.isGenerated = false;
+      result.replacements = {};
+      return;
+    }
   }
-  return result;
 }
 
-LogicFormulaResult ConjunctionExpressionNode::generate(Replacements & replacements) const
+LogicFormulaResult ConjunctionExpressionNode::generate(Replacements & replacements)
 {
   LogicFormulaResult fail = {false, false, {}};
   LogicFormulaResult globalResult = {true, false, replacements};
@@ -111,7 +113,8 @@ LogicFormulaResult ConjunctionExpressionNode::generate(Replacements & replacemen
     if (!lastResult.value)
       return fail;
     globalResult.isGenerated |= lastResult.isGenerated;
-    globalResult.replacements = ReplacementsUtils::intersectReplacements(globalResult.replacements, lastResult.replacements);
+    globalResult.replacements =
+        ReplacementsUtils::intersectReplacements(globalResult.replacements, lastResult.replacements);
     if (ReplacementsUtils::getColumnsAmount(globalResult.replacements) == 0)
       return fail;
   }

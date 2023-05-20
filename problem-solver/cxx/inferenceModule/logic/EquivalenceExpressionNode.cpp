@@ -6,27 +6,16 @@
 
 #include "EquivalenceExpressionNode.hpp"
 
-EquivalenceExpressionNode::EquivalenceExpressionNode(OperandsVector & operands)
+EquivalenceExpressionNode::EquivalenceExpressionNode(
+    ScMemoryContext * context,
+    OperatorLogicExpressionNode::OperandsVector & operands)
+  : context(context)
 {
   for (auto & operand : operands)
     this->operands.emplace_back(std::move(operand));
 }
 
-EquivalenceExpressionNode::EquivalenceExpressionNode(
-    ScMemoryContext * context,
-    OperatorLogicExpressionNode::OperandsVector & operands)
-  : EquivalenceExpressionNode(operands)
-{
-  this->context = context;
-}
-
-// TODO(MksmOrlov): Need to implement
-LogicExpressionResult EquivalenceExpressionNode::check(ScTemplateParams & params) const
-{
-  return {};
-}
-
-LogicFormulaResult EquivalenceExpressionNode::compute(LogicFormulaResult & result) const
+void EquivalenceExpressionNode::compute(LogicFormulaResult & result) const
 {
   vector<LogicFormulaResult> subFormulaResults;
   result.value = false;
@@ -38,22 +27,24 @@ LogicFormulaResult EquivalenceExpressionNode::compute(LogicFormulaResult & resul
     auto atom = dynamic_cast<TemplateExpressionNode *>(operand.get());
     if (atom)
     {
-      if (!FormulaClassifier::isFormulaWithConst(context, atom->getFormulaTemplate()))
+      if (!FormulaClassifier::isFormulaWithConst(context, atom->getFormula()))
       {
         SC_LOG_DEBUG("Found formula without constants in equivalence");
         formulasWithoutConstants.push_back(atom);
         continue;
       }
-      if (FormulaClassifier::isFormulaToGenerate(context, atom->getFormulaTemplate()))
+      if (FormulaClassifier::isFormulaToGenerate(context, atom->getFormula()))
       {
         SC_LOG_DEBUG("Found formula to generate in equivalence");
         formulasToGenerate.push_back(atom);
         continue;
       }
     }
-    subFormulaResults.push_back(operand->compute(result));
+    LogicFormulaResult subFormulaResult;
+    operand->compute(subFormulaResult);
+    subFormulaResults.push_back(subFormulaResult);
   }
-  SC_LOG_DEBUG("Processed " + to_string(subFormulaResults.size()) + " formulas in equivalence");
+  SC_LOG_DEBUG("Processed " << subFormulaResults.size() << " formulas in equivalence");
   if (subFormulaResults.empty())
   {
     SC_LOG_ERROR("All sub formulas in equivalence are either don't have constants or supposed to be generated");
@@ -77,21 +68,19 @@ LogicFormulaResult EquivalenceExpressionNode::compute(LogicFormulaResult & resul
   if (result.value)
     result.replacements =
         ReplacementsUtils::intersectReplacements(subFormulaResults[0].replacements, subFormulaResults[1].replacements);
-  return result;
+  return;
 
   auto leftAtom = dynamic_cast<TemplateExpressionNode *>(operands[0].get());
-  bool isLeftGenerated = (leftAtom) && FormulaClassifier::isFormulaToGenerate(context, leftAtom->getFormulaTemplate());
+  bool isLeftGenerated = (leftAtom) && FormulaClassifier::isFormulaToGenerate(context, leftAtom->getFormula());
 
   auto rightAtom = dynamic_cast<TemplateExpressionNode *>(operands[1].get());
-  bool isRightGenerated =
-      (rightAtom) && FormulaClassifier::isFormulaToGenerate(context, rightAtom->getFormulaTemplate());
+  bool isRightGenerated = (rightAtom) && FormulaClassifier::isFormulaToGenerate(context, rightAtom->getFormula());
 
-  bool leftHasConstants = (leftAtom) && FormulaClassifier::isFormulaWithConst(context, leftAtom->getFormulaTemplate());
-  bool rightHasConstants =
-      (rightAtom) && FormulaClassifier::isFormulaWithConst(context, rightAtom->getFormulaTemplate());
+  bool leftHasConstants = (leftAtom) && FormulaClassifier::isFormulaWithConst(context, leftAtom->getFormula());
+  bool rightHasConstants = (rightAtom) && FormulaClassifier::isFormulaWithConst(context, rightAtom->getFormula());
 
-  SC_LOG_DEBUG("Left has constants = " + to_string(leftHasConstants));
-  SC_LOG_DEBUG("Right has constants = " + to_string(rightHasConstants));
+  SC_LOG_DEBUG("Left has constants = " << leftHasConstants);
+  SC_LOG_DEBUG("Right has constants = " << rightHasConstants);
 
   LogicFormulaResult leftResult;
   LogicFormulaResult rightResult;
@@ -99,20 +88,27 @@ LogicFormulaResult EquivalenceExpressionNode::compute(LogicFormulaResult & resul
   if (!isLeftGenerated)
   {
     SC_LOG_DEBUG("*** Left part of equivalence shouldn't be generated");
-    leftResult = operands[0]->compute(result);
-    rightResult = (isRightGenerated ? rightAtom->generate(leftResult.replacements) : operands[1]->compute(result));
+    operands[0]->compute(leftResult);
+    if (isRightGenerated)
+    {
+      rightResult = rightAtom->generate(leftResult.replacements);
+    }
+    else
+    {
+      operands[1]->compute(rightResult);
+    }
   }
   else
   {
     if (isRightGenerated)
     {
       SC_LOG_DEBUG("*** Right part should be generated");
-      return {true, {}};
+      return;
     }
     else
     {
       SC_LOG_DEBUG("*** Right part shouldn't be generated");
-      rightResult = operands[1]->compute(result);
+      operands[1]->compute(rightResult);
       leftResult = leftAtom->generate(rightResult.replacements);
     }
   }
@@ -120,5 +116,4 @@ LogicFormulaResult EquivalenceExpressionNode::compute(LogicFormulaResult & resul
   result.value = leftResult.value == rightResult.value;
   if (rightResult.value)
     result.replacements = ReplacementsUtils::intersectReplacements(leftResult.replacements, rightResult.replacements);
-  return result;
 }

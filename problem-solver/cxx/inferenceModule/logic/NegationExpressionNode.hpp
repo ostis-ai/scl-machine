@@ -13,22 +13,17 @@ using namespace inference;
 class NegationExpressionNode : public OperatorLogicExpressionNode
 {
 public:
-  explicit NegationExpressionNode(std::unique_ptr<LogicExpressionNode> op);
-  explicit NegationExpressionNode(ScMemoryContext * context, std::unique_ptr<LogicExpressionNode> op);
+  explicit NegationExpressionNode(std::shared_ptr<LogicExpressionNode> operand);
 
-  LogicExpressionResult check(ScTemplateParams & params) const override;
-  LogicFormulaResult compute(LogicFormulaResult & result) const override;
+  void compute(LogicFormulaResult & result) const override;
 
-  LogicFormulaResult generate(Replacements & replacements) const override
+  LogicFormulaResult generate(Replacements & replacements) override
   {
     return {false, false, {}};
   }
 
-  ScAddr getFormulaTemplate() const override
+  ScAddr getFormula() const override
   {
     return {};
   }
-
-private:
-  ScMemoryContext * context;
 };

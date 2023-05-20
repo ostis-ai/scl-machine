@@ -6,46 +6,17 @@
 
 #include "DisjunctionExpressionNode.hpp"
 
-DisjunctionExpressionNode::DisjunctionExpressionNode(OperandsVector & operands)
+DisjunctionExpressionNode::DisjunctionExpressionNode(
+    ScMemoryContext * context,
+    OperatorLogicExpressionNode::OperandsVector & operands)
+  : context(context)
 {
   for (auto & operand : operands)
     this->operands.emplace_back(std::move(operand));
 }
 
-DisjunctionExpressionNode::DisjunctionExpressionNode(
-    ScMemoryContext * context,
-    OperatorLogicExpressionNode::OperandsVector & operands)
-  : DisjunctionExpressionNode(operands)
+void DisjunctionExpressionNode::compute(LogicFormulaResult & result) const
 {
-  this->context = context;
-}
-
-LogicExpressionResult DisjunctionExpressionNode::check(ScTemplateParams & params) const
-{
-  LogicExpressionResult disjunctionResult;
-  disjunctionResult.value = false;
-
-  for (auto & operand : operands)
-  {
-    LogicExpressionResult operandResult = operand->check(params);
-    disjunctionResult.formulaTemplate = operandResult.formulaTemplate;
-
-    if (operandResult.hasSearchResult)
-      disjunctionResult.templateSearchResult = operandResult.templateSearchResult;
-
-    if (operandResult.value)
-    {
-      disjunctionResult.value = true;
-      return disjunctionResult;
-    }
-  }
-
-  return disjunctionResult;
-}
-
-LogicFormulaResult DisjunctionExpressionNode::compute(LogicFormulaResult & result) const
-{
-  LogicFormulaResult fail = {false, false, {}};
   result.value = false;
   vector<TemplateExpressionNode *> formulasWithoutConstants;
   vector<TemplateExpressionNode *> formulasToGenerate;
@@ -56,13 +27,13 @@ LogicFormulaResult DisjunctionExpressionNode::compute(LogicFormulaResult & resul
     auto atom = dynamic_cast<TemplateExpressionNode *>(operand.get());
     if (atom)
     {
-      if (!FormulaClassifier::isFormulaWithConst(context, atom->getFormulaTemplate()))
+      if (!FormulaClassifier::isFormulaWithConst(context, atom->getFormula()))
       {
         SC_LOG_DEBUG("Found formula without constants in disjunction");
         formulasWithoutConstants.push_back(atom);
         continue;
       }
-      if (FormulaClassifier::isFormulaToGenerate(context, atom->getFormulaTemplate()))
+      if (FormulaClassifier::isFormulaToGenerate(context, atom->getFormula()))
       {
         SC_LOG_DEBUG("Found formula to generate in disjunction");
         formulasToGenerate.push_back(atom);
@@ -75,7 +46,12 @@ LogicFormulaResult DisjunctionExpressionNode::compute(LogicFormulaResult & resul
     result.replacements = ReplacementsUtils::uniteReplacements(result.replacements, lastResult.replacements);
   }
   if (result.replacements.empty())
-    return fail;
+  {
+    result.value = false;
+    result.isGenerated = false;
+    result.replacements = {};
+    return;
+  }
   for (auto const & atom : formulasWithoutConstants)
   {
     LogicFormulaResult lastResult = atom->find(result.replacements);
@@ -88,5 +64,4 @@ LogicFormulaResult DisjunctionExpressionNode::compute(LogicFormulaResult & resul
     result.value |= lastResult.value;
     result.replacements = ReplacementsUtils::uniteReplacements(result.replacements, lastResult.replacements);
   }
-  return result;
 }

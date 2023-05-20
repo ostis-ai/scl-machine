@@ -13,8 +13,10 @@ Replacements inference::ReplacementsUtils::intersectReplacements(
 {
   Replacements result;
   size_t resultSize = 0;
-  set<string> firstKeys = getKeySet(first);
-  set<string> secondKeys = getKeySet(second);
+  set<string> firstKeys;
+  getKeySet(first, firstKeys);
+  set<string> secondKeys;
+  getKeySet(second, secondKeys);
   set<string> commonKeysSet = getCommonKeys(firstKeys, secondKeys);
   size_t firstAmountOfColumns = getColumnsAmount(first);
   size_t secondAmountOfColumns = getColumnsAmount(second);
@@ -53,9 +55,11 @@ Replacements inference::ReplacementsUtils::intersectReplacements(
 Replacements inference::ReplacementsUtils::uniteReplacements(Replacements const & first, Replacements const & second)
 {
   Replacements result;
-  int resultSize = 0;
-  set<string> firstKeys = getKeySet(first);
-  set<string> secondKeys = getKeySet(second);
+  size_t resultSize = 0;
+  set<string> firstKeys;
+  getKeySet(first, firstKeys);
+  set<string> secondKeys;
+  getKeySet(second, secondKeys);
   set<string> commonKeysSet = getCommonKeys(firstKeys, secondKeys);
   size_t firstAmountOfColumns = getColumnsAmount(first);
   size_t secondAmountOfColumns = getColumnsAmount(second);
@@ -90,12 +94,10 @@ Replacements inference::ReplacementsUtils::uniteReplacements(Replacements const 
   return result;
 }
 
-set<string> inference::ReplacementsUtils::getKeySet(Replacements const & map)
+void inference::ReplacementsUtils::getKeySet(Replacements const & map, std::set<std::string> & keySet)
 {
-  set<string> keySet;
   for (auto const & pair : map)
     keySet.insert(pair.first);
-  return keySet;
 }
 
 set<string> inference::ReplacementsUtils::getCommonKeys(set<string> const & first, set<string> const & second)
@@ -121,11 +123,17 @@ Replacements inference::ReplacementsUtils::copyReplacements(Replacements const &
   return result;
 }
 
+/**
+ * @brief The size of the all ScAddrVector of variables is the same (it is a matrix)
+ * @param replacements to convert to vector<ScTemplateParams>
+ * @return vector<ScTemplateParams> of converted replacements
+ */
 vector<ScTemplateParams> inference::ReplacementsUtils::getReplacementsToScTemplateParams(
     Replacements const & replacements)
 {
   vector<ScTemplateParams> result;
-  set<string> keys = getKeySet(replacements);
+  set<string> keys;
+  getKeySet(replacements, keys);
   if (keys.empty())
     return result;
 
@@ -143,9 +151,4 @@ vector<ScTemplateParams> inference::ReplacementsUtils::getReplacementsToScTempla
 size_t inference::ReplacementsUtils::getColumnsAmount(Replacements const & replacements)
 {
   return (replacements.empty() ? 0 : replacements.begin()->second.size());
-}
-
-size_t inference::ReplacementsUtils::getRowsAmount(Replacements const & replacements)
-{
-  return replacements.size();
 }

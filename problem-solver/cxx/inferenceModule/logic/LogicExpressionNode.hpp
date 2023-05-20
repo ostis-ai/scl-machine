@@ -8,44 +8,44 @@
 
 #include "utils/ReplacementsUtils.hpp"
 
-struct LogicExpressionResult
-{
-  bool value;
-  bool hasSearchResult;
-  ScTemplateSearchResultItem templateSearchResult{nullptr, nullptr};
-  ScAddr formulaTemplate{};
-};
-
 struct LogicFormulaResult
 {
-  bool value;
-  bool isGenerated;
-  Replacements replacements;
+  bool value = false;
+  bool isGenerated = false;
+  Replacements replacements{};
 };
 
 class LogicExpressionNode
 {
 public:
-  virtual LogicExpressionResult check(ScTemplateParams & params) const = 0;
-  virtual LogicFormulaResult compute(LogicFormulaResult & result) const = 0;
-  virtual ScAddr getFormulaTemplate() const = 0;
+  LogicExpressionNode() = default;
+
+  virtual void compute(LogicFormulaResult & result) const = 0;
+  virtual ScAddr getFormula() const = 0;
   virtual ~LogicExpressionNode() = default;
 
-  virtual LogicFormulaResult generate(Replacements & replacements) const = 0;
+  virtual LogicFormulaResult generate(Replacements & replacements) = 0;
 
   void setArgumentVector(ScAddrVector const & otherArgumentVector)
   {
     argumentVector = otherArgumentVector;
   }
 
+  void setOutputStructureElements(
+      std::unordered_set<ScAddr, ScAddrHashFunc<::size_t>> const & otherOutputStructureElements)
+  {
+    outputStructureElements = otherOutputStructureElements;
+  }
+
 protected:
   ScAddrVector argumentVector;
+  std::unordered_set<ScAddr, ScAddrHashFunc<::size_t>> outputStructureElements;
 };
 
 class OperatorLogicExpressionNode : public LogicExpressionNode
 {
 public:
-  using OperandsVector = std::vector<std::unique_ptr<LogicExpressionNode>>;
+  using OperandsVector = std::vector<std::shared_ptr<LogicExpressionNode>>;
 
 protected:
   OperandsVector operands;

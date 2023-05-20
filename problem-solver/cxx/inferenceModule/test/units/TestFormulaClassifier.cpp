@@ -36,25 +36,37 @@ TEST_F(FormulaClassifierTest, RuleIsImplication)
   initialize();
 
   ScAddr testRule = context.HelperResolveSystemIdtf("inference_logic_test_rule");
-  ScAddr rrel_main_key_sc_element = context.HelperResolveSystemIdtf("rrel_main_key_sc_element");
-  ScIterator5Ptr iter5 = context.Iterator5(
+  ScIterator5Ptr formulaIterator = context.Iterator5(
       testRule,
       ScType::EdgeAccessConstPosPerm,
       ScType::Unknown,
       ScType::EdgeAccessConstPosPerm,
-      rrel_main_key_sc_element);
-  if (iter5->Next())
-  {
-    ScAddr formula = iter5->Get(2);
-    EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, formula), FormulaClassifier::IMPLICATION_EDGE);
-    ScAddr begin;
-    ScAddr end;
-    context.GetEdgeInfo(formula, begin, end);
-    EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, begin), FormulaClassifier::CONJUNCTION);
-    EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, end), FormulaClassifier::ATOM);
-  }
-  else
-    SC_LOG_DEBUG("Cannot find main key sc element");
+      scAgentsCommon::CoreKeynodes::rrel_main_key_sc_element);
+  EXPECT_TRUE(formulaIterator->Next());
+
+  ScAddr formula = formulaIterator->Get(2);
+  EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, formula), FormulaClassifier::IMPLICATION_EDGE);
+  ScAddr begin;
+  ScAddr end;
+  context.GetEdgeInfo(formula, begin, end);
+  EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, begin), FormulaClassifier::CONJUNCTION);
+  EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, end), FormulaClassifier::ATOMIC);
+
+  context.Destroy();
+}
+
+TEST_F(FormulaClassifierTest, AtomicLogicalFormulaWithouCLass)
+{
+  ScMemoryContext context(sc_access_lvl_make_min);
+
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "atomicLogicalFormulaTestWithoutClass.scs");
+  initialize();
+
+  ScAddr formula = context.HelperResolveSystemIdtf("formula");
+  EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, formula), FormulaClassifier::ATOMIC);
+
+  ScAddr formulaWithLink = context.HelperResolveSystemIdtf("formula_with_link");
+  EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, formulaWithLink), FormulaClassifier::ATOMIC);
 
   context.Destroy();
 }

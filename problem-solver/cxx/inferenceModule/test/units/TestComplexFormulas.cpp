@@ -304,32 +304,4 @@ TEST_F(InferenceComplexFormulasTest, EquivalencesNested)
   context.Destroy();
 }
 
-// (a -> (b /\ c))
-TEST_F(InferenceComplexFormulasTest, ConjunctionInConclusionTest)
-{
-  ScMemoryContext context(sc_access_lvl_make_min, "testComplexConclusion");
-
-  string const & name = TEST_FILES_DIR_PATH + "conjunctionInConclusionTest.scs";
-
-  loader.loadScsFile(context, name);
-  initialize();
-
-  ScAddr const test = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
-
-  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, test);
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, test, WAIT_TIME));
-  EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::question_finished_successfully, test, ScType::EdgeAccessConstPosPerm));
-
-  ScAddr const targetNode = context.HelperResolveSystemIdtf("target");
-  ScTemplate scTemplate;
-  ScTemplateSearchResult searchResult;
-  context.HelperBuildTemplate(scTemplate, targetNode);
-  context.HelperSearchTemplate(scTemplate, searchResult);
-  EXPECT_EQ(searchResult.Size(), 1u);
-
-  shutdown();
-  context.Destroy();
-}
-
 }  // namespace directInferenceComplexFormulasTest

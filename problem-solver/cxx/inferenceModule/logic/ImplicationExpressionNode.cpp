@@ -6,53 +6,41 @@
 
 #include "ImplicationExpressionNode.hpp"
 
-ImplicationExpressionNode::ImplicationExpressionNode(OperandsVector & operands)
+ImplicationExpressionNode::ImplicationExpressionNode(
+    ScMemoryContext * context,
+    OperatorLogicExpressionNode::OperandsVector & operands)
+  : context(context)
 {
   for (auto & operand : operands)
     this->operands.emplace_back(std::move(operand));
 }
 
-ImplicationExpressionNode::ImplicationExpressionNode(
-    ScMemoryContext * context,
-    OperatorLogicExpressionNode::OperandsVector & operands)
-  : ImplicationExpressionNode(operands)
+/**
+ * @brief Search premise and get it's replacements. Generate conclusion with found replacements
+ * @param result is a LogicFormulaResult{bool: value, value: isGenerated, Replacements: replacements}
+ * @return result from param
+ */
+void ImplicationExpressionNode::compute(LogicFormulaResult & result) const
 {
-  this->context = context;
-}
-
-LogicExpressionResult ImplicationExpressionNode::check(ScTemplateParams & params) const
-{
-  if (operands.size() != 2)
-  {
-    SC_LOG_ERROR("Implication should have 2 operands but it has " + to_string(operands.size()));
-    return {false, false, {nullptr, nullptr}, ScAddr()};
-  }
-  LogicExpressionResult premiseResult = operands[0]->check(params);
-  LogicExpressionResult conclusionResult = operands[1]->check(params);
-}
-
-LogicFormulaResult ImplicationExpressionNode::compute(LogicFormulaResult & result) const
-{
-  result.value = false;
-
   LogicExpressionNode * premiseAtom = operands[0].get();
   premiseAtom->setArgumentVector(argumentVector);
 
   LogicExpressionNode * conclusionAtom = operands[1].get();
   conclusionAtom->setArgumentVector(argumentVector);
 
-  LogicFormulaResult premiseResult = operands[0]->compute(result);
+  // Compute premise formula, get replacements with found constructions
+  LogicFormulaResult premiseResult;
+  premiseAtom->compute(premiseResult);
+
+  // Generate conclusion using computed premise replacements
   LogicFormulaResult conclusionResult = conclusionAtom->generate(premiseResult.replacements);
 
+  // Implication value (a -> b) is equal to ((!a) || b)
   result.value = !premiseResult.value || conclusionResult.value;
   result.isGenerated = conclusionResult.isGenerated;
   if (conclusionResult.value)
   {
     result.replacements =
-          ReplacementsUtils::intersectReplacements(premiseResult.replacements, conclusionResult.replacements);
-    if (ReplacementsUtils::getColumnsAmount(result.replacements) != 1)
-      SC_THROW_EXCEPTION(utils::ScException, "replacements after generation have " << ReplacementsUtils::getColumnsAmount(result.replacements) << " replacements");
+        ReplacementsUtils::intersectReplacements(premiseResult.replacements, conclusionResult.replacements);
   }
-
-  return result;
 }

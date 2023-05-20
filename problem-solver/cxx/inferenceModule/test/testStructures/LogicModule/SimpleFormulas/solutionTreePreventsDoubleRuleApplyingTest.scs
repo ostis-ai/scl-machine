@@ -71,7 +71,7 @@ solution_tree_template = [*
     _tuples_set _-> _first_pair;;
     _first_pair
         _-> rrel_1:: _first_node;
-        _-> rrel_2:: __second_node;;
+        _-> rrel_2:: _second_node;;
 
-    __second_node _~> _first_node;;
+    _second_node _~> _first_node;;
 *];;

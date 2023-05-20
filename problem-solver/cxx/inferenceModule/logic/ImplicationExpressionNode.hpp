@@ -13,18 +13,16 @@ using namespace inference;
 class ImplicationExpressionNode : public OperatorLogicExpressionNode
 {
 public:
-  explicit ImplicationExpressionNode(OperandsVector & operands);
   explicit ImplicationExpressionNode(ScMemoryContext * context, OperandsVector & operands);
 
-  LogicExpressionResult check(ScTemplateParams & params) const override;
-  LogicFormulaResult compute(LogicFormulaResult & result) const override;
+  void compute(LogicFormulaResult & result) const override;
 
-  LogicFormulaResult generate(Replacements & replacements) const override
+  LogicFormulaResult generate(Replacements & replacements) override
   {
     return {false, false, {}};
   }
 
-  ScAddr getFormulaTemplate() const override
+  ScAddr getFormula() const override
   {
     return {};
   }
