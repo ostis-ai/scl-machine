@@ -54,7 +54,7 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
 
   ScAddrVector answerElements;
 
-  InferenceConfig const & inferenceConfig{GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE};
+  InferenceConfig const & inferenceConfig{GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_FULL};
   ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(ms_context.get(), arguments, ScType::Node);
   ScAddrVector inputStructures;
   if (inputStructure.IsValid())

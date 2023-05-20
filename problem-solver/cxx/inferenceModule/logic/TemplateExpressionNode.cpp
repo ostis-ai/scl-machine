@@ -115,8 +115,9 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
         for (std::string const & name : varNames)
         {
           ScAddrVector replacementsVector;
-          bool const generationHasVar =
-              generationResult.GetReplacements().find(name) != generationResult.GetReplacements().cend();
+          ScAddr outAddr;
+          generationResult.Get(name, outAddr);
+          bool const generationHasVar = outAddr.IsValid();
           ScAddr outResult;
           bool const paramsHaveVar = scTemplateParams.Get(name, outResult);
           if (generationHasVar)
