@@ -4,7 +4,7 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "TemplateSearcher.hpp"
+#include "TemplateSearcherGeneral.hpp"
 
 #include <memory>
 #include <algorithm>
@@ -16,12 +16,12 @@
 
 using namespace inference;
 
-TemplateSearcher::TemplateSearcher(ScMemoryContext * context)
+TemplateSearcherGeneral::TemplateSearcherGeneral(ScMemoryContext * context)
   : TemplateSearcherAbstract(context)
 {
 }
 
-void TemplateSearcher::searchTemplate(
+void TemplateSearcherGeneral::searchTemplate(
     ScAddr const & templateAddr,
     ScTemplateParams const & templateParams,
     std::set<std::string> const & varNames,
@@ -63,7 +63,7 @@ void TemplateSearcher::searchTemplate(
   }
 }
 
-void TemplateSearcher::searchTemplateWithContent(
+void TemplateSearcherGeneral::searchTemplateWithContent(
     ScTemplate const & searchTemplate,
     ScAddr const & templateAddr,
     ScTemplateParams const & templateParams,
@@ -97,7 +97,7 @@ void TemplateSearcher::searchTemplateWithContent(
       });
 }
 
-std::map<std::string, std::string> TemplateSearcher::getTemplateKeyLinksContent(const ScAddr & templateAddr)
+std::map<std::string, std::string> TemplateSearcherGeneral::getTemplateKeyLinksContent(const ScAddr & templateAddr)
 {
   std::string const LINK_ALIAS = "_link";
 

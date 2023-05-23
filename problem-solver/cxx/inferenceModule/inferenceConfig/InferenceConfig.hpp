@@ -27,11 +27,18 @@ enum SolutionTreeType
   TREE_ONLY_OUTPUT_STRUCTURE = 3
 };
 
+enum SearchType
+{
+  SEARCH_IN_ALL_KB = 1,
+  SEARCH_IN_STRUCTURES = 2
+};
+
 struct InferenceConfig
 {
   GenerationType generationType;
   ReplacementsUsingType replacementsUsingType;
   SolutionTreeType solutionTreeType;
+  SearchType searchType;
 };
 
 struct InferenceParams

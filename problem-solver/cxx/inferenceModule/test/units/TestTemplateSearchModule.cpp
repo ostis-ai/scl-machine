@@ -8,8 +8,9 @@
 #include "scs_loader.hpp"
 #include "sc-agents-common/keynodes/coreKeynodes.hpp"
 
-#include "searcher/templateSearcher/TemplateSearcher.hpp"
+#include "searcher/templateSearcher/TemplateSearcherGeneral.hpp"
 #include "keynodes/InferenceKeynodes.hpp"
+#include "utils/ReplacementsUtils.hpp"
 
 #include <algorithm>
 
@@ -35,7 +36,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_NoStructuresTestCase)
   initialize();
 
   ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
-  inference::TemplateSearcher templateSearcher(&context);
+  inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
 
   Replacements searchResults;
@@ -54,7 +55,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_EmptyResultsTestCase)
   initialize();
 
   ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
-  inference::TemplateSearcher templateSearcher(&context);
+  inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
 
   Replacements searchResults;
@@ -78,7 +79,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_SingleResultTestCase)
   initialize();
 
   ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
-  inference::TemplateSearcher templateSearcher(&context);
+  inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
   Replacements searchResults;
   std::set<std::string> varNames;
@@ -98,7 +99,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_NoStructuresTestCase)
   initialize();
 
   ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
-  inference::TemplateSearcher templateSearcher(&context);
+  inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
 
   Replacements searchResults;
@@ -122,7 +123,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_SingleResultTestCase)
   initialize();
 
   ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
-  inference::TemplateSearcher templateSearcher(&context);
+  inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
   Replacements searchResults;
   std::set<std::string> varNames;
@@ -145,7 +146,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_SelectiveTestCase)
   initialize();
 
   ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
-  inference::TemplateSearcher templateSearcher(&context);
+  inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
   Replacements searchResults;
   std::set<std::string> varNames;
@@ -167,7 +168,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_EmptyLinkTestCase)
   initialize();
 
   ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
-  inference::TemplateSearcher templateSearcher(&context);
+  inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
   Replacements searchResults;
   std::set<std::string> varNames;
@@ -189,7 +190,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_EmptyLinkTestCase)
   initialize();
 
   ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
-  inference::TemplateSearcher templateSearcher(&context);
+  inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
   Replacements searchResults;
   std::set<std::string> varNames;

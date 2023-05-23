@@ -52,21 +52,24 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
     return SC_RESULT_ERROR;
   }
 
-  ScAddrVector answerElements;
-
-  InferenceConfig const & inferenceConfig{GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_FULL};
-  ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(ms_context.get(), arguments, ScType::Node);
+  SearchType templateSearcherType = SEARCH_IN_ALL_KB;
   ScAddrVector inputStructures;
   if (inputStructure.IsValid())
   {
     inputStructures.push_back(inputStructure);
+    templateSearcherType = SEARCH_IN_STRUCTURES;
   }
+
+  ScAddrVector answerElements;
+
+  InferenceConfig const & inferenceConfig{GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_FULL, templateSearcherType};
+  ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(ms_context.get(), arguments, ScType::Node);
   ScAddr const & outputStructure = ms_context->CreateNode(ScType::NodeConstStruct);
   InferenceParams const & inferenceParams{
       formulasSet, argumentVector, inputStructures, outputStructure, targetStructure};
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
       InferenceManagerFactory::constructDirectInferenceManagerTarget(
-          ms_context.get(), inferenceConfig, inputStructures);
+          ms_context.get(), inferenceConfig);
   bool targetAchieved;
   try
   {

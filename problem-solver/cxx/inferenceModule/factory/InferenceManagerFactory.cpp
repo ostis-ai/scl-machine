@@ -7,7 +7,7 @@
 #include "InferenceManagerFactory.hpp"
 
 #include "searcher/templateSearcher/TemplateSearcherInStructures.hpp"
-#include "searcher/templateSearcher/TemplateSearcher.hpp"
+#include "searcher/templateSearcher/TemplateSearcherGeneral.hpp"
 #include "manager/templateManager/TemplateManagerFixedArguments.hpp"
 #include "manager/solutionTreeManager/SolutionTreeManagerEmpty.hpp"
 #include "manager/solutionTreeManager/SolutionTreeManager.hpp"
@@ -18,8 +18,7 @@ using namespace inference;
 
 std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDirectInferenceManagerAll(
     ScMemoryContext * context,
-    InferenceConfig const & inferenceFlowConfig,
-    ScAddrVector const & inputStructures)
+    InferenceConfig const & inferenceFlowConfig)
 {
   std::unique_ptr<DirectInferenceManagerAll> strategyAll = std::make_unique<DirectInferenceManagerAll>(context);
   std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager;
@@ -39,11 +38,11 @@ std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDire
   strategyAll->setTemplateManager(templateManager);
 
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
-  if (inputStructures.empty())
+  if (inferenceFlowConfig.searchType == SEARCH_IN_ALL_KB)
   {
-    templateSearcher = std::make_shared<TemplateSearcher>(context);
+    templateSearcher = std::make_shared<TemplateSearcherGeneral>(context);
   }
-  else
+  else if (inferenceFlowConfig.searchType == SEARCH_IN_STRUCTURES)
   {
     templateSearcher = std::make_shared<TemplateSearcherInStructures>(context);
   }
@@ -54,8 +53,7 @@ std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDire
 
 std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDirectInferenceManagerTarget(
     ScMemoryContext * context,
-    InferenceConfig const & inferenceFlowConfig,
-    ScAddrVector const & inputStructures)
+    InferenceConfig const & inferenceFlowConfig)
 {
   std::unique_ptr<DirectInferenceManagerTarget> strategyTarget =
       std::make_unique<DirectInferenceManagerTarget>(context);
@@ -77,11 +75,11 @@ std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDire
   strategyTarget->setTemplateManager(templateManager);
 
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
-  if (inputStructures.empty())
+  if (inferenceFlowConfig.searchType == SEARCH_IN_ALL_KB)
   {
-    templateSearcher = std::make_shared<TemplateSearcher>(context);
+    templateSearcher = std::make_shared<TemplateSearcherGeneral>(context);
   }
-  else
+  else if (inferenceFlowConfig.searchType == SEARCH_IN_STRUCTURES)
   {
     templateSearcher = std::make_shared<TemplateSearcherInStructures>(context);
   }

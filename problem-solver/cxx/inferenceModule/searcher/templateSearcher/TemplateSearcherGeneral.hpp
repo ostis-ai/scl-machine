@@ -17,10 +17,10 @@
 
 namespace inference
 {
-class TemplateSearcher : public TemplateSearcherAbstract
+class TemplateSearcherGeneral : public TemplateSearcherAbstract
 {
 public:
-  explicit TemplateSearcher(ScMemoryContext * ms_context);
+  explicit TemplateSearcherGeneral(ScMemoryContext * ms_context);
 
   void searchTemplate(
       ScAddr const & templateAddr,

@@ -63,16 +63,16 @@ TEST_F(InferenceManagerBuilderTest, SingleSuccessApplyInference)
   ScAddr const & formulasSet = context.HelperResolveSystemIdtf(FORMULAS_SET);
 
   // Form inference params config
-  InferenceParams const & inferenceParamsConfig{formulasSet, arguments, inputStructures, outputStructure};
+  InferenceParams const & inferenceParams{formulasSet, arguments, inputStructures, outputStructure};
 
   // Create inference manager with `strategy all` using director
-  InferenceConfig const & inferenceFlowConfig{GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE};
+  InferenceConfig const & inferenceConfig{
+      GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(
-          &context, inferenceFlowConfig, inputStructures);
+      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
 
   // Apply inference with configured manager and params config
-  bool result = iterationStrategy->applyInference(inferenceParamsConfig);
+  bool result = iterationStrategy->applyInference(inferenceParams);
   EXPECT_TRUE(result);
 
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
@@ -95,15 +95,15 @@ TEST_F(InferenceManagerBuilderTest, GenerateNotUnique)
   ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
   ScAddr const & formulasSet = context.HelperResolveSystemIdtf(FORMULAS_SET);
-  InferenceParams const & inferenceParamsConfig{formulasSet, {argument}, {inputStructure1}, outputStructure};
+  InferenceParams const & inferenceParams{formulasSet, {argument}, {inputStructure1}, outputStructure};
 
   // GenerationType = GENERATE_ALL
-  InferenceConfig const & inferenceFlowConfig{GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE};
+  InferenceConfig const & inferenceConfig{
+      GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(
-          &context, inferenceFlowConfig, {inputStructure1});
+      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
 
-  bool result = iterationStrategy->applyInference(inferenceParamsConfig);
+  bool result = iterationStrategy->applyInference(inferenceParams);
   EXPECT_TRUE(result);
 
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
@@ -132,15 +132,15 @@ TEST_F(InferenceManagerBuilderTest, GenerateUnique)
   ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
   ScAddr const & formulasSet = context.HelperResolveSystemIdtf(FORMULAS_SET);
-  InferenceParams const & inferenceParamsConfig{formulasSet, {argument}, {inputStructure1}, outputStructure};
+  InferenceParams const & inferenceParams{formulasSet, {argument}, {inputStructure1}, outputStructure};
 
   // GenerationType = GENERATE_UNIQUE
-  InferenceConfig const & inferenceFlowConfig{GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE};
+  InferenceConfig const & inferenceConfig{
+      GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(
-          &context, inferenceFlowConfig, {inputStructure1});
+      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
 
-  bool result = iterationStrategy->applyInference(inferenceParamsConfig);
+  bool result = iterationStrategy->applyInference(inferenceParams);
   EXPECT_FALSE(result);
 
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
@@ -175,13 +175,13 @@ TEST_F(InferenceManagerBuilderTest, GenerateNotFirst)
   ScAddr const & rulesSet = context.HelperResolveSystemIdtf(FORMULAS_SET);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
 
-  InferenceConfig const & inferenceFlowConfig{GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE};
+  InferenceConfig const & inferenceConfig{
+      GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(
-          &context, inferenceFlowConfig, inputStructures);
+      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
 
-  InferenceParams const & inferenceParamsConfig{rulesSet, arguments, inputStructures, outputStructure};
-  bool result = iterationStrategy->applyInference(inferenceParamsConfig);
+  InferenceParams const & inferenceParams{rulesSet, arguments, inputStructures, outputStructure};
+  bool result = iterationStrategy->applyInference(inferenceParams);
 
   EXPECT_TRUE(result);
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
@@ -229,13 +229,13 @@ TEST_F(InferenceManagerBuilderTest, GenerateFirst)
   ScAddr const & rulesSet = context.HelperResolveSystemIdtf(FORMULAS_SET);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
 
-  InferenceConfig const & inferenceFlowConfig{GENERATE_ALL_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE};
+  InferenceConfig const & inferenceConfig{
+      GENERATE_ALL_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(
-          &context, inferenceFlowConfig, inputStructures);
+      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
 
-  InferenceParams const & inferenceParamsConfig{rulesSet, arguments, inputStructures, outputStructure};
-  bool result = iterationStrategy->applyInference(inferenceParamsConfig);
+  InferenceParams const & inferenceParams{rulesSet, arguments, inputStructures, outputStructure};
+  bool result = iterationStrategy->applyInference(inferenceParams);
 
   EXPECT_TRUE(result);
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
@@ -268,16 +268,16 @@ TEST_F(InferenceManagerBuilderTest, notGenerateSolutionTree)
   ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
   ScAddr const & formulasSet = context.HelperResolveSystemIdtf(FORMULAS_SET);
-  InferenceParams const & inferenceParamsConfig{formulasSet, {argument}, inputStructures, outputStructure};
+  InferenceParams const & inferenceParams{formulasSet, {argument}, inputStructures, outputStructure};
 
   // Create inference manager with `strategy all` using director
-  InferenceConfig const & inferenceFlowConfig{GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE};
+  InferenceConfig const & inferenceConfig{
+      GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(
-          &context, inferenceFlowConfig, inputStructures);
+      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
 
   // Apply inference with configured manager and params config
-  bool result = iterationStrategy->applyInference(inferenceParamsConfig);
+  bool result = iterationStrategy->applyInference(inferenceParams);
   EXPECT_TRUE(result);
 
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
@@ -304,16 +304,16 @@ TEST_F(InferenceManagerBuilderTest, generateSolutionTree)
   ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
   ScAddr const & formulasSet = context.HelperResolveSystemIdtf(FORMULAS_SET);
-  InferenceParams const & inferenceParamsConfig{formulasSet, {argument}, inputStructures, outputStructure};
+  InferenceParams const & inferenceParams{formulasSet, {argument}, inputStructures, outputStructure};
 
   // Create inference manager with `strategy all` using director
-  InferenceConfig const & inferenceFlowConfig{GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_FULL};
+  InferenceConfig const & inferenceConfig{
+      GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_FULL, SEARCH_IN_STRUCTURES};
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(
-          &context, inferenceFlowConfig, inputStructures);
+      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
 
   // Apply inference with configured manager and params config
-  bool result = iterationStrategy->applyInference(inferenceParamsConfig);
+  bool result = iterationStrategy->applyInference(inferenceParams);
   EXPECT_TRUE(result);
 
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
@@ -341,13 +341,13 @@ TEST_F(InferenceManagerBuilderTest, SingleUnsuccessfulApplyInference)
   ScAddr const & rulesSet = context.HelperResolveSystemIdtf(FORMULAS_SET);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
 
-  InferenceConfig const & inferenceFlowConfig{GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE};
+  InferenceConfig const & inferenceConfig{
+      GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(
-          &context, inferenceFlowConfig, inputStructures);
+      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
 
-  InferenceParams const & inferenceParamsConfig{rulesSet, {}, inputStructures, outputStructure};
-  bool result = iterationStrategy->applyInference(inferenceParamsConfig);
+  InferenceParams const & inferenceParams{rulesSet, {}, inputStructures, outputStructure};
+  bool result = iterationStrategy->applyInference(inferenceParams);
 
   EXPECT_FALSE(result);
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
