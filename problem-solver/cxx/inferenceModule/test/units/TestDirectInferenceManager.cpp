@@ -52,7 +52,8 @@ TEST_F(InferenceManagerTest, SuccessApplyInference)
   ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
   EXPECT_TRUE(inputStructure.IsValid());
 
-  InferenceConfig const & inferenceConfig{GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
+  InferenceConfig const & inferenceConfig{
+      GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
   ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
   InferenceParams const & inferenceParams{ruleSet, argumentVector, {inputStructure}, outputStructure, targetTemplate};
@@ -89,7 +90,8 @@ TEST_F(InferenceManagerTest, SuccessGenerateInferenceConclusion)
   ScAddr argumentSet = context.HelperResolveSystemIdtf(ARGUMENT_SET);
   EXPECT_TRUE(argumentSet.IsValid());
 
-  InferenceConfig const & inferenceConfig{GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_ALL_KB};
+  InferenceConfig const & inferenceConfig{
+      GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_ALL_KB};
   ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
   InferenceParams const & inferenceParams{ruleSet, argumentVector, {}, outputStructure, targetTemplate};
@@ -126,7 +128,8 @@ TEST_F(InferenceManagerTest, RuleNotUsed)
   ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
   EXPECT_TRUE(inputStructure.IsValid());
 
-  InferenceConfig const & inferenceConfig{GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
+  InferenceConfig const & inferenceConfig{
+      GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
   ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
   InferenceParams const & inferenceParams{ruleSet, argumentVector, {inputStructure}, outputStructure, targetTemplate};
@@ -159,7 +162,8 @@ TEST_F(InferenceManagerTest, TargetNotAchieved)
   ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
   EXPECT_TRUE(inputStructure.IsValid());
 
-  InferenceConfig const & inferenceConfig{GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
+  InferenceConfig const & inferenceConfig{
+      GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
   ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
   InferenceParams const & inferenceParams{ruleSet, argumentVector, {inputStructure}, outputStructure, targetTemplate};
@@ -189,7 +193,8 @@ TEST_F(InferenceManagerTest, ReplacementsTest)
   ScAddr argumentSet = context.HelperResolveSystemIdtf(ARGUMENT_SET);
   EXPECT_TRUE(argumentSet.IsValid());
 
-  InferenceConfig const & inferenceConfig{GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_ALL_KB};
+  InferenceConfig const & inferenceConfig{
+      GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_ALL_KB};
   ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
   InferenceParams const & inferenceParams{ruleSet, argumentVector, {}, outputStructure, targetTemplate};
@@ -224,7 +229,8 @@ TEST_F(InferenceManagerTest, DISABLED_ConclusionArgumentsTest)
   ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
   EXPECT_TRUE(inputStructure.IsValid());
 
-  InferenceConfig const & inferenceConfig{GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
+  InferenceConfig const & inferenceConfig{
+      GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
   ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
   InferenceParams const & inferenceParams{
@@ -265,7 +271,8 @@ TEST_F(InferenceManagerTest, SolutionOutputStrcuture)
   ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
   EXPECT_TRUE(inputStructure.IsValid());
 
-  InferenceConfig const & inferenceConfig{GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
+  InferenceConfig const & inferenceConfig{
+      GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
   ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
   ScAddr const & output = context.CreateNode(ScType::NodeConstStruct);
   InferenceParams const & inferenceParams{ruleSet, argumentVector, {inputStructure}, output, targetTemplate};
