@@ -307,8 +307,7 @@ TEST_F(InferenceManagerBuilderTest, generateSolutionTree)
   InferenceParams const & inferenceParams{formulasSet, {argument}, inputStructures, outputStructure};
 
   // Create inference manager with `strategy all` using director
-  InferenceConfig const & inferenceConfig{
-      GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_FULL, SEARCH_IN_STRUCTURES};
+  InferenceConfig const & inferenceConfig{GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_FULL, SEARCH_IN_STRUCTURES};
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
       inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
 
