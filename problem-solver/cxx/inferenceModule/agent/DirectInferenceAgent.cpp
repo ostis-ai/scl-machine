@@ -52,12 +52,12 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
     return SC_RESULT_ERROR;
   }
 
-  TemplateSearcherType templateSearcherType = TEMPLATE_SEARCHER_GENERAL;
+  SearchType templateSearcherType = SEARCH_IN_ALL_KB;
   ScAddrVector inputStructures;
   if (inputStructure.IsValid())
   {
     inputStructures.push_back(inputStructure);
-    templateSearcherType = TEMPLATE_SEARCHER_IN_STRUCTURES;
+    templateSearcherType = SEARCH_IN_STRUCTURES;
   }
 
   ScAddrVector answerElements;

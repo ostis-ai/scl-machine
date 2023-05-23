@@ -67,7 +67,7 @@ TEST_F(InferenceManagerBuilderTest, SingleSuccessApplyInference)
 
   // Create inference manager with `strategy all` using director
   InferenceConfig const & inferenceConfig{
-      GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, TEMPLATE_SEARCHER_IN_STRUCTURES};
+      GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
       inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
 
@@ -99,7 +99,7 @@ TEST_F(InferenceManagerBuilderTest, GenerateNotUnique)
 
   // GenerationType = GENERATE_ALL
   InferenceConfig const & inferenceConfig{
-      GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, TEMPLATE_SEARCHER_IN_STRUCTURES};
+      GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
       inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
 
@@ -136,7 +136,7 @@ TEST_F(InferenceManagerBuilderTest, GenerateUnique)
 
   // GenerationType = GENERATE_UNIQUE
   InferenceConfig const & inferenceConfig{
-      GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, TEMPLATE_SEARCHER_IN_STRUCTURES};
+      GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
       inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
 
@@ -176,7 +176,7 @@ TEST_F(InferenceManagerBuilderTest, GenerateNotFirst)
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
 
   InferenceConfig const & inferenceConfig{
-      GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, TEMPLATE_SEARCHER_IN_STRUCTURES};
+      GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
       inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
 
@@ -230,7 +230,7 @@ TEST_F(InferenceManagerBuilderTest, GenerateFirst)
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
 
   InferenceConfig const & inferenceConfig{
-      GENERATE_ALL_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, TEMPLATE_SEARCHER_IN_STRUCTURES};
+      GENERATE_ALL_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
       inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
 
@@ -272,7 +272,7 @@ TEST_F(InferenceManagerBuilderTest, notGenerateSolutionTree)
 
   // Create inference manager with `strategy all` using director
   InferenceConfig const & inferenceConfig{
-      GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, TEMPLATE_SEARCHER_IN_STRUCTURES};
+      GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
       inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
 
@@ -308,7 +308,7 @@ TEST_F(InferenceManagerBuilderTest, generateSolutionTree)
 
   // Create inference manager with `strategy all` using director
   InferenceConfig const & inferenceConfig{
-      GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_FULL, TEMPLATE_SEARCHER_IN_STRUCTURES};
+      GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_FULL, SEARCH_IN_STRUCTURES};
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
       inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
 
@@ -342,7 +342,7 @@ TEST_F(InferenceManagerBuilderTest, SingleUnsuccessfulApplyInference)
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
 
   InferenceConfig const & inferenceConfig{
-      GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, TEMPLATE_SEARCHER_IN_STRUCTURES};
+      GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES};
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
       inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
 

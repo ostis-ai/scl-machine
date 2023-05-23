@@ -27,10 +27,10 @@ enum SolutionTreeType
   TREE_ONLY_OUTPUT_STRUCTURE = 3
 };
 
-enum TemplateSearcherType
+enum SearchType
 {
-  TEMPLATE_SEARCHER_GENERAL = 1,
-  TEMPLATE_SEARCHER_IN_STRUCTURES = 2
+  SEARCH_IN_ALL_KB = 1,
+  SEARCH_IN_STRUCTURES = 2
 };
 
 struct InferenceConfig
@@ -38,7 +38,7 @@ struct InferenceConfig
   GenerationType generationType;
   ReplacementsUsingType replacementsUsingType;
   SolutionTreeType solutionTreeType;
-  TemplateSearcherType templateSearcherType;
+  SearchType searchType;
 };
 
 struct InferenceParams

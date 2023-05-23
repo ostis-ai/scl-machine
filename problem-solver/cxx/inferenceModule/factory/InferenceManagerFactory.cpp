@@ -38,11 +38,11 @@ std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDire
   strategyAll->setTemplateManager(templateManager);
 
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
-  if (inferenceFlowConfig.templateSearcherType == TEMPLATE_SEARCHER_GENERAL)
+  if (inferenceFlowConfig.searchType == SEARCH_IN_ALL_KB)
   {
     templateSearcher = std::make_shared<TemplateSearcherGeneral>(context);
   }
-  else if (inferenceFlowConfig.templateSearcherType == TEMPLATE_SEARCHER_IN_STRUCTURES)
+  else if (inferenceFlowConfig.searchType == SEARCH_IN_STRUCTURES)
   {
     templateSearcher = std::make_shared<TemplateSearcherInStructures>(context);
   }
@@ -75,11 +75,11 @@ std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDire
   strategyTarget->setTemplateManager(templateManager);
 
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
-  if (inferenceFlowConfig.templateSearcherType == TEMPLATE_SEARCHER_GENERAL)
+  if (inferenceFlowConfig.searchType == SEARCH_IN_ALL_KB)
   {
     templateSearcher = std::make_shared<TemplateSearcherGeneral>(context);
   }
-  else if (inferenceFlowConfig.templateSearcherType == TEMPLATE_SEARCHER_IN_STRUCTURES)
+  else if (inferenceFlowConfig.searchType == SEARCH_IN_STRUCTURES)
   {
     templateSearcher = std::make_shared<TemplateSearcherInStructures>(context);
   }
