@@ -69,7 +69,7 @@ void TemplateSearcherGeneral::searchTemplateWithContent(
     ScTemplateParams const & templateParams,
     Replacements & result)
 {
-  std::map<std::string, std::string> linksContentMap = getTemplateKeyLinksContent(templateAddr);
+  std::map<std::string, std::string> linksContentMap = getTemplateLinksContent(templateAddr);
   std::set<std::string> varNames;
   getVarNames(templateAddr, varNames);
 
@@ -97,30 +97,17 @@ void TemplateSearcherGeneral::searchTemplateWithContent(
       });
 }
 
-std::map<std::string, std::string> TemplateSearcherGeneral::getTemplateKeyLinksContent(const ScAddr & templateAddr)
+std::map<std::string, std::string> TemplateSearcherGeneral::getTemplateLinksContent(ScAddr const & templateAddr)
 {
-  std::string const LINK_ALIAS = "_link";
-
   std::map<std::string, std::string> linksContent;
-  ScTemplate scTemplate;
-  scTemplate.TripleWithRelation(
-      templateAddr,
-      ScType::EdgeAccessVarPosPerm,
-      ScType::Link >> LINK_ALIAS,
-      ScType::EdgeAccessVarPosPerm,
-      scAgentsCommon::CoreKeynodes::rrel_key_sc_element);
-  ScTemplateSearchResult searchResult;
-  context->HelperSearchTemplate(scTemplate, searchResult);
-  for (size_t i = 0; i < searchResult.Size(); i++)
+  ScIterator3Ptr linksIterator = context->Iterator3(templateAddr, ScType::EdgeAccessConstPosPerm, ScType::LinkVar);
+  while (linksIterator->Next())
   {
-    ScAddr const & linkAddr = searchResult[i][LINK_ALIAS];
-    if (utils::CommonUtils::checkType(context, linkAddr, ScType::LinkVar))
+    ScAddr const & linkAddr = linksIterator->Get(2);
+    std::string stringContent;
+    if (context->GetLinkContent(linkAddr, stringContent))
     {
-      std::string stringContent;
-      if (context->GetLinkContent(linkAddr, stringContent))
-      {
-        linksContent.emplace(to_string(linkAddr.Hash()), stringContent);
-      }
+      linksContent.emplace(to_string(linkAddr.Hash()), stringContent);
     }
   }
   return linksContent;

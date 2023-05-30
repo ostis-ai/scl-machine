@@ -247,8 +247,6 @@ TEST_F(InferenceManagerBuilderTest, GenerateFirst)
   ScAddr const & targetClass = context.HelperFindBySystemIdtf(TARGET_NODE_CLASS);
   EXPECT_TRUE(targetClass.IsValid());
 
-  // Expect to generate 1 time
-  ScAddr const & argumentsClass = context.HelperResolveSystemIdtf(CURRENT_NODE_CLASS);
   ScIterator3Ptr const & targetClassIterator =
       context.Iterator3(targetClass, ScType::EdgeAccessConstPosPerm, ScType::NodeConst);
   EXPECT_TRUE(targetClassIterator->Next());

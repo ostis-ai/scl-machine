@@ -87,7 +87,7 @@ void TemplateSearcherInStructures::searchTemplateWithContent(
 {
   std::set<std::string> varNames;
   getVarNames(templateAddr, varNames);
-  std::map<std::string, std::string> linksContentMap = getTemplateKeyLinksContent(templateAddr);
+  std::map<std::string, std::string> linksContentMap = getTemplateLinksContent(templateAddr);
 
   context->HelperSearchTemplate(
       searchTemplate,
@@ -127,39 +127,24 @@ void TemplateSearcherInStructures::searchTemplateWithContent(
       });
 }
 
-std::map<std::string, std::string> TemplateSearcherInStructures::getTemplateKeyLinksContent(const ScAddr & templateAddr)
+std::map<std::string, std::string> TemplateSearcherInStructures::getTemplateLinksContent(ScAddr const & templateAddr)
 {
-  std::string const LINK_ALIAS = "_link";
-
   std::map<std::string, std::string> linksContent;
-  ScTemplate scTemplate;
-  scTemplate.TripleWithRelation(
-      templateAddr,
-      ScType::EdgeAccessVarPosPerm,
-      ScType::Link >> LINK_ALIAS,
-      ScType::EdgeAccessVarPosPerm,
-      scAgentsCommon::CoreKeynodes::rrel_key_sc_element);
-
-  context->HelperSearchTemplate(
-      scTemplate,
-      [this, &LINK_ALIAS, &linksContent](ScTemplateSearchResultItem const & item) -> void {
-        ScAddr const & linkAddr = item[LINK_ALIAS];
-        if (utils::CommonUtils::checkType(context, linkAddr, ScType::LinkVar))
-        {
-          std::string stringContent;
-          ScStreamPtr linkContentStream = context->GetLinkContent(linkAddr);
-          if (linkContentStream != nullptr)
-            ScStreamConverter::StreamToString(linkContentStream, stringContent);
-          linksContent.emplace(context->HelperGetSystemIdtf(linkAddr), stringContent);
-        }
-      },
-      [this](ScAddr const & item) -> bool {
-        // Filter result item belonging to any of the input structures
-        return std::any_of(
-            inputStructures.cbegin(), inputStructures.cend(), [&item, this](ScAddr const & structure) -> bool {
-              return context->HelperCheckEdge(structure, item, ScType::EdgeAccessConstPosPerm);
-            });
-      });
+  ScIterator3Ptr const & linksIterator =
+      context->Iterator3(templateAddr, ScType::EdgeAccessConstPosPerm, ScType::LinkVar);
+  while (linksIterator->Next())
+  {
+    ScAddr const & linkAddr = linksIterator->Get(2);
+    std::string stringContent;
+    if (std::any_of(
+            inputStructures.cbegin(), inputStructures.cend(), [&linkAddr, this](ScAddr const & structure) -> bool {
+              return context->HelperCheckEdge(structure, linkAddr, ScType::EdgeAccessConstPosPerm);
+            }))
+    {
+      context->GetLinkContent(linkAddr, stringContent);
+      linksContent.emplace(to_string(linkAddr.Hash()), stringContent);
+    }
+  }
 
   return linksContent;
 }
