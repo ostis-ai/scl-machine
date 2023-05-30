@@ -119,7 +119,7 @@ std::map<std::string, std::string> TemplateSearcherGeneral::getTemplateKeyLinksC
       std::string stringContent;
       if (context->GetLinkContent(linkAddr, stringContent))
       {
-        linksContent.emplace(context->HelperGetSystemIdtf(linkAddr), stringContent);
+        linksContent.emplace(to_string(linkAddr.Hash()), stringContent);
       }
     }
   }
