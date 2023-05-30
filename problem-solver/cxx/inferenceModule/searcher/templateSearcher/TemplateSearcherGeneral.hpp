@@ -35,6 +35,6 @@ protected:
       ScTemplateParams const & templateParams,
       Replacements & result) override;
 
-  std::map<std::string, std::string> getTemplateKeyLinksContent(const ScAddr & templateAddr) override;
+  std::map<std::string, std::string> getTemplateLinksContent(ScAddr const & templateAddr) override;
 };
 }  // namespace inference

@@ -135,28 +135,6 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_SingleResultTestCase)
   EXPECT_EQ(searchResults.at(nodeAlias)[0], context.HelperFindBySystemIdtf(firstConstantNode));
 }
 
-TEST_F(TemplateSearchManagerTest, SearchWithoutContent_SelectiveTestCase)
-{
-  std::string correctResultLinkIdentifier = "correct_result_link";
-  std::string searchLinkIdentifier = "search_link";
-
-  ScMemoryContext & context = *m_ctx;
-
-  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchWithContentSelectiveSearchTestStucture.scs");
-  initialize();
-
-  ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
-  inference::TemplateSearcherGeneral templateSearcher(&context);
-  ScTemplateParams templateParams;
-  Replacements searchResults;
-  std::set<std::string> varNames;
-  templateSearcher.getVarNames(searchTemplateAddr, varNames);
-  templateSearcher.searchTemplate(searchTemplateAddr, templateParams, varNames, searchResults);
-
-  EXPECT_EQ(searchResults.size(), 1u);
-  EXPECT_EQ(searchResults.at(searchLinkIdentifier)[0], context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
-}
-
 TEST_F(TemplateSearchManagerTest, SearchWithoutContent_EmptyLinkTestCase)
 {
   std::string correctResultLinkIdentifier = "correct_result_link";

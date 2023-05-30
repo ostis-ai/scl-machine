@@ -56,7 +56,7 @@ protected:
       ScTemplateParams const & templateParams,
       Replacements & result) = 0;
 
-  virtual std::map<std::string, std::string> getTemplateKeyLinksContent(ScAddr const & templateAddr) = 0;
+  virtual std::map<std::string, std::string> getTemplateLinksContent(ScAddr const & templateAddr) = 0;
 
   ScMemoryContext * context;
   std::unique_ptr<ScTemplateSearchResult> searchWithoutContentResult;
