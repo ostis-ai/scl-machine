@@ -131,7 +131,7 @@ std::map<std::string, std::string> TemplateSearcherInStructures::getTemplateLink
 {
   std::map<std::string, std::string> linksContent;
   ScIterator3Ptr const & linksIterator =
-      context->Iterator3(templateAddr, ScType::EdgeAccessConstPosPerm, ScType::LinkVar);
+      context->Iterator3(templateAddr, ScType::EdgeAccessConstPosPerm, ScType::Link);
   while (linksIterator->Next())
   {
     ScAddr const & linkAddr = linksIterator->Get(2);

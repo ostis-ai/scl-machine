@@ -100,7 +100,7 @@ void TemplateSearcherGeneral::searchTemplateWithContent(
 std::map<std::string, std::string> TemplateSearcherGeneral::getTemplateLinksContent(ScAddr const & templateAddr)
 {
   std::map<std::string, std::string> linksContent;
-  ScIterator3Ptr linksIterator = context->Iterator3(templateAddr, ScType::EdgeAccessConstPosPerm, ScType::LinkVar);
+  ScIterator3Ptr linksIterator = context->Iterator3(templateAddr, ScType::EdgeAccessConstPosPerm, ScType::Link);
   while (linksIterator->Next())
   {
     ScAddr const & linkAddr = linksIterator->Get(2);
