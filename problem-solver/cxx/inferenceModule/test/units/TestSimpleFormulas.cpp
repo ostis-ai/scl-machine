@@ -64,9 +64,7 @@ TEST_F(InferenceSimpleFormulasTest, TrueSimpleLogicRule)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorBefore->Next());
 
-  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
-
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
       scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
@@ -109,9 +107,7 @@ TEST_F(InferenceSimpleFormulasTest, TrueSimpleLogicRuleThreeArguments)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorBefore->Next());
 
-  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
-
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
       scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
@@ -153,9 +149,7 @@ TEST_F(InferenceSimpleFormulasTest, TrueDoubleApplyLogicRule)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorBefore->Next());
 
-  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
-
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
       scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
@@ -197,9 +191,7 @@ TEST_F(InferenceSimpleFormulasTest, TrueSecondRulesSet)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorBefore->Next());
 
-  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
-
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
       scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
@@ -240,9 +232,7 @@ TEST_F(InferenceSimpleFormulasTest, NothingToGenerateSecondRulesSet)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorBefore->Next());
 
-  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
-
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
       scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
@@ -269,9 +259,7 @@ TEST_F(InferenceSimpleFormulasTest, TwoTriplesTest)
   ScAddr const & action = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
   EXPECT_TRUE(action.IsValid());
 
-  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
-
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
       scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
@@ -289,12 +277,8 @@ TEST_F(InferenceSimpleFormulasTest, ApplyRuleFromSecondAndThenFromFirstSetTest)
 
   ScAddr const & inference_logic_test_question = context.HelperFindBySystemIdtf(QUESTION_IDENTIFIER);
   EXPECT_TRUE(inference_logic_test_question.IsValid());
-  EXPECT_TRUE(
-      context
-          .CreateEdge(
-              ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, inference_logic_test_question)
-          .IsValid());
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, inference_logic_test_question, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(
+      &context, inference_logic_test_question, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
       scAgentsCommon::CoreKeynodes::question_finished_successfully,
       inference_logic_test_question,
@@ -312,17 +296,15 @@ TEST_F(InferenceSimpleFormulasTest, DISABLED_SolutionTreePreventsDoubleRuleApply
   initialize();
 
   ScAddr const & first_inference_logic_test_question = context.HelperFindBySystemIdtf("first_" + QUESTION_IDENTIFIER);
-  context.CreateEdge(
-      ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, first_inference_logic_test_question);
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, first_inference_logic_test_question, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(
+      &context, first_inference_logic_test_question, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
       scAgentsCommon::CoreKeynodes::question_finished_successfully,
       first_inference_logic_test_question,
       ScType::EdgeAccessConstPosPerm));
   ScAddr const & second_inference_logic_test_question = context.HelperFindBySystemIdtf("second_" + QUESTION_IDENTIFIER);
-  context.CreateEdge(
-      ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, second_inference_logic_test_question);
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, second_inference_logic_test_question, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(
+      &context, second_inference_logic_test_question, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
       scAgentsCommon::CoreKeynodes::question_finished_successfully,
       second_inference_logic_test_question,
