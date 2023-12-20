@@ -168,7 +168,7 @@ TEST_F(InferenceManagerBuilderTest, GenerateNotFirst)
   ScAddrVector inputStructures{inputStructure1, inputStructure2};
   ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
   ScAddrVector arguments{argument};
-  for (size_t i = 1; i < 6; i++)
+  for (size_t i = 2; i < 6; i++)
   {
     arguments.push_back(context.HelperResolveSystemIdtf(ARGUMENT + to_string(i)));
   }
@@ -222,7 +222,7 @@ TEST_F(InferenceManagerBuilderTest, GenerateFirst)
   ScAddrVector inputStructures{inputStructure1, inputStructure2};
   ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
   ScAddrVector arguments{argument};
-  for (size_t i = 1; i < 6; i++)
+  for (size_t i = 2; i < 6; i++)
   {
     arguments.push_back(context.HelperResolveSystemIdtf(ARGUMENT + to_string(i)));
   }
