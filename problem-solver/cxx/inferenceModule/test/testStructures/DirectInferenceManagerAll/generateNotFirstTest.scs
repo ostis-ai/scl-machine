@@ -34,6 +34,8 @@ input_structures
 	-> input_structure1;
 	-> input_structure2;;
 
+argument1 <- sc_node;;
+
 arguments
 	-> argument;
 	-> argument2;
