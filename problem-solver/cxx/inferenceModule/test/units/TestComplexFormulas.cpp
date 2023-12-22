@@ -64,9 +64,7 @@ TEST_F(InferenceComplexFormulasTest, TrueNestedImplicationFormula)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorBefore->Next());
 
-  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
-
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
       scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
@@ -108,9 +106,7 @@ TEST_F(InferenceComplexFormulasTest, TrueDisjunctionImplicationFormula)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorBefore->Next());
 
-  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
-
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
       scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
@@ -152,9 +148,7 @@ TEST_F(InferenceComplexFormulasTest, TrueConjunctionImplicationFormula)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorBefore->Next());
 
-  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
-
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
       scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
@@ -197,9 +191,7 @@ TEST_F(InferenceComplexFormulasTest, DISABLED_TrueNegationImplicationLogicRule)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorBefore->Next());
 
-  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, test);
-
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, test, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, test, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
       scAgentsCommon::CoreKeynodes::question_finished_successfully, test, ScType::EdgeAccessConstPosPerm));
 
@@ -242,9 +234,7 @@ TEST_F(InferenceComplexFormulasTest, DISABLED_TrueComplexLogicRule)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorBefore->Next());
 
-  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, test);
-
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, test, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, test, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
       scAgentsCommon::CoreKeynodes::question_finished_successfully, test, ScType::EdgeAccessConstPosPerm));
 
@@ -273,8 +263,7 @@ TEST_F(InferenceComplexFormulasTest, FalseLogicRule)
 
   ScAddr const test = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
 
-  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, test);
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, test, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, test, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
       scAgentsCommon::CoreKeynodes::question_finished_successfully, test, ScType::EdgeAccessConstPosPerm));
 
@@ -295,8 +284,7 @@ TEST_F(InferenceComplexFormulasTest, EquivalencesNested)
 
   ScAddr const test = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
 
-  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, test);
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, test, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, test, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
       scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully, test, ScType::EdgeAccessConstPosPerm));
 
