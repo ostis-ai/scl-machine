@@ -134,13 +134,16 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
         result.replacements = ReplacementsUtils::uniteReplacements(result.replacements, temporalReplacements);
       }
 
-      for (size_t i = 0; i < generationResult.Size(); ++i)
+      if (outputStructure.IsValid())
       {
-        ScAddr const & generatedElement = generationResult[i];
-        if (outputStructureElements.find(generatedElement) == outputStructureElements.cend())
+        for (size_t i = 0; i < generationResult.Size(); ++i)
         {
-          context->CreateEdge(ScType::EdgeAccessConstPosPerm, outputStructure, generatedElement);
-          outputStructureElements.insert(generatedElement);
+          ScAddr const & generatedElement = generationResult[i];
+          if (outputStructureElements.find(generatedElement) == outputStructureElements.cend())
+          {
+            context->CreateEdge(ScType::EdgeAccessConstPosPerm, outputStructure, generatedElement);
+            outputStructureElements.insert(generatedElement);
+          }
         }
       }
     }
