@@ -7,6 +7,7 @@
 #include "sc_test.hpp"
 #include "scs_loader.hpp"
 #include "sc-agents-common/keynodes/coreKeynodes.hpp"
+#include "sc-agents-common/utils/IteratorUtils.hpp"
 
 #include "searcher/templateSearcher/TemplateSearcherGeneral.hpp"
 #include "keynodes/InferenceKeynodes.hpp"
@@ -40,9 +41,9 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_NoStructuresTestCase)
   ScTemplateParams templateParams;
 
   Replacements searchResults;
-  std::set<std::string> varNames;
-  templateSearcher.getVarNames(searchTemplateAddr, varNames);
-  templateSearcher.searchTemplate(searchTemplateAddr, templateParams, varNames, searchResults);
+  ScAddrHashSet variables;
+  templateSearcher.getVariables(searchTemplateAddr, variables);
+  templateSearcher.searchTemplate(searchTemplateAddr, templateParams, variables, searchResults);
 
   EXPECT_TRUE(searchResults.empty());
 }
@@ -59,9 +60,9 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_EmptyResultsTestCase)
   ScTemplateParams templateParams;
 
   Replacements searchResults;
-  std::set<std::string> varNames;
-  templateSearcher.getVarNames(searchTemplateAddr, varNames);
-  templateSearcher.searchTemplate(searchTemplateAddr, templateParams, varNames, searchResults);
+  ScAddrHashSet variables;
+  templateSearcher.getVariables(searchTemplateAddr, variables);
+  templateSearcher.searchTemplate(searchTemplateAddr, templateParams, variables, searchResults);
 
   EXPECT_TRUE(searchResults.empty());
 }
@@ -82,13 +83,19 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_SingleResultTestCase)
   inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
   Replacements searchResults;
-  std::set<std::string> varNames;
-  templateSearcher.getVarNames(searchTemplateAddr, varNames);
-  templateSearcher.searchTemplate(searchTemplateAddr, templateParams, varNames, searchResults);
+  ScAddrHashSet variables;
+  templateSearcher.getVariables(searchTemplateAddr, variables);
+  templateSearcher.searchTemplate(searchTemplateAddr, templateParams, variables, searchResults);
 
-  EXPECT_EQ(searchResults.size(), 2u);
-  EXPECT_EQ(searchResults.at(searchLinkIdentifier)[0], context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
-  EXPECT_EQ(searchResults.at(node_alias)[0], context.HelperFindBySystemIdtf(first_constant_node));
+  ScAddrVector const & vars = utils::IteratorUtils::getAllWithType(&context, searchTemplateAddr, ScType::Var);
+  ScAddrHashSet templateVars = {vars.cbegin(), vars.cend()};
+  EXPECT_EQ(searchResults.size(), templateVars.size());
+  EXPECT_EQ(
+      searchResults.at(context.HelperFindBySystemIdtf(searchLinkIdentifier))[0],
+      context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
+  EXPECT_EQ(
+      searchResults.at(context.HelperFindBySystemIdtf(node_alias))[0],
+      context.HelperFindBySystemIdtf(first_constant_node));
 }
 
 TEST_F(TemplateSearchManagerTest, SearchWithoutContent_NoStructuresTestCase)
@@ -103,9 +110,9 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_NoStructuresTestCase)
   ScTemplateParams templateParams;
 
   Replacements searchResults;
-  std::set<std::string> varNames;
-  templateSearcher.getVarNames(searchTemplateAddr, varNames);
-  templateSearcher.searchTemplate(searchTemplateAddr, templateParams, varNames, searchResults);
+  ScAddrHashSet variables;
+  templateSearcher.getVariables(searchTemplateAddr, variables);
+  templateSearcher.searchTemplate(searchTemplateAddr, templateParams, variables, searchResults);
 
   EXPECT_TRUE(searchResults.empty());
 }
@@ -126,13 +133,20 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_SingleResultTestCase)
   inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
   Replacements searchResults;
-  std::set<std::string> varNames;
-  templateSearcher.getVarNames(searchTemplateAddr, varNames);
-  templateSearcher.searchTemplate(searchTemplateAddr, templateParams, varNames, searchResults);
+  ScAddrHashSet variables;
+  templateSearcher.getVariables(searchTemplateAddr, variables);
+  templateSearcher.searchTemplate(searchTemplateAddr, templateParams, variables, searchResults);
 
-  EXPECT_EQ(searchResults.size(), 2u);
-  EXPECT_EQ(searchResults.at(searchLinkIdentifier)[0], context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
-  EXPECT_EQ(searchResults.at(nodeAlias)[0], context.HelperFindBySystemIdtf(firstConstantNode));
+  ScAddrVector const & vars = utils::IteratorUtils::getAllWithType(&context, searchTemplateAddr, ScType::Var);
+  ScAddrHashSet templateVars = {vars.cbegin(), vars.cend()};
+  EXPECT_EQ(searchResults.size(), templateVars.size());
+
+  EXPECT_EQ(
+      searchResults.at(context.HelperFindBySystemIdtf(searchLinkIdentifier))[0],
+      context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
+  EXPECT_EQ(
+      searchResults.at(context.HelperFindBySystemIdtf(nodeAlias))[0],
+      context.HelperFindBySystemIdtf(firstConstantNode));
 }
 
 TEST_F(TemplateSearchManagerTest, SearchWithoutContent_EmptyLinkTestCase)
@@ -149,12 +163,16 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_EmptyLinkTestCase)
   inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
   Replacements searchResults;
-  std::set<std::string> varNames;
-  templateSearcher.getVarNames(searchTemplateAddr, varNames);
-  templateSearcher.searchTemplate(searchTemplateAddr, templateParams, varNames, searchResults);
+  ScAddrHashSet variables;
+  templateSearcher.getVariables(searchTemplateAddr, variables);
+  templateSearcher.searchTemplate(searchTemplateAddr, templateParams, variables, searchResults);
 
-  EXPECT_EQ(searchResults.size(), 1u);
-  EXPECT_EQ(searchResults.at(searchLinkIdentifier)[0], context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
+  ScAddrVector const & vars = utils::IteratorUtils::getAllWithType(&context, searchTemplateAddr, ScType::Var);
+  ScAddrHashSet templateVars = {vars.cbegin(), vars.cend()};
+  EXPECT_EQ(searchResults.size(), templateVars.size());
+  EXPECT_EQ(
+      searchResults.at(context.HelperFindBySystemIdtf(searchLinkIdentifier))[0],
+      context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
 }
 
 TEST_F(TemplateSearchManagerTest, SearchWithContent_EmptyLinkTestCase)
@@ -171,11 +189,15 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_EmptyLinkTestCase)
   inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
   Replacements searchResults;
-  std::set<std::string> varNames;
-  templateSearcher.getVarNames(searchTemplateAddr, varNames);
-  templateSearcher.searchTemplate(searchTemplateAddr, templateParams, varNames, searchResults);
+  ScAddrHashSet variables;
+  templateSearcher.getVariables(searchTemplateAddr, variables);
+  templateSearcher.searchTemplate(searchTemplateAddr, templateParams, variables, searchResults);
 
-  EXPECT_EQ(searchResults.size(), 1u);
-  EXPECT_EQ(searchResults.at(searchLinkIdentifier)[0], context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
+  ScAddrVector const & vars = utils::IteratorUtils::getAllWithType(&context, searchTemplateAddr, ScType::Var);
+  ScAddrHashSet templateVars = {vars.cbegin(), vars.cend()};
+  EXPECT_EQ(searchResults.size(), templateVars.size());
+  EXPECT_EQ(
+      searchResults.at(context.HelperFindBySystemIdtf(searchLinkIdentifier))[0],
+      context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
 }
 }  // namespace inferenceTest
