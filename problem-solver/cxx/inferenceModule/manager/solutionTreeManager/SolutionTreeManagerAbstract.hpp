@@ -32,7 +32,7 @@ public:
   bool checkIfSolutionNodeExists(
       ScAddr const & formula,
       ScTemplateParams const & templateParams,
-      std::set<std::string> const & varNames);
+      ScAddrHashSet const & variables);
 
 protected:
   std::unique_ptr<SolutionTreeGenerator> solutionTreeGenerator;

@@ -26,9 +26,9 @@ SolutionTreeGenerator::SolutionTreeGenerator(ScMemoryContext * ms_context)
 bool SolutionTreeGenerator::addNode(
     ScAddr const & formula,
     ScTemplateParams const & templateParams,
-    std::set<std::string> const & varNames)
+    ScAddrHashSet const & variables)
 {
-  ScAddr newSolutionNode = createSolutionNode(formula, templateParams, varNames);
+  ScAddr newSolutionNode = createSolutionNode(formula, templateParams, variables);
   bool result = newSolutionNode.IsValid();
   if (result)
   {
@@ -61,29 +61,29 @@ bool SolutionTreeGenerator::addNode(
 ScAddr SolutionTreeGenerator::createSolutionNode(
     ScAddr const & formula,
     ScTemplateParams const & templateParams,
-    std::set<std::string> const & varNames)
+    ScAddrHashSet const & variables)
 {
   ScAddr const & solutionNode = ms_context->CreateNode(ScType::NodeConst);
   GenerationUtils::generateRelationBetween(ms_context, solutionNode, formula, CoreKeynodes::rrel_1);
   ScAddr const & replacementsNode = ms_context->CreateNode(ScType::NodeConst);
   GenerationUtils::generateRelationBetween(ms_context, solutionNode, replacementsNode, CoreKeynodes::rrel_2);
-  for (std::string const & varName : varNames)
+  for (ScAddr const & variable : variables)
   {
     ScAddr replacement;
-    templateParams.Get(varName, replacement);
+    templateParams.Get(variable, replacement);
     if (replacement.IsValid())
     {
       ScAddr const & pair = ms_context->CreateNode(ScType::NodeConst);
       ms_context->CreateEdge(ScType::EdgeAccessConstPosPerm, replacementsNode, pair);
-      ScAddr const & varNode = ms_context->HelperFindBySystemIdtf(varName);
       GenerationUtils::generateRelationBetween(ms_context, pair, replacement, CoreKeynodes::rrel_1);
-      GenerationUtils::generateRelationBetween(ms_context, pair, varNode, CoreKeynodes::rrel_2);
-      ms_context->CreateEdge(ScType::EdgeAccessConstPosTemp, varNode, replacement);
+      GenerationUtils::generateRelationBetween(ms_context, pair, variable, CoreKeynodes::rrel_2);
+      ms_context->CreateEdge(ScType::EdgeAccessConstPosTemp, variable, replacement);
     }
     else
       SC_THROW_EXCEPTION(
           utils::ExceptionItemNotFound,
-          "SolutionTreeGenerator: formula " << ms_context->HelperGetSystemIdtf(formula) << " has var " << varName
+          "SolutionTreeGenerator: formula " << ms_context->HelperGetSystemIdtf(formula) << " has var "
+                                            << ms_context->HelperGetSystemIdtf(variable)
                                             << " but scTemplateParams don't have replacement for this var");
   }
 

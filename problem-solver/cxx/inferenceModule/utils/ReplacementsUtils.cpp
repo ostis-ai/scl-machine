@@ -13,11 +13,11 @@ Replacements inference::ReplacementsUtils::intersectReplacements(
 {
   Replacements result;
   size_t resultSize = 0;
-  set<string> firstKeys;
+  ScAddrHashSet firstKeys;
   getKeySet(first, firstKeys);
-  set<string> secondKeys;
+  ScAddrHashSet secondKeys;
   getKeySet(second, secondKeys);
-  set<string> commonKeysSet = getCommonKeys(firstKeys, secondKeys);
+  ScAddrHashSet commonKeysSet = getCommonKeys(firstKeys, secondKeys);
   size_t firstAmountOfColumns = getColumnsAmount(first);
   size_t secondAmountOfColumns = getColumnsAmount(second);
 
@@ -31,16 +31,16 @@ Replacements inference::ReplacementsUtils::intersectReplacements(
     for (size_t columnIndexInSecond = 0; columnIndexInSecond < secondAmountOfColumns; ++columnIndexInSecond)
     {
       bool commonPartsAreIdentical = true;
-      for (string const & commonKey : commonKeysSet)
+      for (ScAddr const & commonKey : commonKeysSet)
       {
         if (first.find(commonKey)->second[columnIndexInFirst] != second.find(commonKey)->second[columnIndexInSecond])
           commonPartsAreIdentical = false;
       }
       if (commonPartsAreIdentical)
       {
-        for (string const & firstKey : firstKeys)
+        for (ScAddr const & firstKey : firstKeys)
           result[firstKey].push_back(first.find(firstKey)->second[columnIndexInFirst]);
-        for (string const & secondKey : secondKeys)
+        for (ScAddr const & secondKey : secondKeys)
         {
           if (result[secondKey].size() == resultSize)
             result[secondKey].push_back(second.find(secondKey)->second[columnIndexInSecond]);
@@ -56,11 +56,11 @@ Replacements inference::ReplacementsUtils::uniteReplacements(Replacements const 
 {
   Replacements result;
   size_t resultSize = 0;
-  set<string> firstKeys;
+  ScAddrHashSet firstKeys;
   getKeySet(first, firstKeys);
-  set<string> secondKeys;
+  ScAddrHashSet secondKeys;
   getKeySet(second, secondKeys);
-  set<string> commonKeysSet = getCommonKeys(firstKeys, secondKeys);
+  ScAddrHashSet commonKeysSet = getCommonKeys(firstKeys, secondKeys);
   size_t firstAmountOfColumns = getColumnsAmount(first);
   size_t secondAmountOfColumns = getColumnsAmount(second);
 
@@ -73,17 +73,17 @@ Replacements inference::ReplacementsUtils::uniteReplacements(Replacements const 
   {
     for (size_t columnIndexInSecond = 0; columnIndexInSecond < secondAmountOfColumns; ++columnIndexInSecond)
     {
-      for (string const & firstKey : firstKeys)
+      for (ScAddr const & firstKey : firstKeys)
         result[firstKey].push_back(first.find(firstKey)->second[columnIndexInFirst]);
-      for (string const & secondKey : secondKeys)
+      for (ScAddr const & secondKey : secondKeys)
       {
         if (result[secondKey].size() == resultSize)
           result[secondKey].push_back(second.find(secondKey)->second[columnIndexInSecond]);
       }
       ++resultSize;
-      for (string const & secondKey : secondKeys)
+      for (ScAddr const & secondKey : secondKeys)
         result[secondKey].push_back(second.find(secondKey)->second[columnIndexInSecond]);
-      for (string const & firstKey : firstKeys)
+      for (ScAddr const & firstKey : firstKeys)
       {
         if (result[firstKey].size() == resultSize)
           result[firstKey].push_back(first.find(firstKey)->second[columnIndexInFirst]);
@@ -94,16 +94,16 @@ Replacements inference::ReplacementsUtils::uniteReplacements(Replacements const 
   return result;
 }
 
-void inference::ReplacementsUtils::getKeySet(Replacements const & map, std::set<std::string> & keySet)
+void inference::ReplacementsUtils::getKeySet(Replacements const & map, ScAddrHashSet & keySet)
 {
   for (auto const & pair : map)
     keySet.insert(pair.first);
 }
 
-set<string> inference::ReplacementsUtils::getCommonKeys(set<string> const & first, set<string> const & second)
+ScAddrHashSet inference::ReplacementsUtils::getCommonKeys(ScAddrHashSet const & first, ScAddrHashSet const & second)
 {
-  set<string> result;
-  for (string const & key : first)
+  ScAddrHashSet result;
+  for (ScAddr const & key : first)
   {
     if (second.find(key) != second.end())
       result.insert(key);
@@ -116,7 +116,7 @@ Replacements inference::ReplacementsUtils::copyReplacements(Replacements const &
   Replacements result;
   for (auto const & pair : replacements)
   {
-    std::string const & key = pair.first;
+    ScAddr const & key = pair.first;
     for (ScAddr const & value : replacements.find(key)->second)
       result[key].push_back(value);
   }
@@ -132,7 +132,7 @@ vector<ScTemplateParams> inference::ReplacementsUtils::getReplacementsToScTempla
     Replacements const & replacements)
 {
   vector<ScTemplateParams> result;
-  set<string> keys;
+  ScAddrHashSet keys;
   getKeySet(replacements, keys);
   if (keys.empty())
     return result;
@@ -141,7 +141,7 @@ vector<ScTemplateParams> inference::ReplacementsUtils::getReplacementsToScTempla
   for (size_t columnIndex = 0; columnIndex < columnsAmount; ++columnIndex)
   {
     ScTemplateParams params;
-    for (string const & key : keys)
+    for (ScAddr const & key : keys)
       params.Add(key, replacements.find(key)->second[columnIndex]);
     result.push_back(params);
   }

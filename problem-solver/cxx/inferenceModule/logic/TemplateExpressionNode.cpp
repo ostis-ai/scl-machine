@@ -29,17 +29,17 @@ TemplateExpressionNode::TemplateExpressionNode(
 void TemplateExpressionNode::compute(LogicFormulaResult & result) const
 {
   Replacements replacements;
-  std::set<std::string> varNames;
-  templateSearcher->getVarNames(formula, varNames);
+  ScAddrHashSet variables;
+  templateSearcher->getVariables(formula, variables);
   // Template params should be created only if argument vector is not empty. Else search with any possible replacements
   if (!argumentVector.empty())
   {
     std::vector<ScTemplateParams> const & templateParamsVector = templateManager->createTemplateParams(formula);
-    templateSearcher->searchTemplate(formula, templateParamsVector, varNames, replacements);
+    templateSearcher->searchTemplate(formula, templateParamsVector, variables, replacements);
   }
   else
   {
-    templateSearcher->searchTemplate(formula, ScTemplateParams(), varNames, replacements);
+    templateSearcher->searchTemplate(formula, ScTemplateParams(), variables, replacements);
   }
 
   result.replacements = replacements;
@@ -54,9 +54,9 @@ LogicFormulaResult TemplateExpressionNode::find(Replacements & replacements) con
   LogicFormulaResult result;
   std::vector<ScTemplateParams> paramsVector = ReplacementsUtils::getReplacementsToScTemplateParams(replacements);
   Replacements resultReplacements;
-  std::set<std::string> varNames;
-  templateSearcher->getVarNames(formula, varNames);
-  templateSearcher->searchTemplate(formula, paramsVector, varNames, resultReplacements);
+  ScAddrHashSet variables;
+  templateSearcher->getVariables(formula, variables);
+  templateSearcher->searchTemplate(formula, paramsVector, variables, resultReplacements);
   result.replacements = resultReplacements;
   result.value = !result.replacements.empty();
 
@@ -83,9 +83,9 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
     return result;
   }
 
-  std::set<std::string> varNames;
-  ReplacementsUtils::getKeySet(replacements, varNames);
-  templateSearcher->getVarNames(formula, varNames);
+  ScAddrHashSet variables;
+  ReplacementsUtils::getKeySet(replacements, variables);
+  templateSearcher->getVariables(formula, variables);
 
   size_t count = 0;
   Replacements searchResult;
@@ -96,7 +96,7 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
 
     if (templateManager->getGenerationType() == GENERATE_UNIQUE_FORMULAS)
     {
-      templateSearcher->searchTemplate(formula, scTemplateParams, varNames, searchResult);
+      templateSearcher->searchTemplate(formula, scTemplateParams, variables, searchResult);
     }
 
     if (templateManager->getGenerationType() != GENERATE_UNIQUE_FORMULAS || searchResult.empty())
@@ -112,23 +112,24 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
         result.isGenerated = true;
         result.value = true;
         Replacements temporalReplacements;
-        for (std::string const & name : varNames)
+        for (ScAddr const & variable : variables)
         {
           ScAddrVector replacementsVector;
           ScAddr outAddr;
-          generationResult.Get(name, outAddr);
+          generationResult.Get(variable, outAddr);
           bool const generationHasVar = outAddr.IsValid();
           ScAddr outResult;
-          bool const paramsHaveVar = scTemplateParams.Get(name, outResult);
+          bool const paramsHaveVar = scTemplateParams.Get(variable, outResult);
           if (generationHasVar)
-            replacementsVector.push_back(generationResult[name]);
+            replacementsVector.push_back(generationResult[variable]);
           else if (paramsHaveVar)
             replacementsVector.push_back(outResult);
           else
             SC_THROW_EXCEPTION(
                 utils::ExceptionInvalidState,
-                "generation result and template params do not have replacement for " << name);
-          temporalReplacements[name] = replacementsVector;
+                "generation result and template params do not have replacement for "
+                    << context->HelperGetSystemIdtf(variable));
+          temporalReplacements[variable] = replacementsVector;
         }
         result.replacements = ReplacementsUtils::uniteReplacements(result.replacements, temporalReplacements);
       }

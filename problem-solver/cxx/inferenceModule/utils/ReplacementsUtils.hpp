@@ -12,7 +12,8 @@
 #include <sc-memory/sc_addr.hpp>
 #include <sc-memory/sc_template.hpp>
 
-using Replacements = std::map<std::string, ScAddrVector>;
+using Replacements = std::unordered_map<ScAddr, ScAddrVector, ScAddrHashFunc<uint32_t>>;
+using ScAddrHashSet = std::unordered_set<ScAddr, ScAddrHashFunc<uint32_t>>;
 using namespace std;
 
 namespace inference
@@ -24,10 +25,10 @@ public:
   static Replacements uniteReplacements(Replacements const & first, Replacements const & second);
   static vector<ScTemplateParams> getReplacementsToScTemplateParams(Replacements const & replacements);
   static size_t getColumnsAmount(Replacements const & replacements);
-  static void getKeySet(Replacements const & map, std::set<std::string> & keySet);
+  static void getKeySet(Replacements const & map, ScAddrHashSet & keySet);
 
 private:
-  static set<string> getCommonKeys(set<string> const & first, set<string> const & second);
+  static ScAddrHashSet getCommonKeys(ScAddrHashSet const & first, ScAddrHashSet const & second);
   static Replacements copyReplacements(Replacements const & replacements);
 };
 

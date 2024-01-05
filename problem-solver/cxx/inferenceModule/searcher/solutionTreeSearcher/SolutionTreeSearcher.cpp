@@ -11,7 +11,7 @@ SolutionTreeSearcher::SolutionTreeSearcher(ScMemoryContext * context)
 bool SolutionTreeSearcher::checkIfSolutionNodeExists(
     ScAddr const & rule,
     ScTemplateParams const & templateParams,
-    std::set<std::string> const & varNames)
+    ScAddrHashSet const & variables)
 {
   ScTemplate solutionNodeTemplate;
   ScTemplateSearchResult searchResult;
@@ -34,14 +34,13 @@ bool SolutionTreeSearcher::checkIfSolutionNodeExists(
       ScType::NodeVar >> solutions_set_alias,
       ScType::EdgeAccessVarPosPerm,
       scAgentsCommon::CoreKeynodes::rrel_2);
-  for (std::string const & varName : varNames)
+  for (ScAddr const & variable : variables)
   {
     ScAddr replacement;
-    templateParams.Get(varName, replacement);
+    templateParams.Get(variable, replacement);
     if (replacement.IsValid())
     {
-      ScAddr const & varNode = context->HelperFindBySystemIdtf(varName);
-      std::string pair_alias = replacement_for_alias + varName;
+      std::string pair_alias = replacement_for_alias + to_string(variable.Hash());
       solutionNodeTemplate.Triple(solutions_set_alias, ScType::EdgeAccessVarPosPerm, ScType::NodeVar >> pair_alias);
       solutionNodeTemplate.Quintuple(
           pair_alias,
@@ -52,15 +51,16 @@ bool SolutionTreeSearcher::checkIfSolutionNodeExists(
       solutionNodeTemplate.Quintuple(
           pair_alias,
           ScType::EdgeAccessVarPosPerm,
-          varNode,
+          variable,
           ScType::EdgeAccessVarPosPerm,
           scAgentsCommon::CoreKeynodes::rrel_2);
-      solutionNodeTemplate.Triple(varName, ScType::EdgeAccessVarPosTemp, replacement);
+      solutionNodeTemplate.Triple(variable, ScType::EdgeAccessVarPosTemp, replacement);
     }
     else
       SC_THROW_EXCEPTION(
           utils::ExceptionItemNotFound,
-          "SolutionTreeSearcher: rule " << context->HelperGetSystemIdtf(rule) << " has var " << varName
+          "SolutionTreeSearcher: rule " << context->HelperGetSystemIdtf(rule) << " has var "
+                                        << context->HelperGetSystemIdtf(variable)
                                         << " but templateParams don't have replacement for this var");
   }
   context->HelperSearchTemplate(solutionNodeTemplate, searchResult);

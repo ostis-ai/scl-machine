@@ -11,6 +11,8 @@
 
 #include <sc-memory/kpm/sc_agent.hpp>
 
+#include "utils/ReplacementsUtils.hpp"
+
 namespace inference
 {
 class SolutionTreeGenerator
@@ -20,7 +22,7 @@ public:
 
   ~SolutionTreeGenerator() = default;
 
-  bool addNode(ScAddr const & formula, ScTemplateParams const & templateParams, std::set<std::string> const & varNames);
+  bool addNode(ScAddr const & formula, ScTemplateParams const & templateParams, ScAddrHashSet const & variables);
 
   ScAddr createSolution(ScAddr const & outputStructure, bool targetAchieved);
 
@@ -28,7 +30,7 @@ private:
   ScAddr createSolutionNode(
       ScAddr const & formula,
       ScTemplateParams const & templateParams,
-      std::set<std::string> const & varNames);
+      ScAddrHashSet const & variables);
 
   ScMemoryContext * ms_context;
   ScAddr solution;

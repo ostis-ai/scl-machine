@@ -28,51 +28,40 @@ ScAddrVector TemplateSearcherAbstract::getInputStructures() const
 void TemplateSearcherAbstract::searchTemplate(
     ScAddr const & templateAddr,
     vector<ScTemplateParams> const & scTemplateParamsVector,
-    std::set<std::string> const & varNames,
+    ScAddrHashSet const & variables,
     Replacements & result)
 {
   Replacements searchResults;
-  ScAddrVector varNameReplacementValues;
+  ScAddrVector variableReplacementValues;
   ScAddr argument;
 
   for (ScTemplateParams const & scTemplateParams : scTemplateParamsVector)
   {
-    searchTemplate(templateAddr, scTemplateParams, varNames, searchResults);
-    for (std::string const & varName : varNames)
+    searchTemplate(templateAddr, scTemplateParams, variables, searchResults);
+    for (ScAddr const & variable : variables)
     {
-      if (searchResults.count(varName))
+      if (searchResults.count(variable))
       {
-        varNameReplacementValues = searchResults.at(varName);
-        if (scTemplateParams.Get(varName, argument))
+        variableReplacementValues = searchResults.at(variable);
+        if (scTemplateParams.Get(variable, argument))
         {
-          result[varName].push_back(argument);
+          result[variable].push_back(argument);
         }
-        else if (!varNameReplacementValues.empty())
+        else if (!variableReplacementValues.empty())
         {
-          result[varName] = varNameReplacementValues;
+          result[variable] = variableReplacementValues;
         }
       }
     }
   }
 }
 
-void TemplateSearcherAbstract::getVarNames(ScAddr const & formula, std::set<std::string> & varNames)
+void TemplateSearcherAbstract::getVariables(ScAddr const & formula, ScAddrHashSet & variables)
 {
   ScIterator3Ptr const & formulaVariablesIterator =
-      context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::Unknown);
-  ScAddr element;
-  std::string variableSystemIdtf;
+      context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::Var);
   while (formulaVariablesIterator->Next())
-  {
-    element = formulaVariablesIterator->Get(2);
-    // TODO(MksmOrlov): replace with ScType::Var after new memory realisation
-    if (context->GetElementType(element) == ScType::NodeVar || context->GetElementType(element) == ScType::LinkVar)
-    {
-      variableSystemIdtf = context->HelperGetSystemIdtf(element);
-      if (!variableSystemIdtf.empty())
-        varNames.insert(variableSystemIdtf);
-    }
-  }
+    variables.insert(formulaVariablesIterator->Get(2));
 }
 
 bool TemplateSearcherAbstract::isContentIdentical(

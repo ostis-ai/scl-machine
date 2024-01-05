@@ -22,8 +22,8 @@ ScAddr SolutionTreeManagerAbstract::createSolution(ScAddr const & outputStructur
 bool SolutionTreeManagerAbstract::checkIfSolutionNodeExists(
     ScAddr const & formula,
     ScTemplateParams const & templateParams,
-    std::set<std::string> const & varNames)
+    ScAddrHashSet const & variables)
 {
-  return solutionTreeSearcher->checkIfSolutionNodeExists(formula, templateParams, varNames);
+  return solutionTreeSearcher->checkIfSolutionNodeExists(formula, templateParams, variables);
 }
 }  // namespace inference

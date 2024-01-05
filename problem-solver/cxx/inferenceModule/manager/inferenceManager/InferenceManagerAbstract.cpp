@@ -110,17 +110,12 @@ void InferenceManagerAbstract::fillFormulaFixedArgumentsIdentifiers(
     ScAddr const & formula,
     ScAddr const & firstFixedArgument) const
 {
-  std::string const firstFixedArgumentIdentifier = context->HelperGetSystemIdtf(firstFixedArgument);
-  if (!firstFixedArgumentIdentifier.empty())
-  {
-    templateManager->addFixedArgumentIdentifier(firstFixedArgumentIdentifier);
-  }
+  templateManager->addFixedArgument(firstFixedArgument);
 
   // TODO(MksmOrlov): make nrel_basic_sequence oriented set processing
   size_t const maxFixedArgumentsCount = 10;
   ScAddr currentFixedArgument;
   ScAddr currentRoleRelation;
-  std::string currentFixedArgumentIdentifier;
   for (size_t i = 2; i <= maxFixedArgumentsCount; i++)
   {
     currentRoleRelation = utils::IteratorUtils::getRoleRelation(context, i);
@@ -129,11 +124,7 @@ void InferenceManagerAbstract::fillFormulaFixedArgumentsIdentifiers(
     {
       break;
     }
-    currentFixedArgumentIdentifier = context->HelperGetSystemIdtf(currentFixedArgument);
-    if (!currentFixedArgumentIdentifier.empty())
-    {
-      templateManager->addFixedArgumentIdentifier(currentFixedArgumentIdentifier);
-    }
+    templateManager->addFixedArgument(currentFixedArgument);
   }
 }
 

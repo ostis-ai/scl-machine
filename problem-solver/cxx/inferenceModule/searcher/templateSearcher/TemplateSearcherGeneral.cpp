@@ -24,7 +24,7 @@ TemplateSearcherGeneral::TemplateSearcherGeneral(ScMemoryContext * context)
 void TemplateSearcherGeneral::searchTemplate(
     ScAddr const & templateAddr,
     ScTemplateParams const & templateParams,
-    std::set<std::string> const & varNames,
+    ScAddrHashSet const & variables,
     Replacements & result)
 {
   ScTemplate searchTemplate;
@@ -39,18 +39,18 @@ void TemplateSearcherGeneral::searchTemplate(
     {
       context->HelperSmartSearchTemplate(
           searchTemplate,
-          [&templateParams, &result, &varNames](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
+          [&templateParams, &result, &variables](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
             // Add search result items to the result Replacements
-            for (std::string const & varName : varNames)
+            for (ScAddr const & variable : variables)
             {
               ScAddr argument;
-              if (item.Has(varName))
+              if (item.Has(variable))
               {
-                result[varName].push_back(item[varName]);
+                result[variable].push_back(item[variable]);
               }
-              if (templateParams.Get(varName, argument))
+              if (templateParams.Get(variable, argument))
               {
-                result[varName].push_back(argument);
+                result[variable].push_back(argument);
               }
             }
             return ScTemplateSearchRequest::STOP;
@@ -70,23 +70,23 @@ void TemplateSearcherGeneral::searchTemplateWithContent(
     Replacements & result)
 {
   std::map<std::string, std::string> linksContentMap = getTemplateLinksContent(templateAddr);
-  std::set<std::string> varNames;
-  getVarNames(templateAddr, varNames);
+  ScAddrHashSet variables;
+  getVariables(templateAddr, variables);
 
   context->HelperSmartSearchTemplate(
       searchTemplate,
-      [templateParams, &result, &varNames](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
+      [templateParams, &result, &variables](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
         // Add search result items to the result Replacements
-        for (std::string const & varName : varNames)
+        for (ScAddr const & variable : variables)
         {
           ScAddr argument;
-          if (item.Has(varName))
+          if (item.Has(variable))
           {
-            result[varName].push_back(item[varName]);
+            result[variable].push_back(item[variable]);
           }
-          if (templateParams.Get(varName, argument))
+          if (templateParams.Get(variable, argument))
           {
-            result[varName].push_back(argument);
+            result[variable].push_back(argument);
           }
         }
         return ScTemplateSearchRequest::STOP;
