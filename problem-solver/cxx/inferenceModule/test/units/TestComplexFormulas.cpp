@@ -286,7 +286,7 @@ TEST_F(InferenceComplexFormulasTest, EquivalencesNested)
 {
   ScMemoryContext context(sc_access_lvl_make_min, "testSeveralNestedEquivalences");
 
-  string const & name = TEST_FILES_DIR_PATH + "inferenceTestEquivalences.scs";
+  std::string const & name = TEST_FILES_DIR_PATH + "inferenceTestEquivalences.scs";
   struct stat buffer;
   SC_LOG_DEBUG("exists = " + to_string(stat(name.c_str(), &buffer) == 0));
 
