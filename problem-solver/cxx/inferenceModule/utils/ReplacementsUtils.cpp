@@ -116,7 +116,7 @@ Replacements inference::ReplacementsUtils::copyReplacements(Replacements const &
   Replacements result;
   for (auto const & pair : replacements)
   {
-    string const & key = pair.first;
+    std::string const & key = pair.first;
     for (ScAddr const & value : replacements.find(key)->second)
       result[key].push_back(value);
   }
