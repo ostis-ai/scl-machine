@@ -7,7 +7,10 @@
 #include "ReplacementsUtils.hpp"
 #include "sc-memory/kpm/sc_agent.hpp"
 
-Replacements inference::ReplacementsUtils::intersectReplacements(
+namespace inference
+{
+
+Replacements ReplacementsUtils::intersectReplacements(
     Replacements const & first,
     Replacements const & second)
 {
@@ -52,7 +55,7 @@ Replacements inference::ReplacementsUtils::intersectReplacements(
   return result;
 }
 
-Replacements inference::ReplacementsUtils::uniteReplacements(Replacements const & first, Replacements const & second)
+Replacements ReplacementsUtils::uniteReplacements(Replacements const & first, Replacements const & second)
 {
   Replacements result;
   size_t resultSize = 0;
@@ -94,13 +97,13 @@ Replacements inference::ReplacementsUtils::uniteReplacements(Replacements const 
   return result;
 }
 
-void inference::ReplacementsUtils::getKeySet(Replacements const & map, ScAddrHashSet & keySet)
+void ReplacementsUtils::getKeySet(Replacements const & map, ScAddrHashSet & keySet)
 {
   for (auto const & pair : map)
     keySet.insert(pair.first);
 }
 
-ScAddrHashSet inference::ReplacementsUtils::getCommonKeys(ScAddrHashSet const & first, ScAddrHashSet const & second)
+ScAddrHashSet ReplacementsUtils::getCommonKeys(ScAddrHashSet const & first, ScAddrHashSet const & second)
 {
   ScAddrHashSet result;
   for (ScAddr const & key : first)
@@ -111,7 +114,7 @@ ScAddrHashSet inference::ReplacementsUtils::getCommonKeys(ScAddrHashSet const & 
   return result;
 }
 
-Replacements inference::ReplacementsUtils::copyReplacements(Replacements const & replacements)
+Replacements ReplacementsUtils::copyReplacements(Replacements const & replacements)
 {
   Replacements result;
   for (auto const & pair : replacements)
@@ -128,7 +131,7 @@ Replacements inference::ReplacementsUtils::copyReplacements(Replacements const &
  * @param replacements to convert to vector<ScTemplateParams>
  * @return vector<ScTemplateParams> of converted replacements
  */
-vector<ScTemplateParams> inference::ReplacementsUtils::getReplacementsToScTemplateParams(
+vector<ScTemplateParams> ReplacementsUtils::getReplacementsToScTemplateParams(
     Replacements const & replacements)
 {
   vector<ScTemplateParams> result;
@@ -148,7 +151,8 @@ vector<ScTemplateParams> inference::ReplacementsUtils::getReplacementsToScTempla
   return result;
 }
 
-size_t inference::ReplacementsUtils::getColumnsAmount(Replacements const & replacements)
+size_t ReplacementsUtils::getColumnsAmount(Replacements const & replacements)
 {
   return (replacements.empty() ? 0 : replacements.begin()->second.size());
 }
+}  // namespace inference

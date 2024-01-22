@@ -13,7 +13,7 @@
 
 #include "generator/SolutionTreeGenerator.hpp"
 #include "searcher/solutionTreeSearcher/SolutionTreeSearcher.hpp"
-#include "utils/ReplacementsUtils.hpp"
+#include "utils/Types.hpp"
 
 namespace inference
 {

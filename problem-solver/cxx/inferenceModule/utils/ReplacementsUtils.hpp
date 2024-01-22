@@ -6,14 +6,11 @@
 
 #pragma once
 
-#include <map>
-#include <set>
+#include "Types.hpp"
 
 #include <sc-memory/sc_addr.hpp>
 #include <sc-memory/sc_template.hpp>
 
-using Replacements = std::unordered_map<ScAddr, ScAddrVector, ScAddrHashFunc<uint32_t>>;
-using ScAddrHashSet = std::unordered_set<ScAddr, ScAddrHashFunc<uint32_t>>;
 using namespace std;
 
 namespace inference

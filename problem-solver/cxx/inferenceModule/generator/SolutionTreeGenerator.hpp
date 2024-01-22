@@ -11,7 +11,7 @@
 
 #include <sc-memory/kpm/sc_agent.hpp>
 
-#include "utils/ReplacementsUtils.hpp"
+#include "utils/Types.hpp"
 
 namespace inference
 {

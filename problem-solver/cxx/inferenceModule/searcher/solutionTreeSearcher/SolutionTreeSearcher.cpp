@@ -15,23 +15,23 @@ bool SolutionTreeSearcher::checkIfSolutionNodeExists(
 {
   ScTemplate solutionNodeTemplate;
   ScTemplateSearchResult searchResult;
-  std::string const & solution_alias = "_solution";
-  std::string const & solution_node_alias = "_solution_node";
-  std::string const & solutions_set_alias = "_solutions_set";
-  std::string const & replacement_for_alias = "_replacement_for";
+  std::string const & solutionAlias = "_solution";
+  std::string const & solutionNodeAlias = "_solution_node";
+  std::string const & solutionsSetAlias = "_solutions_set";
+  std::string const & replacementForAlias = "_replacement_for";
   solutionNodeTemplate.Triple(
-      InferenceKeynodes::concept_solution, ScType::EdgeAccessVarPosPerm, ScType::NodeVar >> solution_alias);
-  solutionNodeTemplate.Triple(solution_alias, ScType::EdgeAccessVarPosPerm, ScType::NodeVar >> solution_node_alias);
+      InferenceKeynodes::concept_solution, ScType::EdgeAccessVarPosPerm, ScType::NodeVar >> solutionAlias);
+  solutionNodeTemplate.Triple(solutionAlias, ScType::EdgeAccessVarPosPerm, ScType::NodeVar >> solutionNodeAlias);
   solutionNodeTemplate.Quintuple(
-      solution_node_alias,
+      solutionNodeAlias,
       ScType::EdgeAccessVarPosPerm,
       rule,
       ScType::EdgeAccessVarPosPerm,
       scAgentsCommon::CoreKeynodes::rrel_1);
   solutionNodeTemplate.Quintuple(
-      solution_node_alias,
+      solutionNodeAlias,
       ScType::EdgeAccessVarPosPerm,
-      ScType::NodeVar >> solutions_set_alias,
+      ScType::NodeVar >> solutionsSetAlias,
       ScType::EdgeAccessVarPosPerm,
       scAgentsCommon::CoreKeynodes::rrel_2);
   for (ScAddr const & variable : variables)
@@ -40,16 +40,16 @@ bool SolutionTreeSearcher::checkIfSolutionNodeExists(
     templateParams.Get(variable, replacement);
     if (replacement.IsValid())
     {
-      std::string pair_alias = replacement_for_alias + to_string(variable.Hash());
-      solutionNodeTemplate.Triple(solutions_set_alias, ScType::EdgeAccessVarPosPerm, ScType::NodeVar >> pair_alias);
+      std::string const & pairAlias = replacementForAlias + std::to_string(variable.Hash());
+      solutionNodeTemplate.Triple(solutionsSetAlias, ScType::EdgeAccessVarPosPerm, ScType::NodeVar >> pairAlias);
       solutionNodeTemplate.Quintuple(
-          pair_alias,
+          pairAlias,
           ScType::EdgeAccessVarPosPerm,
           replacement,
           ScType::EdgeAccessVarPosPerm,
           scAgentsCommon::CoreKeynodes::rrel_1);
       solutionNodeTemplate.Quintuple(
-          pair_alias,
+          pairAlias,
           ScType::EdgeAccessVarPosPerm,
           variable,
           ScType::EdgeAccessVarPosPerm,
