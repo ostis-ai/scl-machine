@@ -97,14 +97,14 @@ void DirectInferenceManagerTarget::setTargetStructure(ScAddr const & otherTarget
 
 bool DirectInferenceManagerTarget::isTargetAchieved(std::vector<ScTemplateParams> const & templateParamsVector)
 {
-  std::set<std::string> varNames;
-  templateSearcher->getVarNames(targetStructure, varNames);
+  ScAddrHashSet variables;
+  templateSearcher->getVariables(targetStructure, variables);
   return std::any_of(
       templateParamsVector.cbegin(),
       templateParamsVector.cend(),
-      [this, &varNames](ScTemplateParams const & templateParams) -> bool {
+      [this, &variables](ScTemplateParams const & templateParams) -> bool {
         Replacements result;
-        templateSearcher->searchTemplate(targetStructure, templateParams, varNames, result);
+        templateSearcher->searchTemplate(targetStructure, templateParams, variables, result);
         return !result.empty();
       });
 }

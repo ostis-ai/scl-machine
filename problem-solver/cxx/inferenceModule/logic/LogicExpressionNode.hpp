@@ -6,7 +6,10 @@
 
 #pragma once
 
-#include "utils/ReplacementsUtils.hpp"
+#include "utils/Types.hpp"
+
+namespace inference
+{
 
 struct LogicFormulaResult
 {
@@ -50,3 +53,4 @@ public:
 protected:
   OperandsVector operands;
 };
+}  // namespace inference

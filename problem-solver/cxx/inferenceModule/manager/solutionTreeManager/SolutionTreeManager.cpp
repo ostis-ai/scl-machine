@@ -4,6 +4,8 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "utils/ReplacementsUtils.hpp"
+
 #include "SolutionTreeManager.hpp"
 
 namespace inference
@@ -17,11 +19,11 @@ bool SolutionTreeManager::addNode(ScAddr const & formula, Replacements const & r
 {
   std::vector<ScTemplateParams> const & templateParamsVector =
       ReplacementsUtils::getReplacementsToScTemplateParams(replacements);
-  std::set<std::string> varNames;
-  ReplacementsUtils::getKeySet(replacements, varNames);
+  ScAddrHashSet variables;
+  ReplacementsUtils::getKeySet(replacements, variables);
   bool result = true;
   for (ScTemplateParams const & templateParams : templateParamsVector)
-    result &= solutionTreeGenerator->addNode(formula, templateParams, varNames);
+    result &= solutionTreeGenerator->addNode(formula, templateParams, variables);
   return result;
 }
 

@@ -29,9 +29,9 @@ public:
 
   virtual std::vector<ScTemplateParams> createTemplateParams(ScAddr const & scTemplate) = 0;
 
-  void addFixedArgumentIdentifier(std::string const & fixedArgumentIdentifier)
+  void addFixedArgument(ScAddr const & fixedArgument)
   {
-    fixedArgumentIdentifiers.push_back(fixedArgumentIdentifier);
+    fixedArguments.push_back(fixedArgument);
   }
 
   ReplacementsUsingType getReplacementsUsingType() const
@@ -70,6 +70,6 @@ protected:
   ScAddrVector arguments;
   ReplacementsUsingType replacementsUsingType;
   GenerationType generationType;
-  std::vector<std::string> fixedArgumentIdentifiers;
+  ScAddrVector fixedArguments;
 };
 }  // namespace inference

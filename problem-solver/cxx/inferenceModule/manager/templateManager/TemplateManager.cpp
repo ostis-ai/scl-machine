@@ -21,44 +21,43 @@ TemplateManager::TemplateManager(ScMemoryContext * ms_context)
  */
 std::vector<ScTemplateParams> TemplateManager::createTemplateParams(ScAddr const & scTemplate)
 {
-  std::map<std::string, std::set<ScAddr, ScAddrLessFunc>> replacementsMultimap;
+  std::map<ScAddr, std::set<ScAddr, ScAddrLessFunc>, ScAddrLessFunc> replacementsMultimap;
   std::vector<ScTemplateParams> templateParamsVector;
 
-  ScIterator3Ptr varIterator = context->Iterator3(scTemplate, ScType::EdgeAccessConstPosPerm, ScType::NodeVar);
-  while (varIterator->Next())
+  ScIterator3Ptr variableNodeIterator = context->Iterator3(scTemplate, ScType::EdgeAccessConstPosPerm, ScType::NodeVar);
+  while (variableNodeIterator->Next())
   {
-    ScAddr var = varIterator->Get(2);
-    std::string varName = context->HelperGetSystemIdtf(var);
-    if (!replacementsMultimap[varName].empty())
+    ScAddr const & variableNode = variableNodeIterator->Get(2);
+    if (!replacementsMultimap[variableNode].empty())
     {
       continue;
     }
     ScAddr argumentOfVar;
     ScIterator5Ptr constantsIterator = context->Iterator5(
-        ScType::NodeConst, ScType::EdgeAccessVarPosPerm, var, ScType::EdgeAccessConstPosPerm, scTemplate);
+        ScType::NodeConst, ScType::EdgeAccessVarPosPerm, variableNode, ScType::EdgeAccessConstPosPerm, scTemplate);
     while (constantsIterator->Next())
     {
-      ScAddr varClass = constantsIterator->Get(0);
+      ScAddr const & varClass = constantsIterator->Get(0);
       for (ScAddr const & argument : arguments)
       {
         if (context->HelperCheckEdge(varClass, argument, ScType::EdgeAccessConstPosPerm))
-          replacementsMultimap[varName].insert(argument);
+          replacementsMultimap[variableNode].insert(argument);
       }
     }
     if (templateParamsVector.empty())
     {
-      std::set<ScAddr, ScAddrLessFunc> addresses = replacementsMultimap[varName];
-      templateParamsVector.reserve(replacementsMultimap[varName].size());
+      std::set<ScAddr, ScAddrLessFunc> addresses = replacementsMultimap[variableNode];
+      templateParamsVector.reserve(replacementsMultimap[variableNode].size());
       for (ScAddr const & address : addresses)
       {
         ScTemplateParams params;
-        params.Add(varName, address);
+        params.Add(variableNode, address);
         templateParamsVector.push_back(params);
       }
     }
     else
     {
-      std::set<ScAddr, ScAddrLessFunc> addresses = replacementsMultimap[varName];
+      std::set<ScAddr, ScAddrLessFunc> addresses = replacementsMultimap[variableNode];
       size_t amountOfAddressesForVar = addresses.size();
       size_t oldParamsSize = templateParamsVector.size();
 
@@ -75,7 +74,7 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(ScAddr const
         copy_n(templateParamsVector.begin(), oldParamsSize, back_inserter(updatedParams));
         for (size_t i = 0; i < oldParamsSize; ++i)
         {
-          updatedParams[beginOfCopy + i].Add(varName, address);
+          updatedParams[beginOfCopy + i].Add(variableNode, address);
         }
 
         beginOfCopy = endOfCopy;

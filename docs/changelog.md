@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed applying rules chain
 
 ### Changed
+- Replacements are now calculated for all variables in atomic logical formulas
 - Replace DirectInferenceManager logic with configured InferenceManagerTarget
 - Remove return logic expression result in LogicExpressionNode
 - Separate manager and searcher files to the subdirectories
