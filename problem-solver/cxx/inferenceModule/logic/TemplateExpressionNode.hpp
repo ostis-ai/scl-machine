@@ -41,9 +41,44 @@ private:
   ScMemoryContext * context;
 
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
+  std::unique_ptr<TemplateSearcherAbstract> templateSearcherInKb;
   std::shared_ptr<TemplateManagerAbstract> templateManager;
   std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager;
 
   ScAddr outputStructure;
   ScAddr formula;
+  void generateByReplacements(
+      Replacements const & replacements,
+      LogicFormulaResult & result,
+      size_t & count,
+      ScAddrHashSet const & formulaVariables,
+      Replacements & searchResult,
+      Replacements & generatedReplacements);
+
+  Replacements findInKb(Replacements const & replacements) const;
+  void generateByParams(
+      ScTemplateParams const & params,
+      ScAddrHashSet const & formulaVariables,
+      Replacements & generatedReplacements,
+      LogicFormulaResult & result,
+      size_t & count);
+  Replacements getReplacementsWithoutEdges(Replacements const & replacements) const;
+  void processTemplateParams(
+      vector<ScTemplateParams> const & paramsVector,
+      ScAddrHashSet const & formulaVariables,
+      LogicFormulaResult & result,
+      size_t & count,
+      Replacements & searchResult,
+      Replacements & generatedReplacements);
+  Replacements getSearchResultWithoutReplacementsIfNeeded() const;
+  void fillOutputStructure(
+      ScAddrHashSet const & formulaVariables,
+      Replacements const & replacements,
+      Replacements const & resultWithoutReplacements,
+      Replacements const & searchResult);
+  void addFormulaConstantsToOutputStructure();
+  void addToOutputStructure(Replacements const & replacements, ScAddrHashSet const & variables);
+  void addToOutputStructure(ScAddrHashSet const & elements);
+  void addToOutputStructure(ScTemplateResultItem const & item);
+  void addToOutputStructure(ScAddr const & element);
 };
