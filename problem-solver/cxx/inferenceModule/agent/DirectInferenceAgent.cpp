@@ -21,7 +21,7 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
     return SC_RESULT_ERROR;
 
   ScAddr actionNode = m_memoryCtx.GetEdgeTarget(edgeAddr);
-  if (!checkActionClass(m_memoryCtx, actionNode))
+  if (!checkActionClass(&m_memoryCtx, actionNode))
     return SC_RESULT_OK;
 
   SC_LOG_DEBUG("DirectInferenceAgent started");
@@ -87,9 +87,9 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
   return SC_RESULT_OK;
 }
 
-bool DirectInferenceAgent::checkActionClass(ScMemoryContext & context, ScAddr const & actionNode)
+bool DirectInferenceAgent::checkActionClass(ScMemoryContext * context, ScAddr const & actionNode)
 {
-  return context.HelperCheckEdge(
+  return context->HelperCheckEdge(
       InferenceKeynodes::action_direct_inference, actionNode, ScType::EdgeAccessConstPosPerm);
 }
 

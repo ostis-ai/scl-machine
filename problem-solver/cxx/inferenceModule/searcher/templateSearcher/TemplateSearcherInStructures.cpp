@@ -32,7 +32,7 @@ TemplateSearcherInStructures::TemplateSearcherInStructures(ScMemoryContext * con
 void TemplateSearcherInStructures::searchTemplate(
     ScAddr const & templateAddr,
     ScTemplateParams const & templateParams,
-    std::set<std::string> const & varNames,
+    ScAddrHashSet const & variables,
     Replacements & result)
 {
   searchWithoutContentResult = std::make_unique<ScTemplateSearchResult>();
@@ -48,18 +48,18 @@ void TemplateSearcherInStructures::searchTemplate(
     {
       context->HelperSmartSearchTemplate(
           searchTemplate,
-          [templateParams, &result, &varNames](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
+          [templateParams, &result, &variables](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
             // Add search result item to the answer container
-            for (std::string const & varName : varNames)
+            for (ScAddr const & variable : variables)
             {
               ScAddr argument;
-              if (item.Has(varName))
+              if (item.Has(variable))
               {
-                result[varName].push_back(item[varName]);
+                result[variable].push_back(item[variable]);
               }
-              if (templateParams.Get(varName, argument))
+              if (templateParams.Get(variable, argument))
               {
-                result[varName].push_back(argument);
+                result[variable].push_back(argument);
               }
             }
             return ScTemplateSearchRequest::STOP;
@@ -85,24 +85,24 @@ void TemplateSearcherInStructures::searchTemplateWithContent(
     ScTemplateParams const & templateParams,
     Replacements & result)
 {
-  std::set<std::string> varNames;
-  getVarNames(templateAddr, varNames);
+  ScAddrHashSet variables;
+  getVariables(templateAddr, variables);
   std::map<std::string, std::string> linksContentMap = getTemplateLinksContent(templateAddr);
 
   context->HelperSearchTemplate(
       searchTemplate,
-      [templateParams, &result, &varNames](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
+      [templateParams, &result, &variables](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
         // Add search result item to the answer container
-        for (std::string const & varName : varNames)
+        for (ScAddr const & variable : variables)
         {
           ScAddr argument;
-          if (item.Has(varName))
+          if (item.Has(variable))
           {
-            result[varName].push_back(item[varName]);
+            result[variable].push_back(item[variable]);
           }
-          if (templateParams.Get(varName, argument))
+          if (templateParams.Get(variable, argument))
           {
-            result[varName].push_back(argument);
+            result[variable].push_back(argument);
           }
         }
         return ScTemplateSearchRequest::STOP;

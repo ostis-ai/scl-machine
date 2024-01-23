@@ -27,7 +27,7 @@ public:
   void searchTemplate(
       ScAddr const & templateAddr,
       ScTemplateParams const & templateParams,
-      std::set<std::string> const & varNames,
+      ScAddrHashSet const & variables,
       Replacements & result) override;
 
   void searchTemplateWithContent(

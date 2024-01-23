@@ -30,16 +30,16 @@ public:
   virtual void searchTemplate(
       ScAddr const & templateAddr,
       ScTemplateParams const & templateParams,
-      std::set<std::string> const & varNames,
+      ScAddrHashSet const & variables,
       Replacements & result) = 0;
 
   virtual void searchTemplate(
       ScAddr const & templateAddr,
       vector<ScTemplateParams> const & scTemplateParamsVector,
-      std::set<std::string> const & varNames,
+      ScAddrHashSet const & variables,
       Replacements & result);
 
-  void getVarNames(ScAddr const & formula, std::set<std::string> & varNames);
+  void getVariables(ScAddr const & formula, ScAddrHashSet & variables);
 
   bool isContentIdentical(
       ScTemplateSearchResultItem const & item,

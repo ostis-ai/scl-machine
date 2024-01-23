@@ -18,11 +18,11 @@ TemplateManagerFixedArguments::TemplateManagerFixedArguments(ScMemoryContext * c
 std::vector<ScTemplateParams> TemplateManagerFixedArguments::createTemplateParams(ScAddr const & scTemplate)
 {
   std::vector<ScTemplateParams> templateParamsVector;
-  size_t const size = std::min(arguments.size(), fixedArgumentIdentifiers.size());
+  size_t const size = std::min(arguments.size(), fixedArguments.size());
   for (size_t i = 0; i < size; ++i)
   {
     ScTemplateParams param;
-    param.Add(fixedArgumentIdentifiers.at(i), arguments.at(i));
+    param.Add(fixedArguments.at(i), arguments.at(i));
     templateParamsVector.push_back(param);
   }
 
