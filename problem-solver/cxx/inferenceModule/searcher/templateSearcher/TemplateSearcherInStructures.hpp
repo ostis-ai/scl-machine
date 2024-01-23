@@ -37,5 +37,8 @@ public:
       Replacements & result) override;
 
   std::map<std::string, std::string> getTemplateLinksContent(ScAddr const & templateAddr) override;
+
+protected:
+  std::unique_ptr<ScAddrHashSet> contentOfAllInputStructures;
 };
 }  // namespace inference

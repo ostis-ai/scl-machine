@@ -10,8 +10,13 @@
 
 using namespace inference;
 
-TemplateSearcherAbstract::TemplateSearcherAbstract(ScMemoryContext * context)
+TemplateSearcherAbstract::TemplateSearcherAbstract(
+    ScMemoryContext * context,
+    ReplacementsUsingType replacementsUsingType,
+    OutputStructureFillingType outputStructureFillingType)
   : context(context)
+  , replacementsUsingType(replacementsUsingType)
+  , outputStructureFillingType(outputStructureFillingType)
 {
 }
 
@@ -62,6 +67,14 @@ void TemplateSearcherAbstract::getVariables(ScAddr const & formula, ScAddrHashSe
       context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::Var);
   while (formulaVariablesIterator->Next())
     variables.insert(formulaVariablesIterator->Get(2));
+}
+
+void TemplateSearcherAbstract::getConstants(ScAddr const & formula, ScAddrHashSet & constants)
+{
+  ScIterator3Ptr const & formulaConstantsIterator =
+      context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::Const);
+  while (formulaConstantsIterator->Next())
+    constants.insert(formulaConstantsIterator->Get(2));
 }
 
 bool TemplateSearcherAbstract::isContentIdentical(
