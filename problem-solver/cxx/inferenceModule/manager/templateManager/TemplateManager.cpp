@@ -48,6 +48,7 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(ScAddr const
     {
       std::set<ScAddr, ScAddrLessFunc> addresses = replacementsMultimap[variableNode];
       templateParamsVector.reserve(replacementsMultimap[variableNode].size());
+
       for (ScAddr const & address : addresses)
       {
         ScTemplateParams params;
