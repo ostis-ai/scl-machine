@@ -141,5 +141,6 @@ void InferenceManagerAbstract::resetTemplateManager(std::shared_ptr<TemplateMana
   otherTemplateManager->setArguments(templateManager->getArguments());
   otherTemplateManager->setGenerationType(templateManager->getGenerationType());
   otherTemplateManager->setReplacementsUsingType(templateManager->getReplacementsUsingType());
+  otherTemplateManager->setFillingType(templateManager->getFillingType());
   templateManager = std::move(otherTemplateManager);
 }

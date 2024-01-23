@@ -32,9 +32,8 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(ScAddr const
     {
       continue;
     }
-    ScAddr argumentOfVar;
     ScIterator5Ptr constantsIterator = context->Iterator5(
-        ScType::NodeConst, ScType::EdgeAccessVarPosPerm, variableNode, ScType::EdgeAccessConstPosPerm, scTemplate);
+        ScType::NodeConstClass, ScType::EdgeAccessVarPosPerm, variableNode, ScType::EdgeAccessConstPosPerm, scTemplate);
     while (constantsIterator->Next())
     {
       ScAddr const & varClass = constantsIterator->Get(0);
