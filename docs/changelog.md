@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Direct inference manager was removed. To create DirectInferenceManagerTarget use `InferenceManagerFactory::constructDirectInferenceManagerTarget` with config {GENERATE_ALL_FORMULAS, ALL, TREE_ONLY_OUTPUT_STRUCTURE}
 
 ### Added
+- Template searcher abstract with new implementation: TemplateSearcherOnlyAccessEdgesInStructures
 - Inference flow config to control generation unique formulas, only first formula and solution tree
 - Solution tree manager abstract with new implementation: SolutionTreeManagerEmpty
 - Template manager abstract with new implementation: TemplateManagerFixedArguments
@@ -38,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed applying rules chain
 
 ### Changed
+- Replacements operations use hashes to improve performance
 - Replacements are now calculated for all variables in atomic logical formulas
 - Replace DirectInferenceManager logic with configured InferenceManagerTarget
 - Remove return logic expression result in LogicExpressionNode
