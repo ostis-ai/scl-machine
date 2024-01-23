@@ -10,6 +10,7 @@
 #include "sc-agents-common/utils/IteratorUtils.hpp"
 
 #include "searcher/templateSearcher/TemplateSearcherGeneral.hpp"
+#include "searcher/templateSearcher/TemplateSearcherOnlyAccessEdgesInStructures.hpp"
 #include "keynodes/InferenceKeynodes.hpp"
 #include "utils/ReplacementsUtils.hpp"
 
@@ -199,5 +200,37 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_EmptyLinkTestCase)
   EXPECT_EQ(
       searchResults.at(context.HelperFindBySystemIdtf(searchLinkIdentifier))[0],
       context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
+}
+
+TEST_F(TemplateSearchManagerTest, SearchWithExistedConstructionsTest)
+{
+  std::string structure1 = "test_structure_1";
+  std::string structure2 = "test_structure_2";
+  std::string structure3 = "test_structure_3";
+
+  ScMemoryContext & context = *m_ctx;
+
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchWithExistedConstructionsStructure.scs");
+  initialize();
+
+  ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
+  ScAddrVector templateVars = utils::IteratorUtils::getAllWithType(&context, searchTemplateAddr, ScType::Var);
+  ScAddr structure_1 = context.HelperFindBySystemIdtf(structure1);
+  ScAddr structure_2 = context.HelperFindBySystemIdtf(structure2);
+  ScAddr structure_3 = context.HelperFindBySystemIdtf(structure3);
+
+  std::unique_ptr<inference::TemplateSearcherAbstract> templateSearcher =
+      std::make_unique<inference::TemplateSearcherOnlyAccessEdgesInStructures>(
+        &context);
+  templateSearcher->setInputStructures({structure_1, structure_2, structure_3});
+  templateSearcher->setOutputStructureFillingType(SEARCHED_AND_GENERATED);
+  inference::Replacements searchResults;
+  templateSearcher->searchTemplate(
+      searchTemplateAddr,
+      std::vector<ScTemplateParams>{{}},
+      {templateVars.cbegin(), templateVars.cend()},
+      searchResults);
+
+  EXPECT_EQ(searchResults.size(), templateVars.size());
 }
 }  // namespace inferenceTest
