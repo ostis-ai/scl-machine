@@ -22,13 +22,13 @@ bool SolutionTreeSearcher::checkIfSolutionNodeExists(
   solutionNodeTemplate.Triple(
       InferenceKeynodes::concept_solution, ScType::EdgeAccessVarPosPerm, ScType::NodeVar >> solution_alias);
   solutionNodeTemplate.Triple(solution_alias, ScType::EdgeAccessVarPosPerm, ScType::NodeVar >> solution_node_alias);
-  solutionNodeTemplate.TripleWithRelation(
+  solutionNodeTemplate.Quintuple(
       solution_node_alias,
       ScType::EdgeAccessVarPosPerm,
       rule,
       ScType::EdgeAccessVarPosPerm,
       scAgentsCommon::CoreKeynodes::rrel_1);
-  solutionNodeTemplate.TripleWithRelation(
+  solutionNodeTemplate.Quintuple(
       solution_node_alias,
       ScType::EdgeAccessVarPosPerm,
       ScType::NodeVar >> solutions_set_alias,
@@ -43,13 +43,13 @@ bool SolutionTreeSearcher::checkIfSolutionNodeExists(
       ScAddr const & varNode = context->HelperFindBySystemIdtf(varName);
       std::string pair_alias = replacement_for_alias + varName;
       solutionNodeTemplate.Triple(solutions_set_alias, ScType::EdgeAccessVarPosPerm, ScType::NodeVar >> pair_alias);
-      solutionNodeTemplate.TripleWithRelation(
+      solutionNodeTemplate.Quintuple(
           pair_alias,
           ScType::EdgeAccessVarPosPerm,
           replacement,
           ScType::EdgeAccessVarPosPerm,
           scAgentsCommon::CoreKeynodes::rrel_1);
-      solutionNodeTemplate.TripleWithRelation(
+      solutionNodeTemplate.Quintuple(
           pair_alias,
           ScType::EdgeAccessVarPosPerm,
           varNode,
