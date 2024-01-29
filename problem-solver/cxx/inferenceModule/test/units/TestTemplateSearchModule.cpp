@@ -232,5 +232,34 @@ TEST_F(TemplateSearchManagerTest, SearchWithExistedConstructionsTest)
       searchResults);
 
   EXPECT_EQ(searchResults.size(), templateVars.size());
+  EXPECT_EQ(inference::ReplacementsUtils::getColumnsAmount(searchResults), 1u);
+}
+
+TEST_F(TemplateSearchManagerTest, SearchWithoutAccessEdgesTest)
+{
+  ScMemoryContext & context = *m_ctx;
+
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchStructuresWithoutAccessEdges.scs");
+  initialize();
+
+  ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
+  ScAddrVector templateVars = utils::IteratorUtils::getAllWithType(&context, searchTemplateAddr, ScType::Var);
+
+  std::unique_ptr<inference::TemplateSearcherAbstract> templateSearcher =
+      std::make_unique<inference::TemplateSearcherOnlyAccessEdgesInStructures>(
+        &context);
+  // input structures are empty because search template does not have access edges
+  templateSearcher->setInputStructures({});
+  templateSearcher->setOutputStructureFillingType(SEARCHED_AND_GENERATED);
+  templateSearcher->setReplacementsUsingType(REPLACEMENTS_ALL);
+  inference::Replacements searchResults;
+  templateSearcher->searchTemplate(
+      searchTemplateAddr,
+      std::vector<ScTemplateParams>{{}},
+      {templateVars.cbegin(), templateVars.cend()},
+      searchResults);
+
+  EXPECT_EQ(searchResults.size(), templateVars.size());
+  EXPECT_EQ(inference::ReplacementsUtils::getColumnsAmount(searchResults), 1u);
 }
 }  // namespace inferenceTest
