@@ -14,9 +14,6 @@ Replacements ReplacementsUtils::intersectReplacements(
     Replacements const & first,
     Replacements const & second)
 {
-  SC_LOG_DEBUG(
-      "intersecting " << first.size() << "x" << getColumnsAmount(first) << " and " << second.size() << "x"
-                      << getColumnsAmount(second));
   Replacements result;
   std::vector<std::pair<size_t, size_t>> firstSecondPairs;
   ScAddrHashSet firstKeys;
@@ -33,7 +30,6 @@ Replacements ReplacementsUtils::intersectReplacements(
 
   ScAddrHashSet commonKeysSet = getCommonKeys(firstKeys, secondKeys);
 
-  
   ReplacementsHashes firstHashes = calculateHashesForCommonKeys(first, commonKeysSet);
   ReplacementsHashes secondHashes = calculateHashesForCommonKeys(second, commonKeysSet);
   for (auto const & firstHashPair : firstHashes)
@@ -79,15 +75,11 @@ Replacements ReplacementsUtils::intersectReplacements(
     }
   }
   removeDuplicateColumns(result);
-  SC_LOG_DEBUG("returning intersected " << result.size() << "x" << getColumnsAmount(result));
   return result;
 }
 
 Replacements ReplacementsUtils::subtractReplacements(Replacements const & first, Replacements const & second)
 {
-  SC_LOG_DEBUG(
-      "subtracting " << first.size() << "x" << getColumnsAmount(first) << " and " << second.size() << "x"
-                     << getColumnsAmount(second));
   Replacements result;
   ScAddrHashSet firstKeys;
   getKeySet(first, firstKeys);
@@ -148,7 +140,6 @@ Replacements ReplacementsUtils::subtractReplacements(Replacements const & first,
       result[firstKey].push_back(first.find(firstKey)->second[firstColumn]);
   }
   removeDuplicateColumns(result);
-  SC_LOG_DEBUG("returning subtracted " << result.size() << "x" << getColumnsAmount(result));
   return result;
 }
 
@@ -256,7 +247,6 @@ size_t ReplacementsUtils::getColumnsAmount(Replacements const & replacements)
 
 void ReplacementsUtils::removeDuplicateColumns(Replacements & replacements)
 {
-  SC_LOG_DEBUG("ReplacementsUtils::removeDuplicateColumns for " << getColumnsAmount(replacements) << " columns");
   ScAddrHashSet keys;
   getKeySet(replacements, keys);
   if (keys.empty())
@@ -299,8 +289,6 @@ void ReplacementsUtils::removeDuplicateColumns(Replacements & replacements)
       replacementValues.erase(replacementValues.begin() + static_cast<long>(*columnToRemove));
     }
   }
-
-  SC_LOG_DEBUG("ReplacementsUtils::removeDuplicateColumns finish with " << getColumnsAmount(replacements) << " columns");
 }
 
 ReplacementsHashes ReplacementsUtils::calculateHashesForCommonKeys(
