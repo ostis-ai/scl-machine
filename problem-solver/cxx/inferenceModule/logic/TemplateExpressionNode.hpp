@@ -41,7 +41,7 @@ private:
   ScMemoryContext * context;
 
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
-  std::unique_ptr<TemplateSearcherAbstract> templateSearcherInKb;
+  std::unique_ptr<TemplateSearcherAbstract> templateSearcherGeneral;
   std::shared_ptr<TemplateManagerAbstract> templateManager;
   std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager;
 
@@ -55,7 +55,6 @@ private:
       Replacements & searchResult,
       Replacements & generatedReplacements);
 
-  Replacements findInKb(Replacements const & replacements) const;
   void generateByParams(
       ScTemplateParams const & params,
       ScAddrHashSet const & formulaVariables,

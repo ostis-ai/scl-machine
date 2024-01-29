@@ -26,26 +26,27 @@ TemplateExpressionNode::TemplateExpressionNode(
   , outputStructure(outputStructure)
   , formula(formula)
 {
-  this->templateSearcherInKb = std::make_unique<TemplateSearcherGeneral>(context);
-  this->templateSearcherInKb->setReplacementsUsingType(this->templateSearcher->getReplacementsUsingType());
-  this->templateSearcherInKb->setOutputStructureFillingType(this->templateSearcher->getOutputStructureFillingType());
+  this->templateSearcherGeneral = std::make_unique<TemplateSearcherGeneral>(context);
+  this->templateSearcherGeneral->setReplacementsUsingType(this->templateSearcher->getReplacementsUsingType());
+  this->templateSearcherGeneral->setOutputStructureFillingType(this->templateSearcher->getOutputStructureFillingType());
 }
 
 void TemplateExpressionNode::compute(LogicFormulaResult & result) const
 {
+  SC_LOG_DEBUG(
+      "TemplateExpressionNode: compute for " << (argumentVector.empty() ? "empty" : to_string(argumentVector.size()))
+                                             << " arguments");
   Replacements replacements;
   ScAddrHashSet variables;
   templateSearcher->getVariables(formula, variables);
   // Template params should be created only if argument vector is not empty. Else search with any possible replacements
   if (!argumentVector.empty())
   {
-    SC_LOG_DEBUG("TemplateExpressionNode: compute for " << argumentVector.size() << " arguments");
     std::vector<ScTemplateParams> const & templateParamsVector = templateManager->createTemplateParams(formula);
     templateSearcher->searchTemplate(formula, templateParamsVector, variables, replacements);
   }
   else
   {
-    SC_LOG_DEBUG("TemplateExpressionNode: compute for empty arguments");
     templateSearcher->searchTemplate(formula, ScTemplateParams(), variables, replacements);
   }
 
@@ -64,7 +65,9 @@ LogicFormulaResult TemplateExpressionNode::find(Replacements & replacements) con
   Replacements resultReplacements;
   ScAddrHashSet variables;
   templateSearcher->getVariables(formula, variables);
-  SC_LOG_DEBUG("TemplateExpressionNode: call search for " << paramsVector.size() << " params");
+  SC_LOG_DEBUG(
+      "TemplateExpressionNode: call search for " << (paramsVector.empty() ? "empty" : to_string(paramsVector.size()))
+                                                 << " params");
   templateSearcher->searchTemplate(formula, paramsVector, variables, resultReplacements);
   result.replacements = resultReplacements;
   result.value = !result.replacements.empty();
@@ -103,24 +106,30 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
 
   ScAddrHashSet formulaVariables;
   templateSearcher->getVariables(formula, formulaVariables);
-  Replacements resultWithoutReplacements = getSearchResultWithoutReplacementsIfNeeded();
+  // existingFormulaReplacements stores all replacements for atomic logical formula searched with
+  // TemplateSearcherGeneral if condition in getSearchResultWithoutReplacementsIfNeeded() is true
+  Replacements const & existingFormulaReplacements = getSearchResultWithoutReplacementsIfNeeded();
 
   size_t count = 0;
   Replacements searchResult;
   Replacements generatedReplacements;
   if (templateManager->getGenerationType() == GENERATE_UNIQUE_FORMULAS)
   {
+    // replacementsNotInKb stores all replacements from passed to TemplateExpressionNode::generate parameter that don't
+    // have corresponding columns in existingFormulaReplacements
     Replacements const & replacementsNotInKb =
-        ReplacementsUtils::subtractReplacements(replacements, resultWithoutReplacements);
+        ReplacementsUtils::subtractReplacements(replacements, existingFormulaReplacements);
+    // this generation is called with first parameter being replacementsNotInKb because there is no need to generate
+    // atomic logical formula for those replacements found and stored in existingFormulaReplacements
     generateByReplacements(replacementsNotInKb, result, count, formulaVariables, searchResult, generatedReplacements);
   }
   else
     generateByReplacements(replacements, result, count, formulaVariables, searchResult, generatedReplacements);
 
-  fillOutputStructure(formulaVariables, replacements, resultWithoutReplacements, searchResult);
+  fillOutputStructure(formulaVariables, replacements, existingFormulaReplacements, searchResult);
 
   result.replacements = ReplacementsUtils::uniteReplacements(
-      ReplacementsUtils::uniteReplacements(searchResult, resultWithoutReplacements), generatedReplacements);
+      ReplacementsUtils::uniteReplacements(searchResult, existingFormulaReplacements), generatedReplacements);
 
   SC_LOG_DEBUG(
       "Atomic logical formula " << context->HelperGetSystemIdtf(formula) << " is generated " << count << " times");
@@ -128,36 +137,21 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
   return result;
 }
 
+/**
+ * @brief If template searcher was configured to search without replacements then search atomic logical formula
+ * replacements in entire knowledge base without any additional conditions
+ * @return Empty replacements or all replacements for atomic logical formula
+ */
 Replacements TemplateExpressionNode::getSearchResultWithoutReplacementsIfNeeded() const
 {
   Replacements resultWithoutReplacements;
   if (templateSearcher->getAtomicLogicalFormulaSearchBeforeGenerationType() == SEARCH_WITHOUT_REPLACEMENTS)
   {
-    Replacements fakeReplacements;
-    ScAddr const & tempVariable = context->CreateNode(ScType::NodeVar);
-    ScAddr const & tempConstant = context->CreateNode(ScType::NodeConstClass);
-    fakeReplacements[tempVariable].push_back(tempConstant);
-    resultWithoutReplacements = findInKb(fakeReplacements);
-    context->EraseElement(tempVariable);
-    context->EraseElement(tempConstant);
+    ScAddrHashSet variables;
+    templateSearcherGeneral->getVariables(formula, variables);
+    templateSearcherGeneral->searchTemplate(formula, ScTemplateParams(), variables, resultWithoutReplacements);
   }
   return resultWithoutReplacements;
-}
-
-Replacements TemplateExpressionNode::findInKb(Replacements const & replacements) const
-{
-  std::vector<ScTemplateParams> paramsVector =
-      ReplacementsUtils::getReplacementsToScTemplateParams(getReplacementsWithoutEdges(replacements));
-  Replacements resultReplacements;
-  ScAddrHashSet variables;
-  templateSearcherInKb->getVariables(formula, variables);
-  SC_LOG_DEBUG("TemplateExpressionNode: call findInKb for " << paramsVector.size() << " params");
-  templateSearcherInKb->searchTemplate(formula, paramsVector, variables, resultReplacements);
-
-  std::string const idtf = context->HelperGetSystemIdtf(formula);
-  SC_LOG_DEBUG("findInKb Statement " << idtf << (!resultReplacements.empty() ? " true" : " false"));
-
-  return resultReplacements;
 }
 
 void TemplateExpressionNode::generateByReplacements(
@@ -187,7 +181,7 @@ void TemplateExpressionNode::processTemplateParams(
     if (templateManager->getReplacementsUsingType() == REPLACEMENTS_FIRST && result.isGenerated)
       return;
     if (templateManager->getGenerationType() == GENERATE_UNIQUE_FORMULAS)
-      templateSearcherInKb->searchTemplate(formula, params, formulaVariables, searchResult);
+      templateSearcherGeneral->searchTemplate(formula, params, formulaVariables, searchResult);
     if (templateManager->getGenerationType() != GENERATE_UNIQUE_FORMULAS || searchResult.empty())
       generateByParams(params, formulaVariables, generatedReplacements, result, count);
   }
@@ -235,11 +229,11 @@ void TemplateExpressionNode::fillOutputStructure(
   {
     if (ReplacementsUtils::getColumnsAmount(resultWithoutReplacements) > 0)
     {
-      Replacements const & alreadyExistedReplacements =
+      Replacements const & alreadyExistedBeforeGenerationReplacements =
           ReplacementsUtils::intersectReplacements(replacements, resultWithoutReplacements);
-      if (ReplacementsUtils::getColumnsAmount(alreadyExistedReplacements) > 0)
+      if (ReplacementsUtils::getColumnsAmount(alreadyExistedBeforeGenerationReplacements) > 0)
       {
-        addToOutputStructure(alreadyExistedReplacements, formulaVariables);
+        addToOutputStructure(alreadyExistedBeforeGenerationReplacements, formulaVariables);
         addFormulaConstantsToOutputStructure();
       }
     }
