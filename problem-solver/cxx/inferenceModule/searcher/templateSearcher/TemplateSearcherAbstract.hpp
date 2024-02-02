@@ -88,13 +88,6 @@ public:
   }
 
 protected:
-  virtual void searchTemplateWithContent(
-      ScTemplate const & searchTemplate,
-      ScAddr const & templateAddr,
-      ScTemplateParams const & templateParams,
-      Replacements & result) = 0;
-
-  virtual std::map<std::string, std::string> getTemplateLinksContent(ScAddr const & templateAddr) = 0;
 
   ScMemoryContext * context;
   std::unique_ptr<ScTemplateSearchResult> searchWithoutContentResult;
@@ -102,5 +95,14 @@ protected:
   ReplacementsUsingType replacementsUsingType;
   OutputStructureFillingType outputStructureFillingType;
   AtomicLogicalFormulaSearchBeforeGenerationType atomicLogicalFormulaSearchBeforeGenerationType;
+
+private:
+  virtual void searchTemplateWithContent(
+      ScTemplate const & searchTemplate,
+      ScAddr const & templateAddr,
+      ScTemplateParams const & templateParams,
+      Replacements & result) = 0;
+
+  virtual std::map<std::string, std::string> getTemplateLinksContent(ScAddr const & templateAddr) = 0;
 };
 }  // namespace inference
