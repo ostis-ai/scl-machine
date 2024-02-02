@@ -72,12 +72,12 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_SingleResultTestCase)
 {
   std::string correctResultLinkIdentifier = "correct_result_link";
   std::string searchLinkIdentifier = "search_link";
-  std::string node_alias = "_node";
-  std::string first_constant_node = "first_constant_node";
+  std::string nodeAlias = "_node";
+  std::string firstConstantNode = "first_constant_node";
 
   ScMemoryContext & context = *m_ctx;
 
-  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchWithContentSingleResultTestStucture.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchWithContentSingleResultTestStructure.scs");
   initialize();
 
   ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
@@ -95,8 +95,42 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_SingleResultTestCase)
       searchResults.at(context.HelperFindBySystemIdtf(searchLinkIdentifier))[0],
       context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
   EXPECT_EQ(
-      searchResults.at(context.HelperFindBySystemIdtf(node_alias))[0],
-      context.HelperFindBySystemIdtf(first_constant_node));
+      searchResults.at(context.HelperFindBySystemIdtf(nodeAlias))[0],
+      context.HelperFindBySystemIdtf(firstConstantNode));
+}
+
+TEST_F(TemplateSearchManagerTest, SearchInMultipleStructuresWithContent_SingleResultTestCase)
+{
+  std::string correctResultLinkIdentifier = "correct_result_link";
+  std::string searchLinkIdentifier = "search_link";
+  std::string nodeAlias = "_node";
+  std::string firstConstantNode = "first_constant_node";
+
+  ScMemoryContext & context = *m_ctx;
+
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchWithContentSingleResultTestStructure.scs");
+  initialize();
+
+  ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
+  inference::TemplateSearcherInStructures templateSearcher(&context);
+  ScTemplateParams templateParams;
+  inference::Replacements searchResults;
+  inference::ScAddrHashSet variables;
+  ScAddr const & inputStructure1 = context.HelperFindBySystemIdtf("input_structure_1");
+  ScAddr const & inputStructure2 = context.HelperFindBySystemIdtf("input_structure_2");
+  templateSearcher.setInputStructures({inputStructure1, inputStructure2});
+  templateSearcher.getVariables(searchTemplateAddr, variables);
+  templateSearcher.searchTemplate(searchTemplateAddr, templateParams, variables, searchResults);
+
+  ScAddrVector const & vars = utils::IteratorUtils::getAllWithType(&context, searchTemplateAddr, ScType::Var);
+  inference::ScAddrHashSet templateVars = {vars.cbegin(), vars.cend()};
+  EXPECT_EQ(searchResults.size(), templateVars.size());
+  EXPECT_EQ(
+      searchResults.at(context.HelperFindBySystemIdtf(searchLinkIdentifier))[0],
+      context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
+  EXPECT_EQ(
+      searchResults.at(context.HelperFindBySystemIdtf(nodeAlias))[0],
+      context.HelperFindBySystemIdtf(firstConstantNode));
 }
 
 TEST_F(TemplateSearchManagerTest, SearchWithoutContent_NoStructuresTestCase)
@@ -204,9 +238,9 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_EmptyLinkTestCase)
 
 TEST_F(TemplateSearchManagerTest, SearchWithExistedConstructionsTest)
 {
-  std::string structure1 = "test_structure_1";
-  std::string structure2 = "test_structure_2";
-  std::string structure3 = "test_structure_3";
+  std::string const & structure1Identifier = "test_structure_1";
+  std::string const & structure2Identifier = "test_structure_2";
+  std::string const & structure3Identifier = "test_structure_3";
 
   ScMemoryContext & context = *m_ctx;
 
@@ -215,14 +249,14 @@ TEST_F(TemplateSearchManagerTest, SearchWithExistedConstructionsTest)
 
   ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
   ScAddrVector templateVars = utils::IteratorUtils::getAllWithType(&context, searchTemplateAddr, ScType::Var);
-  ScAddr structure_1 = context.HelperFindBySystemIdtf(structure1);
-  ScAddr structure_2 = context.HelperFindBySystemIdtf(structure2);
-  ScAddr structure_3 = context.HelperFindBySystemIdtf(structure3);
+  ScAddr const & structure1 = context.HelperFindBySystemIdtf(structure1Identifier);
+  ScAddr const & structure2 = context.HelperFindBySystemIdtf(structure2Identifier);
+  ScAddr const & structure3 = context.HelperFindBySystemIdtf(structure3Identifier);
 
   std::unique_ptr<inference::TemplateSearcherAbstract> templateSearcher =
       std::make_unique<inference::TemplateSearcherOnlyAccessEdgesInStructures>(
         &context);
-  templateSearcher->setInputStructures({structure_1, structure_2, structure_3});
+  templateSearcher->setInputStructures({structure1, structure2, structure3});
   templateSearcher->setOutputStructureFillingType(SEARCHED_AND_GENERATED);
   inference::Replacements searchResults;
   templateSearcher->searchTemplate(
