@@ -30,7 +30,20 @@ enum SolutionTreeType
 enum SearchType
 {
   SEARCH_IN_ALL_KB = 1,
-  SEARCH_IN_STRUCTURES = 2
+  SEARCH_IN_STRUCTURES = 2,
+  SEARCH_ONLY_ACCESS_EDGES_IN_STRUCTURES = 3
+};
+
+enum OutputStructureFillingType
+{
+  GENERATED_ONLY = 1,
+  SEARCHED_AND_GENERATED = 2
+};
+
+enum AtomicLogicalFormulaSearchBeforeGenerationType
+{
+  SEARCH_WITH_REPLACEMENTS = 1,
+  SEARCH_WITHOUT_REPLACEMENTS = 2
 };
 
 struct InferenceConfig
@@ -39,6 +52,8 @@ struct InferenceConfig
   ReplacementsUsingType replacementsUsingType;
   SolutionTreeType solutionTreeType;
   SearchType searchType;
+  OutputStructureFillingType fillingType;
+  AtomicLogicalFormulaSearchBeforeGenerationType atomicLogicalFormulaSearchBeforeGenerationType;
 };
 
 struct InferenceParams

@@ -6,6 +6,7 @@
 
 #include "InferenceManagerFactory.hpp"
 
+#include "searcher/templateSearcher/TemplateSearcherOnlyAccessEdgesInStructures.hpp"
 #include "searcher/templateSearcher/TemplateSearcherInStructures.hpp"
 #include "searcher/templateSearcher/TemplateSearcherGeneral.hpp"
 #include "manager/templateManager/TemplateManagerFixedArguments.hpp"
@@ -35,6 +36,7 @@ std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDire
   std::shared_ptr<TemplateManagerAbstract> templateManager = std::make_shared<TemplateManagerFixedArguments>(context);
   templateManager->setReplacementsUsingType(inferenceFlowConfig.replacementsUsingType);
   templateManager->setGenerationType(inferenceFlowConfig.generationType);
+  templateManager->setFillingType(inferenceFlowConfig.fillingType);
   strategyAll->setTemplateManager(templateManager);
 
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
@@ -46,6 +48,14 @@ std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDire
   {
     templateSearcher = std::make_shared<TemplateSearcherInStructures>(context);
   }
+  else if (inferenceFlowConfig.searchType == SEARCH_ONLY_ACCESS_EDGES_IN_STRUCTURES)
+  {
+    templateSearcher = std::make_shared<TemplateSearcherOnlyAccessEdgesInStructures>(context);
+  }
+  templateSearcher->setReplacementsUsingType(inferenceFlowConfig.replacementsUsingType);
+  templateSearcher->setOutputStructureFillingType(inferenceFlowConfig.fillingType);
+  templateSearcher->setAtomicLogicalFormulaSearchBeforeGenerationType(
+      inferenceFlowConfig.atomicLogicalFormulaSearchBeforeGenerationType);
   strategyAll->setTemplateSearcher(templateSearcher);
 
   return strategyAll;
@@ -72,6 +82,7 @@ std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDire
   std::shared_ptr<TemplateManagerAbstract> templateManager = std::make_shared<TemplateManager>(context);
   templateManager->setReplacementsUsingType(inferenceFlowConfig.replacementsUsingType);
   templateManager->setGenerationType(inferenceFlowConfig.generationType);
+  templateManager->setFillingType(inferenceFlowConfig.fillingType);
   strategyTarget->setTemplateManager(templateManager);
 
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
@@ -83,6 +94,14 @@ std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDire
   {
     templateSearcher = std::make_shared<TemplateSearcherInStructures>(context);
   }
+  else if (inferenceFlowConfig.searchType == SEARCH_ONLY_ACCESS_EDGES_IN_STRUCTURES)
+  {
+    templateSearcher = std::make_shared<TemplateSearcherOnlyAccessEdgesInStructures>(context);
+  }
+  templateSearcher->setReplacementsUsingType(inferenceFlowConfig.replacementsUsingType);
+  templateSearcher->setOutputStructureFillingType(inferenceFlowConfig.fillingType);
+  templateSearcher->setAtomicLogicalFormulaSearchBeforeGenerationType(
+      inferenceFlowConfig.atomicLogicalFormulaSearchBeforeGenerationType);
   strategyTarget->setTemplateSearcher(templateSearcher);
 
   return strategyTarget;

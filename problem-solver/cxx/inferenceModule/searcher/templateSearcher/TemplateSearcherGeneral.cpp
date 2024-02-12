@@ -39,7 +39,8 @@ void TemplateSearcherGeneral::searchTemplate(
     {
       context->HelperSmartSearchTemplate(
           searchTemplate,
-          [&templateParams, &result, &variables](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
+          [&templateParams, &result, &variables, this](
+              ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
             // Add search result items to the result Replacements
             for (ScAddr const & variable : variables)
             {
@@ -48,12 +49,15 @@ void TemplateSearcherGeneral::searchTemplate(
               {
                 result[variable].push_back(item[variable]);
               }
-              if (templateParams.Get(variable, argument))
+              else if (templateParams.Get(variable, argument))
               {
                 result[variable].push_back(argument);
               }
             }
-            return ScTemplateSearchRequest::STOP;
+            if (replacementsUsingType == ReplacementsUsingType::REPLACEMENTS_FIRST)
+              return ScTemplateSearchRequest::STOP;
+            else
+              return ScTemplateSearchRequest::CONTINUE;
           });
     }
   }

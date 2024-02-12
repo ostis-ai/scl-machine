@@ -23,6 +23,7 @@ public:
   {
     replacementsUsingType = REPLACEMENTS_ALL;
     generationType = GENERATE_ALL_FORMULAS;
+    fillingType = GENERATED_ONLY;
   }
 
   virtual ~TemplateManagerAbstract() = default;
@@ -42,6 +43,11 @@ public:
   GenerationType getGenerationType() const
   {
     return generationType;
+  }
+
+  OutputStructureFillingType getFillingType() const
+  {
+    return fillingType;
   }
 
   void setReplacementsUsingType(ReplacementsUsingType const otherReplacementsUsingType)
@@ -64,11 +70,17 @@ public:
     generationType = otherGenType;
   }
 
+  void setFillingType(OutputStructureFillingType otherFillingType)
+  {
+    fillingType = otherFillingType;
+  }
+
 protected:
   ScMemoryContext * context;
 
   ScAddrVector arguments;
   ReplacementsUsingType replacementsUsingType;
+  OutputStructureFillingType fillingType;
   GenerationType generationType;
   ScAddrVector fixedArguments;
 };

@@ -14,6 +14,8 @@
 
 #include "sc-agents-common/utils/CommonUtils.hpp"
 
+#include "inferenceConfig/InferenceConfig.hpp"
+
 #include "utils/ReplacementsUtils.hpp"
 
 namespace inference
@@ -22,7 +24,10 @@ namespace inference
 class TemplateSearcherAbstract
 {
 public:
-  explicit TemplateSearcherAbstract(ScMemoryContext * context);
+  explicit TemplateSearcherAbstract(
+      ScMemoryContext * context,
+      ReplacementsUsingType replacementsUsingType = ReplacementsUsingType::REPLACEMENTS_FIRST,
+      OutputStructureFillingType outputStructureFillingType = OutputStructureFillingType::GENERATED_ONLY);
 
   virtual ~TemplateSearcherAbstract() = default;
 
@@ -41,6 +46,8 @@ public:
 
   void getVariables(ScAddr const & formula, ScAddrHashSet & variables);
 
+  void getConstants(ScAddr const & formula, ScAddrHashSet & constants);
+
   bool isContentIdentical(
       ScTemplateSearchResultItem const & item,
       std::map<std::string, std::string> const & linksContentMap);
@@ -49,7 +56,47 @@ public:
 
   ScAddrVector getInputStructures() const;
 
+  void setReplacementsUsingType(ReplacementsUsingType const otherReplacementsUsingType)
+  {
+    replacementsUsingType = otherReplacementsUsingType;
+  }
+
+  void setOutputStructureFillingType(OutputStructureFillingType const otherOutputStructureFillingType)
+  {
+    outputStructureFillingType = otherOutputStructureFillingType;
+  }
+
+  void setAtomicLogicalFormulaSearchBeforeGenerationType(
+      AtomicLogicalFormulaSearchBeforeGenerationType const otherAtomicLogicalFormulaSearchBeforeGenerationType)
+  {
+    atomicLogicalFormulaSearchBeforeGenerationType = otherAtomicLogicalFormulaSearchBeforeGenerationType;
+  }
+
+  ReplacementsUsingType getReplacementsUsingType() const
+  {
+    return replacementsUsingType;
+  }
+
+  OutputStructureFillingType getOutputStructureFillingType() const
+  {
+    return outputStructureFillingType;
+  }
+
+  AtomicLogicalFormulaSearchBeforeGenerationType getAtomicLogicalFormulaSearchBeforeGenerationType() const
+  {
+    return atomicLogicalFormulaSearchBeforeGenerationType;
+  }
+
 protected:
+
+  ScMemoryContext * context;
+  std::unique_ptr<ScTemplateSearchResult> searchWithoutContentResult;
+  ScAddrVector inputStructures;
+  ReplacementsUsingType replacementsUsingType;
+  OutputStructureFillingType outputStructureFillingType;
+  AtomicLogicalFormulaSearchBeforeGenerationType atomicLogicalFormulaSearchBeforeGenerationType;
+
+private:
   virtual void searchTemplateWithContent(
       ScTemplate const & searchTemplate,
       ScAddr const & templateAddr,
@@ -57,9 +104,5 @@ protected:
       Replacements & result) = 0;
 
   virtual std::map<std::string, std::string> getTemplateLinksContent(ScAddr const & templateAddr) = 0;
-
-  ScMemoryContext * context;
-  std::unique_ptr<ScTemplateSearchResult> searchWithoutContentResult;
-  ScAddrVector inputStructures;
 };
 }  // namespace inference

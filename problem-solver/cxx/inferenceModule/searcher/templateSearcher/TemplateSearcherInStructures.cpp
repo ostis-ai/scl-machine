@@ -21,11 +21,12 @@ TemplateSearcherInStructures::TemplateSearcherInStructures(
     ScAddrVector const & otherInputStructures)
   : TemplateSearcherAbstract(context)
 {
+  this->contentOfAllInputStructures = std::make_unique<ScAddrHashSet>();
   inputStructures = otherInputStructures;
 }
 
 TemplateSearcherInStructures::TemplateSearcherInStructures(ScMemoryContext * context)
-  : TemplateSearcherAbstract(context)
+  : TemplateSearcherInStructures(context, {})
 {
 }
 
@@ -39,6 +40,7 @@ void TemplateSearcherInStructures::searchTemplate(
   ScTemplate searchTemplate;
   if (context->HelperBuildTemplate(searchTemplate, templateAddr, templateParams))
   {
+    prepareBeforeSearch();
     if (context->HelperCheckEdge(
             InferenceKeynodes::concept_template_with_links, templateAddr, ScType::EdgeAccessConstPosPerm))
     {
@@ -48,28 +50,29 @@ void TemplateSearcherInStructures::searchTemplate(
     {
       context->HelperSmartSearchTemplate(
           searchTemplate,
-          [templateParams, &result, &variables](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
+          [templateParams, &result, &variables, this](
+              ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
             // Add search result item to the answer container
+            ScAddr argument;
             for (ScAddr const & variable : variables)
             {
-              ScAddr argument;
               if (item.Has(variable))
               {
                 result[variable].push_back(item[variable]);
               }
-              if (templateParams.Get(variable, argument))
+              else if (templateParams.Get(variable, argument))
               {
                 result[variable].push_back(argument);
               }
             }
-            return ScTemplateSearchRequest::STOP;
+            if (replacementsUsingType == ReplacementsUsingType::REPLACEMENTS_FIRST)
+              return ScTemplateSearchRequest::STOP;
+            else
+              return ScTemplateSearchRequest::CONTINUE;
           },
           [this](ScAddr const & item) -> bool {
             // Filter result item belonging to any of the input structures
-            return std::any_of(
-                inputStructures.cbegin(), inputStructures.cend(), [&item, this](ScAddr const & structure) -> bool {
-                  return context->HelperCheckEdge(structure, item, ScType::EdgeAccessConstPosPerm);
-                });
+            return isValidElement(item);
           });
     }
   }
@@ -91,7 +94,7 @@ void TemplateSearcherInStructures::searchTemplateWithContent(
 
   context->HelperSearchTemplate(
       searchTemplate,
-      [templateParams, &result, &variables](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
+      [templateParams, &result, &variables, this](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
         // Add search result item to the answer container
         for (ScAddr const & variable : variables)
         {
@@ -105,25 +108,22 @@ void TemplateSearcherInStructures::searchTemplateWithContent(
             result[variable].push_back(argument);
           }
         }
-        return ScTemplateSearchRequest::STOP;
+        if (replacementsUsingType == ReplacementsUsingType::REPLACEMENTS_FIRST)
+          return ScTemplateSearchRequest::STOP;
+        else
+          return ScTemplateSearchRequest::CONTINUE;
       },
       [&linksContentMap, this](ScTemplateSearchResultItem const & item) -> bool {
         // Filter result item by the same content and belonging to any of the input structures
-        bool contentIdentical = isContentIdentical(item, linksContentMap);
-        bool isElementInStructures = std::any_of(
-            inputStructures.cbegin(), inputStructures.cend(), [&item, this](ScAddr const & structure) -> bool {
-              bool result = true;
-              for (size_t i = 0; i < item.Size(); i++)
-              {
-                if (!context->HelperCheckEdge(structure, item[i], ScType::EdgeAccessConstPosPerm))
-                {
-                  result = false;
-                  break;
-                }
-              }
-              return result;
-            });
-        return contentIdentical && isElementInStructures;
+        if (!isContentIdentical(item, linksContentMap))
+          return false;
+        for (size_t i = 0; i < item.Size(); i++)
+        {
+          ScAddr const & checkedElement = item[i];
+          if (isValidElement(checkedElement) == SC_FALSE)
+            return false;
+        }
+        return true;
       });
 }
 
@@ -136,10 +136,7 @@ std::map<std::string, std::string> TemplateSearcherInStructures::getTemplateLink
   {
     ScAddr const & linkAddr = linksIterator->Get(2);
     std::string stringContent;
-    if (std::any_of(
-            inputStructures.cbegin(), inputStructures.cend(), [&linkAddr, this](ScAddr const & structure) -> bool {
-              return context->HelperCheckEdge(structure, linkAddr, ScType::EdgeAccessConstPosPerm);
-            }))
+    if (isValidElement(linkAddr))
     {
       context->GetLinkContent(linkAddr, stringContent);
       linksContent.emplace(to_string(linkAddr.Hash()), stringContent);
@@ -147,4 +144,30 @@ std::map<std::string, std::string> TemplateSearcherInStructures::getTemplateLink
   }
 
   return linksContent;
+}
+
+void TemplateSearcherInStructures::prepareBeforeSearch()
+{
+  this->contentOfAllInputStructures->clear();
+  if (replacementsUsingType == REPLACEMENTS_ALL)
+  {
+    SC_LOG_DEBUG("start input structures processing");
+    for (auto const & inputStructure : inputStructures)
+    {
+      ScAddrVector const & elements = utils::IteratorUtils::getAllWithType(context, inputStructure, ScType::Unknown);
+      contentOfAllInputStructures->insert(elements.cbegin(), elements.cend());
+    }
+    SC_LOG_DEBUG(
+        "input structures processed, found " << contentOfAllInputStructures->size() << " elements, noy using them");
+  }
+}
+
+bool TemplateSearcherInStructures::isValidElement(ScAddr const & element) const
+{
+  if (replacementsUsingType == REPLACEMENTS_FIRST)
+    return std::any_of(inputStructures.cbegin(), inputStructures.cend(), [&element, this](ScAddr const &inputStructure){
+      return context->HelperCheckEdge(inputStructure, element, ScType::EdgeAccessConstPosPerm);
+    });
+  else
+    return contentOfAllInputStructures->count(element);
 }

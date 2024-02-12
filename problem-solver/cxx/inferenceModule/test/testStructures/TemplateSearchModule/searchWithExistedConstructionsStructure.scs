@@ -1,0 +1,15 @@
+sc_node_struct
+    -> test_structure_1;
+    -> test_structure_2;
+    -> test_structure_3;;
+
+test_structure_1 -> ( class_1 -> node );;
+
+test_structure_2 -> ( class_2 -> node );;
+
+test_structure_3 -> ( class_3 -> node );;
+
+search_template = [*
+	class_1 _-> _node;;
+	class_3 _-> _node;;
+*];;

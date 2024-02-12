@@ -28,7 +28,7 @@ public:
       ScAddrHashSet const & variables,
       Replacements & result) override;
 
-protected:
+private:
   void searchTemplateWithContent(
       ScTemplate const & searchTemplate,
       ScAddr const & templateAddr,

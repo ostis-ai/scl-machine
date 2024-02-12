@@ -30,6 +30,10 @@ public:
       ScAddrHashSet const & variables,
       Replacements & result) override;
 
+protected:
+  std::unique_ptr<ScAddrHashSet> contentOfAllInputStructures;
+
+private:
   void searchTemplateWithContent(
       ScTemplate const & searchTemplate,
       ScAddr const & templateAddr,
@@ -37,5 +41,9 @@ public:
       Replacements & result) override;
 
   std::map<std::string, std::string> getTemplateLinksContent(ScAddr const & templateAddr) override;
+
+  virtual void prepareBeforeSearch();
+
+  virtual bool isValidElement(ScAddr const & element) const;
 };
 }  // namespace inference
