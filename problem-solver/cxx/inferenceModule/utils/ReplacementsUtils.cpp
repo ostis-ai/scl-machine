@@ -199,7 +199,7 @@ Replacements ReplacementsUtils::uniteReplacements(Replacements const & first, Re
         std::vector<ScAddr> const sameValuesToInsert(
             firstKeys.size() > commonKeysSet.size() ? secondAmountOfColumns : 1,
             first.at(firstKey).at(columnFromFirst));
-        result[firstKey].insert(result[firstKey].cend(), sameValuesToInsert.cbegin(), sameValuesToInsert.cend());
+        result[firstKey].insert(result.at(firstKey).cend(), sameValuesToInsert.cbegin(), sameValuesToInsert.cend());
       }
       for (auto const & secondKey : secondKeys)
       {
@@ -225,7 +225,7 @@ Replacements ReplacementsUtils::uniteReplacements(Replacements const & first, Re
         std::vector<ScAddr> const sameValuesToInsert(
             secondKeys.size() > commonKeysSet.size() ? firstAmountOfColumns : 1,
             second.at(secondKey).at(columnFromSecond));
-        result[secondKey].insert(result[secondKey].cend(), sameValuesToInsert.cbegin(), sameValuesToInsert.cend());
+        result[secondKey].insert(result.at(secondKey).cend(), sameValuesToInsert.cbegin(), sameValuesToInsert.cend());
       }
       for (auto const & firstKey : firstKeys)
       {
