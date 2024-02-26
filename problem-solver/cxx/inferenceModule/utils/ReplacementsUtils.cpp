@@ -44,7 +44,7 @@ Replacements ReplacementsUtils::intersectReplacements(
         bool commonPartsAreIdentical = true;
         for (ScAddr const & commonKey : commonKeysSet)
         {
-          if (first.find(commonKey)->second[columnIndexInFirst] != second.find(commonKey)->second[columnIndexInSecond])
+          if (first.at(commonKey).at(columnIndexInFirst) != second.at(commonKey).at(columnIndexInSecond))
           {
             commonPartsAreIdentical = false;
             break;
@@ -67,11 +67,11 @@ Replacements ReplacementsUtils::intersectReplacements(
   for (auto const & firstSecondPair : firstSecondPairs)
   {
     for (ScAddr const & firstKey : firstKeys)
-      result[firstKey].push_back(first.find(firstKey)->second[firstSecondPair.first]);
+      result.at(firstKey).push_back(first.at(firstKey).at(firstSecondPair.first));
     for (ScAddr const & secondKey : secondKeys)
     {
       if (!commonKeysSet.count(secondKey))
-        result[secondKey].push_back(second.find(secondKey)->second[firstSecondPair.second]);
+        result.at(secondKey).push_back(second.at(secondKey).at(firstSecondPair.second));
     }
   }
   removeDuplicateColumns(result);
@@ -116,7 +116,7 @@ Replacements ReplacementsUtils::subtractReplacements(Replacements const & first,
         bool hasDifferentValuesForAnyKey = false;
         for (ScAddr const & commonKey : commonKeysSet)
         {
-          if (first.find(commonKey)->second[columnIndexInFirst] != second.find(commonKey)->second[columnIndexInSecond])
+          if (first.at(commonKey).at(columnIndexInFirst) != second.at(commonKey).at(columnIndexInSecond))
           {
             hasDifferentValuesForAnyKey = true;
             break;
@@ -137,7 +137,7 @@ Replacements ReplacementsUtils::subtractReplacements(Replacements const & first,
   for (auto const & firstColumn : firstColumns)
   {
     for (ScAddr const & firstKey : firstKeys)
-      result[firstKey].push_back(first.find(firstKey)->second[firstColumn]);
+      result.at(firstKey).push_back(first.at(firstKey).at(firstColumn));
   }
   removeDuplicateColumns(result);
   return result;
@@ -146,40 +146,92 @@ Replacements ReplacementsUtils::subtractReplacements(Replacements const & first,
 Replacements ReplacementsUtils::uniteReplacements(Replacements const & first, Replacements const & second)
 {
   Replacements result;
-  size_t resultSize = 0;
   ScAddrHashSet firstKeys;
   getKeySet(first, firstKeys);
   ScAddrHashSet secondKeys;
   getKeySet(second, secondKeys);
   ScAddrHashSet commonKeysSet = getCommonKeys(firstKeys, secondKeys);
   size_t firstAmountOfColumns = getColumnsAmount(first);
-  size_t secondAmountOfColumns = getColumnsAmount(second);
-
   if (firstAmountOfColumns == 0)
     return copyReplacements(second);
+  size_t secondAmountOfColumns = getColumnsAmount(second);
   if (secondAmountOfColumns == 0)
     return copyReplacements(first);
 
-  for (size_t columnIndexInFirst = 0; columnIndexInFirst < firstAmountOfColumns; ++columnIndexInFirst)
+  ReplacementsHashes const & firstHashes = calculateHashesForCommonKeys(first, commonKeysSet);
+  ReplacementsHashes const & secondHashes = calculateHashesForCommonKeys(second, commonKeysSet);
+  std::unordered_set<size_t> columnsFromSecondToSkip;
+
+  // insert into columnsFromSecondToSkip all column indices from second that are equal to at least one column from first
+  for (auto const & pairForFirst : firstHashes)
   {
-    for (size_t columnIndexInSecond = 0; columnIndexInSecond < secondAmountOfColumns; ++columnIndexInSecond)
+    std::vector<size_t> const & columnsFromFirst = pairForFirst.second;
+    std::vector<size_t> const & columnsFromSecond =
+        secondHashes.count(pairForFirst.first) ? secondHashes.at(pairForFirst.first) : std::vector<size_t>();
+    for (auto const & columnFromSecond : columnsFromSecond)
     {
-      for (ScAddr const & firstKey : firstKeys)
-        result[firstKey].push_back(first.find(firstKey)->second[columnIndexInFirst]);
-      for (ScAddr const & secondKey : secondKeys)
+      bool isColumnFromSecondIdenticalToColumnFromFirst = true;
+      for (auto const & columnFromFirst : columnsFromFirst)
       {
-        if (result[secondKey].size() == resultSize)
-          result[secondKey].push_back(second.find(secondKey)->second[columnIndexInSecond]);
+        for (auto const & commonKey : commonKeysSet)
+        {
+          if (first.at(commonKey).at(columnFromFirst) != second.at(commonKey).at(columnFromSecond))
+            isColumnFromSecondIdenticalToColumnFromFirst = false;
+          break;
+        }
+        if (!isColumnFromSecondIdenticalToColumnFromFirst)
+          break;
       }
-      ++resultSize;
-      for (ScAddr const & secondKey : secondKeys)
-        result[secondKey].push_back(second.find(secondKey)->second[columnIndexInSecond]);
-      for (ScAddr const & firstKey : firstKeys)
+      if (isColumnFromSecondIdenticalToColumnFromFirst)
+        columnsFromSecondToSkip.insert(columnFromSecond);
+    }
+  }
+
+  // make all possible combinations for each column from first with each column from second with common keys values
+  // taken from first
+  for (auto const & pairForFirst : firstHashes)
+  {
+    std::vector<size_t> const & columnsFromFirst = pairForFirst.second;
+    for (auto const & columnFromFirst : columnsFromFirst)
+    {
+      for (auto const & firstKey : firstKeys)
       {
-        if (result[firstKey].size() == resultSize)
-          result[firstKey].push_back(first.find(firstKey)->second[columnIndexInFirst]);
+        std::vector<ScAddr> const sameValuesToInsert(
+            firstKeys.size() > commonKeysSet.size() ? secondAmountOfColumns : 1,
+            first.at(firstKey).at(columnFromFirst));
+        result[firstKey].insert(result.at(firstKey).cend(), sameValuesToInsert.cbegin(), sameValuesToInsert.cend());
       }
-      ++resultSize;
+      for (auto const & secondKey : secondKeys)
+      {
+        if (!firstKeys.count(secondKey))
+          result[secondKey].insert(
+              result[secondKey].cend(), second.at(secondKey).cbegin(), second.at(secondKey).cend());
+      }
+    }
+  }
+
+  // make all possible combinations for each column from second with each column from first with common keys values
+  // taken from second, skipping those columns from second that have same values as at least one column from first for
+  // each common key
+  for (auto const & pairForSecond : secondHashes)
+  {
+    std::vector<size_t> const & columnsFromSecond = pairForSecond.second;
+    for (auto const & columnFromSecond : columnsFromSecond)
+    {
+      if (columnsFromSecondToSkip.count(columnFromSecond))
+        continue;
+      for (auto const & secondKey : secondKeys)
+      {
+        std::vector<ScAddr> const sameValuesToInsert(
+            secondKeys.size() > commonKeysSet.size() ? firstAmountOfColumns : 1,
+            second.at(secondKey).at(columnFromSecond));
+        result[secondKey].insert(result.at(secondKey).cend(), sameValuesToInsert.cbegin(), sameValuesToInsert.cend());
+      }
+      for (auto const & firstKey : firstKeys)
+      {
+        if (!secondKeys.count(firstKey))
+          result[firstKey].insert(result[firstKey].cend(), first.at(firstKey).cbegin(), first.at(firstKey).cend());
+      }
     }
   }
   removeDuplicateColumns(result);
@@ -209,7 +261,7 @@ Replacements ReplacementsUtils::copyReplacements(Replacements const & replacemen
   for (auto const & pair : replacements)
   {
     ScAddr const & key = pair.first;
-    for (ScAddr const & value : replacements.find(key)->second)
+    for (ScAddr const & value : replacements.at(key))
       result[key].push_back(value);
   }
   return result;
@@ -234,7 +286,7 @@ vector<ScTemplateParams> ReplacementsUtils::getReplacementsToScTemplateParams(
   {
     ScTemplateParams params;
     for (ScAddr const & key : keys)
-      params.Add(key, replacements.find(key)->second[columnIndex]);
+      params.Add(key, replacements.at(key).at(columnIndex));
     result.push_back(params);
   }
   return result;
@@ -261,15 +313,19 @@ void ReplacementsUtils::removeDuplicateColumns(Replacements & replacements)
     {
       for (size_t firstColumnIndex = 0; firstColumnIndex < columnsForHash.size(); ++firstColumnIndex)
       {
+        if (columnsToRemove.count(firstColumnIndex))
+          continue;
         for (auto const & key : keys)
-          column[key] = replacements.find(key)->second[columnsForHash[firstColumnIndex]];
+          column[key] = replacements.at(key).at(columnsForHash[firstColumnIndex]);
         for (size_t comparedColumnIndex = firstColumnIndex + 1; comparedColumnIndex < columnsForHash.size();
              ++comparedColumnIndex)
         {
+          if (columnsToRemove.count(comparedColumnIndex))
+            continue;
           bool columnIsUnique = false;
           for (auto const & key : keys)
           {
-            if (column[key] != replacements.find(key)->second[columnsForHash[comparedColumnIndex]])
+            if (column[key] != replacements.at(key).at(columnsForHash[comparedColumnIndex]))
             {
               columnIsUnique = true;
               break;
@@ -285,7 +341,7 @@ void ReplacementsUtils::removeDuplicateColumns(Replacements & replacements)
   {
     for (auto const & key : keys)
     {
-      ScAddrVector & replacementValues = replacements.find(key)->second;
+      ScAddrVector & replacementValues = replacements.at(key);
       replacementValues.erase(replacementValues.begin() + static_cast<long>(*columnToRemove));
     }
   }
@@ -304,7 +360,7 @@ ReplacementsHashes ReplacementsUtils::calculateHashesForCommonKeys(
     int primeInd = 0;
     size_t offsets = 0;
     for (auto const & commonKey : commonKeys)
-      offsets += replacements.find(commonKey)->second.at(columnNumber).GetRealAddr().offset *
+      offsets += replacements.at(commonKey).at(columnNumber).GetRealAddr().offset *
                  primes.at(primeInd++ % primes.size());
     replacementsHashes[offsets / commonKeysAmount].push_back(columnNumber);
   }

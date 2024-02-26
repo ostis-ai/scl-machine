@@ -99,11 +99,7 @@ void TemplateSearcherInStructures::searchTemplateWithContent(
         for (ScAddr const & variable : variables)
         {
           ScAddr argument;
-          if (item.Has(variable))
-          {
-            result[variable].push_back(item[variable]);
-          }
-          if (templateParams.Get(variable, argument))
+          if (item.Get(variable, argument) || templateParams.Get(variable, argument))
           {
             result[variable].push_back(argument);
           }
