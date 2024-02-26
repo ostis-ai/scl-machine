@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add parameters to solution tree
 
 ### Fixed
+- Agent initiation in tests
 - Clang formatter
 - Fixed template params creating with no arguments
 - Fixed applying rules chain
