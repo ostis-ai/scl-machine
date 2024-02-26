@@ -1,5 +1,5 @@
 # SCL-machine
-Inference module for [OSTIS project](https://github.com/ostis-ai/ostis-project)
+Inference module for [OSTIS Platform](https://github.com/ostis-ai/ostis-web-platform)
 
 # Installation
 ```sh
