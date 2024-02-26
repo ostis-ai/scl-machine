@@ -65,9 +65,7 @@ TEST_F(InferenceLogicTest, AllArgumentsValid)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorBefore->Next());
 
-  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
-
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
       scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
@@ -103,9 +101,7 @@ TEST_F(InferenceLogicTest, InvalidArguments)
   ScIterator3Ptr argumentClassIteratorBefore =
       context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
 
-  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
-
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
       scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully, action, ScType::EdgeAccessConstPosPerm));
 
@@ -124,9 +120,7 @@ TEST_F(InferenceLogicTest, EmptyInputStructure)
   ScAddr action = context.HelperResolveSystemIdtf("empty_input_structure_action");
   EXPECT_TRUE(action.IsValid());
 
-  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
-
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
       scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
   ScAddr answer =
@@ -150,9 +144,7 @@ TEST_F(InferenceLogicTest, EmptyRuleSet)
   ScAddr action = context.HelperResolveSystemIdtf("empty_rules_set_queue_action");
   EXPECT_TRUE(action.IsValid());
 
-  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
-
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
       scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully, action, ScType::EdgeAccessConstPosPerm));
 
@@ -171,9 +163,7 @@ TEST_F(InferenceLogicTest, EmptyRuleSetQueue)
   ScAddr action = context.HelperResolveSystemIdtf("empty_rules_set_action");
   EXPECT_TRUE(action.IsValid());
 
-  context.CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::action_direct_inference, action);
-
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME));
+  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
       scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
