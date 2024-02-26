@@ -178,7 +178,7 @@ void TemplateExpressionNode::processTemplateParams(
 {
   for (ScTemplateParams const & params : paramsVector)
   {
-    unsigned long const previousSearchSize = searchResult.size();
+    size_t const previousSearchSize = searchResult.size();
     if (templateManager->getReplacementsUsingType() == REPLACEMENTS_FIRST && result.isGenerated)
       return;
     if (templateManager->getGenerationType() == GENERATE_UNIQUE_FORMULAS)
