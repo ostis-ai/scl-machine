@@ -146,10 +146,12 @@ TEST_P(InferenceManagerBuilderTest, GenerateUnique)
   initialize();
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
+  ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
   ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
+  ScAddr const & argument2 = context.HelperResolveSystemIdtf(ARGUMENT + "2");
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
   ScAddr const & formulasSet = context.HelperResolveSystemIdtf(FORMULAS_SET);
-  InferenceParams const & inferenceParams{formulasSet, {argument}, {inputStructure1}, outputStructure};
+  InferenceParams const & inferenceParams{formulasSet, {}, {inputStructure1, inputStructure2}, outputStructure};
 
   // GenerationType = GENERATE_UNIQUE
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
@@ -167,7 +169,10 @@ TEST_P(InferenceManagerBuilderTest, GenerateUnique)
   ScAddr const & targetClass = context.HelperFindBySystemIdtf(TARGET_NODE_CLASS);
   EXPECT_TRUE(context.HelperCheckEdge(targetClass, argument, ScType::EdgeAccessConstPosPerm));
 
-  ScIterator3Ptr const & targetClassIterator = context.Iterator3(targetClass, ScType::EdgeAccessConstPosPerm, argument);
+  ScIterator3Ptr targetClassIterator = context.Iterator3(targetClass, ScType::EdgeAccessConstPosPerm, argument);
+  EXPECT_TRUE(targetClassIterator->Next());
+  EXPECT_FALSE(targetClassIterator->Next());
+  targetClassIterator = context.Iterator3(targetClass, ScType::EdgeAccessConstPosPerm, argument2);
   EXPECT_TRUE(targetClassIterator->Next());
   EXPECT_FALSE(targetClassIterator->Next());
 

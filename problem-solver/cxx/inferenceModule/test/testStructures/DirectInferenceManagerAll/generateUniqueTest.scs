@@ -39,6 +39,12 @@ input_structure1 = [*
 	fake_argument <- class_1;;
 *];;
 
+input_structure2 = [*
+	argument2 <- current_node_class;;
+	argument2 <- class_1;;
+	argument2 <- target_node_class;;
+*];;
+
 formulas_set
     -> rrel_1: { logic_rule };;
 
