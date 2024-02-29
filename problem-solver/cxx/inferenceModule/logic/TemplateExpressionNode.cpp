@@ -178,12 +178,13 @@ void TemplateExpressionNode::processTemplateParams(
 {
   for (ScTemplateParams const & params : paramsVector)
   {
-    size_t const previousSearchSize = searchResult.size();
     if (templateManager->getReplacementsUsingType() == REPLACEMENTS_FIRST && result.isGenerated)
       return;
+    size_t const previousSearchSize = ReplacementsUtils::getColumnsAmount(searchResult);
     if (templateManager->getGenerationType() == GENERATE_UNIQUE_FORMULAS)
       templateSearcherGeneral->searchTemplate(formula, params, formulaVariables, searchResult);
-    if (templateManager->getGenerationType() != GENERATE_UNIQUE_FORMULAS || searchResult.size() == previousSearchSize)
+    if (templateManager->getGenerationType() != GENERATE_UNIQUE_FORMULAS ||
+        ReplacementsUtils::getColumnsAmount(searchResult) == previousSearchSize)
       generateByParams(params, formulaVariables, generatedReplacements, result, count);
   }
 }
