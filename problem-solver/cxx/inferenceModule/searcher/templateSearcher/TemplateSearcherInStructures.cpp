@@ -153,8 +153,7 @@ void TemplateSearcherInStructures::prepareBeforeSearch()
       ScAddrVector const & elements = utils::IteratorUtils::getAllWithType(context, inputStructure, ScType::Unknown);
       contentOfAllInputStructures->insert(elements.cbegin(), elements.cend());
     }
-    SC_LOG_DEBUG(
-        "input structures processed, found " << contentOfAllInputStructures->size() << " elements, noy using them");
+    SC_LOG_DEBUG("input structures processed, found " << contentOfAllInputStructures->size() << " elements");
   }
 }
 
