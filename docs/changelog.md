@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add parameters to solution tree
 
 ### Fixed
+- Atomic logical formula generation with GENERATE_UNIQUE_FORMULAS mode
 - Agent initiation in tests
 - Clang formatter
 - Fixed template params creating with no arguments
