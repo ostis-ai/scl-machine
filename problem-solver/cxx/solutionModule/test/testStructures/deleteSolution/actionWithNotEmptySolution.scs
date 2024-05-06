@@ -1,0 +1,106 @@
+sc_node_class
+    -> target_class;
+    -> concept_solution;
+    -> action_delete_solution;;
+
+sc_node_role_relation
+    -> rrel_1;
+    -> rrel_2;;
+
+test_action_node
+    <- action_delete_solution;
+    -> rrel_1: solution;;
+
+concept_solution
+    -> solution;
+    -> solution_not_for_remove;;
+
+@variable_edge = (target_class _-> _variable);;
+
+solution
+    -> first_solution;
+    -> second_solution;
+    -> third_solution;;
+
+first_solution
+    -> rrel_1: some_rule;
+    -> rrel_2: first_substitutions;;
+
+first_substitutions
+    -> first_substitution_pair_1;
+    -> first_substitution_pair_2;;
+
+first_substitution_pair_1
+    -> rrel_1: first_element;
+    -> rrel_2: _variable;;
+_variable
+    ~> first_element;;
+
+@first_substitution_edge = (target_class -> first_element);;
+first_substitution_pair_2
+    -> rrel_1: @first_substitution_edge;
+    -> rrel_2: @variable_edge;;
+@variable_edge ~> @first_substitution_edge;;
+
+second_solution
+    -> rrel_1: some_rule;
+    -> rrel_2: second_substitutions;;
+
+second_substitutions
+    -> second_substitution_pair_1;
+    -> second_substitution_pair_2;;
+
+second_substitution_pair_1
+    -> rrel_1: second_element;
+    -> rrel_2: _variable;;
+_variable
+    ~> second_element;;
+
+@second_substitution_edge = (target_class -> second_element);;
+second_substitution_pair_2
+    -> rrel_1: @second_substitution_edge;
+    -> rrel_2: @variable_edge;;
+@variable_edge ~> @second_substitution_edge;;
+
+third_solution
+    -> rrel_1: some_rule;
+    -> rrel_2: third_substitutions;;
+
+third_substitutions
+    -> third_substitution_pair_1;
+    -> third_substitution_pair_2;;
+
+third_substitution_pair_1
+    -> rrel_1: third_element;
+    -> rrel_2: _variable;;
+_variable
+    ~> third_element;;
+
+@third_substitution_edge = (target_class -> third_element);;
+third_substitution_pair_2
+    -> rrel_1: @third_substitution_edge;
+    -> rrel_2: @variable_edge;;
+@variable_edge ~> @third_substitution_edge;;
+
+solution_not_for_remove
+    -> fourth_solution;;
+
+fourth_solution
+    -> rrel_1: some_rule;
+    -> rrel_2: fourth_substitutions;;
+
+fourth_substitutions
+    -> fourth_substitution_pair_1;
+    -> fourth_substitution_pair_2;;
+
+fourth_substitution_pair_1
+    -> rrel_1: fourth_element;
+    -> rrel_2: _variable;;
+_variable
+    ~> fourth_element;;
+
+@fourth_substitution_edge = (target_class -> fourth_element);;
+fourth_substitution_pair_2
+    -> rrel_1: @fourth_substitution_edge;
+    -> rrel_2: @variable_edge;;
+@variable_edge ~> @fourth_substitution_edge;;
