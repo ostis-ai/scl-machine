@@ -17,6 +17,7 @@ Possible tags:
   * `[dia]` - changes in direct inference agent;
   * `[expr]` - changes in logical expressions (proposition connectives);
   * `[template]` - changes in template manager;
+  * `[solution]` - changes in solution processing;
   * `[test]` - changes in tests;
   * `[review]` - commits with review fixes;
   * `[refactor]` - commits with some code refactoring;
