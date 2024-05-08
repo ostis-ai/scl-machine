@@ -1,0 +1,24 @@
+action_delete_solution
+<- sc_node_class;
+=> nrel_main_idtf:
+    [действие. удалить решение](* <- lang_ru;; *);
+    [action. delete solution](* <- lang_en;; *);
+<- actions_class;
+<- atomic_action_class;
+<= nrel_inclusion: information_action;
+<- rrel_key_sc_element:
+    ...
+    (*
+    <- explanation;;
+    <= nrel_sc_text_translation:
+        {
+        rrel_example: [Действие. удалить решение - действие по удалению дерева решения.]
+            (* <- lang_ru;;*);
+        rrel_example: [Action. delete solution is an action of deleting solution tree.]
+            (* <- lang_en;; *)
+        };;
+    <= nrel_using_constants:
+        {
+        concept_solution
+        };;
+    *);;
