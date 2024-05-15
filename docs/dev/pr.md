@@ -17,6 +17,7 @@ Possible tags:
   * `[dia]` - changes in direct inference agent;
   * `[expr]` - changes in logical expressions (proposition connectives);
   * `[template]` - changes in template manager;
+  * `[solution]` - changes in solution processing;
   * `[test]` - changes in tests;
   * `[review]` - commits with review fixes;
   * `[refactor]` - commits with some code refactoring;
@@ -26,7 +27,8 @@ Possible tags:
   * `[scripts]` - updates in the `scl-machine/scripts` files
   * `[ci]` - changes in `ci` configuration or scripts;
   * `[git]` - changes in `git` configuration;
-  * `[cmake]` - changes in `cmake` build system. 
+  * `[cmake]` - changes in `cmake` build system;
+  * `[kb]` - changes in knowledge base.
 
 Each commit in Pull request should be an atomic. Another word implement or fix one feature. For example:
 <pre>
