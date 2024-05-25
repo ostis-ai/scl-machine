@@ -61,7 +61,6 @@ private:
       Replacements & generatedReplacements,
       LogicFormulaResult & result,
       size_t & count);
-  Replacements getReplacementsWithoutEdges(Replacements const & replacements) const;
   void processTemplateParams(
       vector<ScTemplateParams> const & paramsVector,
       ScAddrHashSet const & formulaVariables,
