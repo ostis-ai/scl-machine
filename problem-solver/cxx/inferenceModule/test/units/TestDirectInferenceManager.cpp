@@ -355,4 +355,55 @@ TEST_P(InferenceManagerTest, SolutionOutputStrcuture)
   EXPECT_FALSE(solutionOutputIterator->Next());
 }
 
+TEST_P(InferenceManagerTest, conclusionContainsEdgeReplacementFromPremise)
+{
+  ScMemoryContext & context = *m_ctx;
+
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "conclusionContainsEdgeReplacementFromPremise.scs");
+  initialize();
+
+  ScAddr const & inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
+  ScAddr const & targetTemplate = context.HelperResolveSystemIdtf(TARGET_TEMPLATE);
+  ScAddrVector inputStructures{inputStructure};
+  ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
+  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  ScAddr const & set1 = context.HelperFindBySystemIdtf("set1");
+  ScAddr const & set2 = context.HelperFindBySystemIdtf("set2");
+  EXPECT_TRUE(set1.IsValid());
+  EXPECT_TRUE(set2.IsValid());
+  ScAddr const & nrelInclusion = context.HelperFindBySystemIdtf("nrel_inclusion");
+  ScAddr const & nrelSubset = context.HelperFindBySystemIdtf("nrel_subset");
+  EXPECT_TRUE(nrelInclusion.IsValid());
+  EXPECT_TRUE(nrelSubset.IsValid());
+  {
+    auto const & sets12IteratorBefore = context.Iterator3(set1, ScType::EdgeDCommonConst, set2);
+    EXPECT_TRUE(sets12IteratorBefore->Next());
+    EXPECT_TRUE(context.HelperCheckEdge(nrelInclusion, sets12IteratorBefore->Get(1), ScType::EdgeAccessConstPosPerm));
+    EXPECT_FALSE(context.HelperCheckEdge(nrelSubset, sets12IteratorBefore->Get(1), ScType::EdgeAccessConstPosPerm));
+    EXPECT_FALSE(sets12IteratorBefore->Next());
+  }
+
+  InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
+      {GENERATE_UNIQUE_FORMULAS,
+       REPLACEMENTS_ALL,
+       TREE_ONLY_OUTPUT_STRUCTURE,
+       SEARCH_IN_STRUCTURES,
+       SEARCHED_AND_GENERATED});
+  std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
+      inference::InferenceManagerFactory::constructDirectInferenceManagerTarget(&context, inferenceConfig);
+
+  InferenceParams const & inferenceParams{rulesSet, {}, inputStructures, outputStructure, targetTemplate};
+  bool result = iterationStrategy->applyInference(inferenceParams);
+
+  EXPECT_TRUE(result);
+
+  {
+    auto const & sets12IteratorAfter = context.Iterator3(set1, ScType::EdgeDCommonConst, set2);
+    EXPECT_TRUE(sets12IteratorAfter->Next());
+    EXPECT_TRUE(context.HelperCheckEdge(nrelInclusion, sets12IteratorAfter->Get(1), ScType::EdgeAccessConstPosPerm));
+    EXPECT_TRUE(context.HelperCheckEdge(nrelSubset, sets12IteratorAfter->Get(1), ScType::EdgeAccessConstPosPerm));
+    EXPECT_FALSE(sets12IteratorAfter->Next());
+  }
+}
+
 }  // namespace directInferenceManagerTest

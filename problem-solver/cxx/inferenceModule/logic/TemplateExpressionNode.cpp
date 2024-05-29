@@ -60,8 +60,7 @@ void TemplateExpressionNode::compute(LogicFormulaResult & result) const
 LogicFormulaResult TemplateExpressionNode::find(Replacements & replacements) const
 {
   LogicFormulaResult result;
-  std::vector<ScTemplateParams> paramsVector =
-      ReplacementsUtils::getReplacementsToScTemplateParams(getReplacementsWithoutEdges(replacements));
+  std::vector<ScTemplateParams> paramsVector = ReplacementsUtils::getReplacementsToScTemplateParams(replacements);
   Replacements resultReplacements;
   ScAddrHashSet variables;
   templateSearcher->getVariables(formula, variables);
@@ -77,17 +76,6 @@ LogicFormulaResult TemplateExpressionNode::find(Replacements & replacements) con
   SC_LOG_DEBUG("Find Statement " << idtf << (result.value ? " true" : " false"));
 
   return result;
-}
-
-Replacements TemplateExpressionNode::getReplacementsWithoutEdges(Replacements const & replacements) const
-{
-  ScAddrHashSet edges;
-  for (auto const & replacement : replacements)
-  {
-    if (context->GetElementType(replacement.first).IsEdge())
-      edges.insert(replacement.first);
-  }
-  return ReplacementsUtils::removeRows(replacements, edges);
 }
 
 /**
@@ -162,9 +150,8 @@ void TemplateExpressionNode::generateByReplacements(
     Replacements & searchResult,
     Replacements & generatedReplacements)
 {
-  Replacements const & replacementsWithoutEdges = getReplacementsWithoutEdges(replacements);
   std::vector<ScTemplateParams> const & paramsVector =
-      ReplacementsUtils::getReplacementsToScTemplateParams(replacementsWithoutEdges);
+      ReplacementsUtils::getReplacementsToScTemplateParams(replacements);
   processTemplateParams(paramsVector, formulaVariables, result, count, searchResult, generatedReplacements);
 }
 
