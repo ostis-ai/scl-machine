@@ -30,7 +30,7 @@ void initialize()
 
 TEST_F(FormulaClassifierTest, RuleIsImplication)
 {
-  ScMemoryContext context(sc_access_lvl_make_min, "implication_detected");
+  ScMemoryContext context;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "inferenceLogicTrueComplexRuleTest.scs");
   initialize();
@@ -57,7 +57,7 @@ TEST_F(FormulaClassifierTest, RuleIsImplication)
 
 TEST_F(FormulaClassifierTest, AtomicLogicalFormulaWithouCLass)
 {
-  ScMemoryContext context(sc_access_lvl_make_min);
+  ScMemoryContext context;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "atomicLogicalFormulaTestWithoutClass.scs");
   initialize();
