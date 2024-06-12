@@ -90,7 +90,6 @@ public:
 protected:
 
   ScMemoryContext * context;
-  std::unique_ptr<ScTemplateSearchResult> searchWithoutContentResult;
   ScAddrVector inputStructures;
   ReplacementsUsingType replacementsUsingType;
   OutputStructureFillingType outputStructureFillingType;
