@@ -144,3 +144,7 @@ void InferenceManagerAbstract::resetTemplateManager(std::shared_ptr<TemplateMana
   otherTemplateManager->setFillingType(templateManager->getFillingType());
   templateManager = std::move(otherTemplateManager);
 }
+InferenceManagerAbstract::~InferenceManagerAbstract()
+{
+  outputStructureElements.clear();
+}
