@@ -62,7 +62,9 @@ void EquivalenceExpressionNode::compute(LogicFormulaResult & result) const
   {
     SC_LOG_DEBUG("Processing formula to generate");
     auto formulaToGenerate = formulasToGenerate[0];
-    subFormulaResults.push_back(formulaToGenerate->generate(subFormulaResults[0].replacements));
+    LogicFormulaResult generationResult;
+    formulaToGenerate->generate(subFormulaResults[0].replacements, generationResult);
+    subFormulaResults.push_back(generationResult);
   }
   result.value = subFormulaResults[0].value == subFormulaResults[1].value;
   if (result.value)
@@ -91,7 +93,7 @@ void EquivalenceExpressionNode::compute(LogicFormulaResult & result) const
     operands[0]->compute(leftResult);
     if (isRightGenerated)
     {
-      rightResult = rightAtom->generate(leftResult.replacements);
+      rightAtom->generate(leftResult.replacements, rightResult);
     }
     else
     {
@@ -109,11 +111,21 @@ void EquivalenceExpressionNode::compute(LogicFormulaResult & result) const
     {
       SC_LOG_DEBUG("*** Right part shouldn't be generated");
       operands[1]->compute(rightResult);
-      leftResult = leftAtom->generate(rightResult.replacements);
+      leftAtom->generate(rightResult.replacements, leftResult);
     }
   }
 
   result.value = leftResult.value == rightResult.value;
   if (rightResult.value)
     ReplacementsUtils::intersectReplacements(leftResult.replacements, rightResult.replacements, result.replacements);
+}
+
+void EquivalenceExpressionNode::generate(Replacements & replacements, LogicFormulaResult & result)
+{
+  result = {false, false, {}};
+}
+
+ScAddr EquivalenceExpressionNode::getFormula() const
+{
+  return ScAddr::Empty;
 }

@@ -27,7 +27,7 @@ public:
   virtual ScAddr getFormula() const = 0;
   virtual ~LogicExpressionNode() = default;
 
-  virtual LogicFormulaResult generate(Replacements & replacements) = 0;
+  virtual void generate(Replacements & replacements, LogicFormulaResult & result) = 0;
 
   void setArgumentVector(ScAddrVector const & otherArgumentVector)
   {

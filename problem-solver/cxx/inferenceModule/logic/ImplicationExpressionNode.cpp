@@ -33,7 +33,8 @@ void ImplicationExpressionNode::compute(LogicFormulaResult & result) const
   premiseAtom->compute(premiseResult);
 
   // Generate conclusion using computed premise replacements
-  LogicFormulaResult conclusionResult = conclusionAtom->generate(premiseResult.replacements);
+  LogicFormulaResult conclusionResult;
+  conclusionAtom->generate(premiseResult.replacements, conclusionResult);
 
   // Implication value (a -> b) is equal to ((!a) || b)
   result.value = !premiseResult.value || conclusionResult.value;
@@ -41,4 +42,14 @@ void ImplicationExpressionNode::compute(LogicFormulaResult & result) const
   if (conclusionResult.value)
     ReplacementsUtils::intersectReplacements(
         premiseResult.replacements, conclusionResult.replacements, result.replacements);
+}
+
+void ImplicationExpressionNode::generate(Replacements & replacements, LogicFormulaResult & result)
+{
+  result = {false, false, {}};
+}
+
+ScAddr ImplicationExpressionNode::getFormula() const
+{
+  return ScAddr::Empty;
 }

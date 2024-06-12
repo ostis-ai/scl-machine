@@ -31,6 +31,11 @@ TemplateExpressionNode::TemplateExpressionNode(
   this->templateSearcherGeneral->setOutputStructureFillingType(this->templateSearcher->getOutputStructureFillingType());
 }
 
+ScAddr TemplateExpressionNode::getFormula() const
+{
+  return formula;
+}
+
 void TemplateExpressionNode::compute(LogicFormulaResult & result) const
 {
   SC_LOG_DEBUG(
@@ -80,15 +85,15 @@ LogicFormulaResult TemplateExpressionNode::find(Replacements & replacements) con
 /**
  * @brief Generate atomic logical formula using replacements
  * @param replacements variables and ScAddrs to use in generation
- * @return LogicFormulaResult{bool: value, bool: isGenerated, Replacements: replacements}
+ * @param result {bool: value, bool: isGenerated, Replacements: replacements}
  */
-LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
+void TemplateExpressionNode::generate(Replacements & replacements, LogicFormulaResult & result)
 {
-  LogicFormulaResult result;
+  result = {};
   if (ReplacementsUtils::getColumnsAmount(replacements) == 0)
   {
     SC_LOG_DEBUG("Atomic logical formula " << context->HelperGetSystemIdtf(formula) << " is not generated");
-    return result;
+    return;
   }
 
   ScAddrHashSet formulaVariables;
@@ -121,8 +126,6 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
 
   SC_LOG_DEBUG(
       "Atomic logical formula " << context->HelperGetSystemIdtf(formula) << " is generated " << count << " times");
-
-  return result;
 }
 
 /**
