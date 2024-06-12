@@ -53,7 +53,7 @@ void ConjunctionExpressionNode::compute(LogicFormulaResult & result) const
       result = lastResult;
     else
     {
-      result.replacements = ReplacementsUtils::intersectReplacements(result.replacements, lastResult.replacements);
+      ReplacementsUtils::intersectReplacements(result.replacements, lastResult.replacements, result.replacements);
       if (result.replacements.empty())
       {
         result.value = false;
@@ -73,7 +73,7 @@ void ConjunctionExpressionNode::compute(LogicFormulaResult & result) const
       result.replacements = {};
       return;
     }
-    result.replacements = ReplacementsUtils::intersectReplacements(result.replacements, lastResult.replacements);
+    ReplacementsUtils::intersectReplacements(result.replacements, lastResult.replacements, result.replacements);
     if (result.replacements.empty())
     {
       result.value = false;
@@ -92,7 +92,7 @@ void ConjunctionExpressionNode::compute(LogicFormulaResult & result) const
       result.replacements = {};
       return;
     }
-    result.replacements = ReplacementsUtils::intersectReplacements(result.replacements, lastResult.replacements);
+    ReplacementsUtils::intersectReplacements(result.replacements, lastResult.replacements, result.replacements);
     if (result.replacements.empty())
     {
       result.value = false;
@@ -113,8 +113,8 @@ LogicFormulaResult ConjunctionExpressionNode::generate(Replacements & replacemen
     if (!lastResult.value)
       return fail;
     globalResult.isGenerated |= lastResult.isGenerated;
-    globalResult.replacements =
-        ReplacementsUtils::intersectReplacements(globalResult.replacements, lastResult.replacements);
+    ReplacementsUtils::intersectReplacements(
+        globalResult.replacements, lastResult.replacements, globalResult.replacements);
     if (ReplacementsUtils::getColumnsAmount(globalResult.replacements) == 0)
       return fail;
   }

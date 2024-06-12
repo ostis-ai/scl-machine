@@ -66,8 +66,8 @@ void EquivalenceExpressionNode::compute(LogicFormulaResult & result) const
   }
   result.value = subFormulaResults[0].value == subFormulaResults[1].value;
   if (result.value)
-    result.replacements =
-        ReplacementsUtils::intersectReplacements(subFormulaResults[0].replacements, subFormulaResults[1].replacements);
+    ReplacementsUtils::intersectReplacements(
+        subFormulaResults[0].replacements, subFormulaResults[1].replacements, result.replacements);
   return;
 
   auto leftAtom = dynamic_cast<TemplateExpressionNode *>(operands[0].get());
@@ -115,5 +115,5 @@ void EquivalenceExpressionNode::compute(LogicFormulaResult & result) const
 
   result.value = leftResult.value == rightResult.value;
   if (rightResult.value)
-    result.replacements = ReplacementsUtils::intersectReplacements(leftResult.replacements, rightResult.replacements);
+    ReplacementsUtils::intersectReplacements(leftResult.replacements, rightResult.replacements, result.replacements);
 }

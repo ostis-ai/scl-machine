@@ -39,8 +39,6 @@ void ImplicationExpressionNode::compute(LogicFormulaResult & result) const
   result.value = !premiseResult.value || conclusionResult.value;
   result.isGenerated = conclusionResult.isGenerated;
   if (conclusionResult.value)
-  {
-    result.replacements =
-        ReplacementsUtils::intersectReplacements(premiseResult.replacements, conclusionResult.replacements);
-  }
+    ReplacementsUtils::intersectReplacements(
+        premiseResult.replacements, conclusionResult.replacements, result.replacements);
 }

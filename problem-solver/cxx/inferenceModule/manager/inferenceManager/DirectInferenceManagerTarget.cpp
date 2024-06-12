@@ -64,8 +64,9 @@ bool DirectInferenceManagerTarget::applyInference(InferenceParams const & infere
       {
         solutionTreeManager->addNode(formula, formulaResult.replacements);
         // We need to check target with result generated replacements, not with input
-        targetAchieved =
-            isTargetAchieved(ReplacementsUtils::getReplacementsToScTemplateParams(formulaResult.replacements));
+        std::vector<ScTemplateParams> paramsVector;
+        ReplacementsUtils::getReplacementsToScTemplateParams(formulaResult.replacements, paramsVector);
+        targetAchieved = isTargetAchieved(paramsVector);
         if (targetAchieved)
         {
           SC_LOG_DEBUG("Target is achieved");
