@@ -43,7 +43,7 @@ void shutdown()
 // a -> b; Simple test with only one implication that must generates one class to the argument. Four arguments
 TEST_F(InferenceSimpleFormulasTest, TrueSimpleLogicRule)
 {
-  ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
+  ScMemoryContext context;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "trueSimpleRuleTest.scs");
   initialize();
@@ -86,7 +86,7 @@ TEST_F(InferenceSimpleFormulasTest, TrueSimpleLogicRule)
 // a -> b; Simple test with only one implication that must generates one class to the argument. Three arguments
 TEST_F(InferenceSimpleFormulasTest, TrueSimpleLogicRuleThreeArguments)
 {
-  ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
+  ScMemoryContext context;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "trueSimpleRuleTest.scs");
   initialize();
@@ -129,7 +129,7 @@ TEST_F(InferenceSimpleFormulasTest, TrueSimpleLogicRuleThreeArguments)
 // a -> b; b -> c. Should apply both of them to achieve the target
 TEST_F(InferenceSimpleFormulasTest, TrueDoubleApplyLogicRule)
 {
-  ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
+  ScMemoryContext context;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "trueDoubleApplyRuleTest.scs");
   initialize();
@@ -171,7 +171,7 @@ TEST_F(InferenceSimpleFormulasTest, TrueDoubleApplyLogicRule)
 // a -> b. Should apply the rule from the second rules set
 TEST_F(InferenceSimpleFormulasTest, TrueSecondRulesSet)
 {
-  ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
+  ScMemoryContext context;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "trueSecondRulesSetTest.scs");
   initialize();
@@ -212,7 +212,7 @@ TEST_F(InferenceSimpleFormulasTest, TrueSecondRulesSet)
 // a -> b. Nothing to generate in two rules set
 TEST_F(InferenceSimpleFormulasTest, NothingToGenerateSecondRulesSet)
 {
-  ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
+  ScMemoryContext context;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "nothingToGenerateSecondRulesSetTest.scs");
   initialize();
@@ -251,7 +251,7 @@ TEST_F(InferenceSimpleFormulasTest, NothingToGenerateSecondRulesSet)
 
 TEST_F(InferenceSimpleFormulasTest, TwoTriplesTest)
 {
-  ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
+  ScMemoryContext context;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "twoTriplesTest.scs");
   initialize();
@@ -269,7 +269,7 @@ TEST_F(InferenceSimpleFormulasTest, TwoTriplesTest)
 
 TEST_F(InferenceSimpleFormulasTest, ApplyRuleFromSecondAndThenFromFirstSetTest)
 {
-  ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
+  ScMemoryContext context;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "applyRuleFromSecondAndThenFromFirstSetTest.scs");
 
@@ -288,7 +288,7 @@ TEST_F(InferenceSimpleFormulasTest, ApplyRuleFromSecondAndThenFromFirstSetTest)
 // Fails because of empty solution tree
 TEST_F(InferenceSimpleFormulasTest, DISABLED_SolutionTreePreventsDoubleRuleApplyingOnSameReplacementsTest)
 {
-  ScMemoryContext context(sc_access_lvl_make_min, "successful_inference");
+  ScMemoryContext context;
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "solutionTreePreventsDoubleRuleApplyingTest.scs");
   initialize();
 
