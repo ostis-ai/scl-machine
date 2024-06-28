@@ -53,7 +53,7 @@ void ConjunctionExpressionNode::compute(LogicFormulaResult & result) const
       result = lastResult;
     else
     {
-      result.replacements = ReplacementsUtils::intersectReplacements(result.replacements, lastResult.replacements);
+      ReplacementsUtils::intersectReplacements(result.replacements, lastResult.replacements, result.replacements);
       if (result.replacements.empty())
       {
         result.value = false;
@@ -73,7 +73,7 @@ void ConjunctionExpressionNode::compute(LogicFormulaResult & result) const
       result.replacements = {};
       return;
     }
-    result.replacements = ReplacementsUtils::intersectReplacements(result.replacements, lastResult.replacements);
+    ReplacementsUtils::intersectReplacements(result.replacements, lastResult.replacements, result.replacements);
     if (result.replacements.empty())
     {
       result.value = false;
@@ -84,7 +84,8 @@ void ConjunctionExpressionNode::compute(LogicFormulaResult & result) const
   }
   for (auto const & formulaToGenerate : formulasToGenerate)  // atoms which should be generated are processed here
   {
-    LogicFormulaResult lastResult = formulaToGenerate->generate(result.replacements);
+    LogicFormulaResult lastResult;
+    formulaToGenerate->generate(result.replacements, lastResult);
     if (!lastResult.value)
     {
       result.value = false;
@@ -92,7 +93,7 @@ void ConjunctionExpressionNode::compute(LogicFormulaResult & result) const
       result.replacements = {};
       return;
     }
-    result.replacements = ReplacementsUtils::intersectReplacements(result.replacements, lastResult.replacements);
+    ReplacementsUtils::intersectReplacements(result.replacements, lastResult.replacements, result.replacements);
     if (result.replacements.empty())
     {
       result.value = false;
@@ -103,20 +104,30 @@ void ConjunctionExpressionNode::compute(LogicFormulaResult & result) const
   }
 }
 
-LogicFormulaResult ConjunctionExpressionNode::generate(Replacements & replacements)
+void ConjunctionExpressionNode::generate(Replacements & replacements, LogicFormulaResult & result)
 {
   LogicFormulaResult fail = {false, false, {}};
-  LogicFormulaResult globalResult = {true, false, replacements};
+  result = {true, false, replacements};
   for (auto const & operand : operands)
   {
-    LogicFormulaResult lastResult = operand->generate(globalResult.replacements);
+    LogicFormulaResult lastResult;
+    operand->generate(result.replacements, lastResult);
     if (!lastResult.value)
-      return fail;
-    globalResult.isGenerated |= lastResult.isGenerated;
-    globalResult.replacements =
-        ReplacementsUtils::intersectReplacements(globalResult.replacements, lastResult.replacements);
-    if (ReplacementsUtils::getColumnsAmount(globalResult.replacements) == 0)
-      return fail;
+    {
+      result = fail;
+      return;
+    }
+    result.isGenerated |= lastResult.isGenerated;
+    ReplacementsUtils::intersectReplacements(result.replacements, lastResult.replacements, result.replacements);
+    if (ReplacementsUtils::getColumnsAmount(result.replacements) == 0)
+    {
+      result = fail;
+      return;
+    }
   }
-  return globalResult;
+}
+
+ScAddr ConjunctionExpressionNode::getFormula() const
+{
+  return ScAddr::Empty;
 }

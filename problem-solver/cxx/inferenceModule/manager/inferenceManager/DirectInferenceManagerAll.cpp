@@ -51,6 +51,6 @@ bool DirectInferenceManagerAll::applyInference(InferenceParams const & inference
       uncheckedFormulas.pop();
     }
   }
-
+  formulaResult.replacements.clear();
   return result;
 }

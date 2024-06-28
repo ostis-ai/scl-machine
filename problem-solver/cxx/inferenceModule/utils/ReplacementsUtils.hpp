@@ -19,21 +19,33 @@ namespace inference
 class ReplacementsUtils
 {
 public:
-  static Replacements intersectReplacements(Replacements const & first, Replacements const & second);
-  static Replacements uniteReplacements(Replacements const & first, Replacements const & second);
-  static Replacements subtractReplacements(Replacements const & first, Replacements const & second);
+  static void intersectReplacements(
+      Replacements const & first,
+      Replacements const & second,
+      Replacements & intersection);
+  static void uniteReplacements(
+      Replacements const & first,
+      Replacements const & second,
+      Replacements & unionResult);
+  static void subtractReplacements(
+      Replacements const & first,
+      Replacements const & second,
+      Replacements & difference);
   static Replacements removeRows(Replacements const & replacements, ScAddrHashSet & keysToRemove);
-  static vector<ScTemplateParams> getReplacementsToScTemplateParams(Replacements const & replacements);
+  static void getReplacementsToScTemplateParams(
+      Replacements const & replacements,
+      std::vector<ScTemplateParams> & templateParams);
   static size_t getColumnsAmount(Replacements const & replacements);
   static void getKeySet(Replacements const & map, ScAddrHashSet & keySet);
 
 private:
-  static ScAddrHashSet getCommonKeys(ScAddrHashSet const & first, ScAddrHashSet const & second);
+  static void getCommonKeys(ScAddrHashSet const & first, ScAddrHashSet const & second, ScAddrHashSet & commonKeys);
   static Replacements copyReplacements(Replacements const & replacements);
   static void removeDuplicateColumns(Replacements & replacements);
-  static ReplacementsHashes calculateHashesForCommonKeys(
+  static void calculateHashesForCommonKeys(
       Replacements const & replacements,
-      ScAddrHashSet const & commonKeys);
+      ScAddrHashSet const & commonKeys,
+      ReplacementsHashes & hashes);
 };
 
 }  // namespace inference

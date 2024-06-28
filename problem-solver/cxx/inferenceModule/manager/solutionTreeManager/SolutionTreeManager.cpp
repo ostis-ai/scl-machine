@@ -17,8 +17,8 @@ SolutionTreeManager::SolutionTreeManager(ScMemoryContext * context)
 
 bool SolutionTreeManager::addNode(ScAddr const & formula, Replacements const & replacements)
 {
-  std::vector<ScTemplateParams> const & templateParamsVector =
-      ReplacementsUtils::getReplacementsToScTemplateParams(replacements);
+  std::vector<ScTemplateParams> templateParamsVector;
+  ReplacementsUtils::getReplacementsToScTemplateParams(replacements, templateParamsVector);
   ScAddrHashSet variables;
   ReplacementsUtils::getKeySet(replacements, variables);
   bool result = true;

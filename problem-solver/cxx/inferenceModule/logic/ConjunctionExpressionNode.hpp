@@ -17,12 +17,9 @@ public:
 
   void compute(LogicFormulaResult & result) const override;
 
-  LogicFormulaResult generate(Replacements & replacements) override;
+  void generate(Replacements & replacements, LogicFormulaResult & result) override;
 
-  ScAddr getFormula() const override
-  {
-    return {};
-  }
+  ScAddr getFormula() const override;
 
 private:
   ScMemoryContext * context;

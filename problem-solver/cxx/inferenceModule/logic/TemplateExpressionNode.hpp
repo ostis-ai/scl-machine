@@ -30,12 +30,9 @@ public:
   void compute(LogicFormulaResult & result) const override;
   // TODO: remove useless method. Use compute instead of find
   LogicFormulaResult find(Replacements & replacements) const;
-  LogicFormulaResult generate(Replacements & replacements) override;
+  void generate(Replacements & replacements, LogicFormulaResult & result) override;
 
-  ScAddr getFormula() const override
-  {
-    return formula;
-  }
+  ScAddr getFormula() const override;
 
 private:
   ScMemoryContext * context;

@@ -43,6 +43,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed applying rules chain
 
 ### Changed
+- Logic formula generation results are passed as method arguments instead of return values
+- Replacements results are passed as method arguments instead of return values
 - Replacements union use hashes to improve performance
 - Replacements operations use hashes to improve performance
 - Replacements are now calculated for all variables in atomic logical formulas

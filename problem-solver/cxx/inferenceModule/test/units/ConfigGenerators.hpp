@@ -49,4 +49,4 @@ public:
   }
 };
 
-}  // namespace inference::generator
+}  // namespace inference::generatorTest

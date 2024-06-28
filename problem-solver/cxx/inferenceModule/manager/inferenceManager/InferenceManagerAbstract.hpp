@@ -25,7 +25,7 @@ class InferenceManagerAbstract
 public:
   explicit InferenceManagerAbstract(ScMemoryContext * context);
 
-  virtual ~InferenceManagerAbstract() = default;
+  virtual ~InferenceManagerAbstract();
 
   void setTemplateSearcher(std::shared_ptr<TemplateSearcherAbstract> searcher);
   void setTemplateManager(std::shared_ptr<TemplateManagerAbstract> manager);

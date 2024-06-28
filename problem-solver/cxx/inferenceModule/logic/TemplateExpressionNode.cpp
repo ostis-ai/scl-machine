@@ -31,26 +31,30 @@ TemplateExpressionNode::TemplateExpressionNode(
   this->templateSearcherGeneral->setOutputStructureFillingType(this->templateSearcher->getOutputStructureFillingType());
 }
 
+ScAddr TemplateExpressionNode::getFormula() const
+{
+  return formula;
+}
+
 void TemplateExpressionNode::compute(LogicFormulaResult & result) const
 {
   SC_LOG_DEBUG(
       "TemplateExpressionNode: compute for " << (argumentVector.empty() ? "empty" : to_string(argumentVector.size()))
                                              << " arguments");
-  Replacements replacements;
   ScAddrHashSet variables;
+  result.replacements.clear();
   templateSearcher->getVariables(formula, variables);
   // Template params should be created only if argument vector is not empty. Else search with any possible replacements
   if (!argumentVector.empty())
   {
     std::vector<ScTemplateParams> const & templateParamsVector = templateManager->createTemplateParams(formula);
-    templateSearcher->searchTemplate(formula, templateParamsVector, variables, replacements);
+    templateSearcher->searchTemplate(formula, templateParamsVector, variables, result.replacements);
   }
   else
   {
-    templateSearcher->searchTemplate(formula, ScTemplateParams(), variables, replacements);
+    templateSearcher->searchTemplate(formula, ScTemplateParams(), variables, result.replacements);
   }
 
-  result.replacements = replacements;
   result.value = !result.replacements.empty();
   SC_LOG_DEBUG(
       "Compute atomic logical formula " << context->HelperGetSystemIdtf(formula)
@@ -60,15 +64,15 @@ void TemplateExpressionNode::compute(LogicFormulaResult & result) const
 LogicFormulaResult TemplateExpressionNode::find(Replacements & replacements) const
 {
   LogicFormulaResult result;
-  std::vector<ScTemplateParams> paramsVector = ReplacementsUtils::getReplacementsToScTemplateParams(replacements);
-  Replacements resultReplacements;
+  std::vector<ScTemplateParams> paramsVector;
+  ReplacementsUtils::getReplacementsToScTemplateParams(replacements, paramsVector);
+  result.replacements.clear();
   ScAddrHashSet variables;
   templateSearcher->getVariables(formula, variables);
   SC_LOG_DEBUG(
       "TemplateExpressionNode: call search for " << (paramsVector.empty() ? "empty" : to_string(paramsVector.size()))
                                                  << " params");
-  templateSearcher->searchTemplate(formula, paramsVector, variables, resultReplacements);
-  result.replacements = resultReplacements;
+  templateSearcher->searchTemplate(formula, paramsVector, variables, result.replacements);
   result.value = !result.replacements.empty();
 
 
@@ -81,15 +85,15 @@ LogicFormulaResult TemplateExpressionNode::find(Replacements & replacements) con
 /**
  * @brief Generate atomic logical formula using replacements
  * @param replacements variables and ScAddrs to use in generation
- * @return LogicFormulaResult{bool: value, bool: isGenerated, Replacements: replacements}
+ * @param result {bool: value, bool: isGenerated, Replacements: replacements}
  */
-LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
+void TemplateExpressionNode::generate(Replacements & replacements, LogicFormulaResult & result)
 {
-  LogicFormulaResult result;
+  result = {};
   if (ReplacementsUtils::getColumnsAmount(replacements) == 0)
   {
     SC_LOG_DEBUG("Atomic logical formula " << context->HelperGetSystemIdtf(formula) << " is not generated");
-    return result;
+    return;
   }
 
   ScAddrHashSet formulaVariables;
@@ -105,8 +109,8 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
   {
     // replacementsNotInKb stores all replacements from passed to TemplateExpressionNode::generate parameter that don't
     // have corresponding columns in existingFormulaReplacements
-    Replacements const & replacementsNotInKb =
-        ReplacementsUtils::subtractReplacements(replacements, existingFormulaReplacements);
+    Replacements replacementsNotInKb;
+    ReplacementsUtils::subtractReplacements(replacements, existingFormulaReplacements, replacementsNotInKb);
     // this generation is called with first parameter being replacementsNotInKb because there is no need to generate
     // atomic logical formula for those replacements found and stored in existingFormulaReplacements
     generateByReplacements(replacementsNotInKb, result, count, formulaVariables, searchResult, generatedReplacements);
@@ -116,13 +120,12 @@ LogicFormulaResult TemplateExpressionNode::generate(Replacements & replacements)
 
   fillOutputStructure(formulaVariables, replacements, existingFormulaReplacements, searchResult);
 
-  result.replacements = ReplacementsUtils::uniteReplacements(
-      ReplacementsUtils::uniteReplacements(searchResult, existingFormulaReplacements), generatedReplacements);
+  Replacements intermediateUniteResult;
+  ReplacementsUtils::uniteReplacements(searchResult, existingFormulaReplacements, intermediateUniteResult);
+  ReplacementsUtils::uniteReplacements(intermediateUniteResult, generatedReplacements, result.replacements);
 
   SC_LOG_DEBUG(
       "Atomic logical formula " << context->HelperGetSystemIdtf(formula) << " is generated " << count << " times");
-
-  return result;
 }
 
 /**
@@ -150,8 +153,8 @@ void TemplateExpressionNode::generateByReplacements(
     Replacements & searchResult,
     Replacements & generatedReplacements)
 {
-  std::vector<ScTemplateParams> const & paramsVector =
-      ReplacementsUtils::getReplacementsToScTemplateParams(replacements);
+  std::vector<ScTemplateParams> paramsVector;
+  ReplacementsUtils::getReplacementsToScTemplateParams(replacements, paramsVector);
   processTemplateParams(paramsVector, formulaVariables, result, count, searchResult, generatedReplacements);
 }
 
@@ -218,8 +221,9 @@ void TemplateExpressionNode::fillOutputStructure(
   {
     if (ReplacementsUtils::getColumnsAmount(resultWithoutReplacements) > 0)
     {
-      Replacements const & alreadyExistedBeforeGenerationReplacements =
-          ReplacementsUtils::intersectReplacements(replacements, resultWithoutReplacements);
+      Replacements alreadyExistedBeforeGenerationReplacements;
+      ReplacementsUtils::intersectReplacements(
+          replacements, resultWithoutReplacements, alreadyExistedBeforeGenerationReplacements);
       if (ReplacementsUtils::getColumnsAmount(alreadyExistedBeforeGenerationReplacements) > 0)
       {
         addToOutputStructure(alreadyExistedBeforeGenerationReplacements, formulaVariables);

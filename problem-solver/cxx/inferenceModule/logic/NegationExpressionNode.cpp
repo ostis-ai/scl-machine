@@ -17,3 +17,13 @@ void NegationExpressionNode::compute(LogicFormulaResult & result) const
   SC_LOG_DEBUG("Sub formula in negation returned " << (result.value ? "true" : "false"));
   result.value = !result.value;
 }
+
+void NegationExpressionNode::generate(Replacements & replacements, LogicFormulaResult & result)
+{
+  result = {false, false, {}};
+}
+
+ScAddr NegationExpressionNode::getFormula() const
+{
+  return ScAddr::Empty;
+}

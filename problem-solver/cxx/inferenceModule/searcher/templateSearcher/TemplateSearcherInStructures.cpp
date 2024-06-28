@@ -36,7 +36,6 @@ void TemplateSearcherInStructures::searchTemplate(
     ScAddrHashSet const & variables,
     Replacements & result)
 {
-  searchWithoutContentResult = std::make_unique<ScTemplateSearchResult>();
   ScTemplate searchTemplate;
   if (context->HelperBuildTemplate(searchTemplate, templateAddr, templateParams))
   {
