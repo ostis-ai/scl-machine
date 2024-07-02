@@ -58,6 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed condition for applying generation(generate if this rule with this parameters wasn't applied yet)
 
 ### Removed
+- Cache of input structures in TemplateSearcherInStructures
 - Unused and duplicated keynodes
 - `check` method of LogicExpressionNode
 - Unused and unimplemented agents

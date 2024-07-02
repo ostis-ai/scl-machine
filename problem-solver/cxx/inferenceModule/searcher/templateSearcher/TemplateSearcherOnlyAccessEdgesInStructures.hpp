@@ -23,8 +23,6 @@ public:
 private:
   map<std::string, std::string> getTemplateLinksContent(ScAddr const & templateAddr) override;
 
-  void prepareBeforeSearch() override;
-
   bool isValidElement(ScAddr const & element) const override;
 };
 

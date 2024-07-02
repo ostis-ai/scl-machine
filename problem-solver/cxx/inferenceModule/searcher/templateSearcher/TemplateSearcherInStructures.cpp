@@ -10,7 +10,6 @@
 #include <algorithm>
 
 #include "sc-agents-common/utils/CommonUtils.hpp"
-#include "sc-agents-common/utils/IteratorUtils.hpp"
 
 #include "keynodes/InferenceKeynodes.hpp"
 
@@ -21,7 +20,6 @@ TemplateSearcherInStructures::TemplateSearcherInStructures(
     ScAddrVector const & otherInputStructures)
   : TemplateSearcherAbstract(context)
 {
-  this->contentOfAllInputStructures = std::make_unique<ScAddrHashSet>();
   inputStructures = otherInputStructures;
 }
 
@@ -39,7 +37,6 @@ void TemplateSearcherInStructures::searchTemplate(
   ScTemplate searchTemplate;
   if (context->HelperBuildTemplate(searchTemplate, templateAddr, templateParams))
   {
-    prepareBeforeSearch();
     if (context->HelperCheckEdge(
             InferenceKeynodes::concept_template_with_links, templateAddr, ScType::EdgeAccessConstPosPerm))
     {
@@ -141,27 +138,10 @@ std::map<std::string, std::string> TemplateSearcherInStructures::getTemplateLink
   return linksContent;
 }
 
-void TemplateSearcherInStructures::prepareBeforeSearch()
-{
-  this->contentOfAllInputStructures->clear();
-  if (replacementsUsingType == REPLACEMENTS_ALL)
-  {
-    SC_LOG_DEBUG("start input structures processing");
-    for (auto const & inputStructure : inputStructures)
-    {
-      ScAddrVector const & elements = utils::IteratorUtils::getAllWithType(context, inputStructure, ScType::Unknown);
-      contentOfAllInputStructures->insert(elements.cbegin(), elements.cend());
-    }
-    SC_LOG_DEBUG("input structures processed, found " << contentOfAllInputStructures->size() << " elements");
-  }
-}
-
 bool TemplateSearcherInStructures::isValidElement(ScAddr const & element) const
 {
-  if (replacementsUsingType == REPLACEMENTS_FIRST)
-    return std::any_of(inputStructures.cbegin(), inputStructures.cend(), [&element, this](ScAddr const &inputStructure){
-      return context->HelperCheckEdge(inputStructure, element, ScType::EdgeAccessConstPosPerm);
-    });
-  else
-    return contentOfAllInputStructures->count(element);
+  return std::any_of(
+      inputStructures.cbegin(), inputStructures.cend(), [&element, this](ScAddr const & inputStructure) -> bool {
+        return context->HelperCheckEdge(inputStructure, element, ScType::EdgeAccessConstPosPerm);
+      });
 }
