@@ -20,12 +20,12 @@ TemplateSearcherAbstract::TemplateSearcherAbstract(
 {
 }
 
-void TemplateSearcherAbstract::setInputStructures(ScAddrVector const & otherInputStructures)
+void TemplateSearcherAbstract::setInputStructures(ScAddrHashSet const & otherInputStructures)
 {
   inputStructures = otherInputStructures;
 }
 
-ScAddrVector TemplateSearcherAbstract::getInputStructures() const
+ScAddrHashSet TemplateSearcherAbstract::getInputStructures() const
 {
   return inputStructures;
 }

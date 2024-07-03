@@ -16,7 +16,7 @@ class TemplateSearcherOnlyAccessEdgesInStructures : public TemplateSearcherInStr
 public:
   explicit TemplateSearcherOnlyAccessEdgesInStructures(
       ScMemoryContext * context,
-      ScAddrVector const & otherInputStructures);
+      ScAddrHashSet const & otherInputStructures);
 
   explicit TemplateSearcherOnlyAccessEdgesInStructures(ScMemoryContext * ms_context);
 

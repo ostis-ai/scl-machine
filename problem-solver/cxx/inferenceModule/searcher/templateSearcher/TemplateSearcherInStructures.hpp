@@ -20,7 +20,7 @@ namespace inference
 class TemplateSearcherInStructures : public TemplateSearcherAbstract
 {
 public:
-  explicit TemplateSearcherInStructures(ScMemoryContext * context, ScAddrVector const & otherInputStructures);
+  explicit TemplateSearcherInStructures(ScMemoryContext * context, ScAddrHashSet const & otherInputStructures);
 
   explicit TemplateSearcherInStructures(ScMemoryContext * ms_context);
 
@@ -29,9 +29,6 @@ public:
       ScTemplateParams const & templateParams,
       ScAddrHashSet const & variables,
       Replacements & result) override;
-
-protected:
-  std::unique_ptr<ScAddrHashSet> contentOfAllInputStructures;
 
 private:
   void searchTemplateWithContent(

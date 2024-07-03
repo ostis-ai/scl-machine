@@ -17,7 +17,7 @@ using namespace inference;
 
 TemplateSearcherInStructures::TemplateSearcherInStructures(
     ScMemoryContext * context,
-    ScAddrVector const & otherInputStructures)
+    ScAddrHashSet const & otherInputStructures)
   : TemplateSearcherAbstract(context)
 {
   inputStructures = otherInputStructures;
@@ -140,8 +140,12 @@ std::map<std::string, std::string> TemplateSearcherInStructures::getTemplateLink
 
 bool TemplateSearcherInStructures::isValidElement(ScAddr const & element) const
 {
-  return std::any_of(
-      inputStructures.cbegin(), inputStructures.cend(), [&element, this](ScAddr const & inputStructure) -> bool {
-        return context->HelperCheckEdge(inputStructure, element, ScType::EdgeAccessConstPosPerm);
-      });
+  auto const & structuresIterator =
+      context->Iterator3(ScType::NodeConstStruct, ScType::EdgeAccessConstPosPerm, element);
+  while (structuresIterator->Next())
+  {
+    if (inputStructures.count(element))
+      return true;
+  }
+  return false;
 }

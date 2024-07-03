@@ -52,9 +52,9 @@ public:
       ScTemplateSearchResultItem const & item,
       std::map<std::string, std::string> const & linksContentMap);
 
-  void setInputStructures(ScAddrVector const & otherInputStructures);
+  void setInputStructures(ScAddrHashSet const & otherInputStructures);
 
-  ScAddrVector getInputStructures() const;
+  ScAddrHashSet getInputStructures() const;
 
   void setReplacementsUsingType(ReplacementsUsingType const otherReplacementsUsingType)
   {
@@ -90,7 +90,7 @@ public:
 protected:
 
   ScMemoryContext * context;
-  ScAddrVector inputStructures;
+  ScAddrHashSet inputStructures;
   ReplacementsUsingType replacementsUsingType;
   OutputStructureFillingType outputStructureFillingType;
   AtomicLogicalFormulaSearchBeforeGenerationType atomicLogicalFormulaSearchBeforeGenerationType;

@@ -51,10 +51,10 @@ SC_AGENT_IMPLEMENTATION(DirectInferenceAgent)
   }
 
   SearchType templateSearcherType = SEARCH_IN_ALL_KB;
-  ScAddrVector inputStructures;
+  ScAddrHashSet inputStructures;
   if (inputStructure.IsValid())
   {
-    inputStructures.push_back(inputStructure);
+    inputStructures.insert(inputStructure);
     templateSearcherType = SEARCH_IN_STRUCTURES;
   }
 

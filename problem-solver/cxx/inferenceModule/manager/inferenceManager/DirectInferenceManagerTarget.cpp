@@ -39,8 +39,8 @@ bool DirectInferenceManagerTarget::applyInference(InferenceParams const & infere
   }
 
   // Extend input structures vector with outputStructure to find target with generated elements
-  ScAddrVector inputStructures = templateSearcher->getInputStructures();
-  inputStructures.push_back(inferenceParamsConfig.outputStructure);
+  ScAddrHashSet inputStructures = templateSearcher->getInputStructures();
+  inputStructures.insert(inferenceParamsConfig.outputStructure);
   templateSearcher->setInputStructures(inputStructures);
 
   ScAddrVector checkedFormulas;
