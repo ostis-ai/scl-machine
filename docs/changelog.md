@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Direct inference manager was removed. To create DirectInferenceManagerTarget use `InferenceManagerFactory::constructDirectInferenceManagerTarget` with config {GENERATE_ALL_FORMULAS, ALL, TREE_ONLY_OUTPUT_STRUCTURE}
 
 ### Added
+- InferenceConfig uses ScAddrHashSet to store input structures
 - Allow edges substitution from replacements in atomic logical formula search and generation
 - Solution removal agent
 - Template searcher abstract with new implementation: TemplateSearcherOnlyAccessEdgesInStructures
@@ -43,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed applying rules chain
 
 ### Changed
+- Template search in structures checks if element is in structure instead of check if structure has element
 - Logic formula generation results are passed as method arguments instead of return values
 - Replacements results are passed as method arguments instead of return values
 - Replacements union use hashes to improve performance

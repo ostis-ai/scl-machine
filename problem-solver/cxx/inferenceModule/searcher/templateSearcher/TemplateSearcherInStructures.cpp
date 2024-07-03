@@ -144,7 +144,7 @@ bool TemplateSearcherInStructures::isValidElement(ScAddr const & element) const
       context->Iterator3(ScType::NodeConstStruct, ScType::EdgeAccessConstPosPerm, element);
   while (structuresIterator->Next())
   {
-    if (inputStructures.count(element))
+    if (inputStructures.count(structuresIterator->Get(0)))
       return true;
   }
   return false;
