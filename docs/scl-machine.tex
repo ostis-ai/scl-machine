@@ -89,7 +89,7 @@
         \scnitem{метод поиска атомарных логических формул по параметрам}
         \begin{scnindent}
             \scntext{заголовок метода}{virtual void searchTemplate(ScAddr const \& templateAddr, ScTemplateParams const
-            \& templateParams, ScAddrHashSet const \& variables, Replacements \& result) = 0;}
+            \& templateParams, ScAddrUnorderedSet const \& variables, Replacements \& result) = 0;}
             \scntext{примечание}{Метод ищет конструкции в базе знаний по графу-образцу (логической атомарной формулы)
                 с учётом переданных параметров графа-образца и создаёт соответствие между sc-переменными формулы и
                 соответствующими ей константными sc-элементами.}
@@ -99,7 +99,7 @@
             \scntext{заголовок метода}{virtual void searchTemplate(
                 ScAddr const \& templateAddr,
                 vector<ScTemplateParams> const \& scTemplateParamsVector,
-                ScAddrHashSet const \& variables,
+                ScAddrUnorderedSet const \& variables,
                 Replacements \& result);}
             \scntext{примечание}{Метод вызывает \scnkeyword{метод поиска атомарных логических формул по параметрам} в цикле для переданного множества параметров поиска.}
         \end{scnindent}
