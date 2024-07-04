@@ -63,7 +63,7 @@ struct InferenceParams
 {
   ScAddr formulasSet;
   ScAddrVector arguments;
-  ScAddrHashSet inputStructures;
+  ScAddrUnorderedSet inputStructures;
   ScAddr outputStructure;
   ScAddr targetStructure;
 };

@@ -41,7 +41,7 @@ void TemplateExpressionNode::compute(LogicFormulaResult & result) const
   SC_LOG_DEBUG(
       "TemplateExpressionNode: compute for " << (argumentVector.empty() ? "empty" : to_string(argumentVector.size()))
                                              << " arguments");
-  ScAddrHashSet variables;
+  ScAddrUnorderedSet variables;
   result.replacements.clear();
   templateSearcher->getVariables(formula, variables);
   // Template params should be created only if argument vector is not empty. Else search with any possible replacements
@@ -67,7 +67,7 @@ LogicFormulaResult TemplateExpressionNode::find(Replacements & replacements) con
   std::vector<ScTemplateParams> paramsVector;
   ReplacementsUtils::getReplacementsToScTemplateParams(replacements, paramsVector);
   result.replacements.clear();
-  ScAddrHashSet variables;
+  ScAddrUnorderedSet variables;
   templateSearcher->getVariables(formula, variables);
   SC_LOG_DEBUG(
       "TemplateExpressionNode: call search for " << (paramsVector.empty() ? "empty" : to_string(paramsVector.size()))
@@ -96,7 +96,7 @@ void TemplateExpressionNode::generate(Replacements & replacements, LogicFormulaR
     return;
   }
 
-  ScAddrHashSet formulaVariables;
+  ScAddrUnorderedSet formulaVariables;
   templateSearcher->getVariables(formula, formulaVariables);
   // existingFormulaReplacements stores all replacements for atomic logical formula searched with
   // TemplateSearcherGeneral if condition in getSearchResultWithoutReplacementsIfNeeded() is true
@@ -138,7 +138,7 @@ Replacements TemplateExpressionNode::getSearchResultWithoutReplacementsIfNeeded(
   Replacements resultWithoutReplacements;
   if (templateSearcher->getAtomicLogicalFormulaSearchBeforeGenerationType() == SEARCH_WITHOUT_REPLACEMENTS)
   {
-    ScAddrHashSet variables;
+    ScAddrUnorderedSet variables;
     templateSearcherGeneral->getVariables(formula, variables);
     templateSearcherGeneral->searchTemplate(formula, ScTemplateParams(), variables, resultWithoutReplacements);
   }
@@ -149,7 +149,7 @@ void TemplateExpressionNode::generateByReplacements(
     Replacements const & replacements,
     LogicFormulaResult & result,
     size_t & count,
-    ScAddrHashSet const & formulaVariables,
+    ScAddrUnorderedSet const & formulaVariables,
     Replacements & searchResult,
     Replacements & generatedReplacements)
 {
@@ -160,7 +160,7 @@ void TemplateExpressionNode::generateByReplacements(
 
 void TemplateExpressionNode::processTemplateParams(
     vector<ScTemplateParams> const & paramsVector,
-    ScAddrHashSet const & formulaVariables,
+    ScAddrUnorderedSet const & formulaVariables,
     LogicFormulaResult & result,
     size_t & count,
     Replacements & searchResult,
@@ -181,7 +181,7 @@ void TemplateExpressionNode::processTemplateParams(
 
 void TemplateExpressionNode::generateByParams(
     ScTemplateParams const & params,
-    ScAddrHashSet const & formulaVariables,
+    ScAddrUnorderedSet const & formulaVariables,
     Replacements & generatedReplacements,
     LogicFormulaResult & result,
     size_t & count)
@@ -212,7 +212,7 @@ void TemplateExpressionNode::generateByParams(
 }
 
 void TemplateExpressionNode::fillOutputStructure(
-    ScAddrHashSet const & formulaVariables,
+    ScAddrUnorderedSet const & formulaVariables,
     Replacements const & replacements,
     Replacements const & resultWithoutReplacements,
     Replacements const & searchResult)
@@ -240,12 +240,13 @@ void TemplateExpressionNode::fillOutputStructure(
 
 void TemplateExpressionNode::addFormulaConstantsToOutputStructure()
 {
-  ScAddrHashSet formulaConstants;
+  ScAddrUnorderedSet formulaConstants;
   templateSearcher->getConstants(formula, formulaConstants);
   addToOutputStructure(formulaConstants);
 }
 
-void TemplateExpressionNode::addToOutputStructure(Replacements const & replacements, ScAddrHashSet const & variables)
+void TemplateExpressionNode::addToOutputStructure(Replacements const & replacements,
+    ScAddrUnorderedSet const & variables)
 {
   if (outputStructure.IsValid())
   {
@@ -260,7 +261,7 @@ void TemplateExpressionNode::addToOutputStructure(Replacements const & replaceme
   }
 }
 
-void TemplateExpressionNode::addToOutputStructure(ScAddrHashSet const & elements)
+void TemplateExpressionNode::addToOutputStructure(ScAddrUnorderedSet const & elements)
 {
   if (outputStructure.IsValid())
   {

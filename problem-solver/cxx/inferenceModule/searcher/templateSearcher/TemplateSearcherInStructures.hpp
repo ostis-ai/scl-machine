@@ -20,14 +20,14 @@ namespace inference
 class TemplateSearcherInStructures : public TemplateSearcherAbstract
 {
 public:
-  explicit TemplateSearcherInStructures(ScMemoryContext * context, ScAddrHashSet const & otherInputStructures);
+  explicit TemplateSearcherInStructures(ScMemoryContext * context, ScAddrUnorderedSet const & otherInputStructures);
 
   explicit TemplateSearcherInStructures(ScMemoryContext * ms_context);
 
   void searchTemplate(
       ScAddr const & templateAddr,
       ScTemplateParams const & templateParams,
-      ScAddrHashSet const & variables,
+      ScAddrUnorderedSet const & variables,
       Replacements & result) override;
 
 private:

@@ -48,32 +48,32 @@ private:
       Replacements const & replacements,
       LogicFormulaResult & result,
       size_t & count,
-      ScAddrHashSet const & formulaVariables,
+      ScAddrUnorderedSet const & formulaVariables,
       Replacements & searchResult,
       Replacements & generatedReplacements);
 
   void generateByParams(
       ScTemplateParams const & params,
-      ScAddrHashSet const & formulaVariables,
+      ScAddrUnorderedSet const & formulaVariables,
       Replacements & generatedReplacements,
       LogicFormulaResult & result,
       size_t & count);
   void processTemplateParams(
       vector<ScTemplateParams> const & paramsVector,
-      ScAddrHashSet const & formulaVariables,
+      ScAddrUnorderedSet const & formulaVariables,
       LogicFormulaResult & result,
       size_t & count,
       Replacements & searchResult,
       Replacements & generatedReplacements);
   Replacements getSearchResultWithoutReplacementsIfNeeded() const;
   void fillOutputStructure(
-      ScAddrHashSet const & formulaVariables,
+      ScAddrUnorderedSet const & formulaVariables,
       Replacements const & replacements,
       Replacements const & resultWithoutReplacements,
       Replacements const & searchResult);
   void addFormulaConstantsToOutputStructure();
-  void addToOutputStructure(Replacements const & replacements, ScAddrHashSet const & variables);
-  void addToOutputStructure(ScAddrHashSet const & elements);
+  void addToOutputStructure(Replacements const & replacements, ScAddrUnorderedSet const & variables);
+  void addToOutputStructure(ScAddrUnorderedSet const & elements);
   void addToOutputStructure(ScTemplateResultItem const & item);
   void addToOutputStructure(ScAddr const & element);
 };

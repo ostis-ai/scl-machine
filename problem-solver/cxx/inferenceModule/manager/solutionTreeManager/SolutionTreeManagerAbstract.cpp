@@ -22,7 +22,7 @@ ScAddr SolutionTreeManagerAbstract::createSolution(ScAddr const & outputStructur
 bool SolutionTreeManagerAbstract::checkIfSolutionNodeExists(
     ScAddr const & formula,
     ScTemplateParams const & templateParams,
-    ScAddrHashSet const & variables)
+    ScAddrUnorderedSet const & variables)
 {
   return solutionTreeSearcher->checkIfSolutionNodeExists(formula, templateParams, variables);
 }

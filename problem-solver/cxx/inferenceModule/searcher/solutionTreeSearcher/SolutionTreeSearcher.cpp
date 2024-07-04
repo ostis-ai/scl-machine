@@ -11,7 +11,7 @@ SolutionTreeSearcher::SolutionTreeSearcher(ScMemoryContext * context)
 bool SolutionTreeSearcher::checkIfSolutionNodeExists(
     ScAddr const & rule,
     ScTemplateParams const & templateParams,
-    ScAddrHashSet const & variables)
+    ScAddrUnorderedSet const & variables)
 {
   ScTemplate solutionNodeTemplate;
   ScTemplateSearchResult searchResult;

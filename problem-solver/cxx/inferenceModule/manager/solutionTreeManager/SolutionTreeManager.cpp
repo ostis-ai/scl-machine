@@ -19,7 +19,7 @@ bool SolutionTreeManager::addNode(ScAddr const & formula, Replacements const & r
 {
   std::vector<ScTemplateParams> templateParamsVector;
   ReplacementsUtils::getReplacementsToScTemplateParams(replacements, templateParamsVector);
-  ScAddrHashSet variables;
+  ScAddrUnorderedSet variables;
   ReplacementsUtils::getKeySet(replacements, variables);
   bool result = true;
   for (ScTemplateParams const & templateParams : templateParamsVector)

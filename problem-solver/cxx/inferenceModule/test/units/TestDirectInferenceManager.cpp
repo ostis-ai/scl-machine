@@ -364,7 +364,7 @@ TEST_P(InferenceManagerTest, conclusionContainsEdgeReplacementFromPremise)
 
   ScAddr const & inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
   ScAddr const & targetTemplate = context.HelperResolveSystemIdtf(TARGET_TEMPLATE);
-  ScAddrHashSet inputStructures{inputStructure};
+  ScAddrUnorderedSet inputStructures{inputStructure};
   ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
   ScAddr const & set1 = context.HelperFindBySystemIdtf("set1");

@@ -17,7 +17,7 @@ using namespace inference;
 
 TemplateSearcherInStructures::TemplateSearcherInStructures(
     ScMemoryContext * context,
-    ScAddrHashSet const & otherInputStructures)
+    ScAddrUnorderedSet const & otherInputStructures)
   : TemplateSearcherAbstract(context)
 {
   inputStructures = otherInputStructures;
@@ -31,7 +31,7 @@ TemplateSearcherInStructures::TemplateSearcherInStructures(ScMemoryContext * con
 void TemplateSearcherInStructures::searchTemplate(
     ScAddr const & templateAddr,
     ScTemplateParams const & templateParams,
-    ScAddrHashSet const & variables,
+    ScAddrUnorderedSet const & variables,
     Replacements & result)
 {
   ScTemplate searchTemplate;
@@ -84,7 +84,7 @@ void TemplateSearcherInStructures::searchTemplateWithContent(
     ScTemplateParams const & templateParams,
     Replacements & result)
 {
-  ScAddrHashSet variables;
+  ScAddrUnorderedSet variables;
   getVariables(templateAddr, variables);
   std::map<std::string, std::string> linksContentMap = getTemplateLinksContent(templateAddr);
 

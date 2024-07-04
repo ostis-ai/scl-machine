@@ -13,7 +13,7 @@ namespace inference
 
 TemplateSearcherOnlyAccessEdgesInStructures::TemplateSearcherOnlyAccessEdgesInStructures(
     ScMemoryContext * context,
-    ScAddrHashSet const & otherInputStructures)
+    ScAddrUnorderedSet const & otherInputStructures)
   : TemplateSearcherInStructures(context, otherInputStructures)
 {
 }

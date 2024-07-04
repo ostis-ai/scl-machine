@@ -20,12 +20,12 @@ TemplateSearcherAbstract::TemplateSearcherAbstract(
 {
 }
 
-void TemplateSearcherAbstract::setInputStructures(ScAddrHashSet const & otherInputStructures)
+void TemplateSearcherAbstract::setInputStructures(ScAddrUnorderedSet const & otherInputStructures)
 {
   inputStructures = otherInputStructures;
 }
 
-ScAddrHashSet TemplateSearcherAbstract::getInputStructures() const
+ScAddrUnorderedSet TemplateSearcherAbstract::getInputStructures() const
 {
   return inputStructures;
 }
@@ -33,7 +33,7 @@ ScAddrHashSet TemplateSearcherAbstract::getInputStructures() const
 void TemplateSearcherAbstract::searchTemplate(
     ScAddr const & templateAddr,
     vector<ScTemplateParams> const & scTemplateParamsVector,
-    ScAddrHashSet const & variables,
+    ScAddrUnorderedSet const & variables,
     Replacements & result)
 {
   Replacements searchResults;
@@ -61,7 +61,7 @@ void TemplateSearcherAbstract::searchTemplate(
   }
 }
 
-void TemplateSearcherAbstract::getVariables(ScAddr const & formula, ScAddrHashSet & variables)
+void TemplateSearcherAbstract::getVariables(ScAddr const & formula, ScAddrUnorderedSet & variables)
 {
   ScIterator3Ptr const & formulaVariablesIterator =
       context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::Var);
@@ -69,7 +69,7 @@ void TemplateSearcherAbstract::getVariables(ScAddr const & formula, ScAddrHashSe
     variables.insert(formulaVariablesIterator->Get(2));
 }
 
-void TemplateSearcherAbstract::getConstants(ScAddr const & formula, ScAddrHashSet & constants)
+void TemplateSearcherAbstract::getConstants(ScAddr const & formula, ScAddrUnorderedSet & constants)
 {
   ScIterator3Ptr const & formulaConstantsIterator =
       context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::Const);

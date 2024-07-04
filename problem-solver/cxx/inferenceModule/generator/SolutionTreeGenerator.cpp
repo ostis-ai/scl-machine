@@ -26,7 +26,7 @@ SolutionTreeGenerator::SolutionTreeGenerator(ScMemoryContext * ms_context)
 bool SolutionTreeGenerator::addNode(
     ScAddr const & formula,
     ScTemplateParams const & templateParams,
-    ScAddrHashSet const & variables)
+    ScAddrUnorderedSet const & variables)
 {
   ScAddr newSolutionNode = createSolutionNode(formula, templateParams, variables);
   bool result = newSolutionNode.IsValid();
@@ -61,7 +61,7 @@ bool SolutionTreeGenerator::addNode(
 ScAddr SolutionTreeGenerator::createSolutionNode(
     ScAddr const & formula,
     ScTemplateParams const & templateParams,
-    ScAddrHashSet const & variables)
+    ScAddrUnorderedSet const & variables)
 {
   ScAddr const & solutionNode = ms_context->CreateNode(ScType::NodeConst);
   GenerationUtils::generateRelationBetween(ms_context, solutionNode, formula, CoreKeynodes::rrel_1);
