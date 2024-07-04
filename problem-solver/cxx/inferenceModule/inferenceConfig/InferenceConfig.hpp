@@ -9,7 +9,8 @@
 #include <sc-memory/sc_addr.hpp>
 
 #include "utils/Types.hpp"
-
+namespace inference
+{
 enum GenerationType
 {
   GENERATE_UNIQUE_FORMULAS = 1,
@@ -62,7 +63,8 @@ struct InferenceParams
 {
   ScAddr formulasSet;
   ScAddrVector arguments;
-  inference::ScAddrHashSet inputStructures;
+  ScAddrHashSet inputStructures;
   ScAddr outputStructure;
   ScAddr targetStructure;
 };
+}  // namespace inference

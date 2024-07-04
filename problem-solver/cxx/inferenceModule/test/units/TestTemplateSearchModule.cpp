@@ -257,7 +257,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithExistedConstructionsTest)
       std::make_unique<inference::TemplateSearcherOnlyAccessEdgesInStructures>(
         &context);
   templateSearcher->setInputStructures({structure1, structure2, structure3});
-  templateSearcher->setOutputStructureFillingType(SEARCHED_AND_GENERATED);
+  templateSearcher->setOutputStructureFillingType(inference::SEARCHED_AND_GENERATED);
   inference::Replacements searchResults;
   templateSearcher->searchTemplate(
       searchTemplateAddr,
@@ -284,8 +284,8 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutAccessEdgesTest)
         &context);
   // input structures are empty because search template does not have access edges
   templateSearcher->setInputStructures({});
-  templateSearcher->setOutputStructureFillingType(SEARCHED_AND_GENERATED);
-  templateSearcher->setReplacementsUsingType(REPLACEMENTS_ALL);
+  templateSearcher->setOutputStructureFillingType(inference::SEARCHED_AND_GENERATED);
+  templateSearcher->setReplacementsUsingType(inference::REPLACEMENTS_ALL);
   inference::Replacements searchResults;
   templateSearcher->searchTemplate(
       searchTemplateAddr,
