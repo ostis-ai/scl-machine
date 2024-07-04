@@ -44,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed applying rules chain
 
 ### Changed
+- InferenceConfig is added to inference namespace
 - Template search in structures checks if element is in structure instead of check if structure has element
 - Logic formula generation results are passed as method arguments instead of return values
 - Replacements results are passed as method arguments instead of return values
