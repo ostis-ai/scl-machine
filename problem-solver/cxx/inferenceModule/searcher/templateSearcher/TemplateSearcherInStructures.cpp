@@ -17,7 +17,7 @@ using namespace inference;
 
 TemplateSearcherInStructures::TemplateSearcherInStructures(
     ScMemoryContext * context,
-    ScAddrVector const & otherInputStructures)
+    ScAddrUnorderedSet const & otherInputStructures)
   : TemplateSearcherAbstract(context)
 {
   inputStructures = otherInputStructures;
@@ -31,7 +31,7 @@ TemplateSearcherInStructures::TemplateSearcherInStructures(ScMemoryContext * con
 void TemplateSearcherInStructures::searchTemplate(
     ScAddr const & templateAddr,
     ScTemplateParams const & templateParams,
-    ScAddrHashSet const & variables,
+    ScAddrUnorderedSet const & variables,
     Replacements & result)
 {
   ScTemplate searchTemplate;
@@ -84,7 +84,7 @@ void TemplateSearcherInStructures::searchTemplateWithContent(
     ScTemplateParams const & templateParams,
     Replacements & result)
 {
-  ScAddrHashSet variables;
+  ScAddrUnorderedSet variables;
   getVariables(templateAddr, variables);
   std::map<std::string, std::string> linksContentMap = getTemplateLinksContent(templateAddr);
 
@@ -140,8 +140,12 @@ std::map<std::string, std::string> TemplateSearcherInStructures::getTemplateLink
 
 bool TemplateSearcherInStructures::isValidElement(ScAddr const & element) const
 {
-  return std::any_of(
-      inputStructures.cbegin(), inputStructures.cend(), [&element, this](ScAddr const & inputStructure) -> bool {
-        return context->HelperCheckEdge(inputStructure, element, ScType::EdgeAccessConstPosPerm);
-      });
+  auto const & structuresIterator =
+      context->Iterator3(ScType::NodeConstStruct, ScType::EdgeAccessConstPosPerm, element);
+  while (structuresIterator->Next())
+  {
+    if (inputStructures.count(structuresIterator->Get(0)))
+      return true;
+  }
+  return false;
 }

@@ -16,9 +16,9 @@ void ReplacementsUtils::intersectReplacements(
     Replacements & intersection)
 {
   std::vector<std::pair<size_t, size_t>> firstSecondPairs;
-  ScAddrHashSet firstKeys;
+  ScAddrUnorderedSet firstKeys;
   getKeySet(first, firstKeys);
-  ScAddrHashSet secondKeys;
+  ScAddrUnorderedSet secondKeys;
   getKeySet(second, secondKeys);
   size_t firstAmountOfColumns = getColumnsAmount(first);
   size_t secondAmountOfColumns = getColumnsAmount(second);
@@ -34,7 +34,7 @@ void ReplacementsUtils::intersectReplacements(
     return;
   }
 
-  ScAddrHashSet commonKeysSet;
+  ScAddrUnorderedSet commonKeysSet;
   getCommonKeys(firstKeys, secondKeys, commonKeysSet);
 
   ReplacementsHashes firstHashes;
@@ -93,9 +93,9 @@ void ReplacementsUtils::subtractReplacements(
     Replacements const & second,
     Replacements & difference)
 {
-  ScAddrHashSet firstKeys;
+  ScAddrUnorderedSet firstKeys;
   getKeySet(first, firstKeys);
-  ScAddrHashSet secondKeys;
+  ScAddrUnorderedSet secondKeys;
   getKeySet(second, secondKeys);
   size_t firstAmountOfColumns = getColumnsAmount(first);
   size_t secondAmountOfColumns = getColumnsAmount(second);
@@ -108,7 +108,7 @@ void ReplacementsUtils::subtractReplacements(
     return;
   }
 
-  ScAddrHashSet commonKeysSet;
+  ScAddrUnorderedSet commonKeysSet;
   getCommonKeys(firstKeys, secondKeys, commonKeysSet);
 
   if (commonKeysSet.empty())
@@ -170,11 +170,11 @@ void ReplacementsUtils::uniteReplacements(
     Replacements const & second,
     Replacements & unionResult)
 {
-  ScAddrHashSet firstKeys;
+  ScAddrUnorderedSet firstKeys;
   getKeySet(first, firstKeys);
-  ScAddrHashSet secondKeys;
+  ScAddrUnorderedSet secondKeys;
   getKeySet(second, secondKeys);
-  ScAddrHashSet commonKeysSet;
+  ScAddrUnorderedSet commonKeysSet;
   getCommonKeys(firstKeys, secondKeys, commonKeysSet);
   size_t firstAmountOfColumns = getColumnsAmount(first);
   if (firstAmountOfColumns == 0)
@@ -272,18 +272,18 @@ void ReplacementsUtils::uniteReplacements(
   unionResult = result;
 }
 
-void ReplacementsUtils::getKeySet(Replacements const & map, ScAddrHashSet & keySet)
+void ReplacementsUtils::getKeySet(Replacements const & map, ScAddrUnorderedSet & keySet)
 {
   for (auto const & pair : map)
     keySet.insert(pair.first);
 }
 
 void ReplacementsUtils::getCommonKeys(
-    ScAddrHashSet const & first,
-    ScAddrHashSet const & second,
-    ScAddrHashSet & commonKeys)
+    ScAddrUnorderedSet const & first,
+    ScAddrUnorderedSet const & second,
+    ScAddrUnorderedSet & commonKeys)
 {
-  ScAddrHashSet result;
+  ScAddrUnorderedSet result;
   for (ScAddr const & key : first)
   {
     if (second.find(key) != second.end())
@@ -312,7 +312,7 @@ void ReplacementsUtils::getReplacementsToScTemplateParams(
     Replacements const & replacements,
     std::vector<ScTemplateParams> & templateParams)
 {
-  ScAddrHashSet keys;
+  ScAddrUnorderedSet keys;
   getKeySet(replacements, keys);
   if (keys.empty())
     return;
@@ -334,7 +334,7 @@ size_t ReplacementsUtils::getColumnsAmount(Replacements const & replacements)
 
 void ReplacementsUtils::removeDuplicateColumns(Replacements & replacements)
 {
-  ScAddrHashSet keys;
+  ScAddrUnorderedSet keys;
   getKeySet(replacements, keys);
   if (keys.empty())
     return;
@@ -385,7 +385,7 @@ void ReplacementsUtils::removeDuplicateColumns(Replacements & replacements)
 
 void ReplacementsUtils::calculateHashesForCommonKeys(
     Replacements const & replacements,
-    ScAddrHashSet const & commonKeys,
+    ScAddrUnorderedSet const & commonKeys,
     ReplacementsHashes & hashes)
 {
   size_t const columnsAmount = ReplacementsUtils::getColumnsAmount(replacements);
@@ -402,7 +402,7 @@ void ReplacementsUtils::calculateHashesForCommonKeys(
   }
 }
 
-Replacements ReplacementsUtils::removeRows(Replacements const & replacements, ScAddrHashSet & keysToRemove)
+Replacements ReplacementsUtils::removeRows(Replacements const & replacements, ScAddrUnorderedSet & keysToRemove)
 {
   Replacements result;
   for (auto const & replacement : replacements)

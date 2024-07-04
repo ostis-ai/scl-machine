@@ -25,7 +25,7 @@ public:
   void searchTemplate(
       ScAddr const & templateAddr,
       ScTemplateParams const & templateParams,
-      ScAddrHashSet const & variables,
+      ScAddrUnorderedSet const & variables,
       Replacements & result) override;
 
 private:

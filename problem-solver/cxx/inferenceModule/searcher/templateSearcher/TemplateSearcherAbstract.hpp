@@ -35,26 +35,26 @@ public:
   virtual void searchTemplate(
       ScAddr const & templateAddr,
       ScTemplateParams const & templateParams,
-      ScAddrHashSet const & variables,
+      ScAddrUnorderedSet const & variables,
       Replacements & result) = 0;
 
   virtual void searchTemplate(
       ScAddr const & templateAddr,
       vector<ScTemplateParams> const & scTemplateParamsVector,
-      ScAddrHashSet const & variables,
+      ScAddrUnorderedSet const & variables,
       Replacements & result);
 
-  void getVariables(ScAddr const & formula, ScAddrHashSet & variables);
+  void getVariables(ScAddr const & formula, ScAddrUnorderedSet & variables);
 
-  void getConstants(ScAddr const & formula, ScAddrHashSet & constants);
+  void getConstants(ScAddr const & formula, ScAddrUnorderedSet & constants);
 
   bool isContentIdentical(
       ScTemplateSearchResultItem const & item,
       std::map<std::string, std::string> const & linksContentMap);
 
-  void setInputStructures(ScAddrVector const & otherInputStructures);
+  void setInputStructures(ScAddrUnorderedSet const & otherInputStructures);
 
-  ScAddrVector getInputStructures() const;
+  ScAddrUnorderedSet getInputStructures() const;
 
   void setReplacementsUsingType(ReplacementsUsingType const otherReplacementsUsingType)
   {
@@ -90,7 +90,7 @@ public:
 protected:
 
   ScMemoryContext * context;
-  ScAddrVector inputStructures;
+  ScAddrUnorderedSet inputStructures;
   ReplacementsUsingType replacementsUsingType;
   OutputStructureFillingType outputStructureFillingType;
   AtomicLogicalFormulaSearchBeforeGenerationType atomicLogicalFormulaSearchBeforeGenerationType;

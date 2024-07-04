@@ -67,7 +67,7 @@ TEST_P(InferenceManagerBuilderTest, SingleSuccessApplyInference)
   // second triple.
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
-  ScAddrVector inputStructures{inputStructure1, inputStructure2};
+  ScAddrUnorderedSet inputStructures{inputStructure1, inputStructure2};
 
   // Get arguments set. It is a singleton
   ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
@@ -237,7 +237,7 @@ TEST_P(InferenceManagerBuilderTest, GenerateNotFirst)
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
-  ScAddrVector inputStructures{inputStructure1, inputStructure2};
+  ScAddrUnorderedSet inputStructures{inputStructure1, inputStructure2};
   ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
   ScAddrVector arguments{argument};
   for (size_t i = 2; i < 6; i++)
@@ -291,7 +291,7 @@ TEST_P(InferenceManagerBuilderTest, GenerateFirst)
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
-  ScAddrVector inputStructures{inputStructure1, inputStructure2};
+  ScAddrUnorderedSet inputStructures{inputStructure1, inputStructure2};
   ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
   ScAddrVector arguments{argument};
   for (size_t i = 2; i < 6; i++)
@@ -334,7 +334,7 @@ TEST_P(InferenceManagerBuilderTest, notGenerateSolutionTree)
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
-  ScAddrVector inputStructures{inputStructure1, inputStructure2};
+  ScAddrUnorderedSet inputStructures{inputStructure1, inputStructure2};
   ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
   ScAddr const & formulasSet = context.HelperResolveSystemIdtf(FORMULAS_SET);
@@ -370,7 +370,7 @@ TEST_P(InferenceManagerBuilderTest, generateSolutionTree)
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
-  ScAddrVector inputStructures{inputStructure1, inputStructure2};
+  ScAddrUnorderedSet inputStructures{inputStructure1, inputStructure2};
   ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
   ScAddr const & formulasSet = context.HelperResolveSystemIdtf(FORMULAS_SET);
@@ -407,7 +407,7 @@ TEST_P(InferenceManagerBuilderTest, SingleUnsuccessfulApplyInference)
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
-  ScAddrVector inputStructures{inputStructure1, inputStructure2};
+  ScAddrUnorderedSet inputStructures{inputStructure1, inputStructure2};
   ScAddr const & rulesSet = context.HelperResolveSystemIdtf(FORMULAS_SET);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
 
@@ -446,7 +446,7 @@ TEST_P(InferenceManagerBuilderTest, SingleSuccessfulApplyInferenceWithAccessEdge
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
-  ScAddrVector inputStructures{inputStructure1, inputStructure2};
+  ScAddrUnorderedSet inputStructures{inputStructure1, inputStructure2};
   ScAddr const & rulesSet = context.HelperResolveSystemIdtf(FORMULAS_SET);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
 
@@ -482,7 +482,7 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsGeneratedAndFlagIsGen
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
-  ScAddrVector inputStructures{inputStructure1, inputStructure2};
+  ScAddrUnorderedSet inputStructures{inputStructure1, inputStructure2};
   ScAddr const & rulesSet = context.HelperResolveSystemIdtf(FORMULAS_SET);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
 
@@ -525,7 +525,7 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsGeneratedButFlagIsSea
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
-  ScAddrVector inputStructures{inputStructure1, inputStructure2};
+  ScAddrUnorderedSet inputStructures{inputStructure1, inputStructure2};
   ScAddr const & rulesSet = context.HelperResolveSystemIdtf(FORMULAS_SET);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
 
@@ -567,7 +567,7 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsSearchedAndFlagIsSear
   initialize();
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
-  ScAddrVector inputStructures{inputStructure1};
+  ScAddrUnorderedSet inputStructures{inputStructure1};
   ScAddr const & rulesSet = context.HelperResolveSystemIdtf(FORMULAS_SET);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
 
@@ -609,7 +609,7 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureDoesNotContainSearchedBecause
   initialize();
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
-  ScAddrVector inputStructures{inputStructure1};
+  ScAddrUnorderedSet inputStructures{inputStructure1};
   ScAddr const & rulesSet = context.HelperResolveSystemIdtf(FORMULAS_SET);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
 
@@ -646,7 +646,7 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsSearchedAndGeneratedA
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
-  ScAddrVector inputStructures{inputStructure1, inputStructure2};
+  ScAddrUnorderedSet inputStructures{inputStructure1, inputStructure2};
   ScAddr const & rulesSet = context.HelperResolveSystemIdtf(FORMULAS_SET);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
   ScAddr const & argument = context.HelperFindBySystemIdtf(ARGUMENT);
@@ -700,7 +700,7 @@ TEST_P(InferenceManagerBuilderTest, conclusionContainsEdgeReplacementFromPremise
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
-  ScAddrVector inputStructures{inputStructure1, inputStructure2};
+  ScAddrUnorderedSet inputStructures{inputStructure1, inputStructure2};
   ScAddr const & rulesSet = context.HelperResolveSystemIdtf(FORMULAS_SET);
   ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
   ScAddr const & set1 = context.HelperFindBySystemIdtf("set1");

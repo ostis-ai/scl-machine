@@ -24,7 +24,7 @@ TemplateSearcherGeneral::TemplateSearcherGeneral(ScMemoryContext * context)
 void TemplateSearcherGeneral::searchTemplate(
     ScAddr const & templateAddr,
     ScTemplateParams const & templateParams,
-    ScAddrHashSet const & variables,
+    ScAddrUnorderedSet const & variables,
     Replacements & result)
 {
   ScTemplate searchTemplate;
@@ -70,7 +70,7 @@ void TemplateSearcherGeneral::searchTemplateWithContent(
     Replacements & result)
 {
   std::map<std::string, std::string> linksContentMap = getTemplateLinksContent(templateAddr);
-  ScAddrHashSet variables;
+  ScAddrUnorderedSet variables;
   getVariables(templateAddr, variables);
 
   context->HelperSmartSearchTemplate(

@@ -31,20 +31,23 @@ public:
       Replacements const & first,
       Replacements const & second,
       Replacements & difference);
-  static Replacements removeRows(Replacements const & replacements, ScAddrHashSet & keysToRemove);
+  static Replacements removeRows(Replacements const & replacements, ScAddrUnorderedSet & keysToRemove);
   static void getReplacementsToScTemplateParams(
       Replacements const & replacements,
       std::vector<ScTemplateParams> & templateParams);
   static size_t getColumnsAmount(Replacements const & replacements);
-  static void getKeySet(Replacements const & map, ScAddrHashSet & keySet);
+  static void getKeySet(Replacements const & map, ScAddrUnorderedSet & keySet);
 
 private:
-  static void getCommonKeys(ScAddrHashSet const & first, ScAddrHashSet const & second, ScAddrHashSet & commonKeys);
+  static void getCommonKeys(
+      ScAddrUnorderedSet const & first,
+      ScAddrUnorderedSet const & second,
+      ScAddrUnorderedSet & commonKeys);
   static Replacements copyReplacements(Replacements const & replacements);
   static void removeDuplicateColumns(Replacements & replacements);
   static void calculateHashesForCommonKeys(
       Replacements const & replacements,
-      ScAddrHashSet const & commonKeys,
+      ScAddrUnorderedSet const & commonKeys,
       ReplacementsHashes & hashes);
 };
 

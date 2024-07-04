@@ -22,7 +22,7 @@ public:
 
   ~SolutionTreeGenerator() = default;
 
-  bool addNode(ScAddr const & formula, ScTemplateParams const & templateParams, ScAddrHashSet const & variables);
+  bool addNode(ScAddr const & formula, ScTemplateParams const & templateParams, ScAddrUnorderedSet const & variables);
 
   ScAddr createSolution(ScAddr const & outputStructure, bool targetAchieved);
 
@@ -30,7 +30,7 @@ private:
   ScAddr createSolutionNode(
       ScAddr const & formula,
       ScTemplateParams const & templateParams,
-      ScAddrHashSet const & variables);
+      ScAddrUnorderedSet const & variables);
 
   ScMemoryContext * ms_context;
   ScAddr solution;

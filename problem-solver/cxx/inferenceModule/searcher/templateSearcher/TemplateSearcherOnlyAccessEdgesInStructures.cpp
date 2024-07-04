@@ -13,7 +13,7 @@ namespace inference
 
 TemplateSearcherOnlyAccessEdgesInStructures::TemplateSearcherOnlyAccessEdgesInStructures(
     ScMemoryContext * context,
-    ScAddrVector const & otherInputStructures)
+    ScAddrUnorderedSet const & otherInputStructures)
   : TemplateSearcherInStructures(context, otherInputStructures)
 {
 }
@@ -33,10 +33,15 @@ map<std::string, std::string> TemplateSearcherOnlyAccessEdgesInStructures::getTe
 
 bool TemplateSearcherOnlyAccessEdgesInStructures::isValidElement(ScAddr const & element) const
 {
-  return !context->GetElementType(element).BitAnd(ScType::EdgeAccess) ||
-         std::any_of(
-             inputStructures.cbegin(), inputStructures.cend(), [&element, this](ScAddr const & inputStructure) -> bool {
-               return context->HelperCheckEdge(inputStructure, element, ScType::EdgeAccessConstPosPerm);
-             });
+  if (!context->GetElementType(element).BitAnd(ScType::EdgeAccess))
+    return true;
+  auto const & structuresIterator =
+      context->Iterator3(ScType::NodeConstStruct, ScType::EdgeAccessConstPosPerm, element);
+  while (structuresIterator->Next())
+  {
+    if (inputStructures.count(structuresIterator->Get(0)))
+      return true;
+  }
+  return false;
 }
 }  // namespace inference

@@ -42,7 +42,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_NoStructuresTestCase)
   ScTemplateParams templateParams;
 
   inference::Replacements searchResults;
-  inference::ScAddrHashSet variables;
+  inference::ScAddrUnorderedSet variables;
   templateSearcher.getVariables(searchTemplateAddr, variables);
   templateSearcher.searchTemplate(searchTemplateAddr, templateParams, variables, searchResults);
 
@@ -61,7 +61,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_EmptyResultsTestCase)
   ScTemplateParams templateParams;
 
   inference::Replacements searchResults;
-  inference::ScAddrHashSet variables;
+  inference::ScAddrUnorderedSet variables;
   templateSearcher.getVariables(searchTemplateAddr, variables);
   templateSearcher.searchTemplate(searchTemplateAddr, templateParams, variables, searchResults);
 
@@ -84,12 +84,12 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_SingleResultTestCase)
   inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
   inference::Replacements searchResults;
-  inference::ScAddrHashSet variables;
+  inference::ScAddrUnorderedSet variables;
   templateSearcher.getVariables(searchTemplateAddr, variables);
   templateSearcher.searchTemplate(searchTemplateAddr, templateParams, variables, searchResults);
 
   ScAddrVector const & vars = utils::IteratorUtils::getAllWithType(&context, searchTemplateAddr, ScType::Var);
-  inference::ScAddrHashSet templateVars = {vars.cbegin(), vars.cend()};
+  inference::ScAddrUnorderedSet templateVars = {vars.cbegin(), vars.cend()};
   EXPECT_EQ(searchResults.size(), templateVars.size());
   EXPECT_EQ(
       searchResults.at(context.HelperFindBySystemIdtf(searchLinkIdentifier))[0],
@@ -115,7 +115,7 @@ TEST_F(TemplateSearchManagerTest, SearchInMultipleStructuresWithContent_SingleRe
   inference::TemplateSearcherInStructures templateSearcher(&context);
   ScTemplateParams templateParams;
   inference::Replacements searchResults;
-  inference::ScAddrHashSet variables;
+  inference::ScAddrUnorderedSet variables;
   ScAddr const & inputStructure1 = context.HelperFindBySystemIdtf("input_structure_1");
   ScAddr const & inputStructure2 = context.HelperFindBySystemIdtf("input_structure_2");
   templateSearcher.setInputStructures({inputStructure1, inputStructure2});
@@ -123,7 +123,7 @@ TEST_F(TemplateSearchManagerTest, SearchInMultipleStructuresWithContent_SingleRe
   templateSearcher.searchTemplate(searchTemplateAddr, templateParams, variables, searchResults);
 
   ScAddrVector const & vars = utils::IteratorUtils::getAllWithType(&context, searchTemplateAddr, ScType::Var);
-  inference::ScAddrHashSet templateVars = {vars.cbegin(), vars.cend()};
+  inference::ScAddrUnorderedSet templateVars = {vars.cbegin(), vars.cend()};
   EXPECT_EQ(searchResults.size(), templateVars.size());
   EXPECT_EQ(
       searchResults.at(context.HelperFindBySystemIdtf(searchLinkIdentifier))[0],
@@ -145,7 +145,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_NoStructuresTestCase)
   ScTemplateParams templateParams;
 
   inference::Replacements searchResults;
-  inference::ScAddrHashSet variables;
+  inference::ScAddrUnorderedSet variables;
   templateSearcher.getVariables(searchTemplateAddr, variables);
   templateSearcher.searchTemplate(searchTemplateAddr, templateParams, variables, searchResults);
 
@@ -168,12 +168,12 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_SingleResultTestCase)
   inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
   inference::Replacements searchResults;
-  inference::ScAddrHashSet variables;
+  inference::ScAddrUnorderedSet variables;
   templateSearcher.getVariables(searchTemplateAddr, variables);
   templateSearcher.searchTemplate(searchTemplateAddr, templateParams, variables, searchResults);
 
   ScAddrVector const & vars = utils::IteratorUtils::getAllWithType(&context, searchTemplateAddr, ScType::Var);
-  inference::ScAddrHashSet templateVars = {vars.cbegin(), vars.cend()};
+  inference::ScAddrUnorderedSet templateVars = {vars.cbegin(), vars.cend()};
   EXPECT_EQ(searchResults.size(), templateVars.size());
 
   EXPECT_EQ(
@@ -198,12 +198,12 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_EmptyLinkTestCase)
   inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
   inference::Replacements searchResults;
-  inference::ScAddrHashSet variables;
+  inference::ScAddrUnorderedSet variables;
   templateSearcher.getVariables(searchTemplateAddr, variables);
   templateSearcher.searchTemplate(searchTemplateAddr, templateParams, variables, searchResults);
 
   ScAddrVector const & vars = utils::IteratorUtils::getAllWithType(&context, searchTemplateAddr, ScType::Var);
-  inference::ScAddrHashSet templateVars = {vars.cbegin(), vars.cend()};
+  inference::ScAddrUnorderedSet templateVars = {vars.cbegin(), vars.cend()};
   EXPECT_EQ(searchResults.size(), templateVars.size());
   EXPECT_EQ(
       searchResults.at(context.HelperFindBySystemIdtf(searchLinkIdentifier))[0],
@@ -224,12 +224,12 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_EmptyLinkTestCase)
   inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
   inference::Replacements searchResults;
-  inference::ScAddrHashSet variables;
+  inference::ScAddrUnorderedSet variables;
   templateSearcher.getVariables(searchTemplateAddr, variables);
   templateSearcher.searchTemplate(searchTemplateAddr, templateParams, variables, searchResults);
 
   ScAddrVector const & vars = utils::IteratorUtils::getAllWithType(&context, searchTemplateAddr, ScType::Var);
-  inference::ScAddrHashSet templateVars = {vars.cbegin(), vars.cend()};
+  inference::ScAddrUnorderedSet templateVars = {vars.cbegin(), vars.cend()};
   EXPECT_EQ(searchResults.size(), templateVars.size());
   EXPECT_EQ(
       searchResults.at(context.HelperFindBySystemIdtf(searchLinkIdentifier))[0],
@@ -257,7 +257,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithExistedConstructionsTest)
       std::make_unique<inference::TemplateSearcherOnlyAccessEdgesInStructures>(
         &context);
   templateSearcher->setInputStructures({structure1, structure2, structure3});
-  templateSearcher->setOutputStructureFillingType(SEARCHED_AND_GENERATED);
+  templateSearcher->setOutputStructureFillingType(inference::SEARCHED_AND_GENERATED);
   inference::Replacements searchResults;
   templateSearcher->searchTemplate(
       searchTemplateAddr,
@@ -284,8 +284,8 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutAccessEdgesTest)
         &context);
   // input structures are empty because search template does not have access edges
   templateSearcher->setInputStructures({});
-  templateSearcher->setOutputStructureFillingType(SEARCHED_AND_GENERATED);
-  templateSearcher->setReplacementsUsingType(REPLACEMENTS_ALL);
+  templateSearcher->setOutputStructureFillingType(inference::SEARCHED_AND_GENERATED);
+  templateSearcher->setReplacementsUsingType(inference::REPLACEMENTS_ALL);
   inference::Replacements searchResults;
   templateSearcher->searchTemplate(
       searchTemplateAddr,
