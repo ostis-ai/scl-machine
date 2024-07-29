@@ -44,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed applying rules chain
 
 ### Changed
+- All questions are replaced with actions
 - ScAddrHashSet is renamed to ScAddrUnorderedSet
 - InferenceConfig is added to inference namespace
 - Template search in structures checks if element is in structure instead of check if structure has element
