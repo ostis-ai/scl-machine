@@ -93,7 +93,7 @@ input_structure = [*
 rules_set
     -> rrel_1: { lr_complex };;
 
-inference_logic_test_question
+inference_logic_test_action
     <- action_direct_inference;
     -> rrel_1: target_template;
     -> rrel_2: rules_set;

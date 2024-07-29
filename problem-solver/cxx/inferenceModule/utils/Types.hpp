@@ -7,6 +7,5 @@
 
 namespace inference
 {
-using Replacements = std::unordered_map<ScAddr, ScAddrVector, ScAddrHashFunc<uint32_t>>;
-using ScAddrUnorderedSet = std::unordered_set<ScAddr, ScAddrHashFunc<uint32_t>>;
+using Replacements = std::unordered_map<ScAddr, ScAddrVector, ScAddrHashFunc>;
 }  // namespace inference

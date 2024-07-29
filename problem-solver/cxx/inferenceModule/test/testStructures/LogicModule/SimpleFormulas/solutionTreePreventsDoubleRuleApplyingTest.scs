@@ -48,13 +48,13 @@ atomic_logical_formula
 @edge = (logic_rules -> @tuple);;
 rrel_1 -> @edge;;
 
-first_inference_logic_test_question
+first_inference_logic_test_action
     -> rrel_1: reachable_target;
     -> rrel_2: logic_rules;
     -> rrel_3: arguments;
     -> rrel_4: input_structure;;
     
-second_inference_logic_test_question
+second_inference_logic_test_action
     -> rrel_1: unreachable_target;
     -> rrel_2: logic_rules;
     -> rrel_3: arguments;

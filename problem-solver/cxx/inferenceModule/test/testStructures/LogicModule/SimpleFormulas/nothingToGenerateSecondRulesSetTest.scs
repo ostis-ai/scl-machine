@@ -66,7 +66,7 @@ rrel_1 -> @rules_set_arc;;
 @rules2_set_arc = (rules_set -> rules_2);;
 @rules_set_arc => nrel_basic_sequence: @rules2_set_arc;;
 
-inference_logic_test_question
+inference_logic_test_action
     <- action_direct_inference;
     -> rrel_1: target_template;
     -> rrel_2: rules_set;

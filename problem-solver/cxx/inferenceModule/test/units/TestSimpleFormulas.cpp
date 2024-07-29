@@ -21,7 +21,7 @@ namespace directInferenceSimpleFormulasTest
 {
 ScsLoader loader;
 string const TEST_FILES_DIR_PATH = TEMPLATE_SEARCH_MODULE_TEST_SRC_PATH "/testStructures/LogicModule/SimpleFormulas/";
-string const QUESTION_IDENTIFIER = "inference_logic_test_question";
+string const ACTION_IDENTIFIER = "inference_logic_test_action";
 
 using InferenceSimpleFormulasTest = ScMemoryTest;
 const int WAIT_TIME = 1500;
@@ -66,7 +66,7 @@ TEST_F(InferenceSimpleFormulasTest, TrueSimpleLogicRule)
 
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::action_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
   ScIterator3Ptr argumentClassIteratorAfter =
       context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
@@ -109,7 +109,7 @@ TEST_F(InferenceSimpleFormulasTest, TrueSimpleLogicRuleThreeArguments)
 
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::action_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
   ScIterator3Ptr argumentClassIteratorAfter =
       context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
@@ -134,7 +134,7 @@ TEST_F(InferenceSimpleFormulasTest, TrueDoubleApplyLogicRule)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "trueDoubleApplyRuleTest.scs");
   initialize();
 
-  ScAddr action = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
+  ScAddr action = context.HelperResolveSystemIdtf(ACTION_IDENTIFIER);
   EXPECT_TRUE(action.IsValid());
 
   ScAddr argument = context.HelperFindBySystemIdtf("argument");
@@ -151,7 +151,7 @@ TEST_F(InferenceSimpleFormulasTest, TrueDoubleApplyLogicRule)
 
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::action_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
   ScIterator3Ptr argumentClassIteratorAfter =
       context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
@@ -176,7 +176,7 @@ TEST_F(InferenceSimpleFormulasTest, TrueSecondRulesSet)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "trueSecondRulesSetTest.scs");
   initialize();
 
-  ScAddr action = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
+  ScAddr action = context.HelperResolveSystemIdtf(ACTION_IDENTIFIER);
   EXPECT_TRUE(action.IsValid());
 
   ScAddr argument = context.HelperFindBySystemIdtf("argument");
@@ -193,7 +193,7 @@ TEST_F(InferenceSimpleFormulasTest, TrueSecondRulesSet)
 
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::action_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
   ScIterator3Ptr argumentClassIteratorAfter =
       context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
@@ -217,7 +217,7 @@ TEST_F(InferenceSimpleFormulasTest, NothingToGenerateSecondRulesSet)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "nothingToGenerateSecondRulesSetTest.scs");
   initialize();
 
-  ScAddr action = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
+  ScAddr action = context.HelperResolveSystemIdtf(ACTION_IDENTIFIER);
   EXPECT_TRUE(action.IsValid());
 
   ScAddr argument = context.HelperFindBySystemIdtf("argument");
@@ -234,7 +234,7 @@ TEST_F(InferenceSimpleFormulasTest, NothingToGenerateSecondRulesSet)
 
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::action_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
   ScIterator3Ptr argumentClassIteratorAfter =
       context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
@@ -256,12 +256,12 @@ TEST_F(InferenceSimpleFormulasTest, TwoTriplesTest)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "twoTriplesTest.scs");
   initialize();
 
-  ScAddr const & action = context.HelperResolveSystemIdtf(QUESTION_IDENTIFIER);
+  ScAddr const & action = context.HelperResolveSystemIdtf(ACTION_IDENTIFIER);
   EXPECT_TRUE(action.IsValid());
 
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::action_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
   shutdown();
   context.Destroy();
@@ -275,11 +275,11 @@ TEST_F(InferenceSimpleFormulasTest, ApplyRuleFromSecondAndThenFromFirstSetTest)
 
   initialize();
 
-  ScAddr const & action = context.HelperFindBySystemIdtf(QUESTION_IDENTIFIER);
+  ScAddr const & action = context.HelperFindBySystemIdtf(ACTION_IDENTIFIER);
   EXPECT_TRUE(action.IsValid());
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::action_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
   shutdown();
   context.Destroy();
@@ -292,19 +292,19 @@ TEST_F(InferenceSimpleFormulasTest, DISABLED_SolutionTreePreventsDoubleRuleApply
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "solutionTreePreventsDoubleRuleApplyingTest.scs");
   initialize();
 
-  ScAddr const & first_inference_logic_test_question = context.HelperFindBySystemIdtf("first_" + QUESTION_IDENTIFIER);
+  ScAddr const & first_inference_logic_test_action = context.HelperFindBySystemIdtf("first_" + ACTION_IDENTIFIER);
   EXPECT_TRUE(utils::AgentUtils::applyAction(
-      &context, first_inference_logic_test_question, WAIT_TIME, InferenceKeynodes::action_direct_inference));
+      &context, first_inference_logic_test_action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::question_finished_successfully,
-      first_inference_logic_test_question,
+      scAgentsCommon::CoreKeynodes::action_finished_successfully,
+      first_inference_logic_test_action,
       ScType::EdgeAccessConstPosPerm));
-  ScAddr const & second_inference_logic_test_question = context.HelperFindBySystemIdtf("second_" + QUESTION_IDENTIFIER);
+  ScAddr const & second_inference_logic_test_action = context.HelperFindBySystemIdtf("second_" + ACTION_IDENTIFIER);
   EXPECT_TRUE(utils::AgentUtils::applyAction(
-      &context, second_inference_logic_test_question, WAIT_TIME, InferenceKeynodes::action_direct_inference));
+      &context, second_inference_logic_test_action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::question_finished_successfully,
-      second_inference_logic_test_question,
+      scAgentsCommon::CoreKeynodes::action_finished_successfully,
+      second_inference_logic_test_action,
       ScType::EdgeAccessConstPosPerm));
 
   ScIterator3Ptr iterator =

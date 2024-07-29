@@ -28,7 +28,7 @@ test_rule_set
     };;
 
 //action description
-inference_logic_test_question
+inference_logic_test_action
     <- action_direct_inference;
     -> rrel_1: target_structure;
     //-> rrel_2: test_rule_set;

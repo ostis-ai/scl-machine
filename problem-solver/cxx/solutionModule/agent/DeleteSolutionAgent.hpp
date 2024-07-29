@@ -17,7 +17,7 @@ namespace solutionModule
 class DeleteSolutionAgent : public ScAgent
 {
 public:
-  SC_CLASS(Agent, Event(scAgentsCommon::CoreKeynodes::question_initiated, ScEvent::Type::AddOutputEdge))
+  SC_CLASS(Agent, Event(scAgentsCommon::CoreKeynodes::action_initiated, ScEvent::Type::AddOutputEdge))
   SC_GENERATED_BODY()
 
 private:

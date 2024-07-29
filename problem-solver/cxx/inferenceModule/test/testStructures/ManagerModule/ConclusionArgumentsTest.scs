@@ -29,7 +29,7 @@ rules_sets
 rules_set_priority_1
 	-> lr_test_conclusion_arguments;;
 
-inference_logic_test_question
+inference_logic_test_action
     <- action_direct_inference;
     -> rrel_1: inference_target;
     -> rrel_2: rules_sets;

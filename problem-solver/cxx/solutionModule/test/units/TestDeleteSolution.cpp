@@ -48,7 +48,7 @@ TEST_F(DeleteSolutionAgentTest, solutionHasNoElements)
   EXPECT_TRUE(testActionNode.IsValid());
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, testActionNode, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::question_finished_successfully, testActionNode, ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::action_finished_successfully, testActionNode, ScType::EdgeAccessConstPosPerm));
   shutdown();
 }
 
@@ -76,7 +76,7 @@ TEST_F(DeleteSolutionAgentTest, solutionHasSomeElements)
   EXPECT_TRUE(testActionNode.IsValid());
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, testActionNode, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::question_finished_successfully, testActionNode, ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::action_finished_successfully, testActionNode, ScType::EdgeAccessConstPosPerm));
   EXPECT_EQ(context.GetElementOutputArcsCount(edgeFromClassToVariable), 1u);
   EXPECT_EQ(utils::IteratorUtils::getAllWithType(&context, conceptSolution, ScType::NodeConst).size(), 1u);
   shutdown();
@@ -92,7 +92,7 @@ TEST_F(DeleteSolutionAgentTest, solutionIsInvalid)
   EXPECT_TRUE(testActionNode.IsValid());
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, testActionNode, WAIT_TIME));
   EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully, testActionNode, ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::action_finished_unsuccessfully, testActionNode, ScType::EdgeAccessConstPosPerm));
   shutdown();
 }
 

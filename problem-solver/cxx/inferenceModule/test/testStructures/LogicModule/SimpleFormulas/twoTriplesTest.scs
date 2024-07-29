@@ -60,7 +60,7 @@ arguments
     _target_node_1 _=> nrel_relation:: _target_node_2;;
 *];;
 
-inference_logic_test_question
+inference_logic_test_action
     -> rrel_1: @target;
     -> rrel_2: rules;
     -> rrel_3: arguments;;
