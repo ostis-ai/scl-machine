@@ -18,7 +18,7 @@ test_input_structure = [*
 *];;
 
 //action description
-inference_logic_test_question
+inference_logic_test_action
     <- action_direct_inference;
     -> rrel_1: test_direct_inference_target;
     //-> rrel_2: test_rule_set (* -> test_rule_1;; -> test_rule_2;; *);

@@ -340,7 +340,7 @@ void ReplacementsUtils::removeDuplicateColumns(Replacements & replacements)
     return;
   ReplacementsHashes replacementsHashes;
   calculateHashesForCommonKeys(replacements, keys, replacementsHashes);
-  std::unordered_map<ScAddr, ScAddr, ScAddrHashFunc<uint32_t>> column;
+  std::unordered_map<ScAddr, ScAddr, ScAddrHashFunc> column;
   std::set<size_t> columnsToRemove;
   for (auto const & replacementsHash : replacementsHashes)
   {

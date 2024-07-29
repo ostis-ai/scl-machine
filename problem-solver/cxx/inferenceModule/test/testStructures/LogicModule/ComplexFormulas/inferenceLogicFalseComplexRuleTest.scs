@@ -68,7 +68,7 @@ concept_square -> ABCD;;
 
 action_direct_inference <- sc_node_class;;
 
-inference_logic_test_question
+inference_logic_test_action
     <- action_direct_inference;
     -> rrel_1: test_direct_inference_target;
     -> rrel_2: rule_set;

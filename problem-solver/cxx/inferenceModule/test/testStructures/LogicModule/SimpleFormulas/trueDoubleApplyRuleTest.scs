@@ -64,7 +64,7 @@ input_structure = [*
 rules_set
     -> rrel_1: { logic_rule; logic_rule2 };;
 
-inference_logic_test_question
+inference_logic_test_action
     <- action_direct_inference;
     -> rrel_1: target_template;
     -> rrel_2: rules_set;

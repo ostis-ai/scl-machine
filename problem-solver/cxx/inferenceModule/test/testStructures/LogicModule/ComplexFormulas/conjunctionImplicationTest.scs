@@ -44,7 +44,7 @@ conj_1 = [*
 @edge_16587360 = (impl_tuple -> conjunction_tuple);;
 @edge_16597248 = (rrel_if -> @edge_16587360);;
 
-inference_logic_test_question
+inference_logic_test_action
     <- action_direct_inference;
     -> rrel_1: test_direct_inference_target;
     -> rrel_2: rules_set;

@@ -67,7 +67,7 @@ TEST_F(InferenceLogicTest, AllArgumentsValid)
 
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::action_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
   ScIterator3Ptr argumentClassIteratorAfter =
       context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
@@ -103,7 +103,7 @@ TEST_F(InferenceLogicTest, InvalidArguments)
 
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully, action, ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::action_finished_unsuccessfully, action, ScType::EdgeAccessConstPosPerm));
 
   shutdown();
   context.Destroy();
@@ -122,7 +122,7 @@ TEST_F(InferenceLogicTest, EmptyInputStructure)
 
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::action_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
   ScAddr answer =
       utils::IteratorUtils::getAnyByOutRelation(&context, action, scAgentsCommon::CoreKeynodes::nrel_answer);
   ScAddr solution = utils::IteratorUtils::getAnyFromSet(&context, answer);
@@ -146,7 +146,7 @@ TEST_F(InferenceLogicTest, EmptyRuleSet)
 
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::question_finished_unsuccessfully, action, ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::action_finished_unsuccessfully, action, ScType::EdgeAccessConstPosPerm));
 
   shutdown();
   context.Destroy();
@@ -165,7 +165,7 @@ TEST_F(InferenceLogicTest, EmptyRuleSetQueue)
 
   EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
   EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::question_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
+      scAgentsCommon::CoreKeynodes::action_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
 
   shutdown();
   context.Destroy();

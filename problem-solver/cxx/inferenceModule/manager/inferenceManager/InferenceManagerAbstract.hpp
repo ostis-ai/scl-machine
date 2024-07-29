@@ -61,6 +61,6 @@ protected:
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
   std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager;
 
-  std::unordered_set<ScAddr, ScAddrHashFunc<sc_uint32>> outputStructureElements;
+  std::unordered_set<ScAddr, ScAddrHashFunc> outputStructureElements;
 };
 }  // namespace inference
