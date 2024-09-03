@@ -5,7 +5,9 @@
  */
 
 #include "ReplacementsUtils.hpp"
-#include "sc-memory/sc_agent.hpp"
+
+#include <sc-memory/sc_agent.hpp>
+
 namespace inference
 {
 

@@ -4,9 +4,9 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "keynodes/InferenceKeynodes.hpp"
-
 #include "TemplateSearcherOnlyAccessEdgesInStructures.hpp"
+
+#include "keynodes/InferenceKeynodes.hpp"
 
 namespace inference
 {

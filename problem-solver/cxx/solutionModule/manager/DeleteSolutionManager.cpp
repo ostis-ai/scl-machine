@@ -4,9 +4,9 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "sc-agents-common/utils/IteratorUtils.hpp"
-
 #include "DeleteSolutionManager.hpp"
+
+#include <sc-agents-common/utils/IteratorUtils.hpp>
 
 namespace solutionModule
 {

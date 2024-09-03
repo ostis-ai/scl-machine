@@ -4,14 +4,16 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "sc_test.hpp"
-#include "scs_loader.hpp"
-#include "manager/inferenceManager/DirectInferenceManagerTarget.hpp"
-#include "keynodes/InferenceKeynodes.hpp"
-#include "factory/InferenceManagerFactory.hpp"
-#include "sc-agents-common/utils/IteratorUtils.hpp"
-
 #include "ConfigGenerators.hpp"
+
+#include "factory/InferenceManagerFactory.hpp"
+
+#include "keynodes/InferenceKeynodes.hpp"
+
+#include <sc_test.hpp>
+#include <scs_loader.hpp>
+
+#include <sc-agents-common/utils/IteratorUtils.hpp>
 
 using namespace inference;
 

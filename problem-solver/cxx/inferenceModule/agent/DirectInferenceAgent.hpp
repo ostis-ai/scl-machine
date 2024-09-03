@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "sc-memory/sc_agent.hpp"
 #include "manager/inferenceManager/InferenceManagerAbstract.hpp"
-#include "keynodes/InferenceKeynodes.hpp"
+
+#include <sc-memory/sc_agent.hpp>
 
 namespace inference
 {

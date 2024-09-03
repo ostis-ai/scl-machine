@@ -7,7 +7,6 @@
 #include "InferenceModule.hpp"
 
 #include "agent/DirectInferenceAgent.hpp"
-#include "keynodes/InferenceKeynodes.hpp"
 
 using namespace inference;
 

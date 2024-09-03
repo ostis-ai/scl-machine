@@ -4,14 +4,12 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "sc-memory/sc_agent.hpp"
-#include "sc_test.hpp"
-#include "scs_loader.hpp"
-
-#include "sc-agents-common/utils/IteratorUtils.hpp"
-#include "keynodes/SolutionKeynodes.hpp"
-
 #include "agent/DeleteSolutionAgent.hpp"
+
+#include <sc_test.hpp>
+#include <scs_loader.hpp>
+
+#include <sc-agents-common/utils/IteratorUtils.hpp>
 
 namespace deleteSolutionAgentTest
 {

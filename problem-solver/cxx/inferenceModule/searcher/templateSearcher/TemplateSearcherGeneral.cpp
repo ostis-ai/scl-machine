@@ -6,11 +6,10 @@
 
 #include "TemplateSearcherGeneral.hpp"
 
+#include "keynodes/InferenceKeynodes.hpp"
+
 #include <memory>
 #include <algorithm>
-
-#include "sc-agents-common/utils/CommonUtils.hpp"
-#include "keynodes/InferenceKeynodes.hpp"
 
 using namespace inference;
 

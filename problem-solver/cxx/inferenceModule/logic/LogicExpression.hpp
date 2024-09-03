@@ -6,18 +6,22 @@
 
 #pragma once
 
+#include "classifier/FormulaClassifier.hpp"
+
+#include "keynodes/InferenceKeynodes.hpp"
+
+#include "manager/solutionTreeManager/SolutionTreeManager.hpp"
+#include "manager/templateManager/TemplateManager.hpp"
+
+#include "searcher/templateSearcher/TemplateSearcherAbstract.hpp"
+
+#include "utils/ReplacementsUtils.hpp"
+
 #include <sc-memory/sc_template.hpp>
 #include <sc-agents-common/utils/IteratorUtils.hpp>
 #include <sc-agents-common/utils/CommonUtils.hpp>
-#include "keynodes/InferenceKeynodes.hpp"
 
 #include "LogicExpressionNode.hpp"
-
-#include "utils/ReplacementsUtils.hpp"
-#include "manager/solutionTreeManager/SolutionTreeManager.hpp"
-#include "manager/templateManager/TemplateManager.hpp"
-#include "searcher/templateSearcher/TemplateSearcherAbstract.hpp"
-#include "classifier/FormulaClassifier.hpp"
 
 using namespace inference;
 

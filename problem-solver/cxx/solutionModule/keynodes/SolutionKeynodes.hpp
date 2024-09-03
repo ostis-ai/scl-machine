@@ -5,9 +5,9 @@
  */
 
 #pragma once
-#include "sc-memory/sc_keynodes.hpp"
-#include "sc-memory/sc_addr.hpp"
-#include "sc-memory/sc_object.hpp"
+
+#include <sc-memory/sc_keynodes.hpp>
+
 namespace solutionModule
 {
 class SolutionKeynodes : public ScKeynodes

@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "sc-memory/sc_memory_headers.hpp"
+#include <sc-memory/sc_memory_headers.hpp>
 
 namespace solutionModule
 {

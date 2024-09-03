@@ -6,9 +6,11 @@
 
 #include "SolutionTreeGenerator.hpp"
 
-#include <sc-memory/sc_addr.hpp>
-#include <sc-agents-common/utils/GenerationUtils.hpp>
 #include "keynodes/InferenceKeynodes.hpp"
+
+#include <sc-agents-common/utils/GenerationUtils.hpp>
+
+#include <sc-memory/sc_addr.hpp>
 
 using namespace inference;
 using namespace utils;

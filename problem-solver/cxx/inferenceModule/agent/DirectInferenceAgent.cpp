@@ -4,24 +4,25 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <sc-agents-common/utils/IteratorUtils.hpp>
 #include "DirectInferenceAgent.hpp"
+
 #include "factory/InferenceManagerFactory.hpp"
+
+#include "keynodes/InferenceKeynodes.hpp"
+
+#include <sc-agents-common/utils/IteratorUtils.hpp>
 
 namespace inference
 {
 ScResult DirectInferenceAgent::DoProgram(ScActionInitiatedEvent const & event, ScAction & action)
 {
-  ScAddr const targetStructure = action.GetArgument(1);
-  ScAddr const formulasSet = action.GetArgument(2);
-  ScAddr const arguments = action.GetArgument(3);
-  ScAddr const inputStructure = action.GetArgument(4);
+  auto const [targetStructure, formulasSet, arguments, inputStructure] = action.GetArguments<4>();
 
-  if (!targetStructure.IsValid() || !utils::IteratorUtils::getAnyFromSet(&m_context, targetStructure).IsValid())
+  if (!targetStructure.IsValid() || m_context.ConvertToStructure(targetStructure).IsEmpty())
   {
     SC_AGENT_LOG_WARNING("Target structure is not valid or empty.");
   }
-  if (!formulasSet.IsValid() || !utils::IteratorUtils::getAnyFromSet(&m_context, formulasSet).IsValid())
+  if (!formulasSet.IsValid() || m_context.ConvertToSet(formulasSet).IsEmpty())
   {
     SC_AGENT_LOG_ERROR("Formulas set is not valid or empty.");
     return action.FinishUnsuccessfully();

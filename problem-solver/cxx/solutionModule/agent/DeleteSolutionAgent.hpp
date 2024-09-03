@@ -6,7 +6,8 @@
 
 #pragma once
 
-#include "sc-memory/sc_agent.hpp"
+#include <sc-memory/sc_agent.hpp>
+
 namespace solutionModule
 {
 class DeleteSolutionAgent : public ScActionInitiatedAgent

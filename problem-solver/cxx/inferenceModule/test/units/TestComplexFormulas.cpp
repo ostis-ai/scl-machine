@@ -4,13 +4,10 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "sc_test.hpp"
-#include "scs_loader.hpp"
-
-#include "sc-memory/sc_agent.hpp"
-#include "keynodes/InferenceKeynodes.hpp"
-
 #include "agent/DirectInferenceAgent.hpp"
+
+#include <sc_test.hpp>
+#include <scs_loader.hpp>
 
 using namespace inference;
 

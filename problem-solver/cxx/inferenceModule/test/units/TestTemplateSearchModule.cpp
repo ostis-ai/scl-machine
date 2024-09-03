@@ -4,16 +4,19 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "sc_test.hpp"
-#include "scs_loader.hpp"
-#include "sc-agents-common/utils/IteratorUtils.hpp"
+#include "keynodes/InferenceKeynodes.hpp"
 
 #include "searcher/templateSearcher/TemplateSearcherGeneral.hpp"
 #include "searcher/templateSearcher/TemplateSearcherOnlyAccessEdgesInStructures.hpp"
-#include "keynodes/InferenceKeynodes.hpp"
+
 #include "utils/ReplacementsUtils.hpp"
 
 #include <algorithm>
+
+#include <sc_test.hpp>
+#include <scs_loader.hpp>
+
+#include <sc-agents-common/utils/IteratorUtils.hpp>
 
 namespace inferenceTest
 {
