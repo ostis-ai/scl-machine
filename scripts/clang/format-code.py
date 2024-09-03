@@ -7,7 +7,7 @@ import xml.etree.ElementTree as ET
 
 allowed_extensions = [".cpp", ".hpp", ".c", ".h"]
 
-ignore_files = ["json/json.hpp", "sha256", "tinyxml", ".generated."]
+ignore_files = ["json/json.hpp", "sha256", "tinyxml"]
 
 
 class Formatter:
