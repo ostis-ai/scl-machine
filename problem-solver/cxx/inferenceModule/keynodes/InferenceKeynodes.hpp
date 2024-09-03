@@ -5,61 +5,43 @@
  */
 
 #pragma once
+#include "sc-memory/sc_keynodes.hpp"
 
 #include <sc-memory/sc_addr.hpp>
 #include <sc-memory/sc_object.hpp>
 
-#include "InferenceKeynodes.generated.hpp"
-
 namespace inference
 {
-class InferenceKeynodes : public ScObject
+class InferenceKeynodes : public ScKeynodes
 {
-  SC_CLASS()
-  SC_GENERATED_BODY()
-
 public:
-  SC_PROPERTY(Keynode("action_direct_inference"), ForceCreate)
-  static ScAddr action_direct_inference;
+  static inline ScKeynode const action_direct_inference{"action_direct_inference"};
 
-  SC_PROPERTY(Keynode("concept_solution"), ForceCreate)
-  static ScAddr concept_solution;
+  static inline ScKeynode const concept_solution{"concept_solution"};
 
-  SC_PROPERTY(Keynode("concept_success_solution"), ForceCreate)
-  static ScAddr concept_success_solution;
+  static inline ScKeynode const concept_success_solution{"concept_success_solution"};
 
-  SC_PROPERTY(Keynode("concept_template_with_links"), ForceCreate)
-  static ScAddr concept_template_with_links;
+  static inline ScKeynode const concept_template_with_links{"concept_template_with_links"};
 
-  SC_PROPERTY(Keynode("concept_template_for_generation"), ForceCreate)
-  static ScAddr concept_template_for_generation;
+  static inline ScKeynode const concept_template_for_generation{"concept_template_for_generation"};
 
-  SC_PROPERTY(Keynode("atomic_logical_formula"), ForceCreate)
-  static ScAddr atomic_logical_formula;
+  static inline ScKeynode const atomic_logical_formula{"atomic_logical_formula"};
 
-  SC_PROPERTY(Keynode("nrel_disjunction"), ForceCreate)
-  static ScAddr nrel_disjunction;
+  static inline ScKeynode const nrel_disjunction{"nrel_disjunction"};
 
-  SC_PROPERTY(Keynode("nrel_conjunction"), ForceCreate)
-  static ScAddr nrel_conjunction;
+  static inline ScKeynode const nrel_conjunction{"nrel_conjunction"};
 
-  SC_PROPERTY(Keynode("nrel_negation"), ForceCreate)
-  static ScAddr nrel_negation;
+  static inline ScKeynode const nrel_negation{"nrel_negation"};
 
-  SC_PROPERTY(Keynode("nrel_implication"), ForceCreate)
-  static ScAddr nrel_implication;
+  static inline ScKeynode const nrel_implication{"nrel_implication"};
 
-  SC_PROPERTY(Keynode("nrel_equivalence"), ForceCreate)
-  static ScAddr nrel_equivalence;
+  static inline ScKeynode const nrel_equivalence{"nrel_equivalence"};
 
-  SC_PROPERTY(Keynode("rrel_if"), ForceCreate)
-  static ScAddr rrel_if;
+  static inline ScKeynode const rrel_if{"rrel_if"};
 
-  SC_PROPERTY(Keynode("rrel_then"), ForceCreate)
-  static ScAddr rrel_then;
+  static inline ScKeynode const rrel_then{"rrel_then"};
 
-  SC_PROPERTY(Keynode("nrel_output_structure"), ForceCreate)
-  static ScAddr nrel_output_structure;
+  static inline ScKeynode const nrel_output_structure{"nrel_output_structure"};
 };
 
 }  // namespace inference

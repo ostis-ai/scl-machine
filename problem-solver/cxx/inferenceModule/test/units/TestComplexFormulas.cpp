@@ -7,10 +7,7 @@
 #include "sc_test.hpp"
 #include "scs_loader.hpp"
 
-#include "sc-memory/kpm/sc_agent.hpp"
-#include "sc-agents-common/keynodes/coreKeynodes.hpp"
-#include "sc-agents-common/utils/AgentUtils.hpp"
-
+#include "sc-memory/sc_agent.hpp"
 #include "keynodes/InferenceKeynodes.hpp"
 
 #include "agent/DirectInferenceAgent.hpp"
@@ -27,29 +24,25 @@ string const ARGUMENT_IDENTIFIER = "argument";
 using InferenceComplexFormulasTest = ScMemoryTest;
 int const WAIT_TIME = 1500;
 
-void initialize()
+void initialize(ScAgentContext & context)
 {
-  InferenceKeynodes::InitGlobal();
-  scAgentsCommon::CoreKeynodes::InitGlobal();
-
-  ScAgentInit(true);
-  SC_AGENT_REGISTER(inference::DirectInferenceAgent);
+  context.SubscribeAgent<inference::DirectInferenceAgent>();
 }
 
-void shutdown()
+void shutdown(ScAgentContext & context)
 {
-  SC_AGENT_UNREGISTER(inference::DirectInferenceAgent);
+  context.UnsubscribeAgent<inference::DirectInferenceAgent>();
 }
 
 // (a -> b) -> c
 TEST_F(InferenceComplexFormulasTest, TrueNestedImplicationFormula)
 {
-  ScMemoryContext context;
+  ScAgentContext context;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "trueNestedImplicationFormula.scs");
-  initialize();
+  initialize(context);
 
-  ScAddr action = context.HelperResolveSystemIdtf(ACTION_IDENTIFIER);
+  ScAction action = context.ConvertToAction(context.HelperFindBySystemIdtf(ACTION_IDENTIFIER));
   EXPECT_TRUE(action.IsValid());
 
   ScAddr argument = context.HelperFindBySystemIdtf(ARGUMENT_IDENTIFIER);
@@ -64,9 +57,8 @@ TEST_F(InferenceComplexFormulasTest, TrueNestedImplicationFormula)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorBefore->Next());
 
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
-  EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::action_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
+  EXPECT_TRUE(action.InitiateAndWait(WAIT_TIME));
+  EXPECT_TRUE(action.IsFinishedSuccessfully());
 
   ScIterator3Ptr argumentClassIteratorAfter =
       context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
@@ -79,19 +71,19 @@ TEST_F(InferenceComplexFormulasTest, TrueNestedImplicationFormula)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorAfter->Next());
 
-  shutdown();
+  shutdown(context);
   context.Destroy();
 }
 
 // (a || b) -> c
 TEST_F(InferenceComplexFormulasTest, TrueDisjunctionImplicationFormula)
 {
-  ScMemoryContext context;
+  ScAgentContext context;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "disjunctionImplicationTest.scs");
-  initialize();
+  initialize(context);
 
-  ScAddr action = context.HelperResolveSystemIdtf(ACTION_IDENTIFIER);
+  ScAction action = context.ConvertToAction(context.HelperFindBySystemIdtf(ACTION_IDENTIFIER));
   EXPECT_TRUE(action.IsValid());
 
   ScAddr argument = context.HelperFindBySystemIdtf(ARGUMENT_IDENTIFIER);
@@ -106,9 +98,8 @@ TEST_F(InferenceComplexFormulasTest, TrueDisjunctionImplicationFormula)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorBefore->Next());
 
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
-  EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::action_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
+  EXPECT_TRUE(action.InitiateAndWait(WAIT_TIME));
+  EXPECT_TRUE(action.IsFinishedSuccessfully());
 
   ScIterator3Ptr argumentClassIteratorAfter =
       context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
@@ -120,19 +111,19 @@ TEST_F(InferenceComplexFormulasTest, TrueDisjunctionImplicationFormula)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorAfter->Next());
 
-  shutdown();
+  shutdown(context);
   context.Destroy();
 }
 
 // (a && b) -> c
 TEST_F(InferenceComplexFormulasTest, TrueConjunctionImplicationFormula)
 {
-  ScMemoryContext context;
+  ScAgentContext context;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "conjunctionImplicationTest.scs");
-  initialize();
+  initialize(context);
 
-  ScAddr action = context.HelperResolveSystemIdtf(ACTION_IDENTIFIER);
+  ScAction action = context.ConvertToAction(context.HelperFindBySystemIdtf(ACTION_IDENTIFIER));
   EXPECT_TRUE(action.IsValid());
 
   ScAddr argument = context.HelperFindBySystemIdtf(ARGUMENT_IDENTIFIER);
@@ -148,9 +139,8 @@ TEST_F(InferenceComplexFormulasTest, TrueConjunctionImplicationFormula)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorBefore->Next());
 
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, action, WAIT_TIME, InferenceKeynodes::action_direct_inference));
-  EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::action_finished_successfully, action, ScType::EdgeAccessConstPosPerm));
+  EXPECT_TRUE(action.InitiateAndWait(WAIT_TIME));
+  EXPECT_TRUE(action.IsFinishedSuccessfully());
 
   ScIterator3Ptr argumentClassIteratorAfter =
       context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
@@ -163,7 +153,7 @@ TEST_F(InferenceComplexFormulasTest, TrueConjunctionImplicationFormula)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorAfter->Next());
 
-  shutdown();
+  shutdown(context);
   context.Destroy();
 }
 
@@ -171,12 +161,12 @@ TEST_F(InferenceComplexFormulasTest, TrueConjunctionImplicationFormula)
 // (!a) -> b
 TEST_F(InferenceComplexFormulasTest, DISABLED_TrueNegationImplicationLogicRule)
 {
-  ScMemoryContext context;
+  ScAgentContext context;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "trueNegationImplicationRuleTest.scs");
-  initialize();
+  initialize(context);
 
-  ScAddr const test = context.HelperResolveSystemIdtf(ACTION_IDENTIFIER);
+  ScAction action = context.ConvertToAction(context.HelperFindBySystemIdtf(ACTION_IDENTIFIER));
 
   ScAddr argument = context.HelperFindBySystemIdtf(ARGUMENT_IDENTIFIER);
   EXPECT_TRUE(argument.IsValid());
@@ -191,9 +181,8 @@ TEST_F(InferenceComplexFormulasTest, DISABLED_TrueNegationImplicationLogicRule)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorBefore->Next());
 
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, test, WAIT_TIME, InferenceKeynodes::action_direct_inference));
-  EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::action_finished_successfully, test, ScType::EdgeAccessConstPosPerm));
+  EXPECT_TRUE(action.InitiateAndWait(WAIT_TIME));
+  EXPECT_TRUE(action.IsFinishedSuccessfully());
 
   ScIterator3Ptr argumentClassIteratorAfter =
       context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
@@ -206,7 +195,7 @@ TEST_F(InferenceComplexFormulasTest, DISABLED_TrueNegationImplicationLogicRule)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorAfter->Next());
 
-  shutdown();
+  shutdown(context);
   context.Destroy();
 }
 
@@ -214,12 +203,12 @@ TEST_F(InferenceComplexFormulasTest, DISABLED_TrueNegationImplicationLogicRule)
 // ((a || b) && (!c)) -> d
 TEST_F(InferenceComplexFormulasTest, DISABLED_TrueComplexLogicRule)
 {
-  ScMemoryContext context;
+  ScAgentContext context;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "inferenceLogicTrueComplexRuleTest.scs");
-  initialize();
+  initialize(context);
 
-  ScAddr test = context.HelperResolveSystemIdtf(ACTION_IDENTIFIER);
+  ScAction action = context.ConvertToAction(context.HelperFindBySystemIdtf(ACTION_IDENTIFIER));
 
   ScAddr argument = context.HelperFindBySystemIdtf(ARGUMENT_IDENTIFIER);
   EXPECT_TRUE(argument.IsValid());
@@ -234,9 +223,8 @@ TEST_F(InferenceComplexFormulasTest, DISABLED_TrueComplexLogicRule)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorBefore->Next());
 
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, test, WAIT_TIME, InferenceKeynodes::action_direct_inference));
-  EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::action_finished_successfully, test, ScType::EdgeAccessConstPosPerm));
+  EXPECT_TRUE(action.InitiateAndWait(WAIT_TIME));
+  EXPECT_TRUE(action.IsFinishedSuccessfully());
 
   ScIterator3Ptr argumentClassIteratorAfter =
       context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
@@ -249,46 +237,42 @@ TEST_F(InferenceComplexFormulasTest, DISABLED_TrueComplexLogicRule)
   // And there is no more classes
   EXPECT_FALSE(argumentClassIteratorAfter->Next());
 
-  shutdown();
+  shutdown(context);
   context.Destroy();
 }
 
 // ((a || b) && (!c)) -> d
 TEST_F(InferenceComplexFormulasTest, FalseLogicRule)
 {
-  ScMemoryContext context;
+  ScAgentContext context;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "inferenceLogicFalseComplexRuleTest.scs");
-  initialize();
+  initialize(context);
 
-  ScAddr const test = context.HelperResolveSystemIdtf(ACTION_IDENTIFIER);
+  ScAction action = context.ConvertToAction(context.HelperFindBySystemIdtf(ACTION_IDENTIFIER));
 
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, test, WAIT_TIME, InferenceKeynodes::action_direct_inference));
-  EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::action_finished_successfully, test, ScType::EdgeAccessConstPosPerm));
+  EXPECT_TRUE(action.InitiateAndWait(WAIT_TIME));
+  EXPECT_TRUE(action.IsFinishedSuccessfully());
 
-  shutdown();
+  shutdown(context);
   context.Destroy();
 }
 
 TEST_F(InferenceComplexFormulasTest, EquivalencesNested)
 {
-  ScMemoryContext context;
+  ScAgentContext context;
 
   std::string const & name = TEST_FILES_DIR_PATH + "inferenceTestEquivalences.scs";
-  struct stat buffer;
-  SC_LOG_DEBUG("exists = " + to_string(stat(name.c_str(), &buffer) == 0));
 
   loader.loadScsFile(context, name);
-  initialize();
+  initialize(context);
 
-  ScAddr const test = context.HelperResolveSystemIdtf(ACTION_IDENTIFIER);
+  ScAction action = context.ConvertToAction(context.HelperFindBySystemIdtf(ACTION_IDENTIFIER));
 
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, test, WAIT_TIME, InferenceKeynodes::action_direct_inference));
-  EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::action_finished_unsuccessfully, test, ScType::EdgeAccessConstPosPerm));
+  EXPECT_TRUE(action.InitiateAndWait(WAIT_TIME));
+  EXPECT_TRUE(action.IsFinishedUnsuccessfully());
 
-  shutdown();
+  shutdown(context);
   context.Destroy();
 }
 

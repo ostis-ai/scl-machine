@@ -88,7 +88,6 @@ public:
   }
 
 protected:
-
   ScMemoryContext * context;
   ScAddrUnorderedSet inputStructures;
   ReplacementsUsingType replacementsUsingType;

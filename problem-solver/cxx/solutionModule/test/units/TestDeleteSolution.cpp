@@ -1,17 +1,14 @@
 /*
-* This source file is part of an OSTIS project. For the latest info, see http://ostis.net
-* Distributed under the MIT License
-* (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
+ * This source file is part of an OSTIS project. For the latest info, see http://ostis.net
+ * Distributed under the MIT License
+ * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "sc-memory/kpm/sc_agent.hpp"
+#include "sc-memory/sc_agent.hpp"
 #include "sc_test.hpp"
 #include "scs_loader.hpp"
 
-#include "sc-agents-common/keynodes/coreKeynodes.hpp"
 #include "sc-agents-common/utils/IteratorUtils.hpp"
-#include "sc-agents-common/utils/AgentUtils.hpp"
-
 #include "keynodes/SolutionKeynodes.hpp"
 
 #include "agent/DeleteSolutionAgent.hpp"
@@ -19,45 +16,41 @@
 namespace deleteSolutionAgentTest
 {
 ScsLoader loader;
-const std::string DELETE_SOLUTION_MODULE_TEST_FILES_DIR_PATH = SOLUTION_MODULE_TEST_SRC_PATH "/testStructures/deleteSolution/";
+const std::string DELETE_SOLUTION_MODULE_TEST_FILES_DIR_PATH =
+    SOLUTION_MODULE_TEST_SRC_PATH "/testStructures/deleteSolution/";
 const int WAIT_TIME = 5000;
 
 using DeleteSolutionAgentTest = ScMemoryTest;
 
-void initialize()
+void initialize(ScAgentContext & context)
 {
-  scAgentsCommon::CoreKeynodes::InitGlobal();
-  solutionModule::SolutionKeynodes::InitGlobal();
-
-  ScAgentInit(true);
-  SC_AGENT_REGISTER(solutionModule::DeleteSolutionAgent)
+  context.SubscribeAgent<solutionModule::DeleteSolutionAgent>();
 }
 
-void shutdown()
+void shutdown(ScAgentContext & context)
 {
-  SC_AGENT_UNREGISTER(solutionModule::DeleteSolutionAgent)
+  context.UnsubscribeAgent<solutionModule::DeleteSolutionAgent>();
 }
 
 TEST_F(DeleteSolutionAgentTest, solutionHasNoElements)
 {
-  ScMemoryContext & context = *m_ctx;
+  ScAgentContext & context = *m_ctx;
   loader.loadScsFile(context, DELETE_SOLUTION_MODULE_TEST_FILES_DIR_PATH + "actionWithEmptySolution.scs");
 
-  initialize();
-  ScAddr const & testActionNode = context.HelperFindBySystemIdtf("test_action_node");
+  initialize(context);
+  ScAction testActionNode = context.ConvertToAction(context.HelperFindBySystemIdtf("test_action_node"));
   EXPECT_TRUE(testActionNode.IsValid());
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, testActionNode, WAIT_TIME));
-  EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::action_finished_successfully, testActionNode, ScType::EdgeAccessConstPosPerm));
-  shutdown();
+  EXPECT_TRUE(testActionNode.InitiateAndWait(WAIT_TIME));
+  EXPECT_TRUE(testActionNode.IsFinishedSuccessfully());
+  shutdown(context);
 }
 
 TEST_F(DeleteSolutionAgentTest, solutionHasSomeElements)
 {
-  ScMemoryContext & context = *m_ctx;
+  ScAgentContext & context = *m_ctx;
   loader.loadScsFile(context, DELETE_SOLUTION_MODULE_TEST_FILES_DIR_PATH + "actionWithNotEmptySolution.scs");
 
-  initialize();
+  initialize(context);
 
   ScAddr const & variable = context.HelperFindBySystemIdtf("_variable");
   EXPECT_TRUE(variable.IsValid());
@@ -72,28 +65,26 @@ TEST_F(DeleteSolutionAgentTest, solutionHasSomeElements)
   EXPECT_TRUE(conceptSolution.IsValid());
   EXPECT_EQ(utils::IteratorUtils::getAllWithType(&context, conceptSolution, ScType::NodeConst).size(), 2u);
 
-  ScAddr const & testActionNode = context.HelperFindBySystemIdtf("test_action_node");
+  ScAction testActionNode = context.ConvertToAction(context.HelperFindBySystemIdtf("test_action_node"));
   EXPECT_TRUE(testActionNode.IsValid());
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, testActionNode, WAIT_TIME));
-  EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::action_finished_successfully, testActionNode, ScType::EdgeAccessConstPosPerm));
+  EXPECT_TRUE(testActionNode.InitiateAndWait(WAIT_TIME));
+  EXPECT_TRUE(testActionNode.IsFinishedSuccessfully());
   EXPECT_EQ(context.GetElementOutputArcsCount(edgeFromClassToVariable), 1u);
   EXPECT_EQ(utils::IteratorUtils::getAllWithType(&context, conceptSolution, ScType::NodeConst).size(), 1u);
-  shutdown();
+  shutdown(context);
 }
 
 TEST_F(DeleteSolutionAgentTest, solutionIsInvalid)
 {
-  ScMemoryContext & context = *m_ctx;
+  ScAgentContext & context = *m_ctx;
   loader.loadScsFile(context, DELETE_SOLUTION_MODULE_TEST_FILES_DIR_PATH + "actionWithoutSolution.scs");
 
-  initialize();
-  ScAddr const & testActionNode = context.HelperFindBySystemIdtf("test_action_node");
+  initialize(context);
+  ScAction testActionNode = context.ConvertToAction(context.HelperFindBySystemIdtf("test_action_node"));
   EXPECT_TRUE(testActionNode.IsValid());
-  EXPECT_TRUE(utils::AgentUtils::applyAction(&context, testActionNode, WAIT_TIME));
-  EXPECT_TRUE(context.HelperCheckEdge(
-      scAgentsCommon::CoreKeynodes::action_finished_unsuccessfully, testActionNode, ScType::EdgeAccessConstPosPerm));
-  shutdown();
+  EXPECT_TRUE(testActionNode.InitiateAndWait(WAIT_TIME));
+  EXPECT_TRUE(testActionNode.IsFinishedUnsuccessfully());
+  shutdown(context);
 }
 
 }  // namespace deleteSolutionAgentTest

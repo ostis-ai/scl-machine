@@ -7,11 +7,8 @@
 #pragma once
 
 #include <sc-memory/sc_template.hpp>
-#include <sc-agents-common/keynodes/coreKeynodes.hpp>
 #include <sc-agents-common/utils/IteratorUtils.hpp>
 #include <sc-agents-common/utils/CommonUtils.hpp>
-#include <sc-agents-common/utils/AgentUtils.hpp>
-
 #include "keynodes/InferenceKeynodes.hpp"
 
 #include "LogicExpressionNode.hpp"

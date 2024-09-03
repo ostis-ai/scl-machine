@@ -6,8 +6,6 @@
 
 #include "sc_test.hpp"
 #include "scs_loader.hpp"
-#include "sc-agents-common/keynodes/coreKeynodes.hpp"
-
 #include "manager/inferenceManager/DirectInferenceManagerTarget.hpp"
 #include "keynodes/InferenceKeynodes.hpp"
 #include "factory/InferenceManagerFactory.hpp"
@@ -33,11 +31,6 @@ class InferenceManagerTest
 {
 };
 
-void initialize()
-{
-  InferenceKeynodes::InitGlobal();
-  scAgentsCommon::CoreKeynodes::InitGlobal();
-}
 std::shared_ptr<generatorTest::ConfigGenerator> generators[] = {
     std::make_shared<generatorTest::ConfigGenerator>(),
     std::make_shared<generatorTest::ConfigGeneratorSearchWithReplacements>(),
@@ -56,7 +49,6 @@ TEST_P(InferenceManagerTest, SuccessApplyInference)
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "trueSimpleRuleTest.scs");
-  initialize();
 
   ScAddr targetTemplate = context.HelperResolveSystemIdtf(TARGET_TEMPLATE);
   EXPECT_TRUE(targetTemplate.IsValid());
@@ -97,7 +89,6 @@ TEST_P(InferenceManagerTest, SuccessGenerateInferenceConclusion)
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "conclusionGenerationTest.scs");
-  initialize();
 
   ScAddr targetTemplate = context.HelperResolveSystemIdtf(TARGET_TEMPLATE);
   EXPECT_TRUE(targetTemplate.IsValid());
@@ -132,7 +123,6 @@ TEST_P(InferenceManagerTest, RuleNotUsed)
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "ruleNotUsedTest.scs");
-  initialize();
 
   ScAddr targetTemplate = context.HelperResolveSystemIdtf(TARGET_TEMPLATE);
   EXPECT_TRUE(targetTemplate.IsValid());
@@ -166,7 +156,6 @@ TEST_P(InferenceManagerTest, TargetNotAchieved)
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "targetNotAchievedTest.scs");
-  initialize();
 
   ScAddr targetTemplate = context.HelperResolveSystemIdtf(TARGET_TEMPLATE);
   EXPECT_TRUE(targetTemplate.IsValid());
@@ -200,7 +189,6 @@ TEST_P(InferenceManagerTest, ReplacementsTest)
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "replaceNotWork.scs");
-  initialize();
 
   ScAddr targetTemplate = context.HelperResolveSystemIdtf(TARGET_TEMPLATE);
   EXPECT_TRUE(targetTemplate.IsValid());
@@ -232,8 +220,6 @@ TEST_P(InferenceManagerTest, DISABLED_ConclusionArgumentsTest)
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "ConclusionArgumentsTest.scs");
-
-  initialize();
 
   ScAddr targetStructure = context.HelperResolveSystemIdtf("inference_target");
   EXPECT_TRUE(targetStructure.IsValid());
@@ -275,7 +261,6 @@ TEST_P(InferenceManagerTest, SolutionOutputStrcuture)
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "trueSimpleRuleTest.scs");
-  initialize();
 
   ScAddr targetTemplate = context.HelperResolveSystemIdtf(TARGET_TEMPLATE);
   EXPECT_TRUE(targetTemplate.IsValid());
@@ -360,7 +345,6 @@ TEST_P(InferenceManagerTest, conclusionContainsEdgeReplacementFromPremise)
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "conclusionContainsEdgeReplacementFromPremise.scs");
-  initialize();
 
   ScAddr const & inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
   ScAddr const & targetTemplate = context.HelperResolveSystemIdtf(TARGET_TEMPLATE);

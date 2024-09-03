@@ -61,6 +61,7 @@ arguments
 *];;
 
 inference_logic_test_action
+    <- action_direct_inference;
     -> rrel_1: @target;
     -> rrel_2: rules;
     -> rrel_3: arguments;;

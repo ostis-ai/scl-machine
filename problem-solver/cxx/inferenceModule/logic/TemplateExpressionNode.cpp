@@ -75,7 +75,6 @@ LogicFormulaResult TemplateExpressionNode::find(Replacements & replacements) con
   templateSearcher->searchTemplate(formula, paramsVector, variables, result.replacements);
   result.value = !result.replacements.empty();
 
-
   std::string const idtf = context->HelperGetSystemIdtf(formula);
   SC_LOG_DEBUG("Find Statement " << idtf << (result.value ? " true" : " false"));
 
@@ -204,8 +203,7 @@ void TemplateExpressionNode::generateByParams(
       else
         SC_THROW_EXCEPTION(
             utils::ExceptionInvalidState,
-            "generation result and template params do not have replacement for "
-                << variable.Hash());
+            "generation result and template params do not have replacement for " << variable.Hash());
     }
     addToOutputStructure(generationResult);
   }
@@ -245,7 +243,8 @@ void TemplateExpressionNode::addFormulaConstantsToOutputStructure()
   addToOutputStructure(formulaConstants);
 }
 
-void TemplateExpressionNode::addToOutputStructure(Replacements const & replacements,
+void TemplateExpressionNode::addToOutputStructure(
+    Replacements const & replacements,
     ScAddrUnorderedSet const & variables)
 {
   if (outputStructure.IsValid())

@@ -7,7 +7,6 @@
 #include "sc_test.hpp"
 #include "scs_loader.hpp"
 
-#include "sc-agents-common/keynodes/coreKeynodes.hpp"
 #include "sc-agents-common/utils/IteratorUtils.hpp"
 #include "sc-agents-common/utils/GenerationUtils.hpp"
 
@@ -36,12 +35,6 @@ class InferenceManagerBuilderTest
 {
 };
 
-void initialize()
-{
-  InferenceKeynodes::InitGlobal();
-  scAgentsCommon::CoreKeynodes::InitGlobal();
-}
-
 std::shared_ptr<generatorTest::ConfigGenerator> generators[] = {
     std::make_shared<generatorTest::ConfigGenerator>(),
     std::make_shared<generatorTest::ConfigGeneratorSearchWithReplacements>(),
@@ -61,7 +54,6 @@ TEST_P(InferenceManagerBuilderTest, SingleSuccessApplyInference)
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "singleApplyTest.scs");
-  initialize();
 
   // Form input structures set of two structures. One of them consists one triple from premise and the other -- the
   // second triple.
@@ -106,7 +98,6 @@ TEST_P(InferenceManagerBuilderTest, GenerateNotUnique)
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "generateUniqueTest.scs");
-  initialize();
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
@@ -143,7 +134,6 @@ TEST_P(InferenceManagerBuilderTest, GenerateUnique)
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "generateUniqueTest.scs");
-  initialize();
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
@@ -187,7 +177,6 @@ TEST_P(InferenceManagerBuilderTest, GenerateUniqueWithOutputStructure)
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "generateUniqueTest.scs");
-  initialize();
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & argument = context.HelperResolveSystemIdtf(ARGUMENT);
@@ -233,7 +222,6 @@ TEST_P(InferenceManagerBuilderTest, GenerateNotFirst)
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "generateNotFirstTest.scs");
-  initialize();
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
@@ -287,7 +275,6 @@ TEST_P(InferenceManagerBuilderTest, GenerateFirst)
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "generateNotFirstTest.scs");
-  initialize();
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
@@ -330,7 +317,6 @@ TEST_P(InferenceManagerBuilderTest, notGenerateSolutionTree)
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "singleApplyTest.scs");
-  initialize();
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
@@ -366,7 +352,6 @@ TEST_P(InferenceManagerBuilderTest, generateSolutionTree)
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "singleApplyTest.scs");
-  initialize();
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
@@ -403,7 +388,6 @@ TEST_P(InferenceManagerBuilderTest, SingleUnsuccessfulApplyInference)
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "singleUnsuccessfulApplyTest.scs");
-  initialize();
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
@@ -442,7 +426,6 @@ TEST_P(InferenceManagerBuilderTest, SingleSuccessfulApplyInferenceWithAccessEdge
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "singleApplyAccessEdgesTest.scs");
-  initialize();
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
@@ -478,7 +461,6 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsGeneratedAndFlagIsGen
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "singleApplyTest.scs");
-  initialize();
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
@@ -521,7 +503,6 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsGeneratedButFlagIsSea
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "singleApplyTest.scs");
-  initialize();
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
@@ -564,7 +545,6 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsSearchedAndFlagIsSear
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "generateUniqueTest.scs");
-  initialize();
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddrUnorderedSet inputStructures{inputStructure1};
@@ -606,7 +586,6 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureDoesNotContainSearchedBecause
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "generateUniqueTest.scs");
-  initialize();
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddrUnorderedSet inputStructures{inputStructure1};
@@ -642,7 +621,6 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsSearchedAndGeneratedA
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "generateNotFirstTest.scs");
-  initialize();
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);
@@ -696,7 +674,6 @@ TEST_P(InferenceManagerBuilderTest, conclusionContainsEdgeReplacementFromPremise
   ScMemoryContext & context = *m_ctx;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "conclusionContainsEdgeReplacementFromPremise.scs");
-  initialize();
 
   ScAddr const & inputStructure1 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE1);
   ScAddr const & inputStructure2 = context.HelperResolveSystemIdtf(INPUT_STRUCTURE2);

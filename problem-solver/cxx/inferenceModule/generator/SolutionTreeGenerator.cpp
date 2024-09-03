@@ -8,14 +8,10 @@
 
 #include <sc-memory/sc_addr.hpp>
 #include <sc-agents-common/utils/GenerationUtils.hpp>
-#include <sc-agents-common/keynodes/coreKeynodes.hpp>
-
 #include "keynodes/InferenceKeynodes.hpp"
 
 using namespace inference;
 using namespace utils;
-using namespace scAgentsCommon;
-
 SolutionTreeGenerator::SolutionTreeGenerator(ScMemoryContext * ms_context)
   : ms_context(ms_context)
 {
@@ -34,7 +30,7 @@ bool SolutionTreeGenerator::addNode(
   {
     if (!lastSolutionNode.IsValid())
     {
-      result = GenerationUtils::generateRelationBetween(ms_context, solution, newSolutionNode, CoreKeynodes::rrel_1);
+      result = GenerationUtils::generateRelationBetween(ms_context, solution, newSolutionNode, ScKeynodes::rrel_1);
     }
     else
     {
@@ -45,7 +41,7 @@ bool SolutionTreeGenerator::addNode(
         ScAddr lastSolutionNodeArc = lastSolutionNodeArcIterator->Get(1);
         ScAddr newSolutionNodeArc = ms_context->CreateEdge(ScType::EdgeAccessConstPosPerm, solution, newSolutionNode);
         GenerationUtils::generateRelationBetween(
-            ms_context, lastSolutionNodeArc, newSolutionNodeArc, CoreKeynodes::nrel_basic_sequence);
+            ms_context, lastSolutionNodeArc, newSolutionNodeArc, ScKeynodes::nrel_basic_sequence);
       }
       else
       {
@@ -64,9 +60,9 @@ ScAddr SolutionTreeGenerator::createSolutionNode(
     ScAddrUnorderedSet const & variables)
 {
   ScAddr const & solutionNode = ms_context->CreateNode(ScType::NodeConst);
-  GenerationUtils::generateRelationBetween(ms_context, solutionNode, formula, CoreKeynodes::rrel_1);
+  GenerationUtils::generateRelationBetween(ms_context, solutionNode, formula, ScKeynodes::rrel_1);
   ScAddr const & replacementsNode = ms_context->CreateNode(ScType::NodeConst);
-  GenerationUtils::generateRelationBetween(ms_context, solutionNode, replacementsNode, CoreKeynodes::rrel_2);
+  GenerationUtils::generateRelationBetween(ms_context, solutionNode, replacementsNode, ScKeynodes::rrel_2);
   for (ScAddr const & variable : variables)
   {
     ScAddr replacement;
@@ -75,8 +71,8 @@ ScAddr SolutionTreeGenerator::createSolutionNode(
     {
       ScAddr const & pair = ms_context->CreateNode(ScType::NodeConst);
       ms_context->CreateEdge(ScType::EdgeAccessConstPosPerm, replacementsNode, pair);
-      GenerationUtils::generateRelationBetween(ms_context, pair, replacement, CoreKeynodes::rrel_1);
-      GenerationUtils::generateRelationBetween(ms_context, pair, variable, CoreKeynodes::rrel_2);
+      GenerationUtils::generateRelationBetween(ms_context, pair, replacement, ScKeynodes::rrel_1);
+      GenerationUtils::generateRelationBetween(ms_context, pair, variable, ScKeynodes::rrel_2);
       ms_context->CreateEdge(ScType::EdgeAccessConstPosTemp, variable, replacement);
     }
     else

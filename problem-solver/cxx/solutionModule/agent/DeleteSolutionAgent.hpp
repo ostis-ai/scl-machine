@@ -1,27 +1,21 @@
 /*
-* This source file is part of an OSTIS project. For the latest info, see http://ostis.net
-* Distributed under the MIT License
-* (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
+ * This source file is part of an OSTIS project. For the latest info, see http://ostis.net
+ * Distributed under the MIT License
+ * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
 #pragma once
 
-#include "sc-memory/kpm/sc_agent.hpp"
-
-#include "sc-agents-common/keynodes/coreKeynodes.hpp"
-
-#include "DeleteSolutionAgent.generated.hpp"
-
+#include "sc-memory/sc_agent.hpp"
 namespace solutionModule
 {
-class DeleteSolutionAgent : public ScAgent
+class DeleteSolutionAgent : public ScActionInitiatedAgent
 {
 public:
-  SC_CLASS(Agent, Event(scAgentsCommon::CoreKeynodes::action_initiated, ScEvent::Type::AddOutputEdge))
-  SC_GENERATED_BODY()
+public:
+  ScAddr GetActionClass() const override;
 
-private:
-  bool checkActionClass(ScAddr const & actionNode) const;
+  ScResult DoProgram(ScActionInitiatedEvent const & event, ScAction & action) override;
 };
 
 }  // namespace solutionModule

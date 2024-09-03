@@ -34,8 +34,7 @@ public:
     argumentVector = otherArgumentVector;
   }
 
-  void setOutputStructureElements(
-      std::unordered_set<ScAddr, ScAddrHashFunc> const & otherOutputStructureElements)
+  void setOutputStructureElements(std::unordered_set<ScAddr, ScAddrHashFunc> const & otherOutputStructureElements)
   {
     outputStructureElements = otherOutputStructureElements;
   }

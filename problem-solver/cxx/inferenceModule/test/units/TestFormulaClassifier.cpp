@@ -7,8 +7,6 @@
 #include "sc_test.hpp"
 #include "scs_loader.hpp"
 
-#include "sc-agents-common/keynodes/coreKeynodes.hpp"
-
 #include "keynodes/InferenceKeynodes.hpp"
 
 #include "classifier/FormulaClassifier.hpp"
@@ -22,18 +20,11 @@ std::string const TEST_FILES_DIR_PATH = TEMPLATE_SEARCH_MODULE_TEST_SRC_PATH "/t
 
 using FormulaClassifierTest = ScMemoryTest;
 
-void initialize()
-{
-  InferenceKeynodes::InitGlobal();
-  scAgentsCommon::CoreKeynodes::InitGlobal();
-}
-
 TEST_F(FormulaClassifierTest, RuleIsImplication)
 {
   ScMemoryContext context;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "inferenceLogicTrueComplexRuleTest.scs");
-  initialize();
 
   ScAddr testRule = context.HelperResolveSystemIdtf("inference_logic_test_rule");
   ScIterator5Ptr formulaIterator = context.Iterator5(
@@ -41,7 +32,7 @@ TEST_F(FormulaClassifierTest, RuleIsImplication)
       ScType::EdgeAccessConstPosPerm,
       ScType::Unknown,
       ScType::EdgeAccessConstPosPerm,
-      scAgentsCommon::CoreKeynodes::rrel_main_key_sc_element);
+      ScKeynodes::rrel_main_key_sc_element);
   EXPECT_TRUE(formulaIterator->Next());
 
   ScAddr formula = formulaIterator->Get(2);
@@ -60,7 +51,6 @@ TEST_F(FormulaClassifierTest, AtomicLogicalFormulaWithouCLass)
   ScMemoryContext context;
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "atomicLogicalFormulaTestWithoutClass.scs");
-  initialize();
 
   ScAddr formula = context.HelperResolveSystemIdtf("formula");
   EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, formula), FormulaClassifier::ATOMIC);

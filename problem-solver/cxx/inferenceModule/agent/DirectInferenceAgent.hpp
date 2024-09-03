@@ -6,22 +6,18 @@
 
 #pragma once
 
-#include <sc-memory/kpm/sc_agent.hpp>
-
+#include "sc-memory/sc_agent.hpp"
 #include "manager/inferenceManager/InferenceManagerAbstract.hpp"
 #include "keynodes/InferenceKeynodes.hpp"
 
-#include "DirectInferenceAgent.generated.hpp"
-
 namespace inference
 {
-class DirectInferenceAgent : public ScAgent
+class DirectInferenceAgent : public ScActionInitiatedAgent
 {
-  SC_CLASS(Agent, Event(InferenceKeynodes::action_direct_inference, ScEvent::Type::AddOutputEdge))
-  SC_GENERATED_BODY()
+public:
+  ScAddr GetActionClass() const override;
 
-private:
-  static bool checkActionClass(ScMemoryContext * context, ScAddr const & actionNode);
+  ScResult DoProgram(ScActionInitiatedEvent const & event, ScAction & action) override;
 };
 
 }  // namespace inference

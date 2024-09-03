@@ -1,12 +1,10 @@
 /*
-* This source file is part of an OSTIS project. For the latest info, see http://ostis.net
-* Distributed under the MIT License
-* (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
+ * This source file is part of an OSTIS project. For the latest info, see http://ostis.net
+ * Distributed under the MIT License
+ * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
 #include "sc-agents-common/utils/IteratorUtils.hpp"
-
-#include "sc-agents-common/keynodes/coreKeynodes.hpp"
 
 #include "DeleteSolutionManager.hpp"
 
@@ -48,8 +46,8 @@ void DeleteSolutionManager::deleteRuleAndSubstitutionsPairs(ScAddrList const & r
   {
     if (!context->IsElement(ruleAndSubstitutionPair))
       continue;
-    ScAddr const & substitutions = utils::IteratorUtils::getAnyByOutRelation(
-        context, ruleAndSubstitutionPair, scAgentsCommon::CoreKeynodes::rrel_2);
+    ScAddr const & substitutions =
+        utils::IteratorUtils::getAnyByOutRelation(context, ruleAndSubstitutionPair, ScKeynodes::rrel_2);
     safeDeleteElement(ruleAndSubstitutionPair);
     deleteSubstitutions(substitutions);
   }
@@ -66,9 +64,9 @@ void DeleteSolutionManager::deleteSubstitutions(ScAddr const & substitutions) co
       if (!context->IsElement(substitutionPair))
         continue;
       ScAddr const & replacement =
-          utils::IteratorUtils::getAnyByOutRelation(context, substitutionPair, scAgentsCommon::CoreKeynodes::rrel_1);
+          utils::IteratorUtils::getAnyByOutRelation(context, substitutionPair, ScKeynodes::rrel_1);
       ScAddr const & variable =
-          utils::IteratorUtils::getAnyByOutRelation(context, substitutionPair, scAgentsCommon::CoreKeynodes::rrel_2);
+          utils::IteratorUtils::getAnyByOutRelation(context, substitutionPair, ScKeynodes::rrel_2);
       safeDeleteElement(substitutionPair);
       if (context->IsElement(replacement) && context->IsElement(variable))
         deleteEdges(variable, ScType::EdgeAccessConstPosTemp, replacement);
