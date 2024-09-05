@@ -18,11 +18,11 @@ ScResult DirectInferenceAgent::DoProgram(ScActionInitiatedEvent const & event, S
 {
   auto const [targetStructure, formulasSet, arguments, inputStructure] = action.GetArguments<4>();
 
-  if (!targetStructure.IsValid() || m_context.ConvertToStructure(targetStructure).IsEmpty())
+  if (!IsSetValidAndNotEmpty(targetStructure))
   {
     SC_AGENT_LOG_WARNING("Target structure is not valid or empty.");
   }
-  if (!formulasSet.IsValid() || m_context.ConvertToSet(formulasSet).IsEmpty())
+  if (!IsSetValidAndNotEmpty(formulasSet))
   {
     SC_AGENT_LOG_ERROR("Formulas set is not valid or empty.");
     return action.FinishUnsuccessfully();
@@ -68,5 +68,13 @@ ScResult DirectInferenceAgent::DoProgram(ScActionInitiatedEvent const & event, S
 ScAddr DirectInferenceAgent::GetActionClass() const
 {
   return InferenceKeynodes::action_direct_inference;
+}
+
+bool DirectInferenceAgent::IsSetValidAndNotEmpty(ScAddr const & setAddr) const
+{
+  if (!setAddr.IsValid())
+    return false;
+  ScSet const & scSet = m_context.ConvertToSet(setAddr);
+  return !scSet.IsEmpty();
 }
 }  // namespace inference
