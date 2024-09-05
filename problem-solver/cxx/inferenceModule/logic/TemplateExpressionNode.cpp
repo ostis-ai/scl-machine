@@ -203,7 +203,7 @@ void TemplateExpressionNode::generateByParams(
       else
         SC_THROW_EXCEPTION(
             utils::ExceptionInvalidState,
-            "generation result and template params do not have replacement for " << variable.Hash());
+            "Generation result and template params do not have replacement for " << variable.Hash());
     }
     addToOutputStructure(generationResult);
   }
