@@ -17,7 +17,7 @@ ScResult DeleteSolutionAgent::DoProgram(ScActionInitiatedEvent const & event, Sc
   ScAddr const & solution = action.GetArgument(1);
   try
   {
-    if (m_context.IsElement(solution) == SC_FALSE)
+    if (!m_context.IsElement(solution))
       SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, "DeleteSolutionAgent: solution is not valid");
 
     auto manager = std::make_unique<DeleteSolutionManager>(&m_context);
@@ -28,7 +28,7 @@ ScResult DeleteSolutionAgent::DoProgram(ScActionInitiatedEvent const & event, Sc
   catch (utils::ScException const & exception)
   {
     SC_AGENT_LOG_ERROR(exception.Message());
-    return action.FinishUnsuccessfully();
+    return action.FinishWithError();
   }
 }
 
