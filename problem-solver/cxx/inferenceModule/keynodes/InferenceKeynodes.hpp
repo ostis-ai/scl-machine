@@ -5,6 +5,7 @@
  */
 
 #pragma once
+
 #include <sc-memory/sc_keynodes.hpp>
 
 namespace inference
