@@ -40,7 +40,9 @@ TEST_F(InferenceSimpleFormulasTest, TrueSimpleLogicRule)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "trueSimpleRuleTest.scs");
   initialize(context);
 
-  ScAction action = context.ConvertToAction(context.HelperFindBySystemIdtf("four_arguments_action"));
+  ScAddr const & tempActionNode = context.HelperFindBySystemIdtf("four_arguments_action");
+  EXPECT_TRUE(tempActionNode.IsValid());
+  ScAction action = context.ConvertToAction(tempActionNode);;
   EXPECT_TRUE(action.IsValid());
 
   ScAddr argument = context.HelperFindBySystemIdtf("argument");
@@ -82,7 +84,9 @@ TEST_F(InferenceSimpleFormulasTest, TrueSimpleLogicRuleThreeArguments)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "trueSimpleRuleTest.scs");
   initialize(context);
 
-  ScAction action = context.ConvertToAction(context.HelperFindBySystemIdtf("three_arguments_action"));
+  ScAddr const & tempActionNode = context.HelperFindBySystemIdtf("three_arguments_action");
+  EXPECT_TRUE(tempActionNode.IsValid());
+  ScAction action = context.ConvertToAction(tempActionNode);;
   EXPECT_TRUE(action.IsValid());
 
   ScAddr argument = context.HelperFindBySystemIdtf("argument");
@@ -124,7 +128,9 @@ TEST_F(InferenceSimpleFormulasTest, TrueDoubleApplyLogicRule)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "trueDoubleApplyRuleTest.scs");
   initialize(context);
 
-  ScAction action = context.ConvertToAction(context.HelperFindBySystemIdtf(ACTION_IDENTIFIER));
+  ScAddr const & tempActionNode = context.HelperFindBySystemIdtf(ACTION_IDENTIFIER);
+  EXPECT_TRUE(tempActionNode.IsValid());
+  ScAction action = context.ConvertToAction(tempActionNode);;
   EXPECT_TRUE(action.IsValid());
 
   ScAddr argument = context.HelperFindBySystemIdtf("argument");
@@ -165,7 +171,9 @@ TEST_F(InferenceSimpleFormulasTest, TrueSecondRulesSet)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "trueSecondRulesSetTest.scs");
   initialize(context);
 
-  ScAction action = context.ConvertToAction(context.HelperFindBySystemIdtf(ACTION_IDENTIFIER));
+  ScAddr const & tempActionNode = context.HelperFindBySystemIdtf(ACTION_IDENTIFIER);
+  EXPECT_TRUE(tempActionNode.IsValid());
+  ScAction action = context.ConvertToAction(tempActionNode);;
   EXPECT_TRUE(action.IsValid());
 
   ScAddr argument = context.HelperFindBySystemIdtf("argument");
@@ -205,7 +213,9 @@ TEST_F(InferenceSimpleFormulasTest, NothingToGenerateSecondRulesSet)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "nothingToGenerateSecondRulesSetTest.scs");
   initialize(context);
 
-  ScAction action = context.ConvertToAction(context.HelperFindBySystemIdtf(ACTION_IDENTIFIER));
+  ScAddr const & tempActionNode = context.HelperFindBySystemIdtf(ACTION_IDENTIFIER);
+  EXPECT_TRUE(tempActionNode.IsValid());
+  ScAction action = context.ConvertToAction(tempActionNode);;
   EXPECT_TRUE(action.IsValid());
 
   ScAddr argument = context.HelperFindBySystemIdtf("argument");
@@ -243,7 +253,9 @@ TEST_F(InferenceSimpleFormulasTest, TwoTriplesTest)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "twoTriplesTest.scs");
   initialize(context);
 
-  ScAction action = context.ConvertToAction(context.HelperFindBySystemIdtf(ACTION_IDENTIFIER));
+  ScAddr const & tempActionNode = context.HelperFindBySystemIdtf(ACTION_IDENTIFIER);
+  EXPECT_TRUE(tempActionNode.IsValid());
+  ScAction action = context.ConvertToAction(tempActionNode);;
   EXPECT_TRUE(action.IsValid());
 
   EXPECT_TRUE(action.InitiateAndWait(WAIT_TIME));
@@ -261,7 +273,9 @@ TEST_F(InferenceSimpleFormulasTest, ApplyRuleFromSecondAndThenFromFirstSetTest)
 
   initialize(context);
 
-  ScAction action = context.ConvertToAction(context.HelperFindBySystemIdtf(ACTION_IDENTIFIER));
+  ScAddr const & tempActionNode = context.HelperFindBySystemIdtf(ACTION_IDENTIFIER);
+  EXPECT_TRUE(tempActionNode.IsValid());
+  ScAction action = context.ConvertToAction(tempActionNode);;
   EXPECT_TRUE(action.IsValid());
   EXPECT_TRUE(action.InitiateAndWait(WAIT_TIME));
   EXPECT_TRUE(action.IsFinishedSuccessfully());

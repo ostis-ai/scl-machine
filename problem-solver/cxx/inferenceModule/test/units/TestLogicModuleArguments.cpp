@@ -42,7 +42,9 @@ TEST_F(InferenceLogicTest, AllArgumentsValid)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "logicModuleArgumentsTest.scs");
   initialize(context);
 
-  ScAction action = context.ConvertToAction(context.HelperFindBySystemIdtf("valid_arguments_action"));
+  ScAddr const & tempActionNode = context.HelperFindBySystemIdtf("valid_arguments_action");
+  EXPECT_TRUE(tempActionNode.IsValid());
+  ScAction action = context.ConvertToAction(tempActionNode);;
   EXPECT_TRUE(action.IsValid());
 
   ScAddr argument = context.HelperFindBySystemIdtf("argument");
@@ -84,7 +86,9 @@ TEST_F(InferenceLogicTest, InvalidArguments)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "logicModuleArgumentsTest.scs");
   initialize(context);
 
-  ScAction action = context.ConvertToAction(context.HelperFindBySystemIdtf("invalid_arguments_action"));
+  ScAddr const & tempActionNode = context.HelperFindBySystemIdtf("invalid_arguments_action");
+  EXPECT_TRUE(tempActionNode.IsValid());
+  ScAction action = context.ConvertToAction(tempActionNode);;
   EXPECT_TRUE(action.IsValid());
 
   ScAddr argument = context.HelperFindBySystemIdtf("argument");
@@ -108,13 +112,16 @@ TEST_F(InferenceLogicTest, EmptyInputStructure)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "logicModuleArgumentsTest.scs");
   initialize(context);
 
-  ScAction action = context.ConvertToAction(context.HelperFindBySystemIdtf("empty_input_structure_action"));
+  ScAddr const & tempActionNode = context.HelperFindBySystemIdtf("empty_input_structure_action");
+  EXPECT_TRUE(tempActionNode.IsValid());
+  ScAction action = context.ConvertToAction(tempActionNode);;
   EXPECT_TRUE(action.IsValid());
 
   EXPECT_TRUE(action.InitiateAndWait(WAIT_TIME));
   EXPECT_TRUE(action.IsFinishedSuccessfully());
   ScStructure result = action.GetResult();
   ScAddr solution = utils::IteratorUtils::getAnyFromSet(&context, result);
+  EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(
       context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstNegPerm));
 
@@ -130,7 +137,9 @@ TEST_F(InferenceLogicTest, EmptyRuleSet)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "logicModuleArgumentsTest.scs");
   initialize(context);
 
-  ScAction action = context.ConvertToAction(context.HelperFindBySystemIdtf("empty_rules_set_queue_action"));
+  ScAddr const & tempActionNode = context.HelperFindBySystemIdtf("empty_rules_set_queue_action");
+  EXPECT_TRUE(tempActionNode.IsValid());
+  ScAction action = context.ConvertToAction(tempActionNode);;
   EXPECT_TRUE(action.IsValid());
 
   EXPECT_TRUE(action.InitiateAndWait(WAIT_TIME));
@@ -148,7 +157,9 @@ TEST_F(InferenceLogicTest, EmptyRuleSetQueue)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "logicModuleArgumentsTest.scs");
   initialize(context);
 
-  ScAction action = context.ConvertToAction(context.HelperFindBySystemIdtf("empty_rules_set_action"));
+  ScAddr const & tempActionNode = context.HelperFindBySystemIdtf("empty_rules_set_action");
+  EXPECT_TRUE(tempActionNode.IsValid());
+  ScAction action = context.ConvertToAction(tempActionNode);;
   EXPECT_TRUE(action.IsValid());
 
   EXPECT_TRUE(action.InitiateAndWait(WAIT_TIME));
