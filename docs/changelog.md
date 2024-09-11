@@ -4,10 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v0.2.0]
+## [Unreleased]
 
 ### Breaking changes
 - Direct inference agent's subscription element is changed to `action_initiated`
+
+### Removed
+- Codegen for agents
+
+## [v0.2.0]
+
+### Breaking changes
 - Direct inference manager was removed. To create DirectInferenceManagerTarget use `InferenceManagerFactory::constructDirectInferenceManagerTarget` with config {GENERATE_ALL_FORMULAS, ALL, TREE_ONLY_OUTPUT_STRUCTURE}
 
 ### Added
@@ -64,7 +71,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed condition for applying generation(generate if this rule with this parameters wasn't applied yet)
 
 ### Removed
-- Codegen for agents
 - Cache of input structures in TemplateSearcherInStructures
 - Unused and duplicated keynodes
 - `check` method of LogicExpressionNode
