@@ -24,7 +24,8 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(ScAddr const
   std::map<ScAddr, std::set<ScAddr, ScAddrLessFunc>, ScAddrLessFunc> replacementsMultimap;
   std::vector<ScTemplateParams> templateParamsVector;
 
-  ScIterator3Ptr variableNodeIterator = context->Iterator3(scTemplate, ScType::EdgeAccessConstPosPerm, ScType::NodeVar);
+  ScIterator3Ptr variableNodeIterator =
+      context->CreateIterator3(scTemplate, ScType::EdgeAccessConstPosPerm, ScType::NodeVar);
   while (variableNodeIterator->Next())
   {
     ScAddr const & variableNode = variableNodeIterator->Get(2);
@@ -32,14 +33,14 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(ScAddr const
     {
       continue;
     }
-    ScIterator5Ptr constantsIterator = context->Iterator5(
+    ScIterator5Ptr constantsIterator = context->CreateIterator5(
         ScType::NodeConst, ScType::EdgeAccessVarPosPerm, variableNode, ScType::EdgeAccessConstPosPerm, scTemplate);
     while (constantsIterator->Next())
     {
       ScAddr const & varClass = constantsIterator->Get(0);
       for (ScAddr const & argument : arguments)
       {
-        if (context->HelperCheckEdge(varClass, argument, ScType::EdgeAccessConstPosPerm))
+        if (context->CheckConnector(varClass, argument, ScType::EdgeAccessConstPosPerm))
           replacementsMultimap[variableNode].insert(argument);
       }
     }

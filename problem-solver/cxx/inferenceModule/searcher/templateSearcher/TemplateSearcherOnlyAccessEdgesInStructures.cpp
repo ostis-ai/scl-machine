@@ -36,7 +36,7 @@ bool TemplateSearcherOnlyAccessEdgesInStructures::isValidElement(ScAddr const & 
   if (!context->GetElementType(element).BitAnd(ScType::EdgeAccess))
     return true;
   auto const & structuresIterator =
-      context->Iterator3(ScType::NodeConstStruct, ScType::EdgeAccessConstPosPerm, element);
+      context->CreateIterator3(ScType::NodeConstStruct, ScType::EdgeAccessConstPosPerm, element);
   while (structuresIterator->Next())
   {
     if (inputStructures.count(structuresIterator->Get(0)))

@@ -36,7 +36,7 @@ TEST_F(DeleteSolutionAgentTest, solutionHasNoElements)
   loader.loadScsFile(context, DELETE_SOLUTION_MODULE_TEST_FILES_DIR_PATH + "actionWithEmptySolution.scs");
 
   initialize(context);
-  ScAction testActionNode = context.ConvertToAction(context.HelperFindBySystemIdtf("test_action_node"));
+  ScAction testActionNode = context.ConvertToAction(context.SearchElementBySystemIdentifier("test_action_node"));
   EXPECT_TRUE(testActionNode.IsValid());
   EXPECT_TRUE(testActionNode.InitiateAndWait(WAIT_TIME));
   EXPECT_TRUE(testActionNode.IsFinishedSuccessfully());
@@ -50,24 +50,24 @@ TEST_F(DeleteSolutionAgentTest, solutionHasSomeElements)
 
   initialize(context);
 
-  ScAddr const & variable = context.HelperFindBySystemIdtf("_variable");
+  ScAddr const & variable = context.SearchElementBySystemIdentifier("_variable");
   EXPECT_TRUE(variable.IsValid());
   auto const & classesForVariableIterator =
-      context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessVarPosPerm, variable);
+      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessVarPosPerm, variable);
   EXPECT_TRUE(classesForVariableIterator->Next());
   ScAddr const & edgeFromClassToVariable = classesForVariableIterator->Get(1);
   EXPECT_FALSE(classesForVariableIterator->Next());
-  EXPECT_EQ(context.GetElementOutputArcsCount(edgeFromClassToVariable), 4u);
+  EXPECT_EQ(context.GetElementEdgesAndOutgoingArcsCount(edgeFromClassToVariable), 4u);
 
-  ScAddr const & conceptSolution = context.HelperFindBySystemIdtf("concept_solution");
+  ScAddr const & conceptSolution = context.SearchElementBySystemIdentifier("concept_solution");
   EXPECT_TRUE(conceptSolution.IsValid());
   EXPECT_EQ(utils::IteratorUtils::getAllWithType(&context, conceptSolution, ScType::NodeConst).size(), 2u);
 
-  ScAction testActionNode = context.ConvertToAction(context.HelperFindBySystemIdtf("test_action_node"));
+  ScAction testActionNode = context.ConvertToAction(context.SearchElementBySystemIdentifier("test_action_node"));
   EXPECT_TRUE(testActionNode.IsValid());
   EXPECT_TRUE(testActionNode.InitiateAndWait(WAIT_TIME));
   EXPECT_TRUE(testActionNode.IsFinishedSuccessfully());
-  EXPECT_EQ(context.GetElementOutputArcsCount(edgeFromClassToVariable), 1u);
+  EXPECT_EQ(context.GetElementEdgesAndOutgoingArcsCount(edgeFromClassToVariable), 1u);
   EXPECT_EQ(utils::IteratorUtils::getAllWithType(&context, conceptSolution, ScType::NodeConst).size(), 1u);
   shutdown(context);
 }
@@ -78,10 +78,10 @@ TEST_F(DeleteSolutionAgentTest, solutionIsInvalid)
   loader.loadScsFile(context, DELETE_SOLUTION_MODULE_TEST_FILES_DIR_PATH + "actionWithoutSolution.scs");
 
   initialize(context);
-  ScAction testActionNode = context.ConvertToAction(context.HelperFindBySystemIdtf("test_action_node"));
+  ScAction testActionNode = context.ConvertToAction(context.SearchElementBySystemIdentifier("test_action_node"));
   EXPECT_TRUE(testActionNode.IsValid());
   EXPECT_TRUE(testActionNode.InitiateAndWait(WAIT_TIME));
-  EXPECT_TRUE(testActionNode.IsFinishedUnsuccessfully());
+  EXPECT_TRUE(testActionNode.IsFinishedWithError());
   shutdown(context);
 }
 

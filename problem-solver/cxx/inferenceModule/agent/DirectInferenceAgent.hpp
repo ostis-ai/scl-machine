@@ -18,6 +18,7 @@ public:
   ScAddr GetActionClass() const override;
 
   ScResult DoProgram(ScActionInitiatedEvent const & event, ScAction & action) override;
+
 private:
   bool IsSetValidAndNotEmpty(ScAddr const & setAddr) const;
 };

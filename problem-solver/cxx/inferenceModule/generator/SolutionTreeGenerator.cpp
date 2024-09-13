@@ -17,8 +17,8 @@ using namespace utils;
 SolutionTreeGenerator::SolutionTreeGenerator(ScMemoryContext * ms_context)
   : ms_context(ms_context)
 {
-  solution = ms_context->CreateNode(ScType::NodeConst);
-  ms_context->CreateEdge(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::concept_solution, solution);
+  solution = ms_context->GenerateNode(ScType::NodeConst);
+  ms_context->GenerateConnector(ScType::EdgeAccessConstPosPerm, InferenceKeynodes::concept_solution, solution);
 }
 
 bool SolutionTreeGenerator::addNode(
@@ -37,11 +37,12 @@ bool SolutionTreeGenerator::addNode(
     else
     {
       ScIterator3Ptr lastSolutionNodeArcIterator =
-          ms_context->Iterator3(solution, ScType::EdgeAccessConstPosPerm, lastSolutionNode);
+          ms_context->CreateIterator3(solution, ScType::EdgeAccessConstPosPerm, lastSolutionNode);
       if (lastSolutionNodeArcIterator->Next())
       {
         ScAddr lastSolutionNodeArc = lastSolutionNodeArcIterator->Get(1);
-        ScAddr newSolutionNodeArc = ms_context->CreateEdge(ScType::EdgeAccessConstPosPerm, solution, newSolutionNode);
+        ScAddr newSolutionNodeArc =
+            ms_context->GenerateConnector(ScType::EdgeAccessConstPosPerm, solution, newSolutionNode);
         GenerationUtils::generateRelationBetween(
             ms_context, lastSolutionNodeArc, newSolutionNodeArc, ScKeynodes::nrel_basic_sequence);
       }
@@ -61,9 +62,9 @@ ScAddr SolutionTreeGenerator::createSolutionNode(
     ScTemplateParams const & templateParams,
     ScAddrUnorderedSet const & variables)
 {
-  ScAddr const & solutionNode = ms_context->CreateNode(ScType::NodeConst);
+  ScAddr const & solutionNode = ms_context->GenerateNode(ScType::NodeConst);
   GenerationUtils::generateRelationBetween(ms_context, solutionNode, formula, ScKeynodes::rrel_1);
-  ScAddr const & replacementsNode = ms_context->CreateNode(ScType::NodeConst);
+  ScAddr const & replacementsNode = ms_context->GenerateNode(ScType::NodeConst);
   GenerationUtils::generateRelationBetween(ms_context, solutionNode, replacementsNode, ScKeynodes::rrel_2);
   for (ScAddr const & variable : variables)
   {
@@ -71,17 +72,17 @@ ScAddr SolutionTreeGenerator::createSolutionNode(
     templateParams.Get(variable, replacement);
     if (replacement.IsValid())
     {
-      ScAddr const & pair = ms_context->CreateNode(ScType::NodeConst);
-      ms_context->CreateEdge(ScType::EdgeAccessConstPosPerm, replacementsNode, pair);
+      ScAddr const & pair = ms_context->GenerateNode(ScType::NodeConst);
+      ms_context->GenerateConnector(ScType::EdgeAccessConstPosPerm, replacementsNode, pair);
       GenerationUtils::generateRelationBetween(ms_context, pair, replacement, ScKeynodes::rrel_1);
       GenerationUtils::generateRelationBetween(ms_context, pair, variable, ScKeynodes::rrel_2);
-      ms_context->CreateEdge(ScType::EdgeAccessConstPosTemp, variable, replacement);
+      ms_context->GenerateConnector(ScType::EdgeAccessConstPosTemp, variable, replacement);
     }
     else
       SC_THROW_EXCEPTION(
           utils::ExceptionItemNotFound,
-          "SolutionTreeGenerator: formula " << ms_context->HelperGetSystemIdtf(formula) << " has var "
-                                            << ms_context->HelperGetSystemIdtf(variable)
+          "SolutionTreeGenerator: formula " << ms_context->GetElementSystemIdentifier(formula) << " has var "
+                                            << ms_context->GetElementSystemIdentifier(variable)
                                             << " but scTemplateParams don't have replacement for this var");
   }
 
@@ -91,7 +92,7 @@ ScAddr SolutionTreeGenerator::createSolutionNode(
 ScAddr SolutionTreeGenerator::createSolution(ScAddr const & outputStructure, bool const targetAchieved)
 {
   ScType arcType = targetAchieved ? ScType::EdgeAccessConstPosPerm : ScType::EdgeAccessConstNegPerm;
-  ms_context->CreateEdge(arcType, InferenceKeynodes::concept_success_solution, solution);
+  ms_context->GenerateConnector(arcType, InferenceKeynodes::concept_success_solution, solution);
   GenerationUtils::generateRelationBetween(
       ms_context, solution, outputStructure, InferenceKeynodes::nrel_output_structure);
 

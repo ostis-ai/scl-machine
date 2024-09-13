@@ -28,7 +28,8 @@ void DeleteSolutionManager::deleteSolution(ScAddr const & solution) const
 ScAddrList DeleteSolutionManager::getListFromSet(ScAddr const & set) const
 {
   ScAddrList setElements;
-  ScIterator3Ptr const & fromSetIterator = context->Iterator3(set, ScType::EdgeAccessConstPosPerm, ScType::NodeConst);
+  ScIterator3Ptr const & fromSetIterator =
+      context->CreateIterator3(set, ScType::EdgeAccessConstPosPerm, ScType::NodeConst);
   while (fromSetIterator->Next())
     setElements.push_back(fromSetIterator->Get(2));
   return setElements;
@@ -80,7 +81,7 @@ void DeleteSolutionManager::deleteSubstitutions(ScAddr const & substitutions) co
 
 void DeleteSolutionManager::deleteEdges(ScAddr const & source, ScType const & edge, ScAddr const & target) const
 {
-  ScIterator3Ptr const & edgesIterator = context->Iterator3(source, edge, target);
+  ScIterator3Ptr const & edgesIterator = context->CreateIterator3(source, edge, target);
   while (edgesIterator->Next())
     safeDeleteElement(edgesIterator->Get(1));
 }

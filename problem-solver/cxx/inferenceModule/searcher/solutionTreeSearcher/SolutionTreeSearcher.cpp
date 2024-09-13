@@ -47,11 +47,11 @@ bool SolutionTreeSearcher::checkIfSolutionNodeExists(
     else
       SC_THROW_EXCEPTION(
           utils::ExceptionItemNotFound,
-          "SolutionTreeSearcher: rule " << context->HelperGetSystemIdtf(rule) << " has var "
-                                        << context->HelperGetSystemIdtf(variable)
+          "SolutionTreeSearcher: rule " << context->GetElementSystemIdentifier(rule) << " has var "
+                                        << context->GetElementSystemIdentifier(variable)
                                         << " but templateParams don't have replacement for this var");
   }
-  context->HelperSearchTemplate(solutionNodeTemplate, searchResult);
+  context->SearchByTemplate(solutionNodeTemplate, searchResult);
   return !searchResult.IsEmpty();
 }
 }  // namespace inference

@@ -32,7 +32,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_NoStructuresTestCase)
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchWithContentNoStructures.scs");
 
-  ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
+  ScAddr searchTemplateAddr = context.SearchElementBySystemIdentifier(TEST_SEARCH_TEMPLATE_ID);
   inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
 
@@ -50,7 +50,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_EmptyResultsTestCase)
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchWithContentEmptyResultsTestStucture.scs");
 
-  ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
+  ScAddr searchTemplateAddr = context.SearchElementBySystemIdentifier(TEST_SEARCH_TEMPLATE_ID);
   inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
 
@@ -73,7 +73,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_SingleResultTestCase)
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchWithContentSingleResultTestStructure.scs");
 
-  ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
+  ScAddr searchTemplateAddr = context.SearchElementBySystemIdentifier(TEST_SEARCH_TEMPLATE_ID);
   inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
   inference::Replacements searchResults;
@@ -85,11 +85,11 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_SingleResultTestCase)
   ScAddrUnorderedSet templateVars = {vars.cbegin(), vars.cend()};
   EXPECT_EQ(searchResults.size(), templateVars.size());
   EXPECT_EQ(
-      searchResults.at(context.HelperFindBySystemIdtf(searchLinkIdentifier))[0],
-      context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
+      searchResults.at(context.SearchElementBySystemIdentifier(searchLinkIdentifier))[0],
+      context.SearchElementBySystemIdentifier(correctResultLinkIdentifier));
   EXPECT_EQ(
-      searchResults.at(context.HelperFindBySystemIdtf(nodeAlias))[0],
-      context.HelperFindBySystemIdtf(firstConstantNode));
+      searchResults.at(context.SearchElementBySystemIdentifier(nodeAlias))[0],
+      context.SearchElementBySystemIdentifier(firstConstantNode));
 }
 
 TEST_F(TemplateSearchManagerTest, SearchInMultipleStructuresWithContent_SingleResultTestCase)
@@ -103,13 +103,13 @@ TEST_F(TemplateSearchManagerTest, SearchInMultipleStructuresWithContent_SingleRe
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchWithContentSingleResultTestStructure.scs");
 
-  ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
+  ScAddr searchTemplateAddr = context.SearchElementBySystemIdentifier(TEST_SEARCH_TEMPLATE_ID);
   inference::TemplateSearcherInStructures templateSearcher(&context);
   ScTemplateParams templateParams;
   inference::Replacements searchResults;
   ScAddrUnorderedSet variables;
-  ScAddr const & inputStructure1 = context.HelperFindBySystemIdtf("input_structure_1");
-  ScAddr const & inputStructure2 = context.HelperFindBySystemIdtf("input_structure_2");
+  ScAddr const & inputStructure1 = context.SearchElementBySystemIdentifier("input_structure_1");
+  ScAddr const & inputStructure2 = context.SearchElementBySystemIdentifier("input_structure_2");
   templateSearcher.setInputStructures({inputStructure1, inputStructure2});
   templateSearcher.getVariables(searchTemplateAddr, variables);
   templateSearcher.searchTemplate(searchTemplateAddr, templateParams, variables, searchResults);
@@ -118,11 +118,11 @@ TEST_F(TemplateSearchManagerTest, SearchInMultipleStructuresWithContent_SingleRe
   ScAddrUnorderedSet templateVars = {vars.cbegin(), vars.cend()};
   EXPECT_EQ(searchResults.size(), templateVars.size());
   EXPECT_EQ(
-      searchResults.at(context.HelperFindBySystemIdtf(searchLinkIdentifier))[0],
-      context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
+      searchResults.at(context.SearchElementBySystemIdentifier(searchLinkIdentifier))[0],
+      context.SearchElementBySystemIdentifier(correctResultLinkIdentifier));
   EXPECT_EQ(
-      searchResults.at(context.HelperFindBySystemIdtf(nodeAlias))[0],
-      context.HelperFindBySystemIdtf(firstConstantNode));
+      searchResults.at(context.SearchElementBySystemIdentifier(nodeAlias))[0],
+      context.SearchElementBySystemIdentifier(firstConstantNode));
 }
 
 TEST_F(TemplateSearchManagerTest, SearchWithoutContent_NoStructuresTestCase)
@@ -131,7 +131,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_NoStructuresTestCase)
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchWithoutContentNoStructures.scs");
 
-  ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
+  ScAddr searchTemplateAddr = context.SearchElementBySystemIdentifier(TEST_SEARCH_TEMPLATE_ID);
   inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
 
@@ -154,7 +154,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_SingleResultTestCase)
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchWithoutContentSingleResultTestStucture.scs");
 
-  ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
+  ScAddr searchTemplateAddr = context.SearchElementBySystemIdentifier(TEST_SEARCH_TEMPLATE_ID);
   inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
   inference::Replacements searchResults;
@@ -167,11 +167,11 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_SingleResultTestCase)
   EXPECT_EQ(searchResults.size(), templateVars.size());
 
   EXPECT_EQ(
-      searchResults.at(context.HelperFindBySystemIdtf(searchLinkIdentifier))[0],
-      context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
+      searchResults.at(context.SearchElementBySystemIdentifier(searchLinkIdentifier))[0],
+      context.SearchElementBySystemIdentifier(correctResultLinkIdentifier));
   EXPECT_EQ(
-      searchResults.at(context.HelperFindBySystemIdtf(nodeAlias))[0],
-      context.HelperFindBySystemIdtf(firstConstantNode));
+      searchResults.at(context.SearchElementBySystemIdentifier(nodeAlias))[0],
+      context.SearchElementBySystemIdentifier(firstConstantNode));
 }
 
 TEST_F(TemplateSearchManagerTest, SearchWithoutContent_EmptyLinkTestCase)
@@ -183,7 +183,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_EmptyLinkTestCase)
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchWithoutContentEmptyLinkTest.scs");
 
-  ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
+  ScAddr searchTemplateAddr = context.SearchElementBySystemIdentifier(TEST_SEARCH_TEMPLATE_ID);
   inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
   inference::Replacements searchResults;
@@ -195,8 +195,8 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutContent_EmptyLinkTestCase)
   ScAddrUnorderedSet templateVars = {vars.cbegin(), vars.cend()};
   EXPECT_EQ(searchResults.size(), templateVars.size());
   EXPECT_EQ(
-      searchResults.at(context.HelperFindBySystemIdtf(searchLinkIdentifier))[0],
-      context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
+      searchResults.at(context.SearchElementBySystemIdentifier(searchLinkIdentifier))[0],
+      context.SearchElementBySystemIdentifier(correctResultLinkIdentifier));
 }
 
 TEST_F(TemplateSearchManagerTest, SearchWithContent_EmptyLinkTestCase)
@@ -208,7 +208,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_EmptyLinkTestCase)
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchWithContentEmptyLinkTest.scs");
 
-  ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
+  ScAddr searchTemplateAddr = context.SearchElementBySystemIdentifier(TEST_SEARCH_TEMPLATE_ID);
   inference::TemplateSearcherGeneral templateSearcher(&context);
   ScTemplateParams templateParams;
   inference::Replacements searchResults;
@@ -220,8 +220,8 @@ TEST_F(TemplateSearchManagerTest, SearchWithContent_EmptyLinkTestCase)
   ScAddrUnorderedSet templateVars = {vars.cbegin(), vars.cend()};
   EXPECT_EQ(searchResults.size(), templateVars.size());
   EXPECT_EQ(
-      searchResults.at(context.HelperFindBySystemIdtf(searchLinkIdentifier))[0],
-      context.HelperFindBySystemIdtf(correctResultLinkIdentifier));
+      searchResults.at(context.SearchElementBySystemIdentifier(searchLinkIdentifier))[0],
+      context.SearchElementBySystemIdentifier(correctResultLinkIdentifier));
 }
 
 TEST_F(TemplateSearchManagerTest, SearchWithExistedConstructionsTest)
@@ -234,11 +234,11 @@ TEST_F(TemplateSearchManagerTest, SearchWithExistedConstructionsTest)
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchWithExistedConstructionsStructure.scs");
 
-  ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
+  ScAddr searchTemplateAddr = context.SearchElementBySystemIdentifier(TEST_SEARCH_TEMPLATE_ID);
   ScAddrVector templateVars = utils::IteratorUtils::getAllWithType(&context, searchTemplateAddr, ScType::Var);
-  ScAddr const & structure1 = context.HelperFindBySystemIdtf(structure1Identifier);
-  ScAddr const & structure2 = context.HelperFindBySystemIdtf(structure2Identifier);
-  ScAddr const & structure3 = context.HelperFindBySystemIdtf(structure3Identifier);
+  ScAddr const & structure1 = context.SearchElementBySystemIdentifier(structure1Identifier);
+  ScAddr const & structure2 = context.SearchElementBySystemIdentifier(structure2Identifier);
+  ScAddr const & structure3 = context.SearchElementBySystemIdentifier(structure3Identifier);
 
   std::unique_ptr<inference::TemplateSearcherAbstract> templateSearcher =
       std::make_unique<inference::TemplateSearcherOnlyAccessEdgesInStructures>(&context);
@@ -261,7 +261,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutAccessEdgesTest)
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchStructuresWithoutAccessEdges.scs");
 
-  ScAddr searchTemplateAddr = context.HelperFindBySystemIdtf(TEST_SEARCH_TEMPLATE_ID);
+  ScAddr searchTemplateAddr = context.SearchElementBySystemIdentifier(TEST_SEARCH_TEMPLATE_ID);
   ScAddrVector templateVars = utils::IteratorUtils::getAllWithType(&context, searchTemplateAddr, ScType::Var);
 
   std::unique_ptr<inference::TemplateSearcherAbstract> templateSearcher =

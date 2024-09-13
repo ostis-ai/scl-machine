@@ -39,16 +39,17 @@ TEST_F(InferenceComplexFormulasTest, TrueNestedImplicationFormula)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "trueNestedImplicationFormula.scs");
   initialize(context);
 
-  ScAddr const & tempActionNode = context.HelperFindBySystemIdtf(ACTION_IDENTIFIER);
+  ScAddr const & tempActionNode = context.SearchElementBySystemIdentifier(ACTION_IDENTIFIER);
   EXPECT_TRUE(tempActionNode.IsValid());
-  ScAction action = context.ConvertToAction(tempActionNode);;
+  ScAction action = context.ConvertToAction(tempActionNode);
+  ;
   EXPECT_TRUE(action.IsValid());
 
-  ScAddr argument = context.HelperFindBySystemIdtf(ARGUMENT_IDENTIFIER);
+  ScAddr argument = context.SearchElementBySystemIdentifier(ARGUMENT_IDENTIFIER);
   EXPECT_TRUE(argument.IsValid());
 
   ScIterator3Ptr argumentClassIteratorBefore =
-      context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
 
   // There is only one class of argument before agent run
   EXPECT_TRUE(argumentClassIteratorBefore->Next());
@@ -60,7 +61,7 @@ TEST_F(InferenceComplexFormulasTest, TrueNestedImplicationFormula)
   EXPECT_TRUE(action.IsFinishedSuccessfully());
 
   ScIterator3Ptr argumentClassIteratorAfter =
-      context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
 
   // There is only two classes of argument: one was before agent run and two was generated
   EXPECT_TRUE(argumentClassIteratorAfter->Next());
@@ -82,16 +83,17 @@ TEST_F(InferenceComplexFormulasTest, TrueDisjunctionImplicationFormula)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "disjunctionImplicationTest.scs");
   initialize(context);
 
-  ScAddr const & tempActionNode = context.HelperFindBySystemIdtf(ACTION_IDENTIFIER);
+  ScAddr const & tempActionNode = context.SearchElementBySystemIdentifier(ACTION_IDENTIFIER);
   EXPECT_TRUE(tempActionNode.IsValid());
-  ScAction action = context.ConvertToAction(tempActionNode);;
+  ScAction action = context.ConvertToAction(tempActionNode);
+  ;
   EXPECT_TRUE(action.IsValid());
 
-  ScAddr argument = context.HelperFindBySystemIdtf(ARGUMENT_IDENTIFIER);
+  ScAddr argument = context.SearchElementBySystemIdentifier(ARGUMENT_IDENTIFIER);
   EXPECT_TRUE(argument.IsValid());
 
   ScIterator3Ptr argumentClassIteratorBefore =
-      context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
 
   // There is only one class of argument before agent run
   EXPECT_TRUE(argumentClassIteratorBefore->Next());
@@ -103,7 +105,7 @@ TEST_F(InferenceComplexFormulasTest, TrueDisjunctionImplicationFormula)
   EXPECT_TRUE(action.IsFinishedSuccessfully());
 
   ScIterator3Ptr argumentClassIteratorAfter =
-      context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
 
   // There is only two classes of argument: one was before agent run and one was generated
   EXPECT_TRUE(argumentClassIteratorAfter->Next());
@@ -124,16 +126,17 @@ TEST_F(InferenceComplexFormulasTest, TrueConjunctionImplicationFormula)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "conjunctionImplicationTest.scs");
   initialize(context);
 
-  ScAddr const & tempActionNode = context.HelperFindBySystemIdtf(ACTION_IDENTIFIER);
+  ScAddr const & tempActionNode = context.SearchElementBySystemIdentifier(ACTION_IDENTIFIER);
   EXPECT_TRUE(tempActionNode.IsValid());
-  ScAction action = context.ConvertToAction(tempActionNode);;
+  ScAction action = context.ConvertToAction(tempActionNode);
+  ;
   EXPECT_TRUE(action.IsValid());
 
-  ScAddr argument = context.HelperFindBySystemIdtf(ARGUMENT_IDENTIFIER);
+  ScAddr argument = context.SearchElementBySystemIdentifier(ARGUMENT_IDENTIFIER);
   EXPECT_TRUE(argument.IsValid());
 
   ScIterator3Ptr argumentClassIteratorBefore =
-      context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
 
   // There is only two classes of argument before agent run
   EXPECT_TRUE(argumentClassIteratorBefore->Next());
@@ -146,7 +149,7 @@ TEST_F(InferenceComplexFormulasTest, TrueConjunctionImplicationFormula)
   EXPECT_TRUE(action.IsFinishedSuccessfully());
 
   ScIterator3Ptr argumentClassIteratorAfter =
-      context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
 
   // There is only three classes of argument: one was before agent run and two were generated
   EXPECT_TRUE(argumentClassIteratorAfter->Next());
@@ -169,15 +172,16 @@ TEST_F(InferenceComplexFormulasTest, DISABLED_TrueNegationImplicationLogicRule)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "trueNegationImplicationRuleTest.scs");
   initialize(context);
 
-  ScAddr const & tempActionNode = context.HelperFindBySystemIdtf(ACTION_IDENTIFIER);
+  ScAddr const & tempActionNode = context.SearchElementBySystemIdentifier(ACTION_IDENTIFIER);
   EXPECT_TRUE(tempActionNode.IsValid());
-  ScAction action = context.ConvertToAction(tempActionNode);;
+  ScAction action = context.ConvertToAction(tempActionNode);
+  ;
 
-  ScAddr argument = context.HelperFindBySystemIdtf(ARGUMENT_IDENTIFIER);
+  ScAddr argument = context.SearchElementBySystemIdentifier(ARGUMENT_IDENTIFIER);
   EXPECT_TRUE(argument.IsValid());
 
   ScIterator3Ptr argumentClassIteratorBefore =
-      context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
 
   // There is only two classes of argument before agent run
   EXPECT_TRUE(argumentClassIteratorBefore->Next());
@@ -190,7 +194,7 @@ TEST_F(InferenceComplexFormulasTest, DISABLED_TrueNegationImplicationLogicRule)
   EXPECT_TRUE(action.IsFinishedSuccessfully());
 
   ScIterator3Ptr argumentClassIteratorAfter =
-      context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
 
   // There is only three classes of argument: one was before agent run and two were generated
   EXPECT_TRUE(argumentClassIteratorAfter->Next());
@@ -213,15 +217,16 @@ TEST_F(InferenceComplexFormulasTest, DISABLED_TrueComplexLogicRule)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "inferenceLogicTrueComplexRuleTest.scs");
   initialize(context);
 
-  ScAddr const & tempActionNode = context.HelperFindBySystemIdtf(ACTION_IDENTIFIER);
+  ScAddr const & tempActionNode = context.SearchElementBySystemIdentifier(ACTION_IDENTIFIER);
   EXPECT_TRUE(tempActionNode.IsValid());
-  ScAction action = context.ConvertToAction(tempActionNode);;
+  ScAction action = context.ConvertToAction(tempActionNode);
+  ;
 
-  ScAddr argument = context.HelperFindBySystemIdtf(ARGUMENT_IDENTIFIER);
+  ScAddr argument = context.SearchElementBySystemIdentifier(ARGUMENT_IDENTIFIER);
   EXPECT_TRUE(argument.IsValid());
 
   ScIterator3Ptr argumentClassIteratorBefore =
-      context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
 
   // There is only two classes of argument before agent run
   EXPECT_TRUE(argumentClassIteratorBefore->Next());
@@ -234,7 +239,7 @@ TEST_F(InferenceComplexFormulasTest, DISABLED_TrueComplexLogicRule)
   EXPECT_TRUE(action.IsFinishedSuccessfully());
 
   ScIterator3Ptr argumentClassIteratorAfter =
-      context.Iterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
 
   // There is only three classes of argument: one was before agent run and two were generated
   EXPECT_TRUE(argumentClassIteratorAfter->Next());
@@ -256,9 +261,10 @@ TEST_F(InferenceComplexFormulasTest, FalseLogicRule)
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "inferenceLogicFalseComplexRuleTest.scs");
   initialize(context);
 
-  ScAddr const & tempActionNode = context.HelperFindBySystemIdtf(ACTION_IDENTIFIER);
+  ScAddr const & tempActionNode = context.SearchElementBySystemIdentifier(ACTION_IDENTIFIER);
   EXPECT_TRUE(tempActionNode.IsValid());
-  ScAction action = context.ConvertToAction(tempActionNode);;
+  ScAction action = context.ConvertToAction(tempActionNode);
+  ;
 
   EXPECT_TRUE(action.InitiateAndWait(WAIT_TIME));
   EXPECT_TRUE(action.IsFinishedSuccessfully());
@@ -276,9 +282,10 @@ TEST_F(InferenceComplexFormulasTest, EquivalencesNested)
   loader.loadScsFile(context, name);
   initialize(context);
 
-  ScAddr const & tempActionNode = context.HelperFindBySystemIdtf(ACTION_IDENTIFIER);
+  ScAddr const & tempActionNode = context.SearchElementBySystemIdentifier(ACTION_IDENTIFIER);
   EXPECT_TRUE(tempActionNode.IsValid());
-  ScAction action = context.ConvertToAction(tempActionNode);;
+  ScAction action = context.ConvertToAction(tempActionNode);
+  ;
 
   EXPECT_TRUE(action.InitiateAndWait(WAIT_TIME));
   EXPECT_TRUE(action.IsFinishedUnsuccessfully());

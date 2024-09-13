@@ -52,22 +52,22 @@ TEST_P(InferenceManagerTest, SuccessApplyInference)
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "trueSimpleRuleTest.scs");
 
-  ScAddr targetTemplate = context.HelperResolveSystemIdtf(TARGET_TEMPLATE);
+  ScAddr targetTemplate = context.ResolveElementSystemIdentifier(TARGET_TEMPLATE);
   EXPECT_TRUE(targetTemplate.IsValid());
 
-  ScAddr ruleSet = context.HelperResolveSystemIdtf(RULES_SET);
+  ScAddr ruleSet = context.ResolveElementSystemIdentifier(RULES_SET);
   EXPECT_TRUE(ruleSet.IsValid());
 
-  ScAddr argumentSet = context.HelperResolveSystemIdtf(ARGUMENT_SET);
+  ScAddr argumentSet = context.ResolveElementSystemIdentifier(ARGUMENT_SET);
   EXPECT_TRUE(argumentSet.IsValid());
 
-  ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
+  ScAddr inputStructure = context.ResolveElementSystemIdentifier(INPUT_STRUCTURE);
   EXPECT_TRUE(inputStructure.IsValid());
 
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES});
   ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
-  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  ScAddr const & outputStructure = context.GenerateNode(ScType::NodeConstStruct);
   InferenceParams const & inferenceParams{ruleSet, argumentVector, {inputStructure}, outputStructure, targetTemplate};
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
       InferenceManagerFactory::constructDirectInferenceManagerTarget(&context, inferenceConfig);
@@ -76,14 +76,14 @@ TEST_P(InferenceManagerTest, SuccessApplyInference)
 
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
-      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm));
+      context.CheckConnector(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm));
 
-  ScAddr argument = context.HelperFindBySystemIdtf("argument");
+  ScAddr argument = context.SearchElementBySystemIdentifier("argument");
   EXPECT_TRUE(argument.IsValid());
-  ScAddr targetClass = context.HelperFindBySystemIdtf("target_node_class");
+  ScAddr targetClass = context.SearchElementBySystemIdentifier("target_node_class");
   EXPECT_TRUE(targetClass.IsValid());
 
-  EXPECT_TRUE(context.HelperCheckEdge(targetClass, argument, ScType::EdgeAccessConstPosPerm));
+  EXPECT_TRUE(context.CheckConnector(targetClass, argument, ScType::EdgeAccessConstPosPerm));
 }
 
 TEST_P(InferenceManagerTest, SuccessGenerateInferenceConclusion)
@@ -92,19 +92,19 @@ TEST_P(InferenceManagerTest, SuccessGenerateInferenceConclusion)
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "conclusionGenerationTest.scs");
 
-  ScAddr targetTemplate = context.HelperResolveSystemIdtf(TARGET_TEMPLATE);
+  ScAddr targetTemplate = context.ResolveElementSystemIdentifier(TARGET_TEMPLATE);
   EXPECT_TRUE(targetTemplate.IsValid());
 
-  ScAddr ruleSet = context.HelperResolveSystemIdtf(RULES_SET);
+  ScAddr ruleSet = context.ResolveElementSystemIdentifier(RULES_SET);
   EXPECT_TRUE(ruleSet.IsValid());
 
-  ScAddr argumentSet = context.HelperResolveSystemIdtf(ARGUMENT_SET);
+  ScAddr argumentSet = context.ResolveElementSystemIdentifier(ARGUMENT_SET);
   EXPECT_TRUE(argumentSet.IsValid());
 
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_ALL_KB});
   ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
-  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  ScAddr const & outputStructure = context.GenerateNode(ScType::NodeConstStruct);
   InferenceParams const & inferenceParams{ruleSet, argumentVector, {}, outputStructure, targetTemplate};
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
       InferenceManagerFactory::constructDirectInferenceManagerTarget(&context, inferenceConfig);
@@ -113,11 +113,11 @@ TEST_P(InferenceManagerTest, SuccessGenerateInferenceConclusion)
 
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
-      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm));
+      context.CheckConnector(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm));
   ScTemplate conclusionTemplate;
   ScTemplateSearchResult conclusionSearchResult;
-  context.HelperBuildTemplate(conclusionTemplate, targetTemplate);
-  EXPECT_TRUE(context.HelperSearchTemplate(conclusionTemplate, conclusionSearchResult));
+  context.BuildTemplate(conclusionTemplate, targetTemplate);
+  EXPECT_TRUE(context.SearchByTemplate(conclusionTemplate, conclusionSearchResult));
 }
 
 TEST_P(InferenceManagerTest, RuleNotUsed)
@@ -126,22 +126,22 @@ TEST_P(InferenceManagerTest, RuleNotUsed)
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "ruleNotUsedTest.scs");
 
-  ScAddr targetTemplate = context.HelperResolveSystemIdtf(TARGET_TEMPLATE);
+  ScAddr targetTemplate = context.ResolveElementSystemIdentifier(TARGET_TEMPLATE);
   EXPECT_TRUE(targetTemplate.IsValid());
 
-  ScAddr ruleSet = context.HelperResolveSystemIdtf(RULES_SET);
+  ScAddr ruleSet = context.ResolveElementSystemIdentifier(RULES_SET);
   EXPECT_TRUE(ruleSet.IsValid());
 
-  ScAddr argumentSet = context.HelperResolveSystemIdtf(ARGUMENT_SET);
+  ScAddr argumentSet = context.ResolveElementSystemIdentifier(ARGUMENT_SET);
   EXPECT_TRUE(argumentSet.IsValid());
 
-  ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
+  ScAddr inputStructure = context.ResolveElementSystemIdentifier(INPUT_STRUCTURE);
   EXPECT_TRUE(inputStructure.IsValid());
 
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES});
   ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
-  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  ScAddr const & outputStructure = context.GenerateNode(ScType::NodeConstStruct);
   InferenceParams const & inferenceParams{ruleSet, argumentVector, {inputStructure}, outputStructure, targetTemplate};
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
       InferenceManagerFactory::constructDirectInferenceManagerTarget(&context, inferenceConfig);
@@ -150,7 +150,7 @@ TEST_P(InferenceManagerTest, RuleNotUsed)
 
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
-      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
+      context.CheckConnector(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
 }
 
 TEST_P(InferenceManagerTest, TargetNotAchieved)
@@ -159,22 +159,22 @@ TEST_P(InferenceManagerTest, TargetNotAchieved)
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "targetNotAchievedTest.scs");
 
-  ScAddr targetTemplate = context.HelperResolveSystemIdtf(TARGET_TEMPLATE);
+  ScAddr targetTemplate = context.ResolveElementSystemIdentifier(TARGET_TEMPLATE);
   EXPECT_TRUE(targetTemplate.IsValid());
 
-  ScAddr ruleSet = context.HelperResolveSystemIdtf(RULES_SET);
+  ScAddr ruleSet = context.ResolveElementSystemIdentifier(RULES_SET);
   EXPECT_TRUE(ruleSet.IsValid());
 
-  ScAddr argumentSet = context.HelperResolveSystemIdtf(ARGUMENT_SET);
+  ScAddr argumentSet = context.ResolveElementSystemIdentifier(ARGUMENT_SET);
   EXPECT_TRUE(argumentSet.IsValid());
 
-  ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
+  ScAddr inputStructure = context.ResolveElementSystemIdentifier(INPUT_STRUCTURE);
   EXPECT_TRUE(inputStructure.IsValid());
 
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES});
   ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
-  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  ScAddr const & outputStructure = context.GenerateNode(ScType::NodeConstStruct);
   InferenceParams const & inferenceParams{ruleSet, argumentVector, {inputStructure}, outputStructure, targetTemplate};
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
       InferenceManagerFactory::constructDirectInferenceManagerTarget(&context, inferenceConfig);
@@ -183,7 +183,7 @@ TEST_P(InferenceManagerTest, TargetNotAchieved)
 
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
-      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
+      context.CheckConnector(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
 }
 
 TEST_P(InferenceManagerTest, ReplacementsTest)
@@ -192,19 +192,19 @@ TEST_P(InferenceManagerTest, ReplacementsTest)
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "replaceNotWork.scs");
 
-  ScAddr targetTemplate = context.HelperResolveSystemIdtf(TARGET_TEMPLATE);
+  ScAddr targetTemplate = context.ResolveElementSystemIdentifier(TARGET_TEMPLATE);
   EXPECT_TRUE(targetTemplate.IsValid());
 
-  ScAddr ruleSet = context.HelperResolveSystemIdtf(RULES_SET);
+  ScAddr ruleSet = context.ResolveElementSystemIdentifier(RULES_SET);
   EXPECT_TRUE(ruleSet.IsValid());
 
-  ScAddr argumentSet = context.HelperResolveSystemIdtf(ARGUMENT_SET);
+  ScAddr argumentSet = context.ResolveElementSystemIdentifier(ARGUMENT_SET);
   EXPECT_TRUE(argumentSet.IsValid());
 
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_ALL_KB});
   ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
-  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  ScAddr const & outputStructure = context.GenerateNode(ScType::NodeConstStruct);
   InferenceParams const & inferenceParams{ruleSet, argumentVector, {}, outputStructure, targetTemplate};
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
       InferenceManagerFactory::constructDirectInferenceManagerTarget(&context, inferenceConfig);
@@ -213,7 +213,7 @@ TEST_P(InferenceManagerTest, ReplacementsTest)
 
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
-      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
+      context.CheckConnector(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstNegPerm));
 }
 
 // Add dialog to arguments_set and test will pass
@@ -223,22 +223,22 @@ TEST_P(InferenceManagerTest, DISABLED_ConclusionArgumentsTest)
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "ConclusionArgumentsTest.scs");
 
-  ScAddr targetStructure = context.HelperResolveSystemIdtf("inference_target");
+  ScAddr targetStructure = context.ResolveElementSystemIdentifier("inference_target");
   EXPECT_TRUE(targetStructure.IsValid());
 
-  ScAddr formulasSet = context.HelperResolveSystemIdtf("rules_sets");
+  ScAddr formulasSet = context.ResolveElementSystemIdentifier("rules_sets");
   EXPECT_TRUE(formulasSet.IsValid());
 
-  ScAddr argumentSet = context.HelperResolveSystemIdtf(ARGUMENT_SET);
+  ScAddr argumentSet = context.ResolveElementSystemIdentifier(ARGUMENT_SET);
   EXPECT_TRUE(argumentSet.IsValid());
 
-  ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
+  ScAddr inputStructure = context.ResolveElementSystemIdentifier(INPUT_STRUCTURE);
   EXPECT_TRUE(inputStructure.IsValid());
 
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES});
   ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
-  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
+  ScAddr const & outputStructure = context.GenerateNode(ScType::NodeConstStruct);
   InferenceParams const & inferenceParams{
       formulasSet, argumentVector, {inputStructure}, outputStructure, targetStructure};
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
@@ -248,14 +248,14 @@ TEST_P(InferenceManagerTest, DISABLED_ConclusionArgumentsTest)
 
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
-      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm));
+      context.CheckConnector(InferenceKeynodes::concept_success_solution, answer, ScType::EdgeAccessConstPosPerm));
 
-  ScAddr dialog = context.HelperFindBySystemIdtf("dialog");
-  ScAddr dialogClass = context.HelperFindBySystemIdtf("concept_dialog_class");
+  ScAddr dialog = context.SearchElementBySystemIdentifier("dialog");
+  ScAddr dialogClass = context.SearchElementBySystemIdentifier("concept_dialog_class");
   EXPECT_TRUE(dialog.IsValid());
   EXPECT_TRUE(dialogClass.IsValid());
 
-  EXPECT_TRUE(context.HelperCheckEdge(dialogClass, dialog, ScType::EdgeAccessConstPosPerm));
+  EXPECT_TRUE(context.CheckConnector(dialogClass, dialog, ScType::EdgeAccessConstPosPerm));
 }
 
 TEST_P(InferenceManagerTest, SolutionOutputStrcuture)
@@ -264,22 +264,22 @@ TEST_P(InferenceManagerTest, SolutionOutputStrcuture)
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "trueSimpleRuleTest.scs");
 
-  ScAddr targetTemplate = context.HelperResolveSystemIdtf(TARGET_TEMPLATE);
+  ScAddr targetTemplate = context.ResolveElementSystemIdentifier(TARGET_TEMPLATE);
   EXPECT_TRUE(targetTemplate.IsValid());
 
-  ScAddr ruleSet = context.HelperResolveSystemIdtf(RULES_SET);
+  ScAddr ruleSet = context.ResolveElementSystemIdentifier(RULES_SET);
   EXPECT_TRUE(ruleSet.IsValid());
 
-  ScAddr argumentSet = context.HelperResolveSystemIdtf(ARGUMENT_SET);
+  ScAddr argumentSet = context.ResolveElementSystemIdentifier(ARGUMENT_SET);
   EXPECT_TRUE(argumentSet.IsValid());
 
-  ScAddr inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
+  ScAddr inputStructure = context.ResolveElementSystemIdentifier(INPUT_STRUCTURE);
   EXPECT_TRUE(inputStructure.IsValid());
 
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES});
   ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
-  ScAddr const & output = context.CreateNode(ScType::NodeConstStruct);
+  ScAddr const & output = context.GenerateNode(ScType::NodeConstStruct);
   InferenceParams const & inferenceParams{ruleSet, argumentVector, {inputStructure}, output, targetTemplate};
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
       InferenceManagerFactory::constructDirectInferenceManagerTarget(&context, inferenceConfig);
@@ -288,10 +288,10 @@ TEST_P(InferenceManagerTest, SolutionOutputStrcuture)
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(
-      context.HelperCheckEdge(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
+      context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstPosPerm));
 
   // Check if nrel_output_structure exists
-  ScIterator5Ptr solutionOutputIterator = context.Iterator5(
+  ScIterator5Ptr solutionOutputIterator = context.CreateIterator5(
       solution,
       ScType::EdgeDCommonConst,
       ScType::NodeConstStruct,
@@ -304,18 +304,18 @@ TEST_P(InferenceManagerTest, SolutionOutputStrcuture)
 
   // Check class in output structure, expect target_node_class
   ScIterator3Ptr outputStructureClassIterator =
-      context.Iterator3(outputStructure, ScType::EdgeAccessConstPosPerm, ScType::NodeConstClass);
+      context.CreateIterator3(outputStructure, ScType::EdgeAccessConstPosPerm, ScType::NodeConstClass);
   EXPECT_TRUE(outputStructureClassIterator->Next());
 
   ScAddr outputStructureClass = outputStructureClassIterator->Get(2);
   EXPECT_TRUE(outputStructureClass.IsValid());
 
-  ScAddr targetClass = context.HelperFindBySystemIdtf("target_node_class");
+  ScAddr targetClass = context.SearchElementBySystemIdentifier("target_node_class");
   EXPECT_TRUE(targetClass.IsValid());
   EXPECT_TRUE(targetClass == outputStructureClass);
 
   // Check target_node_class element in output structure, expect argument
-  ScIterator5Ptr outputStructureClassElementIterator = context.Iterator5(
+  ScIterator5Ptr outputStructureClassElementIterator = context.CreateIterator5(
       outputStructureClass,
       ScType::EdgeAccessConstPosPerm,
       ScType::NodeConst,
@@ -324,13 +324,13 @@ TEST_P(InferenceManagerTest, SolutionOutputStrcuture)
   EXPECT_TRUE(outputStructureClassElementIterator->Next());
 
   ScAddr outputStructureClassElement = outputStructureClassElementIterator->Get(2);
-  ScAddr argument = context.HelperFindBySystemIdtf("argument");
+  ScAddr argument = context.SearchElementBySystemIdentifier("argument");
   EXPECT_TRUE(argument.IsValid());
   EXPECT_TRUE(outputStructureClassElement.IsValid());
   EXPECT_TRUE(argument == outputStructureClassElement);
 
   // Check if edge between target_node_class and argument exists in output structure
-  ScIterator5Ptr edgeOutputStructureIterator = context.Iterator5(
+  ScIterator5Ptr edgeOutputStructureIterator = context.CreateIterator5(
       outputStructureClass,
       ScType::EdgeAccessConstPosPerm,
       outputStructureClassElement,
@@ -348,24 +348,24 @@ TEST_P(InferenceManagerTest, conclusionContainsEdgeReplacementFromPremise)
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "conclusionContainsEdgeReplacementFromPremise.scs");
 
-  ScAddr const & inputStructure = context.HelperResolveSystemIdtf(INPUT_STRUCTURE);
-  ScAddr const & targetTemplate = context.HelperResolveSystemIdtf(TARGET_TEMPLATE);
+  ScAddr const & inputStructure = context.ResolveElementSystemIdentifier(INPUT_STRUCTURE);
+  ScAddr const & targetTemplate = context.ResolveElementSystemIdentifier(TARGET_TEMPLATE);
   ScAddrUnorderedSet inputStructures{inputStructure};
-  ScAddr const & rulesSet = context.HelperResolveSystemIdtf(RULES_SET);
-  ScAddr const & outputStructure = context.CreateNode(ScType::NodeConstStruct);
-  ScAddr const & set1 = context.HelperFindBySystemIdtf("set1");
-  ScAddr const & set2 = context.HelperFindBySystemIdtf("set2");
+  ScAddr const & rulesSet = context.ResolveElementSystemIdentifier(RULES_SET);
+  ScAddr const & outputStructure = context.GenerateNode(ScType::NodeConstStruct);
+  ScAddr const & set1 = context.SearchElementBySystemIdentifier("set1");
+  ScAddr const & set2 = context.SearchElementBySystemIdentifier("set2");
   EXPECT_TRUE(set1.IsValid());
   EXPECT_TRUE(set2.IsValid());
-  ScAddr const & nrelInclusion = context.HelperFindBySystemIdtf("nrel_inclusion");
-  ScAddr const & nrelSubset = context.HelperFindBySystemIdtf("nrel_subset");
+  ScAddr const & nrelInclusion = context.SearchElementBySystemIdentifier("nrel_inclusion");
+  ScAddr const & nrelSubset = context.SearchElementBySystemIdentifier("nrel_subset");
   EXPECT_TRUE(nrelInclusion.IsValid());
   EXPECT_TRUE(nrelSubset.IsValid());
   {
-    auto const & sets12IteratorBefore = context.Iterator3(set1, ScType::EdgeDCommonConst, set2);
+    auto const & sets12IteratorBefore = context.CreateIterator3(set1, ScType::EdgeDCommonConst, set2);
     EXPECT_TRUE(sets12IteratorBefore->Next());
-    EXPECT_TRUE(context.HelperCheckEdge(nrelInclusion, sets12IteratorBefore->Get(1), ScType::EdgeAccessConstPosPerm));
-    EXPECT_FALSE(context.HelperCheckEdge(nrelSubset, sets12IteratorBefore->Get(1), ScType::EdgeAccessConstPosPerm));
+    EXPECT_TRUE(context.CheckConnector(nrelInclusion, sets12IteratorBefore->Get(1), ScType::EdgeAccessConstPosPerm));
+    EXPECT_FALSE(context.CheckConnector(nrelSubset, sets12IteratorBefore->Get(1), ScType::EdgeAccessConstPosPerm));
     EXPECT_FALSE(sets12IteratorBefore->Next());
   }
 
@@ -384,10 +384,10 @@ TEST_P(InferenceManagerTest, conclusionContainsEdgeReplacementFromPremise)
   EXPECT_TRUE(result);
 
   {
-    auto const & sets12IteratorAfter = context.Iterator3(set1, ScType::EdgeDCommonConst, set2);
+    auto const & sets12IteratorAfter = context.CreateIterator3(set1, ScType::EdgeDCommonConst, set2);
     EXPECT_TRUE(sets12IteratorAfter->Next());
-    EXPECT_TRUE(context.HelperCheckEdge(nrelInclusion, sets12IteratorAfter->Get(1), ScType::EdgeAccessConstPosPerm));
-    EXPECT_TRUE(context.HelperCheckEdge(nrelSubset, sets12IteratorAfter->Get(1), ScType::EdgeAccessConstPosPerm));
+    EXPECT_TRUE(context.CheckConnector(nrelInclusion, sets12IteratorAfter->Get(1), ScType::EdgeAccessConstPosPerm));
+    EXPECT_TRUE(context.CheckConnector(nrelSubset, sets12IteratorAfter->Get(1), ScType::EdgeAccessConstPosPerm));
     EXPECT_FALSE(sets12IteratorAfter->Next());
   }
 }

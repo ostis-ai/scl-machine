@@ -20,7 +20,7 @@ int FormulaClassifier::typeOfFormula(ScMemoryContext * ms_context, ScAddr const 
 
   // TODO(MksmOrlov): implement the agent of logical formulas verification, check types and number of operands
   bool isAtomicFormula =
-      ms_context->HelperCheckEdge(InferenceKeynodes::atomic_logical_formula, formula, ScType::EdgeAccessConstPosPerm);
+      ms_context->CheckConnector(InferenceKeynodes::atomic_logical_formula, formula, ScType::EdgeAccessConstPosPerm);
   if (!isAtomicFormula)
   {
     if (ms_context->GetElementType(formula) == ScType::NodeConstStruct && isFormulaWithVar(ms_context, formula))
@@ -32,7 +32,7 @@ int FormulaClassifier::typeOfFormula(ScMemoryContext * ms_context, ScAddr const 
     return ATOMIC;
 
   bool const isImplication =
-      ms_context->HelperCheckEdge(InferenceKeynodes::nrel_implication, formula, ScType::EdgeAccessConstPosPerm);
+      ms_context->CheckConnector(InferenceKeynodes::nrel_implication, formula, ScType::EdgeAccessConstPosPerm);
   if (isImplication)
   {
     if (ms_context->GetElementType(formula) == ScType::EdgeDCommonConst)
@@ -43,22 +43,22 @@ int FormulaClassifier::typeOfFormula(ScMemoryContext * ms_context, ScAddr const 
   }
 
   bool const isNegation =
-      ms_context->HelperCheckEdge(InferenceKeynodes::nrel_negation, formula, ScType::EdgeAccessConstPosPerm);
+      ms_context->CheckConnector(InferenceKeynodes::nrel_negation, formula, ScType::EdgeAccessConstPosPerm);
   if (isNegation)
     return NEGATION;
 
   bool const isConjunction =
-      ms_context->HelperCheckEdge(InferenceKeynodes::nrel_conjunction, formula, ScType::EdgeAccessConstPosPerm);
+      ms_context->CheckConnector(InferenceKeynodes::nrel_conjunction, formula, ScType::EdgeAccessConstPosPerm);
   if (isConjunction)
     return CONJUNCTION;
 
   bool const isDisjunction =
-      ms_context->HelperCheckEdge(InferenceKeynodes::nrel_disjunction, formula, ScType::EdgeAccessConstPosPerm);
+      ms_context->CheckConnector(InferenceKeynodes::nrel_disjunction, formula, ScType::EdgeAccessConstPosPerm);
   if (isDisjunction)
     return DISJUNCTION;
 
   bool const isEquivalence =
-      ms_context->HelperCheckEdge(InferenceKeynodes::nrel_equivalence, formula, ScType::EdgeAccessConstPosPerm);
+      ms_context->CheckConnector(InferenceKeynodes::nrel_equivalence, formula, ScType::EdgeAccessConstPosPerm);
   if (isEquivalence)
   {
     if (ms_context->GetElementType(formula) == ScType::EdgeUCommonConst)
@@ -72,25 +72,29 @@ int FormulaClassifier::typeOfFormula(ScMemoryContext * ms_context, ScAddr const 
 
 bool FormulaClassifier::isFormulaWithConst(ScMemoryContext * ms_context, ScAddr const & formula)
 {
-  ScIterator3Ptr constNodesIterator = ms_context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::NodeConst);
+  ScIterator3Ptr constNodesIterator =
+      ms_context->CreateIterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::NodeConst);
   if (constNodesIterator->Next())
     return true;
-  ScIterator3Ptr constLinksIterator = ms_context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::LinkConst);
+  ScIterator3Ptr constLinksIterator =
+      ms_context->CreateIterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::LinkConst);
   return constLinksIterator->Next();
 }
 
 bool FormulaClassifier::isFormulaWithVar(ScMemoryContext * ms_context, ScAddr const & formula)
 {
-  ScIterator3Ptr varNodesIterator = ms_context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::NodeVar);
+  ScIterator3Ptr varNodesIterator =
+      ms_context->CreateIterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::NodeVar);
   if (varNodesIterator->Next())
     return true;
-  ScIterator3Ptr varLinksIterator = ms_context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::LinkVar);
+  ScIterator3Ptr varLinksIterator =
+      ms_context->CreateIterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::LinkVar);
   return varLinksIterator->Next();
 }
 
 bool FormulaClassifier::isFormulaToGenerate(ScMemoryContext * ms_context, ScAddr const & formula)
 {
-  return ms_context->HelperCheckEdge(
+  return ms_context->CheckConnector(
       InferenceKeynodes::concept_template_for_generation, formula, ScType::EdgeAccessConstPosPerm);
 }
 

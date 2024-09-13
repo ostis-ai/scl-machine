@@ -26,8 +26,8 @@ TEST_F(FormulaClassifierTest, RuleIsImplication)
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "inferenceLogicTrueComplexRuleTest.scs");
 
-  ScAddr testRule = context.HelperResolveSystemIdtf("inference_logic_test_rule");
-  ScIterator5Ptr formulaIterator = context.Iterator5(
+  ScAddr testRule = context.ResolveElementSystemIdentifier("inference_logic_test_rule");
+  ScIterator5Ptr formulaIterator = context.CreateIterator5(
       testRule,
       ScType::EdgeAccessConstPosPerm,
       ScType::Unknown,
@@ -37,9 +37,7 @@ TEST_F(FormulaClassifierTest, RuleIsImplication)
 
   ScAddr formula = formulaIterator->Get(2);
   EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, formula), FormulaClassifier::IMPLICATION_EDGE);
-  ScAddr begin;
-  ScAddr end;
-  context.GetEdgeInfo(formula, begin, end);
+  auto const & [begin, end] = context.GetConnectorIncidentElements(formula);
   EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, begin), FormulaClassifier::CONJUNCTION);
   EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, end), FormulaClassifier::ATOMIC);
 
@@ -52,10 +50,10 @@ TEST_F(FormulaClassifierTest, AtomicLogicalFormulaWithouCLass)
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "atomicLogicalFormulaTestWithoutClass.scs");
 
-  ScAddr formula = context.HelperResolveSystemIdtf("formula");
+  ScAddr formula = context.ResolveElementSystemIdentifier("formula");
   EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, formula), FormulaClassifier::ATOMIC);
 
-  ScAddr formulaWithLink = context.HelperResolveSystemIdtf("formula_with_link");
+  ScAddr formulaWithLink = context.ResolveElementSystemIdentifier("formula_with_link");
   EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, formulaWithLink), FormulaClassifier::ATOMIC);
 
   context.Destroy();
