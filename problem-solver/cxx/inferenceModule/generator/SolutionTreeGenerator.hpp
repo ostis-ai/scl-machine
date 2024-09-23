@@ -6,12 +6,12 @@
 
 #pragma once
 
-#include <queue>
-#include <vector>
-
-#include <sc-memory/kpm/sc_agent.hpp>
-
 #include "utils/Types.hpp"
+
+#include <sc-memory/sc_agent.hpp>
+
+#include <vector>
+#include <queue>
 
 namespace inference
 {

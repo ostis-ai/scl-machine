@@ -23,17 +23,13 @@ bool SolutionTreeSearcher::checkIfSolutionNodeExists(
       InferenceKeynodes::concept_solution, ScType::EdgeAccessVarPosPerm, ScType::NodeVar >> solutionAlias);
   solutionNodeTemplate.Triple(solutionAlias, ScType::EdgeAccessVarPosPerm, ScType::NodeVar >> solutionNodeAlias);
   solutionNodeTemplate.Quintuple(
-      solutionNodeAlias,
-      ScType::EdgeAccessVarPosPerm,
-      rule,
-      ScType::EdgeAccessVarPosPerm,
-      scAgentsCommon::CoreKeynodes::rrel_1);
+      solutionNodeAlias, ScType::EdgeAccessVarPosPerm, rule, ScType::EdgeAccessVarPosPerm, ScKeynodes::rrel_1);
   solutionNodeTemplate.Quintuple(
       solutionNodeAlias,
       ScType::EdgeAccessVarPosPerm,
       ScType::NodeVar >> solutionsSetAlias,
       ScType::EdgeAccessVarPosPerm,
-      scAgentsCommon::CoreKeynodes::rrel_2);
+      ScKeynodes::rrel_2);
   for (ScAddr const & variable : variables)
   {
     ScAddr replacement;
@@ -43,27 +39,19 @@ bool SolutionTreeSearcher::checkIfSolutionNodeExists(
       std::string const & pairAlias = replacementForAlias + std::to_string(variable.Hash());
       solutionNodeTemplate.Triple(solutionsSetAlias, ScType::EdgeAccessVarPosPerm, ScType::NodeVar >> pairAlias);
       solutionNodeTemplate.Quintuple(
-          pairAlias,
-          ScType::EdgeAccessVarPosPerm,
-          replacement,
-          ScType::EdgeAccessVarPosPerm,
-          scAgentsCommon::CoreKeynodes::rrel_1);
+          pairAlias, ScType::EdgeAccessVarPosPerm, replacement, ScType::EdgeAccessVarPosPerm, ScKeynodes::rrel_1);
       solutionNodeTemplate.Quintuple(
-          pairAlias,
-          ScType::EdgeAccessVarPosPerm,
-          variable,
-          ScType::EdgeAccessVarPosPerm,
-          scAgentsCommon::CoreKeynodes::rrel_2);
+          pairAlias, ScType::EdgeAccessVarPosPerm, variable, ScType::EdgeAccessVarPosPerm, ScKeynodes::rrel_2);
       solutionNodeTemplate.Triple(variable, ScType::EdgeAccessVarPosTemp, replacement);
     }
     else
       SC_THROW_EXCEPTION(
           utils::ExceptionItemNotFound,
-          "SolutionTreeSearcher: rule " << context->HelperGetSystemIdtf(rule) << " has var "
-                                        << context->HelperGetSystemIdtf(variable)
+          "SolutionTreeSearcher: rule " << context->GetElementSystemIdentifier(rule) << " has var "
+                                        << context->GetElementSystemIdentifier(variable)
                                         << " but templateParams don't have replacement for this var");
   }
-  context->HelperSearchTemplate(solutionNodeTemplate, searchResult);
+  context->SearchByTemplate(solutionNodeTemplate, searchResult);
   return !searchResult.IsEmpty();
 }
 }  // namespace inference

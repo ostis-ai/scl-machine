@@ -57,7 +57,7 @@ bool DirectInferenceManagerTarget::applyInference(InferenceParams const & infere
     while (!uncheckedFormulas.empty())
     {
       formula = uncheckedFormulas.front();
-      SC_LOG_DEBUG("Trying to generate by formula: " << context->HelperGetSystemIdtf(formula));
+      SC_LOG_DEBUG("Trying to generate by formula: " << context->GetElementSystemIdentifier(formula));
       formulaResult = useFormula(formula, inferenceParamsConfig.outputStructure);
       SC_LOG_DEBUG("Logical formula is " << (formulaResult.isGenerated ? "generated" : "not generated"));
       if (formulaResult.isGenerated)

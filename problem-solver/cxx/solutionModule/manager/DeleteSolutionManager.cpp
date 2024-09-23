@@ -1,14 +1,12 @@
 /*
-* This source file is part of an OSTIS project. For the latest info, see http://ostis.net
-* Distributed under the MIT License
-* (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
+ * This source file is part of an OSTIS project. For the latest info, see http://ostis.net
+ * Distributed under the MIT License
+ * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "sc-agents-common/utils/IteratorUtils.hpp"
-
-#include "sc-agents-common/keynodes/coreKeynodes.hpp"
-
 #include "DeleteSolutionManager.hpp"
+
+#include <sc-agents-common/utils/IteratorUtils.hpp>
 
 namespace solutionModule
 {
@@ -30,7 +28,8 @@ void DeleteSolutionManager::deleteSolution(ScAddr const & solution) const
 ScAddrList DeleteSolutionManager::getListFromSet(ScAddr const & set) const
 {
   ScAddrList setElements;
-  ScIterator3Ptr const & fromSetIterator = context->Iterator3(set, ScType::EdgeAccessConstPosPerm, ScType::NodeConst);
+  ScIterator3Ptr const & fromSetIterator =
+      context->CreateIterator3(set, ScType::EdgeAccessConstPosPerm, ScType::NodeConst);
   while (fromSetIterator->Next())
     setElements.push_back(fromSetIterator->Get(2));
   return setElements;
@@ -48,8 +47,8 @@ void DeleteSolutionManager::deleteRuleAndSubstitutionsPairs(ScAddrList const & r
   {
     if (!context->IsElement(ruleAndSubstitutionPair))
       continue;
-    ScAddr const & substitutions = utils::IteratorUtils::getAnyByOutRelation(
-        context, ruleAndSubstitutionPair, scAgentsCommon::CoreKeynodes::rrel_2);
+    ScAddr const & substitutions =
+        utils::IteratorUtils::getAnyByOutRelation(context, ruleAndSubstitutionPair, ScKeynodes::rrel_2);
     safeDeleteElement(ruleAndSubstitutionPair);
     deleteSubstitutions(substitutions);
   }
@@ -66,9 +65,9 @@ void DeleteSolutionManager::deleteSubstitutions(ScAddr const & substitutions) co
       if (!context->IsElement(substitutionPair))
         continue;
       ScAddr const & replacement =
-          utils::IteratorUtils::getAnyByOutRelation(context, substitutionPair, scAgentsCommon::CoreKeynodes::rrel_1);
+          utils::IteratorUtils::getAnyByOutRelation(context, substitutionPair, ScKeynodes::rrel_1);
       ScAddr const & variable =
-          utils::IteratorUtils::getAnyByOutRelation(context, substitutionPair, scAgentsCommon::CoreKeynodes::rrel_2);
+          utils::IteratorUtils::getAnyByOutRelation(context, substitutionPair, ScKeynodes::rrel_2);
       safeDeleteElement(substitutionPair);
       if (context->IsElement(replacement) && context->IsElement(variable))
         deleteEdges(variable, ScType::EdgeAccessConstPosTemp, replacement);
@@ -82,7 +81,7 @@ void DeleteSolutionManager::deleteSubstitutions(ScAddr const & substitutions) co
 
 void DeleteSolutionManager::deleteEdges(ScAddr const & source, ScType const & edge, ScAddr const & target) const
 {
-  ScIterator3Ptr const & edgesIterator = context->Iterator3(source, edge, target);
+  ScIterator3Ptr const & edgesIterator = context->CreateIterator3(source, edge, target);
   while (edgesIterator->Next())
     safeDeleteElement(edgesIterator->Get(1));
 }

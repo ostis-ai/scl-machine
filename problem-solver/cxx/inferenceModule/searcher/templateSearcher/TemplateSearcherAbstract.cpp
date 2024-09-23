@@ -64,7 +64,7 @@ void TemplateSearcherAbstract::searchTemplate(
 void TemplateSearcherAbstract::getVariables(ScAddr const & formula, ScAddrUnorderedSet & variables)
 {
   ScIterator3Ptr const & formulaVariablesIterator =
-      context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::Var);
+      context->CreateIterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::Var);
   while (formulaVariablesIterator->Next())
     variables.insert(formulaVariablesIterator->Get(2));
 }
@@ -72,7 +72,7 @@ void TemplateSearcherAbstract::getVariables(ScAddr const & formula, ScAddrUnorde
 void TemplateSearcherAbstract::getConstants(ScAddr const & formula, ScAddrUnorderedSet & constants)
 {
   ScIterator3Ptr const & formulaConstantsIterator =
-      context->Iterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::Const);
+      context->CreateIterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::Const);
   while (formulaConstantsIterator->Next())
     constants.insert(formulaConstantsIterator->Get(2));
 }

@@ -45,8 +45,7 @@ vector<ScAddrQueue> InferenceManagerAbstract::createFormulasQueuesListByPriority
 {
   vector<ScAddrQueue> formulasQueuesList;
 
-  ScAddr setOfFormulas =
-      utils::IteratorUtils::getAnyByOutRelation(context, formulasSet, scAgentsCommon::CoreKeynodes::rrel_1);
+  ScAddr setOfFormulas = utils::IteratorUtils::getAnyByOutRelation(context, formulasSet, ScKeynodes::rrel_1);
   while (setOfFormulas.IsValid())
   {
     formulasQueuesList.push_back(createQueue(setOfFormulas));
@@ -73,16 +72,15 @@ ScAddrQueue InferenceManagerAbstract::createQueue(ScAddr const & set)
  */
 LogicFormulaResult InferenceManagerAbstract::useFormula(ScAddr const & formula, ScAddr const & outputStructure)
 {
-  ScAddr const & formulaRoot = utils::IteratorUtils::getAnyByOutRelation(
-      context, formula, scAgentsCommon::CoreKeynodes::rrel_main_key_sc_element);
+  ScAddr const & formulaRoot =
+      utils::IteratorUtils::getAnyByOutRelation(context, formula, ScKeynodes::rrel_main_key_sc_element);
   if (!formulaRoot.IsValid())
   {
     return {false, false, {}};
   }
 
   // Choose template manager according to the formula specification (if fixed arguments exist)
-  ScAddr const & firstFixedArgument =
-      utils::IteratorUtils::getAnyByOutRelation(context, formula, scAgentsCommon::CoreKeynodes::rrel_1);
+  ScAddr const & firstFixedArgument = utils::IteratorUtils::getAnyByOutRelation(context, formula, ScKeynodes::rrel_1);
   if (firstFixedArgument.IsValid())
   {
     formTemplateManagerFixedArguments(formula, firstFixedArgument);

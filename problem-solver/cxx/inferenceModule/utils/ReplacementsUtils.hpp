@@ -23,14 +23,8 @@ public:
       Replacements const & first,
       Replacements const & second,
       Replacements & intersection);
-  static void uniteReplacements(
-      Replacements const & first,
-      Replacements const & second,
-      Replacements & unionResult);
-  static void subtractReplacements(
-      Replacements const & first,
-      Replacements const & second,
-      Replacements & difference);
+  static void uniteReplacements(Replacements const & first, Replacements const & second, Replacements & unionResult);
+  static void subtractReplacements(Replacements const & first, Replacements const & second, Replacements & difference);
   static Replacements removeRows(Replacements const & replacements, ScAddrUnorderedSet & keysToRemove);
   static void getReplacementsToScTemplateParams(
       Replacements const & replacements,

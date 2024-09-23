@@ -2,13 +2,14 @@ file(GLOB_RECURSE SOURCES "*.cpp" "*.hpp")
 
 list(FILTER SOURCES EXCLUDE REGEX ".*/test/.*")
 
-set(SOLUTION_MODULE_GENERATED_DIR ${CMAKE_CURRENT_LIST_DIR}/generated)
-include_directories(${CMAKE_CURRENT_LIST_DIR} ${SC_MEMORY_SRC} ${SC_KPM_SRC} ${SOLUTION_MODULE_GENERATED_DIR})
-
 add_library(solutionModule SHARED ${SOURCES})
-target_link_libraries(solutionModule sc-memory sc-agents-common)
-
-sc_codegen_ex(solutionModule ${CMAKE_CURRENT_LIST_DIR} ${SOLUTION_MODULE_GENERATED_DIR})
+target_link_libraries(solutionModule
+    LINK_PRIVATE sc-memory
+    LINK_PRIVATE sc-agents-common)
+target_include_directories(solutionModule
+    PUBLIC ${CMAKE_CURRENT_LIST_DIR}
+    PRIVATE ${SC_MEMORY_SRC}
+    PRIVATE ${SC_KPM_SRC})
 
 if (${SC_BUILD_TESTS})
     include(${CMAKE_CURRENT_LIST_DIR}/test/tests.cmake)

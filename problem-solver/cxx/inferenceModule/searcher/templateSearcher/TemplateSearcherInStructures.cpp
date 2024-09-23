@@ -35,46 +35,40 @@ void TemplateSearcherInStructures::searchTemplate(
     Replacements & result)
 {
   ScTemplate searchTemplate;
-  if (context->HelperBuildTemplate(searchTemplate, templateAddr, templateParams))
+  context->BuildTemplate(searchTemplate, templateAddr, templateParams);
+  if (context->CheckConnector(
+          InferenceKeynodes::concept_template_with_links, templateAddr, ScType::EdgeAccessConstPosPerm))
   {
-    if (context->HelperCheckEdge(
-            InferenceKeynodes::concept_template_with_links, templateAddr, ScType::EdgeAccessConstPosPerm))
-    {
-      searchTemplateWithContent(searchTemplate, templateAddr, templateParams, result);
-    }
-    else
-    {
-      context->HelperSmartSearchTemplate(
-          searchTemplate,
-          [templateParams, &result, &variables, this](
-              ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
-            // Add search result item to the answer container
-            ScAddr argument;
-            for (ScAddr const & variable : variables)
-            {
-              if (item.Has(variable))
-              {
-                result[variable].push_back(item[variable]);
-              }
-              else if (templateParams.Get(variable, argument))
-              {
-                result[variable].push_back(argument);
-              }
-            }
-            if (replacementsUsingType == ReplacementsUsingType::REPLACEMENTS_FIRST)
-              return ScTemplateSearchRequest::STOP;
-            else
-              return ScTemplateSearchRequest::CONTINUE;
-          },
-          [this](ScAddr const & item) -> bool {
-            // Filter result item belonging to any of the input structures
-            return isValidElement(item);
-          });
-    }
+    searchTemplateWithContent(searchTemplate, templateAddr, templateParams, result);
   }
   else
   {
-    throw std::runtime_error("Template is not built.");
+    context->SearchByTemplateInterruptibly(
+        searchTemplate,
+        [templateParams, &result, &variables, this](
+            ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
+          // Add search result item to the answer container
+          ScAddr argument;
+          for (ScAddr const & variable : variables)
+          {
+            if (item.Has(variable))
+            {
+              result[variable].push_back(item[variable]);
+            }
+            else if (templateParams.Get(variable, argument))
+            {
+              result[variable].push_back(argument);
+            }
+          }
+          if (replacementsUsingType == ReplacementsUsingType::REPLACEMENTS_FIRST)
+            return ScTemplateSearchRequest::STOP;
+          else
+            return ScTemplateSearchRequest::CONTINUE;
+        },
+        [this](ScAddr const & item) -> bool {
+          // Filter result item belonging to any of the input structures
+          return isValidElement(item);
+        });
   }
 }
 
@@ -88,7 +82,7 @@ void TemplateSearcherInStructures::searchTemplateWithContent(
   getVariables(templateAddr, variables);
   std::map<std::string, std::string> linksContentMap = getTemplateLinksContent(templateAddr);
 
-  context->HelperSearchTemplate(
+  context->SearchByTemplate(
       searchTemplate,
       [templateParams, &result, &variables, this](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
         // Add search result item to the answer container
@@ -123,7 +117,7 @@ std::map<std::string, std::string> TemplateSearcherInStructures::getTemplateLink
 {
   std::map<std::string, std::string> linksContent;
   ScIterator3Ptr const & linksIterator =
-      context->Iterator3(templateAddr, ScType::EdgeAccessConstPosPerm, ScType::Link);
+      context->CreateIterator3(templateAddr, ScType::EdgeAccessConstPosPerm, ScType::Link);
   while (linksIterator->Next())
   {
     ScAddr const & linkAddr = linksIterator->Get(2);
@@ -141,7 +135,7 @@ std::map<std::string, std::string> TemplateSearcherInStructures::getTemplateLink
 bool TemplateSearcherInStructures::isValidElement(ScAddr const & element) const
 {
   auto const & structuresIterator =
-      context->Iterator3(ScType::NodeConstStruct, ScType::EdgeAccessConstPosPerm, element);
+      context->CreateIterator3(ScType::NodeConstStruct, ScType::EdgeAccessConstPosPerm, element);
   while (structuresIterator->Next())
   {
     if (inputStructures.count(structuresIterator->Get(0)))

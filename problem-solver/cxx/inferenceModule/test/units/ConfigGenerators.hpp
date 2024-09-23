@@ -2,6 +2,8 @@
 
 #include "inferenceConfig/InferenceConfig.hpp"
 
+#include <string>
+
 namespace inference::generatorTest
 {
 

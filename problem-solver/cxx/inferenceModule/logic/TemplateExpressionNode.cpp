@@ -57,7 +57,7 @@ void TemplateExpressionNode::compute(LogicFormulaResult & result) const
 
   result.value = !result.replacements.empty();
   SC_LOG_DEBUG(
-      "Compute atomic logical formula " << context->HelperGetSystemIdtf(formula)
+      "Compute atomic logical formula " << context->GetElementSystemIdentifier(formula)
                                         << (result.value ? " true" : " false"));
 }
 
@@ -75,8 +75,7 @@ LogicFormulaResult TemplateExpressionNode::find(Replacements & replacements) con
   templateSearcher->searchTemplate(formula, paramsVector, variables, result.replacements);
   result.value = !result.replacements.empty();
 
-
-  std::string const idtf = context->HelperGetSystemIdtf(formula);
+  std::string const idtf = context->GetElementSystemIdentifier(formula);
   SC_LOG_DEBUG("Find Statement " << idtf << (result.value ? " true" : " false"));
 
   return result;
@@ -92,7 +91,7 @@ void TemplateExpressionNode::generate(Replacements & replacements, LogicFormulaR
   result = {};
   if (ReplacementsUtils::getColumnsAmount(replacements) == 0)
   {
-    SC_LOG_DEBUG("Atomic logical formula " << context->HelperGetSystemIdtf(formula) << " is not generated");
+    SC_LOG_DEBUG("Atomic logical formula " << context->GetElementSystemIdentifier(formula) << " is not generated");
     return;
   }
 
@@ -125,7 +124,8 @@ void TemplateExpressionNode::generate(Replacements & replacements, LogicFormulaR
   ReplacementsUtils::uniteReplacements(intermediateUniteResult, generatedReplacements, result.replacements);
 
   SC_LOG_DEBUG(
-      "Atomic logical formula " << context->HelperGetSystemIdtf(formula) << " is generated " << count << " times");
+      "Atomic logical formula " << context->GetElementSystemIdentifier(formula) << " is generated " << count
+                                << " times");
 }
 
 /**
@@ -187,28 +187,24 @@ void TemplateExpressionNode::generateByParams(
     size_t & count)
 {
   ScTemplate generatedTemplate;
-  context->HelperBuildTemplate(generatedTemplate, formula, params);
+  context->BuildTemplate(generatedTemplate, formula, params);
 
   ScTemplateGenResult generationResult;
-  ScTemplate::Result const & scTemplateResult = context->HelperGenTemplate(generatedTemplate, generationResult);
-  if (scTemplateResult)
+  context->GenerateByTemplate(generatedTemplate, generationResult);
+  ++count;
+  result.isGenerated = true;
+  result.value = true;
+  for (ScAddr const & variable : formulaVariables)
   {
-    ++count;
-    result.isGenerated = true;
-    result.value = true;
-    for (ScAddr const & variable : formulaVariables)
-    {
-      ScAddr outAddr;
-      if (generationResult.Get(variable, outAddr) || params.Get(variable, outAddr))
-        generatedReplacements[variable].push_back(outAddr);
-      else
-        SC_THROW_EXCEPTION(
-            utils::ExceptionInvalidState,
-            "generation result and template params do not have replacement for "
-                << variable.Hash());
-    }
-    addToOutputStructure(generationResult);
+    ScAddr outAddr;
+    if (generationResult.Get(variable, outAddr) || params.Get(variable, outAddr))
+      generatedReplacements[variable].push_back(outAddr);
+    else
+      SC_THROW_EXCEPTION(
+          utils::ExceptionInvalidState,
+          "Generation result and template params do not have replacement for " << variable.Hash());
   }
+  addToOutputStructure(generationResult);
 }
 
 void TemplateExpressionNode::fillOutputStructure(
@@ -245,7 +241,8 @@ void TemplateExpressionNode::addFormulaConstantsToOutputStructure()
   addToOutputStructure(formulaConstants);
 }
 
-void TemplateExpressionNode::addToOutputStructure(Replacements const & replacements,
+void TemplateExpressionNode::addToOutputStructure(
+    Replacements const & replacements,
     ScAddrUnorderedSet const & variables)
 {
   if (outputStructure.IsValid())
@@ -283,7 +280,7 @@ void TemplateExpressionNode::addToOutputStructure(ScAddr const & element)
 {
   if (outputStructureElements.find(element) == outputStructureElements.cend())
   {
-    context->CreateEdge(ScType::EdgeAccessConstPosPerm, outputStructure, element);
+    context->GenerateConnector(ScType::EdgeAccessConstPosPerm, outputStructure, element);
     outputStructureElements.insert(element);
   }
 }

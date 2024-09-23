@@ -69,6 +69,7 @@ rrel_1 -> @first_edge;;
 @first_edge => nrel_basic_sequence: @second_edge;;
 
 inference_logic_test_action
+    <- action_direct_inference;
     -> rrel_1: first_rule_target;
     -> rrel_2: logic_rules;
     -> rrel_3: arguments;

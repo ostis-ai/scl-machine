@@ -6,13 +6,10 @@
 
 #include "TemplateSearcherGeneral.hpp"
 
+#include "keynodes/InferenceKeynodes.hpp"
+
 #include <memory>
 #include <algorithm>
-
-#include "sc-agents-common/utils/CommonUtils.hpp"
-#include "sc-agents-common/keynodes/coreKeynodes.hpp"
-
-#include "keynodes/InferenceKeynodes.hpp"
 
 using namespace inference;
 
@@ -28,38 +25,32 @@ void TemplateSearcherGeneral::searchTemplate(
     Replacements & result)
 {
   ScTemplate searchTemplate;
-  if (context->HelperBuildTemplate(searchTemplate, templateAddr, templateParams))
+  context->BuildTemplate(searchTemplate, templateAddr, templateParams);
+  if (context->CheckConnector(
+          InferenceKeynodes::concept_template_with_links, templateAddr, ScType::EdgeAccessConstPosPerm))
   {
-    if (context->HelperCheckEdge(
-            InferenceKeynodes::concept_template_with_links, templateAddr, ScType::EdgeAccessConstPosPerm))
-    {
-      searchTemplateWithContent(searchTemplate, templateAddr, templateParams, result);
-    }
-    else
-    {
-      context->HelperSmartSearchTemplate(
-          searchTemplate,
-          [&templateParams, &result, &variables, this](
-              ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
-            // Add search result items to the result Replacements
-            for (ScAddr const & variable : variables)
-            {
-              ScAddr argument;
-              if (item.Get(variable, argument) || templateParams.Get(variable, argument))
-              {
-                result[variable].push_back(argument);
-              }
-            }
-            if (replacementsUsingType == ReplacementsUsingType::REPLACEMENTS_FIRST)
-              return ScTemplateSearchRequest::STOP;
-            else
-              return ScTemplateSearchRequest::CONTINUE;
-          });
-    }
+    searchTemplateWithContent(searchTemplate, templateAddr, templateParams, result);
   }
   else
   {
-    throw runtime_error("Template is not built.");
+    context->SearchByTemplateInterruptibly(
+        searchTemplate,
+        [&templateParams, &result, &variables, this](
+            ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
+          // Add search result items to the result Replacements
+          for (ScAddr const & variable : variables)
+          {
+            ScAddr argument;
+            if (item.Get(variable, argument) || templateParams.Get(variable, argument))
+            {
+              result[variable].push_back(argument);
+            }
+          }
+          if (replacementsUsingType == ReplacementsUsingType::REPLACEMENTS_FIRST)
+            return ScTemplateSearchRequest::STOP;
+          else
+            return ScTemplateSearchRequest::CONTINUE;
+        });
   }
 }
 
@@ -73,7 +64,7 @@ void TemplateSearcherGeneral::searchTemplateWithContent(
   ScAddrUnorderedSet variables;
   getVariables(templateAddr, variables);
 
-  context->HelperSmartSearchTemplate(
+  context->SearchByTemplateInterruptibly(
       searchTemplate,
       [templateParams, &result, &variables](ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
         // Add search result items to the result Replacements
@@ -100,7 +91,7 @@ void TemplateSearcherGeneral::searchTemplateWithContent(
 std::map<std::string, std::string> TemplateSearcherGeneral::getTemplateLinksContent(ScAddr const & templateAddr)
 {
   std::map<std::string, std::string> linksContent;
-  ScIterator3Ptr linksIterator = context->Iterator3(templateAddr, ScType::EdgeAccessConstPosPerm, ScType::Link);
+  ScIterator3Ptr linksIterator = context->CreateIterator3(templateAddr, ScType::EdgeAccessConstPosPerm, ScType::Link);
   while (linksIterator->Next())
   {
     ScAddr const & linkAddr = linksIterator->Get(2);
