@@ -45,8 +45,8 @@ atomic_logical_formula
     <- rrel_main_key_sc_element: rule_node;;
 
 @tuple = { rule_node };;
-@edge = (logic_rules -> @tuple);;
-rrel_1 -> @edge;;
+@arc = (logic_rules -> @tuple);;
+rrel_1 -> @arc;;
 
 first_inference_logic_test_action
     -> rrel_1: reachable_target;

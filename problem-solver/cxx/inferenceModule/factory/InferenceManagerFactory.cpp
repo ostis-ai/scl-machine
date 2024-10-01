@@ -6,7 +6,7 @@
 
 #include "InferenceManagerFactory.hpp"
 
-#include "searcher/templateSearcher/TemplateSearcherOnlyAccessEdgesInStructures.hpp"
+#include "searcher/templateSearcher/TemplateSearcherOnlyMembershipArcsInStructures.hpp"
 #include "searcher/templateSearcher/TemplateSearcherInStructures.hpp"
 #include "searcher/templateSearcher/TemplateSearcherGeneral.hpp"
 #include "manager/templateManager/TemplateManagerFixedArguments.hpp"
@@ -48,9 +48,9 @@ std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDire
   {
     templateSearcher = std::make_shared<TemplateSearcherInStructures>(context);
   }
-  else if (inferenceFlowConfig.searchType == SEARCH_ONLY_ACCESS_EDGES_IN_STRUCTURES)
+  else if (inferenceFlowConfig.searchType == SEARCH_ONLY_MEMBERSHIP_ARCS_IN_STRUCTURES)
   {
-    templateSearcher = std::make_shared<TemplateSearcherOnlyAccessEdgesInStructures>(context);
+    templateSearcher = std::make_shared<TemplateSearcherOnlyMembershipArcsInStructures>(context);
   }
   templateSearcher->setReplacementsUsingType(inferenceFlowConfig.replacementsUsingType);
   templateSearcher->setOutputStructureFillingType(inferenceFlowConfig.fillingType);
@@ -94,9 +94,9 @@ std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDire
   {
     templateSearcher = std::make_shared<TemplateSearcherInStructures>(context);
   }
-  else if (inferenceFlowConfig.searchType == SEARCH_ONLY_ACCESS_EDGES_IN_STRUCTURES)
+  else if (inferenceFlowConfig.searchType == SEARCH_ONLY_MEMBERSHIP_ARCS_IN_STRUCTURES)
   {
-    templateSearcher = std::make_shared<TemplateSearcherOnlyAccessEdgesInStructures>(context);
+    templateSearcher = std::make_shared<TemplateSearcherOnlyMembershipArcsInStructures>(context);
   }
   templateSearcher->setReplacementsUsingType(inferenceFlowConfig.replacementsUsingType);
   templateSearcher->setOutputStructureFillingType(inferenceFlowConfig.fillingType);

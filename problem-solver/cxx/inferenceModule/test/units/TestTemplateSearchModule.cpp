@@ -4,10 +4,8 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "keynodes/InferenceKeynodes.hpp"
-
 #include "searcher/templateSearcher/TemplateSearcherGeneral.hpp"
-#include "searcher/templateSearcher/TemplateSearcherOnlyAccessEdgesInStructures.hpp"
+#include "searcher/templateSearcher/TemplateSearcherOnlyMembershipArcsInStructures.hpp"
 
 #include "utils/ReplacementsUtils.hpp"
 
@@ -241,7 +239,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithExistedConstructionsTest)
   ScAddr const & structure3 = context.SearchElementBySystemIdentifier(structure3Identifier);
 
   std::unique_ptr<inference::TemplateSearcherAbstract> templateSearcher =
-      std::make_unique<inference::TemplateSearcherOnlyAccessEdgesInStructures>(&context);
+      std::make_unique<inference::TemplateSearcherOnlyMembershipArcsInStructures>(&context);
   templateSearcher->setInputStructures({structure1, structure2, structure3});
   templateSearcher->setOutputStructureFillingType(inference::SEARCHED_AND_GENERATED);
   inference::Replacements searchResults;
@@ -255,18 +253,18 @@ TEST_F(TemplateSearchManagerTest, SearchWithExistedConstructionsTest)
   EXPECT_EQ(inference::ReplacementsUtils::getColumnsAmount(searchResults), 1u);
 }
 
-TEST_F(TemplateSearchManagerTest, SearchWithoutAccessEdgesTest)
+TEST_F(TemplateSearchManagerTest, SearchWithoutMembershipArcsTest)
 {
   ScMemoryContext & context = *m_ctx;
 
-  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchStructuresWithoutAccessEdges.scs");
+  loader.loadScsFile(context, TEST_FILES_DIR_PATH + "searchStructuresWithoutMembershipArcs.scs");
 
   ScAddr searchTemplateAddr = context.SearchElementBySystemIdentifier(TEST_SEARCH_TEMPLATE_ID);
   ScAddrVector templateVars = utils::IteratorUtils::getAllWithType(&context, searchTemplateAddr, ScType::Var);
 
   std::unique_ptr<inference::TemplateSearcherAbstract> templateSearcher =
-      std::make_unique<inference::TemplateSearcherOnlyAccessEdgesInStructures>(&context);
-  // input structures are empty because search template does not have access edges
+      std::make_unique<inference::TemplateSearcherOnlyMembershipArcsInStructures>(&context);
+  // input structures are empty because search template does not have membership arcs
   templateSearcher->setInputStructures({});
   templateSearcher->setOutputStructureFillingType(inference::SEARCHED_AND_GENERATED);
   templateSearcher->setReplacementsUsingType(inference::REPLACEMENTS_ALL);

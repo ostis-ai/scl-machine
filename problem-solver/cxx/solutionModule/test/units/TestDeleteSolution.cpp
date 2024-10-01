@@ -53,22 +53,22 @@ TEST_F(DeleteSolutionAgentTest, solutionHasSomeElements)
   ScAddr const & variable = context.SearchElementBySystemIdentifier("_variable");
   EXPECT_TRUE(variable.IsValid());
   auto const & classesForVariableIterator =
-      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessVarPosPerm, variable);
+      context.CreateIterator3(ScType::ConstNodeClass, ScType::VarPermPosArc, variable);
   EXPECT_TRUE(classesForVariableIterator->Next());
-  ScAddr const & edgeFromClassToVariable = classesForVariableIterator->Get(1);
+  ScAddr const & arcFromClassToVariable = classesForVariableIterator->Get(1);
   EXPECT_FALSE(classesForVariableIterator->Next());
-  EXPECT_EQ(context.GetElementEdgesAndOutgoingArcsCount(edgeFromClassToVariable), 4u);
+  EXPECT_EQ(context.GetElementEdgesAndOutgoingArcsCount(arcFromClassToVariable), 4u);
 
   ScAddr const & conceptSolution = context.SearchElementBySystemIdentifier("concept_solution");
   EXPECT_TRUE(conceptSolution.IsValid());
-  EXPECT_EQ(utils::IteratorUtils::getAllWithType(&context, conceptSolution, ScType::NodeConst).size(), 2u);
+  EXPECT_EQ(utils::IteratorUtils::getAllWithType(&context, conceptSolution, ScType::ConstNode).size(), 2u);
 
   ScAction testActionNode = context.ConvertToAction(context.SearchElementBySystemIdentifier("test_action_node"));
   EXPECT_TRUE(testActionNode.IsValid());
   EXPECT_TRUE(testActionNode.InitiateAndWait(WAIT_TIME));
   EXPECT_TRUE(testActionNode.IsFinishedSuccessfully());
-  EXPECT_EQ(context.GetElementEdgesAndOutgoingArcsCount(edgeFromClassToVariable), 1u);
-  EXPECT_EQ(utils::IteratorUtils::getAllWithType(&context, conceptSolution, ScType::NodeConst).size(), 1u);
+  EXPECT_EQ(context.GetElementEdgesAndOutgoingArcsCount(arcFromClassToVariable), 1u);
+  EXPECT_EQ(utils::IteratorUtils::getAllWithType(&context, conceptSolution, ScType::ConstNode).size(), 1u);
   shutdown(context);
 }
 

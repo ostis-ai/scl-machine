@@ -29,14 +29,14 @@ TEST_F(FormulaClassifierTest, RuleIsImplication)
   ScAddr testRule = context.ResolveElementSystemIdentifier("inference_logic_test_rule");
   ScIterator5Ptr formulaIterator = context.CreateIterator5(
       testRule,
-      ScType::EdgeAccessConstPosPerm,
+      ScType::ConstPermPosArc,
       ScType::Unknown,
-      ScType::EdgeAccessConstPosPerm,
+      ScType::ConstPermPosArc,
       ScKeynodes::rrel_main_key_sc_element);
   EXPECT_TRUE(formulaIterator->Next());
 
   ScAddr formula = formulaIterator->Get(2);
-  EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, formula), FormulaClassifier::IMPLICATION_EDGE);
+  EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, formula), FormulaClassifier::IMPLICATION_ARC);
   auto const & [begin, end] = context.GetConnectorIncidentElements(formula);
   EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, begin), FormulaClassifier::CONJUNCTION);
   EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, end), FormulaClassifier::ATOMIC);

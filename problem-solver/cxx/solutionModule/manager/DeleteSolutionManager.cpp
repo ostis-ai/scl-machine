@@ -29,7 +29,7 @@ ScAddrList DeleteSolutionManager::getListFromSet(ScAddr const & set) const
 {
   ScAddrList setElements;
   ScIterator3Ptr const & fromSetIterator =
-      context->CreateIterator3(set, ScType::EdgeAccessConstPosPerm, ScType::NodeConst);
+      context->CreateIterator3(set, ScType::ConstPermPosArc, ScType::ConstNode);
   while (fromSetIterator->Next())
     setElements.push_back(fromSetIterator->Get(2));
   return setElements;
@@ -70,7 +70,7 @@ void DeleteSolutionManager::deleteSubstitutions(ScAddr const & substitutions) co
           utils::IteratorUtils::getAnyByOutRelation(context, substitutionPair, ScKeynodes::rrel_2);
       safeDeleteElement(substitutionPair);
       if (context->IsElement(replacement) && context->IsElement(variable))
-        deleteEdges(variable, ScType::EdgeAccessConstPosTemp, replacement);
+        deleteConnectors(variable, ScType::ConstTempPosArc, replacement);
       else
         SC_LOG_WARNING("DeleteSolutionManager: replacement or variable is invalid");
     }
@@ -79,10 +79,10 @@ void DeleteSolutionManager::deleteSubstitutions(ScAddr const & substitutions) co
     SC_LOG_WARNING("DeleteSolutionManager: solution node does not have substitutions at rrel_2");
 }
 
-void DeleteSolutionManager::deleteEdges(ScAddr const & source, ScType const & edge, ScAddr const & target) const
+void DeleteSolutionManager::deleteConnectors(ScAddr const & source, ScType const & connectorType, ScAddr const & target) const
 {
-  ScIterator3Ptr const & edgesIterator = context->CreateIterator3(source, edge, target);
-  while (edgesIterator->Next())
-    safeDeleteElement(edgesIterator->Get(1));
+  auto const & connectorsIterator = context->CreateIterator3(source, connectorType, target);
+  while (connectorsIterator->Next())
+    safeDeleteElement(connectorsIterator->Get(1));
 }
 }  // namespace solutionModule

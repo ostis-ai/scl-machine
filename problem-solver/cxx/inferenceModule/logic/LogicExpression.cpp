@@ -43,8 +43,8 @@ std::shared_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & formu
     return buildDisjunctionFormula(formula);
   case FormulaClassifier::NEGATION:
     return buildNegationFormula(formula);
-  case FormulaClassifier::IMPLICATION_EDGE:
-    return buildImplicationEdgeFormula(formula);
+  case FormulaClassifier::IMPLICATION_ARC:
+    return buildImplicationArcFormula(formula);
   case FormulaClassifier::IMPLICATION_TUPLE:
     return buildImplicationTupleFormula(formula);
   case FormulaClassifier::EQUIVALENCE_EDGE:
@@ -61,7 +61,7 @@ std::shared_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & formu
 
 OperatorLogicExpressionNode::OperandsVector LogicExpression::resolveTupleOperands(ScAddr const & tuple)
 {
-  ScIterator3Ptr operandsIterator = context->CreateIterator3(tuple, ScType::EdgeAccessConstPosPerm, ScType::Unknown);
+  ScIterator3Ptr operandsIterator = context->CreateIterator3(tuple, ScType::ConstPermPosArc, ScType::Unknown);
 
   OperatorLogicExpressionNode::OperandsVector operandsVector;
 
@@ -77,9 +77,9 @@ OperatorLogicExpressionNode::OperandsVector LogicExpression::resolveTupleOperand
   return operandsVector;
 }
 
-OperatorLogicExpressionNode::OperandsVector LogicExpression::resolveEdgeOperands(ScAddr const & edge)
+OperatorLogicExpressionNode::OperandsVector LogicExpression::resolveConnectorOperands(ScAddr const & connector)
 {
-  auto const & [begin, end] = context->GetConnectorIncidentElements(edge);
+  auto const & [begin, end] = context->GetConnectorIncidentElements(connector);
   OperatorLogicExpressionNode::OperandsVector operandsVector;
 
   if (begin.IsValid())
@@ -161,16 +161,16 @@ std::shared_ptr<LogicExpressionNode> LogicExpression::buildNegationFormula(ScAdd
         utils::ExceptionItemNotFound, "There is " << operands.size() << " operands in negation, but should be one");
 }
 
-std::shared_ptr<LogicExpressionNode> LogicExpression::buildImplicationEdgeFormula(ScAddr const & formula)
+std::shared_ptr<LogicExpressionNode> LogicExpression::buildImplicationArcFormula(ScAddr const & formula)
 {
-  SC_LOG_DEBUG(context->GetElementSystemIdentifier(formula) << " is an implication edge");
-  OperatorLogicExpressionNode::OperandsVector operands = resolveEdgeOperands(formula);
+  SC_LOG_DEBUG(context->GetElementSystemIdentifier(formula) << " is an implication arc");
+  OperatorLogicExpressionNode::OperandsVector operands = resolveConnectorOperands(formula);
   if (operands.size() == 2)
     return std::make_unique<ImplicationExpressionNode>(context, operands);
   else
     SC_THROW_EXCEPTION(
         utils::ExceptionItemNotFound,
-        "There is " << operands.size() << " operands in implication edge, but should be two");
+        "There is " << operands.size() << " operands in implication arc, but should be two");
 }
 
 std::shared_ptr<LogicExpressionNode> LogicExpression::buildImplicationTupleFormula(ScAddr const & formula)
@@ -188,7 +188,7 @@ std::shared_ptr<LogicExpressionNode> LogicExpression::buildImplicationTupleFormu
 std::shared_ptr<LogicExpressionNode> LogicExpression::buildEquivalenceEdgeFormula(ScAddr const & formula)
 {
   SC_LOG_DEBUG(context->GetElementSystemIdentifier(formula) << " is an equivalence edge");
-  OperatorLogicExpressionNode::OperandsVector operands = resolveEdgeOperands(formula);
+  OperatorLogicExpressionNode::OperandsVector operands = resolveConnectorOperands(formula);
   if (operands.size() == 2)
     return std::make_unique<EquivalenceExpressionNode>(context, operands);
   else

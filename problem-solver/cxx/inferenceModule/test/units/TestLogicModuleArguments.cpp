@@ -52,7 +52,7 @@ TEST_F(InferenceLogicTest, AllArgumentsValid)
   EXPECT_TRUE(argument.IsValid());
 
   ScIterator3Ptr argumentClassIteratorBefore =
-      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::ConstNodeClass, ScType::ConstPermPosArc, argument);
 
   // There is only two classes of argument before agent run
   EXPECT_TRUE(argumentClassIteratorBefore->Next());
@@ -65,7 +65,7 @@ TEST_F(InferenceLogicTest, AllArgumentsValid)
   EXPECT_TRUE(action.IsFinishedSuccessfully());
 
   ScIterator3Ptr argumentClassIteratorAfter =
-      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::ConstNodeClass, ScType::ConstPermPosArc, argument);
 
   // There is only 3 classes of argument: two was before agent run and one is generated
   EXPECT_TRUE(argumentClassIteratorAfter->Next());
@@ -97,7 +97,7 @@ TEST_F(InferenceLogicTest, InvalidArguments)
   EXPECT_TRUE(argument.IsValid());
 
   ScIterator3Ptr argumentClassIteratorBefore =
-      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::ConstNodeClass, ScType::ConstPermPosArc, argument);
 
   EXPECT_TRUE(action.InitiateAndWait(WAIT_TIME));
   EXPECT_TRUE(action.IsFinishedUnsuccessfully());
@@ -126,7 +126,7 @@ TEST_F(InferenceLogicTest, EmptyInputStructure)
   ScAddr solution = utils::IteratorUtils::getAnyFromSet(&context, result);
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::EdgeAccessConstNegPerm));
+      context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermNegArc));
 
   shutdown(context);
   context.Destroy();

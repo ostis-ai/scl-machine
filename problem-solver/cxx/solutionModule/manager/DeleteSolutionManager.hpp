@@ -28,7 +28,7 @@ private:
 
   ScAddrList getListFromSet(ScAddr const & set) const;
 
-  void deleteEdges(ScAddr const & source, ScType const & edge, ScAddr const & target) const;
+  void deleteConnectors(ScAddr const & source, ScType const & connectorType, ScAddr const & target) const;
 };
 
 }  // namespace solutionModule

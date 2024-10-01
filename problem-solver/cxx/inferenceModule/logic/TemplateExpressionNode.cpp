@@ -280,7 +280,7 @@ void TemplateExpressionNode::addToOutputStructure(ScAddr const & element)
 {
   if (outputStructureElements.find(element) == outputStructureElements.cend())
   {
-    context->GenerateConnector(ScType::EdgeAccessConstPosPerm, outputStructure, element);
+    context->GenerateConnector(ScType::ConstPermPosArc, outputStructure, element);
     outputStructureElements.insert(element);
   }
 }

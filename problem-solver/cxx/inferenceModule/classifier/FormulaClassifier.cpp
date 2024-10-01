@@ -20,10 +20,10 @@ int FormulaClassifier::typeOfFormula(ScMemoryContext * ms_context, ScAddr const 
 
   // TODO(MksmOrlov): implement the agent of logical formulas verification, check types and number of operands
   bool isAtomicFormula =
-      ms_context->CheckConnector(InferenceKeynodes::atomic_logical_formula, formula, ScType::EdgeAccessConstPosPerm);
+      ms_context->CheckConnector(InferenceKeynodes::atomic_logical_formula, formula, ScType::ConstPermPosArc);
   if (!isAtomicFormula)
   {
-    if (ms_context->GetElementType(formula) == ScType::NodeConstStruct && isFormulaWithVar(ms_context, formula))
+    if (ms_context->GetElementType(formula) == ScType::ConstNodeStructure && isFormulaWithVar(ms_context, formula))
     {
       isAtomicFormula = true;
     }
@@ -32,38 +32,38 @@ int FormulaClassifier::typeOfFormula(ScMemoryContext * ms_context, ScAddr const 
     return ATOMIC;
 
   bool const isImplication =
-      ms_context->CheckConnector(InferenceKeynodes::nrel_implication, formula, ScType::EdgeAccessConstPosPerm);
+      ms_context->CheckConnector(InferenceKeynodes::nrel_implication, formula, ScType::ConstPermPosArc);
   if (isImplication)
   {
-    if (ms_context->GetElementType(formula) == ScType::EdgeDCommonConst)
-      return IMPLICATION_EDGE;
-    if (ms_context->GetElementType(formula) == ScType::NodeConstTuple)
+    if (ms_context->GetElementType(formula) == ScType::ConstCommonArc)
+      return IMPLICATION_ARC;
+    if (ms_context->GetElementType(formula) == ScType::ConstNodeTuple)
       return IMPLICATION_TUPLE;
     return NONE;
   }
 
   bool const isNegation =
-      ms_context->CheckConnector(InferenceKeynodes::nrel_negation, formula, ScType::EdgeAccessConstPosPerm);
+      ms_context->CheckConnector(InferenceKeynodes::nrel_negation, formula, ScType::ConstPermPosArc);
   if (isNegation)
     return NEGATION;
 
   bool const isConjunction =
-      ms_context->CheckConnector(InferenceKeynodes::nrel_conjunction, formula, ScType::EdgeAccessConstPosPerm);
+      ms_context->CheckConnector(InferenceKeynodes::nrel_conjunction, formula, ScType::ConstPermPosArc);
   if (isConjunction)
     return CONJUNCTION;
 
   bool const isDisjunction =
-      ms_context->CheckConnector(InferenceKeynodes::nrel_disjunction, formula, ScType::EdgeAccessConstPosPerm);
+      ms_context->CheckConnector(InferenceKeynodes::nrel_disjunction, formula, ScType::ConstPermPosArc);
   if (isDisjunction)
     return DISJUNCTION;
 
   bool const isEquivalence =
-      ms_context->CheckConnector(InferenceKeynodes::nrel_equivalence, formula, ScType::EdgeAccessConstPosPerm);
+      ms_context->CheckConnector(InferenceKeynodes::nrel_equivalence, formula, ScType::ConstPermPosArc);
   if (isEquivalence)
   {
-    if (ms_context->GetElementType(formula) == ScType::EdgeUCommonConst)
+    if (ms_context->GetElementType(formula) == ScType::ConstCommonEdge)
       return EQUIVALENCE_EDGE;
-    if (ms_context->GetElementType(formula) == ScType::NodeConstTuple)
+    if (ms_context->GetElementType(formula) == ScType::ConstNodeTuple)
       return EQUIVALENCE_TUPLE;
   }
 
@@ -73,29 +73,29 @@ int FormulaClassifier::typeOfFormula(ScMemoryContext * ms_context, ScAddr const 
 bool FormulaClassifier::isFormulaWithConst(ScMemoryContext * ms_context, ScAddr const & formula)
 {
   ScIterator3Ptr constNodesIterator =
-      ms_context->CreateIterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::NodeConst);
+      ms_context->CreateIterator3(formula, ScType::ConstPermPosArc, ScType::ConstNode);
   if (constNodesIterator->Next())
     return true;
   ScIterator3Ptr constLinksIterator =
-      ms_context->CreateIterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::LinkConst);
+      ms_context->CreateIterator3(formula, ScType::ConstPermPosArc, ScType::ConstNodeLink);
   return constLinksIterator->Next();
 }
 
 bool FormulaClassifier::isFormulaWithVar(ScMemoryContext * ms_context, ScAddr const & formula)
 {
   ScIterator3Ptr varNodesIterator =
-      ms_context->CreateIterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::NodeVar);
+      ms_context->CreateIterator3(formula, ScType::ConstPermPosArc, ScType::VarNode);
   if (varNodesIterator->Next())
     return true;
   ScIterator3Ptr varLinksIterator =
-      ms_context->CreateIterator3(formula, ScType::EdgeAccessConstPosPerm, ScType::LinkVar);
+      ms_context->CreateIterator3(formula, ScType::ConstPermPosArc, ScType::VarNodeLink);
   return varLinksIterator->Next();
 }
 
 bool FormulaClassifier::isFormulaToGenerate(ScMemoryContext * ms_context, ScAddr const & formula)
 {
   return ms_context->CheckConnector(
-      InferenceKeynodes::concept_template_for_generation, formula, ScType::EdgeAccessConstPosPerm);
+      InferenceKeynodes::concept_template_for_generation, formula, ScType::ConstPermPosArc);
 }
 
 }  // namespace inference

@@ -37,7 +37,7 @@ void TemplateSearcherInStructures::searchTemplate(
   ScTemplate searchTemplate;
   context->BuildTemplate(searchTemplate, templateAddr, templateParams);
   if (context->CheckConnector(
-          InferenceKeynodes::concept_template_with_links, templateAddr, ScType::EdgeAccessConstPosPerm))
+          InferenceKeynodes::concept_template_with_links, templateAddr, ScType::ConstPermPosArc))
   {
     searchTemplateWithContent(searchTemplate, templateAddr, templateParams, result);
   }
@@ -48,11 +48,13 @@ void TemplateSearcherInStructures::searchTemplate(
         [templateParams, &result, &variables, this](
             ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
           // Add search result item to the answer container
+          SC_LOG_INFO("found item in structure");
           ScAddr argument;
           for (ScAddr const & variable : variables)
           {
             if (item.Has(variable))
             {
+              SC_LOG_INFO("item element is " << context->GetElementSystemIdentifier(item[variable]) << " of type " << std::string(context->GetElementType(item[variable])));
               result[variable].push_back(item[variable]);
             }
             else if (templateParams.Get(variable, argument))
@@ -117,7 +119,7 @@ std::map<std::string, std::string> TemplateSearcherInStructures::getTemplateLink
 {
   std::map<std::string, std::string> linksContent;
   ScIterator3Ptr const & linksIterator =
-      context->CreateIterator3(templateAddr, ScType::EdgeAccessConstPosPerm, ScType::Link);
+      context->CreateIterator3(templateAddr, ScType::ConstPermPosArc, ScType::NodeLink);
   while (linksIterator->Next())
   {
     ScAddr const & linkAddr = linksIterator->Get(2);
@@ -135,7 +137,7 @@ std::map<std::string, std::string> TemplateSearcherInStructures::getTemplateLink
 bool TemplateSearcherInStructures::isValidElement(ScAddr const & element) const
 {
   auto const & structuresIterator =
-      context->CreateIterator3(ScType::NodeConstStruct, ScType::EdgeAccessConstPosPerm, element);
+      context->CreateIterator3(ScType::ConstNodeStructure, ScType::ConstPermPosArc, element);
   while (structuresIterator->Next())
   {
     if (inputStructures.count(structuresIterator->Get(0)))

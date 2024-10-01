@@ -11,14 +11,14 @@
 namespace inference
 {
 
-class TemplateSearcherOnlyAccessEdgesInStructures : public TemplateSearcherInStructures
+class TemplateSearcherOnlyMembershipArcsInStructures : public TemplateSearcherInStructures
 {
 public:
-  explicit TemplateSearcherOnlyAccessEdgesInStructures(
+  explicit TemplateSearcherOnlyMembershipArcsInStructures(
       ScMemoryContext * context,
       ScAddrUnorderedSet const & otherInputStructures);
 
-  explicit TemplateSearcherOnlyAccessEdgesInStructures(ScMemoryContext * ms_context);
+  explicit TemplateSearcherOnlyMembershipArcsInStructures(ScMemoryContext * ms_context);
 
 private:
   map<std::string, std::string> getTemplateLinksContent(ScAddr const & templateAddr) override;

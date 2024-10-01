@@ -15,7 +15,7 @@ concept_solution
     -> solution;
     -> solution_not_for_remove;;
 
-@variable_edge = (target_class _-> _variable);;
+@variable_arc = (target_class _-> _variable);;
 
 solution
     -> first_solution;
@@ -36,11 +36,11 @@ first_substitution_pair_1
 _variable
     ~> first_element;;
 
-@first_substitution_edge = (target_class -> first_element);;
+@first_substitution_arc = (target_class -> first_element);;
 first_substitution_pair_2
-    -> rrel_1: @first_substitution_edge;
-    -> rrel_2: @variable_edge;;
-@variable_edge ~> @first_substitution_edge;;
+    -> rrel_1: @first_substitution_arc;
+    -> rrel_2: @variable_arc;;
+@variable_arc ~> @first_substitution_arc;;
 
 second_solution
     -> rrel_1: some_rule;
@@ -56,11 +56,11 @@ second_substitution_pair_1
 _variable
     ~> second_element;;
 
-@second_substitution_edge = (target_class -> second_element);;
+@second_substitution_arc = (target_class -> second_element);;
 second_substitution_pair_2
-    -> rrel_1: @second_substitution_edge;
-    -> rrel_2: @variable_edge;;
-@variable_edge ~> @second_substitution_edge;;
+    -> rrel_1: @second_substitution_arc;
+    -> rrel_2: @variable_arc;;
+@variable_arc ~> @second_substitution_arc;;
 
 third_solution
     -> rrel_1: some_rule;
@@ -76,11 +76,11 @@ third_substitution_pair_1
 _variable
     ~> third_element;;
 
-@third_substitution_edge = (target_class -> third_element);;
+@third_substitution_arc = (target_class -> third_element);;
 third_substitution_pair_2
-    -> rrel_1: @third_substitution_edge;
-    -> rrel_2: @variable_edge;;
-@variable_edge ~> @third_substitution_edge;;
+    -> rrel_1: @third_substitution_arc;
+    -> rrel_2: @variable_arc;;
+@variable_arc ~> @third_substitution_arc;;
 
 solution_not_for_remove
     -> fourth_solution;;
@@ -99,8 +99,8 @@ fourth_substitution_pair_1
 _variable
     ~> fourth_element;;
 
-@fourth_substitution_edge = (target_class -> fourth_element);;
+@fourth_substitution_arc = (target_class -> fourth_element);;
 fourth_substitution_pair_2
-    -> rrel_1: @fourth_substitution_edge;
-    -> rrel_2: @variable_edge;;
-@variable_edge ~> @fourth_substitution_edge;;
+    -> rrel_1: @fourth_substitution_arc;
+    -> rrel_2: @variable_arc;;
+@variable_arc ~> @fourth_substitution_arc;;
