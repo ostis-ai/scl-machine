@@ -61,7 +61,7 @@ void TemplateExpressionNode::compute(LogicFormulaResult & result) const
                                         << (result.value ? " true" : " false"));
 }
 
-LogicFormulaResult TemplateExpressionNode::find(Replacements & replacements) const
+LogicFormulaResult TemplateExpressionNode::search(Replacements & replacements) const
 {
   LogicFormulaResult result;
   std::vector<ScTemplateParams> paramsVector;
@@ -76,7 +76,7 @@ LogicFormulaResult TemplateExpressionNode::find(Replacements & replacements) con
   result.value = !result.replacements.empty();
 
   std::string const idtf = context->GetElementSystemIdentifier(formula);
-  SC_LOG_DEBUG("Find Statement " << idtf << (result.value ? " true" : " false"));
+  SC_LOG_DEBUG("Search Statement " << idtf << (result.value ? " true" : " false"));
 
   return result;
 }

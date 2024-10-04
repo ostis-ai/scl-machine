@@ -85,7 +85,7 @@ TEST_P(InferenceManagerBuilderTest, SingleSuccessApplyInference)
   bool result = iterationStrategy->applyInference(inferenceParams);
   EXPECT_TRUE(result);
 
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
   EXPECT_TRUE(
       context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
 
@@ -115,7 +115,7 @@ TEST_P(InferenceManagerBuilderTest, GenerateNotUnique)
   bool result = iterationStrategy->applyInference(inferenceParams);
   EXPECT_TRUE(result);
 
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
   EXPECT_TRUE(
       context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
 
@@ -154,7 +154,7 @@ TEST_P(InferenceManagerBuilderTest, GenerateUnique)
   bool result = iterationStrategy->applyInference(inferenceParams);
   EXPECT_FALSE(result);
 
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
   EXPECT_TRUE(
       context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermNegArc));
 
@@ -199,7 +199,7 @@ TEST_P(InferenceManagerBuilderTest, GenerateUniqueWithOutputStructure)
   bool result = iterationStrategy->applyInference(inferenceParams);
   EXPECT_FALSE(result);
 
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
   EXPECT_TRUE(
       context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermNegArc));
 
@@ -247,7 +247,7 @@ TEST_P(InferenceManagerBuilderTest, GenerateNotFirst)
   bool result = iterationStrategy->applyInference(inferenceParams);
 
   EXPECT_TRUE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(
@@ -300,7 +300,7 @@ TEST_P(InferenceManagerBuilderTest, GenerateFirst)
   bool result = iterationStrategy->applyInference(inferenceParams);
 
   EXPECT_TRUE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(
@@ -339,7 +339,7 @@ TEST_P(InferenceManagerBuilderTest, notGenerateSolutionTree)
   bool result = iterationStrategy->applyInference(inferenceParams);
   EXPECT_TRUE(result);
 
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
   EXPECT_TRUE(
       context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
 
@@ -374,7 +374,7 @@ TEST_P(InferenceManagerBuilderTest, generateSolutionTree)
   bool result = iterationStrategy->applyInference(inferenceParams);
   EXPECT_TRUE(result);
 
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
   EXPECT_TRUE(
       context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
 
@@ -407,7 +407,7 @@ TEST_P(InferenceManagerBuilderTest, SingleUnsuccessfulApplyInference)
   bool result = iterationStrategy->applyInference(inferenceParams);
 
   EXPECT_FALSE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(
@@ -445,7 +445,7 @@ TEST_P(InferenceManagerBuilderTest, SingleSuccessfulApplyInferenceWithMembership
   bool result = iterationStrategy->applyInference(inferenceParams);
 
   EXPECT_TRUE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(
@@ -484,7 +484,7 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsGeneratedAndFlagIsGen
   bool result = iterationStrategy->applyInference(inferenceParams);
 
   EXPECT_TRUE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(
@@ -526,7 +526,7 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsGeneratedButFlagIsSea
   bool result = iterationStrategy->applyInference(inferenceParams);
 
   EXPECT_TRUE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(
@@ -567,7 +567,7 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsSearchedAndFlagIsSear
   bool result = iterationStrategy->applyInference(inferenceParams);
 
   EXPECT_FALSE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(
@@ -608,7 +608,7 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureDoesNotContainSearchedBecause
   bool result = iterationStrategy->applyInference(inferenceParams);
 
   EXPECT_FALSE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(
@@ -649,7 +649,7 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsSearchedAndGeneratedA
   bool result = iterationStrategy->applyInference(inferenceParams);
 
   EXPECT_TRUE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->createSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(

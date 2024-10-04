@@ -1,19 +1,19 @@
 sc_node_class
     -> target_class;
     -> concept_solution;
-    -> action_delete_solution;;
+    -> action_erase_solution;;
 
 sc_node_role_relation
     -> rrel_1;
     -> rrel_2;;
 
 test_action_node
-    <- action_delete_solution;
+    <- action_erase_solution;
     -> rrel_1: solution;;
 
 concept_solution
     -> solution;
-    -> solution_not_for_remove;;
+    -> solution_not_for_erase;;
 
 @variable_arc = (target_class _-> _variable);;
 
@@ -82,7 +82,7 @@ third_substitution_pair_2
     -> rrel_2: @variable_arc;;
 @variable_arc ~> @third_substitution_arc;;
 
-solution_not_for_remove
+solution_not_for_erase
     -> fourth_solution;;
 
 fourth_solution

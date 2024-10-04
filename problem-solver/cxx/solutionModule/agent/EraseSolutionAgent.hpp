@@ -10,7 +10,7 @@
 
 namespace solutionModule
 {
-class DeleteSolutionAgent : public ScActionInitiatedAgent
+class EraseSolutionAgent : public ScActionInitiatedAgent
 {
 public:
 public:

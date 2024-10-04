@@ -4,36 +4,36 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "agent/DeleteSolutionAgent.hpp"
+#include "agent/EraseSolutionAgent.hpp"
 
 #include <sc_test.hpp>
 #include <scs_loader.hpp>
 
 #include <sc-agents-common/utils/IteratorUtils.hpp>
 
-namespace deleteSolutionAgentTest
+namespace eraseSolutionAgentTest
 {
 ScsLoader loader;
-const std::string DELETE_SOLUTION_MODULE_TEST_FILES_DIR_PATH =
-    SOLUTION_MODULE_TEST_SRC_PATH "/testStructures/deleteSolution/";
+const std::string ERASE_SOLUTION_MODULE_TEST_FILES_DIR_PATH =
+    SOLUTION_MODULE_TEST_SRC_PATH "/testStructures/eraseSolution/";
 const int WAIT_TIME = 5000;
 
-using DeleteSolutionAgentTest = ScMemoryTest;
+using EraseSolutionAgentTest = ScMemoryTest;
 
 void initialize(ScAgentContext & context)
 {
-  context.SubscribeAgent<solutionModule::DeleteSolutionAgent>();
+  context.SubscribeAgent<solutionModule::EraseSolutionAgent>();
 }
 
 void shutdown(ScAgentContext & context)
 {
-  context.UnsubscribeAgent<solutionModule::DeleteSolutionAgent>();
+  context.UnsubscribeAgent<solutionModule::EraseSolutionAgent>();
 }
 
-TEST_F(DeleteSolutionAgentTest, solutionHasNoElements)
+TEST_F(EraseSolutionAgentTest, solutionHasNoElements)
 {
   ScAgentContext & context = *m_ctx;
-  loader.loadScsFile(context, DELETE_SOLUTION_MODULE_TEST_FILES_DIR_PATH + "actionWithEmptySolution.scs");
+  loader.loadScsFile(context, ERASE_SOLUTION_MODULE_TEST_FILES_DIR_PATH + "actionWithEmptySolution.scs");
 
   initialize(context);
   ScAction testActionNode = context.ConvertToAction(context.SearchElementBySystemIdentifier("test_action_node"));
@@ -43,10 +43,10 @@ TEST_F(DeleteSolutionAgentTest, solutionHasNoElements)
   shutdown(context);
 }
 
-TEST_F(DeleteSolutionAgentTest, solutionHasSomeElements)
+TEST_F(EraseSolutionAgentTest, solutionHasSomeElements)
 {
   ScAgentContext & context = *m_ctx;
-  loader.loadScsFile(context, DELETE_SOLUTION_MODULE_TEST_FILES_DIR_PATH + "actionWithNotEmptySolution.scs");
+  loader.loadScsFile(context, ERASE_SOLUTION_MODULE_TEST_FILES_DIR_PATH + "actionWithNotEmptySolution.scs");
 
   initialize(context);
 
@@ -72,10 +72,10 @@ TEST_F(DeleteSolutionAgentTest, solutionHasSomeElements)
   shutdown(context);
 }
 
-TEST_F(DeleteSolutionAgentTest, solutionIsInvalid)
+TEST_F(EraseSolutionAgentTest, solutionIsInvalid)
 {
   ScAgentContext & context = *m_ctx;
-  loader.loadScsFile(context, DELETE_SOLUTION_MODULE_TEST_FILES_DIR_PATH + "actionWithoutSolution.scs");
+  loader.loadScsFile(context, ERASE_SOLUTION_MODULE_TEST_FILES_DIR_PATH + "actionWithoutSolution.scs");
 
   initialize(context);
   ScAction testActionNode = context.ConvertToAction(context.SearchElementBySystemIdentifier("test_action_node"));
@@ -85,4 +85,4 @@ TEST_F(DeleteSolutionAgentTest, solutionIsInvalid)
   shutdown(context);
 }
 
-}  // namespace deleteSolutionAgentTest
+}  // namespace eraseSolutionAgentTest

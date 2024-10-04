@@ -72,7 +72,7 @@ TEST_P(InferenceManagerTest, SuccessApplyInference)
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
       InferenceManagerFactory::constructDirectInferenceManagerTarget(&context, inferenceConfig);
   bool targetAchieved = inferenceManager->applyInference(inferenceParams);
-  ScAddr answer = inferenceManager->getSolutionTreeManager()->createSolution(outputStructure, targetAchieved);
+  ScAddr answer = inferenceManager->getSolutionTreeManager()->generateSolution(outputStructure, targetAchieved);
 
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
@@ -109,7 +109,7 @@ TEST_P(InferenceManagerTest, SuccessGenerateInferenceConclusion)
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
       InferenceManagerFactory::constructDirectInferenceManagerTarget(&context, inferenceConfig);
   bool targetAchieved = inferenceManager->applyInference(inferenceParams);
-  ScAddr answer = inferenceManager->getSolutionTreeManager()->createSolution(outputStructure, targetAchieved);
+  ScAddr answer = inferenceManager->getSolutionTreeManager()->generateSolution(outputStructure, targetAchieved);
 
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
@@ -146,7 +146,7 @@ TEST_P(InferenceManagerTest, RuleNotUsed)
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
       InferenceManagerFactory::constructDirectInferenceManagerTarget(&context, inferenceConfig);
   bool targetAchieved = inferenceManager->applyInference(inferenceParams);
-  ScAddr answer = inferenceManager->getSolutionTreeManager()->createSolution(outputStructure, targetAchieved);
+  ScAddr answer = inferenceManager->getSolutionTreeManager()->generateSolution(outputStructure, targetAchieved);
 
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
@@ -179,7 +179,7 @@ TEST_P(InferenceManagerTest, TargetNotAchieved)
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
       InferenceManagerFactory::constructDirectInferenceManagerTarget(&context, inferenceConfig);
   bool targetAchieved = inferenceManager->applyInference(inferenceParams);
-  ScAddr answer = inferenceManager->getSolutionTreeManager()->createSolution(outputStructure, targetAchieved);
+  ScAddr answer = inferenceManager->getSolutionTreeManager()->generateSolution(outputStructure, targetAchieved);
 
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
@@ -209,7 +209,7 @@ TEST_P(InferenceManagerTest, ReplacementsTest)
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
       InferenceManagerFactory::constructDirectInferenceManagerTarget(&context, inferenceConfig);
   bool targetAchieved = inferenceManager->applyInference(inferenceParams);
-  ScAddr answer = inferenceManager->getSolutionTreeManager()->createSolution(outputStructure, targetAchieved);
+  ScAddr answer = inferenceManager->getSolutionTreeManager()->generateSolution(outputStructure, targetAchieved);
 
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
@@ -244,7 +244,7 @@ TEST_P(InferenceManagerTest, DISABLED_ConclusionArgumentsTest)
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
       InferenceManagerFactory::constructDirectInferenceManagerTarget(&context, inferenceConfig);
   bool targetAchieved = inferenceManager->applyInference(inferenceParams);
-  ScAddr answer = inferenceManager->getSolutionTreeManager()->createSolution(outputStructure, targetAchieved);
+  ScAddr answer = inferenceManager->getSolutionTreeManager()->generateSolution(outputStructure, targetAchieved);
 
   EXPECT_TRUE(answer.IsValid());
   EXPECT_TRUE(
@@ -284,7 +284,7 @@ TEST_P(InferenceManagerTest, SolutionOutputStrcuture)
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
       InferenceManagerFactory::constructDirectInferenceManagerTarget(&context, inferenceConfig);
   bool targetAchieved = inferenceManager->applyInference(inferenceParams);
-  ScAddr solution = inferenceManager->getSolutionTreeManager()->createSolution(output, targetAchieved);
+  ScAddr solution = inferenceManager->getSolutionTreeManager()->generateSolution(output, targetAchieved);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(

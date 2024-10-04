@@ -26,7 +26,7 @@ bool SolutionTreeGenerator::addNode(
     ScTemplateParams const & templateParams,
     ScAddrUnorderedSet const & variables)
 {
-  ScAddr newSolutionNode = createSolutionNode(formula, templateParams, variables);
+  ScAddr newSolutionNode = generateSolutionNode(formula, templateParams, variables);
   bool result = newSolutionNode.IsValid();
   if (result)
   {
@@ -57,7 +57,7 @@ bool SolutionTreeGenerator::addNode(
   return result;
 }
 
-ScAddr SolutionTreeGenerator::createSolutionNode(
+ScAddr SolutionTreeGenerator::generateSolutionNode(
     ScAddr const & formula,
     ScTemplateParams const & templateParams,
     ScAddrUnorderedSet const & variables)
@@ -89,7 +89,7 @@ ScAddr SolutionTreeGenerator::createSolutionNode(
   return solutionNode;
 }
 
-ScAddr SolutionTreeGenerator::createSolution(ScAddr const & outputStructure, bool const targetAchieved)
+ScAddr SolutionTreeGenerator::generateSolution(ScAddr const & outputStructure, bool targetAchieved)
 {
   ScType arcType = targetAchieved ? ScType::ConstPermPosArc : ScType::ConstPermNegArc;
   ms_context->GenerateConnector(arcType, InferenceKeynodes::concept_success_solution, solution);

@@ -59,7 +59,7 @@ ScResult DirectInferenceAgent::DoProgram(ScActionInitiatedEvent const & event, S
     SC_AGENT_LOG_ERROR(exception.Message());
     return action.FinishUnsuccessfully();
   }
-  ScAddr solutionNode = inferenceManager->getSolutionTreeManager()->createSolution(outputStructure, targetAchieved);
+  ScAddr solutionNode = inferenceManager->getSolutionTreeManager()->generateSolution(outputStructure, targetAchieved);
 
   action.FormResult(solutionNode);
   return action.FinishSuccessfully();

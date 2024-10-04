@@ -17,7 +17,7 @@
 
 namespace inference
 {
-/// Class to create solution tree of the inference
+/// Class to generate solution tree of the inference
 class SolutionTreeManagerAbstract
 {
 public:
@@ -27,7 +27,7 @@ public:
 
   virtual bool addNode(ScAddr const & formula, Replacements const & replacements) = 0;
 
-  ScAddr createSolution(ScAddr const & outputStructure, bool targetAchieved);
+  ScAddr generateSolution(ScAddr const & outputStructure, bool targetAchieved);
 
   bool checkIfSolutionNodeExists(
       ScAddr const & formula,

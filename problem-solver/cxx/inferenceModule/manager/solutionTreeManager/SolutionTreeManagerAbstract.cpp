@@ -14,9 +14,9 @@ SolutionTreeManagerAbstract::SolutionTreeManagerAbstract(ScMemoryContext * conte
   solutionTreeSearcher = std::make_unique<SolutionTreeSearcher>(context);
 }
 
-ScAddr SolutionTreeManagerAbstract::createSolution(ScAddr const & outputStructure, bool targetAchieved)
+ScAddr SolutionTreeManagerAbstract::generateSolution(ScAddr const & outputStructure, bool targetAchieved)
 {
-  return solutionTreeGenerator->createSolution(outputStructure, targetAchieved);
+  return solutionTreeGenerator->generateSolution(outputStructure, targetAchieved);
 }
 
 bool SolutionTreeManagerAbstract::checkIfSolutionNodeExists(
