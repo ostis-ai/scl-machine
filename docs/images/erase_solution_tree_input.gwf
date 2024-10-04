@@ -217,7 +217,7 @@
         <node type="node/const/perm/group" idtf="action_initiated" shapeColor="0" id="110297637405696" parent="0" left="0" top="0" right="141.313" bottom="25" textColor="164" text_angle="0" text_font="Times New Roman [Arial]" font_size="10" x="355" y="269" haveBus="false" idtf_pos="0">
             <content type="0" mime_type="" content_visibility="false" file_name=""/>
         </node>
-        <node type="node/const/perm/group" idtf="action_delete_solution" shapeColor="0" id="110297637340160" parent="0" left="0" top="0" right="171.875" bottom="25" textColor="164" text_angle="0" text_font="Times New Roman [Arial]" font_size="10" x="303" y="206" haveBus="false" idtf_pos="0">
+        <node type="node/const/perm/group" idtf="action_erase_solution" shapeColor="0" id="110297637340160" parent="0" left="0" top="0" right="171.875" bottom="25" textColor="164" text_angle="0" text_font="Times New Roman [Arial]" font_size="10" x="303" y="206" haveBus="false" idtf_pos="0">
             <content type="0" mime_type="" content_visibility="false" file_name=""/>
         </node>
         <pair type="pair/const/pos/perm/orient/membership" idtf="" shapeColor="0" id="110297637420544" parent="0" id_b="110297647623696" id_e="110297637403088" b_x="-130.5" b_y="674.208" e_x="-214" e_y="2" dotBBalance="0" dotEBalance="0.317082">
