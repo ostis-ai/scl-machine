@@ -41,9 +41,9 @@ std::shared_ptr<SolutionTreeManagerAbstract> InferenceManagerAbstract::getSoluti
   return solutionTreeManager;
 }
 
-vector<ScAddrQueue> InferenceManagerAbstract::createFormulasQueuesListByPriority(ScAddr const & formulasSet)
+std::vector<ScAddrQueue> InferenceManagerAbstract::createFormulasQueuesListByPriority(ScAddr const & formulasSet)
 {
-  vector<ScAddrQueue> formulasQueuesList;
+  std::vector<ScAddrQueue> formulasQueuesList;
 
   ScAddr setOfFormulas = utils::IteratorUtils::getAnyByOutRelation(context, formulasSet, ScKeynodes::rrel_1);
   while (setOfFormulas.IsValid())

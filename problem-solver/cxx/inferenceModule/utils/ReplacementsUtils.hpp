@@ -12,7 +12,6 @@
 #include <sc-memory/sc_template.hpp>
 
 using ReplacementsHashes = std::unordered_map<size_t, std::vector<size_t>>;
-using namespace std;
 
 namespace inference
 {

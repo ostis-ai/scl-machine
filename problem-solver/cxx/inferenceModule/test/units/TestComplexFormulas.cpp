@@ -14,9 +14,9 @@ using namespace inference;
 namespace directInferenceComplexFormulasTest
 {
 ScsLoader loader;
-string const TEST_FILES_DIR_PATH = TEMPLATE_SEARCH_MODULE_TEST_SRC_PATH "/testStructures/LogicModule/ComplexFormulas/";
-string const ACTION_IDENTIFIER = "inference_logic_test_action";
-string const ARGUMENT_IDENTIFIER = "argument";
+std::string const TEST_FILES_DIR_PATH = TEMPLATE_SEARCH_MODULE_TEST_SRC_PATH "/testStructures/LogicModule/ComplexFormulas/";
+std::string const ACTION_IDENTIFIER = "inference_logic_test_action";
+std::string const ARGUMENT_IDENTIFIER = "argument";
 
 using InferenceComplexFormulasTest = ScMemoryTest;
 int const WAIT_TIME = 1500;
