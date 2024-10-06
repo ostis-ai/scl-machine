@@ -59,7 +59,7 @@ private:
       LogicFormulaResult & result,
       size_t & count);
   void processTemplateParams(
-      vector<ScTemplateParams> const & paramsVector,
+      std::vector<ScTemplateParams> const & paramsVector,
       ScAddrUnorderedSet const & formulaVariables,
       LogicFormulaResult & result,
       size_t & count,

@@ -23,7 +23,7 @@ TemplateSearcherOnlyAccessEdgesInStructures::TemplateSearcherOnlyAccessEdgesInSt
 {
 }
 
-map<std::string, std::string> TemplateSearcherOnlyAccessEdgesInStructures::getTemplateLinksContent(
+std::map<std::string, std::string> TemplateSearcherOnlyAccessEdgesInStructures::getTemplateLinksContent(
     ScAddr const & templateAddr)
 {
   // TODO(kilativ-dotcom): need to decide what to return here. Input structures contain only access edges so there are

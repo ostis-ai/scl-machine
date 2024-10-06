@@ -98,7 +98,7 @@ std::map<std::string, std::string> TemplateSearcherGeneral::getTemplateLinksCont
     std::string stringContent;
     if (context->GetLinkContent(linkAddr, stringContent))
     {
-      linksContent.emplace(to_string(linkAddr.Hash()), stringContent);
+      linksContent.emplace(std::to_string(linkAddr.Hash()), stringContent);
     }
   }
   return linksContent;
