@@ -1,5 +1,0 @@
-sc_node_class
-    -> action_delete_solution;;
-
-test_action_node
-    <- action_delete_solution;;

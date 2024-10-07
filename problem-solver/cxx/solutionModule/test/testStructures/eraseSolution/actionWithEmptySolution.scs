@@ -1,12 +1,12 @@
 sc_node_class
-    -> action_delete_solution;
+    -> action_erase_solution;
     -> concept_solution;;
 
 sc_node_role_relation
     -> rrel_1;;
 
 test_action_node
-    <- action_delete_solution;
+    <- action_erase_solution;
     -> rrel_1: empty_solution;;
 
 empty_solution

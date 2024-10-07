@@ -44,7 +44,7 @@ ScResult DirectInferenceAgent::DoProgram(ScActionInitiatedEvent const & event, S
   InferenceConfig const & inferenceConfig{
       GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_FIRST, TREE_FULL, templateSearcherType};
   ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&m_context, arguments, ScType::Node);
-  ScAddr const & outputStructure = m_context.GenerateNode(ScType::NodeConstStruct);
+  ScAddr const & outputStructure = m_context.GenerateNode(ScType::ConstNodeStructure);
   InferenceParams const & inferenceParams{
       formulasSet, argumentVector, inputStructures, outputStructure, targetStructure};
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
@@ -59,7 +59,7 @@ ScResult DirectInferenceAgent::DoProgram(ScActionInitiatedEvent const & event, S
     SC_AGENT_LOG_ERROR(exception.Message());
     return action.FinishUnsuccessfully();
   }
-  ScAddr solutionNode = inferenceManager->getSolutionTreeManager()->createSolution(outputStructure, targetAchieved);
+  ScAddr solutionNode = inferenceManager->getSolutionTreeManager()->generateSolution(outputStructure, targetAchieved);
 
   action.FormResult(solutionNode);
   return action.FinishSuccessfully();

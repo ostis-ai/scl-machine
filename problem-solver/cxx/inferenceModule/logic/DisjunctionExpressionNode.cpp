@@ -54,7 +54,7 @@ void DisjunctionExpressionNode::compute(LogicFormulaResult & result) const
   }
   for (auto const & atom : formulasWithoutConstants)
   {
-    LogicFormulaResult lastResult = atom->find(result.replacements);
+    LogicFormulaResult lastResult = atom->search(result.replacements);
     result.value |= lastResult.value;
     ReplacementsUtils::uniteReplacements(result.replacements, lastResult.replacements, result.replacements);
   }

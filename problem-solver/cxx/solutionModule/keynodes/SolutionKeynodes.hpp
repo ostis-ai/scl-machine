@@ -13,6 +13,6 @@ namespace solutionModule
 class SolutionKeynodes : public ScKeynodes
 {
 public:
-  static inline ScKeynode const action_delete_solution{"action_delete_solution"};
+  static inline ScKeynode const action_erase_solution{"action_erase_solution"};
 };
 }  // namespace solutionModule

@@ -20,15 +20,15 @@ bool SolutionTreeSearcher::checkIfSolutionNodeExists(
   std::string const & solutionsSetAlias = "_solutions_set";
   std::string const & replacementForAlias = "_replacement_for";
   solutionNodeTemplate.Triple(
-      InferenceKeynodes::concept_solution, ScType::EdgeAccessVarPosPerm, ScType::NodeVar >> solutionAlias);
-  solutionNodeTemplate.Triple(solutionAlias, ScType::EdgeAccessVarPosPerm, ScType::NodeVar >> solutionNodeAlias);
+      InferenceKeynodes::concept_solution, ScType::VarPermPosArc, ScType::VarNode >> solutionAlias);
+  solutionNodeTemplate.Triple(solutionAlias, ScType::VarPermPosArc, ScType::VarNode >> solutionNodeAlias);
   solutionNodeTemplate.Quintuple(
-      solutionNodeAlias, ScType::EdgeAccessVarPosPerm, rule, ScType::EdgeAccessVarPosPerm, ScKeynodes::rrel_1);
+      solutionNodeAlias, ScType::VarPermPosArc, rule, ScType::VarPermPosArc, ScKeynodes::rrel_1);
   solutionNodeTemplate.Quintuple(
       solutionNodeAlias,
-      ScType::EdgeAccessVarPosPerm,
-      ScType::NodeVar >> solutionsSetAlias,
-      ScType::EdgeAccessVarPosPerm,
+      ScType::VarPermPosArc,
+      ScType::VarNode >> solutionsSetAlias,
+      ScType::VarPermPosArc,
       ScKeynodes::rrel_2);
   for (ScAddr const & variable : variables)
   {
@@ -37,12 +37,12 @@ bool SolutionTreeSearcher::checkIfSolutionNodeExists(
     if (replacement.IsValid())
     {
       std::string const & pairAlias = replacementForAlias + std::to_string(variable.Hash());
-      solutionNodeTemplate.Triple(solutionsSetAlias, ScType::EdgeAccessVarPosPerm, ScType::NodeVar >> pairAlias);
+      solutionNodeTemplate.Triple(solutionsSetAlias, ScType::VarPermPosArc, ScType::VarNode >> pairAlias);
       solutionNodeTemplate.Quintuple(
-          pairAlias, ScType::EdgeAccessVarPosPerm, replacement, ScType::EdgeAccessVarPosPerm, ScKeynodes::rrel_1);
+          pairAlias, ScType::VarPermPosArc, replacement, ScType::VarPermPosArc, ScKeynodes::rrel_1);
       solutionNodeTemplate.Quintuple(
-          pairAlias, ScType::EdgeAccessVarPosPerm, variable, ScType::EdgeAccessVarPosPerm, ScKeynodes::rrel_2);
-      solutionNodeTemplate.Triple(variable, ScType::EdgeAccessVarPosTemp, replacement);
+          pairAlias, ScType::VarPermPosArc, variable, ScType::VarPermPosArc, ScKeynodes::rrel_2);
+      solutionNodeTemplate.Triple(variable, ScType::VarTempPosArc, replacement);
     }
     else
       SC_THROW_EXCEPTION(

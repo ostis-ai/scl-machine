@@ -38,7 +38,7 @@ bool DirectInferenceManagerTarget::applyInference(InferenceParams const & infere
     SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, "No formulas sets found.");
   }
 
-  // Extend input structures vector with outputStructure to find target with generated elements
+  // Extend input structures vector with outputStructure to search target with generated elements
   ScAddrUnorderedSet inputStructures = templateSearcher->getInputStructures();
   inputStructures.insert(inferenceParamsConfig.outputStructure);
   templateSearcher->setInputStructures(inputStructures);

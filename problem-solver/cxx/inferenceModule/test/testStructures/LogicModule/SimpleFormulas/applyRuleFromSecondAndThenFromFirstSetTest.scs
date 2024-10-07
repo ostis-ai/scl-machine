@@ -55,8 +55,8 @@ atomic_logical_formula
     <- rrel_main_key_sc_element: first_set;;
 
 @first_tuple = { first_set };;
-@first_edge = (logic_rules -> @first_tuple);;
-rrel_1 -> @first_edge;;
+@first_arc = (logic_rules -> @first_tuple);;
+rrel_1 -> @first_arc;;
 
 @second_implication_arc = (second_rule_condition => second_rule_result);;
 @second_implication_arc
@@ -64,9 +64,9 @@ rrel_1 -> @first_edge;;
     <- rrel_main_key_sc_element: second_set;;
 
 @second_tuple = { second_set };;
-@second_edge = (logic_rules -> @second_tuple);;
+@second_arc = (logic_rules -> @second_tuple);;
 
-@first_edge => nrel_basic_sequence: @second_edge;;
+@first_arc => nrel_basic_sequence: @second_arc;;
 
 inference_logic_test_action
     <- action_direct_inference;

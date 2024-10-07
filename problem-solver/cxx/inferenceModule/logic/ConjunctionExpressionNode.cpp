@@ -65,7 +65,7 @@ void ConjunctionExpressionNode::compute(LogicFormulaResult & result) const
   }
   for (auto const & atom : formulasWithoutConstants)  // atoms without constants are processed here
   {
-    LogicFormulaResult lastResult = atom->find(result.replacements);
+    LogicFormulaResult lastResult = atom->search(result.replacements);
     if (!lastResult.value)
     {
       result.value = false;

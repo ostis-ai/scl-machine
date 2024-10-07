@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Breaking changes
 - Direct inference agent's subscription element is changed to `action_initiated`
 
+### Fixed
+- Deprecated sc-types are no longer in use
+
+### Changed
+- TemplateSearcherOnlyAccessEdgesInStructures is renamed to TemplateSearcherOnlyMembershipArcsInStructures
+
 ### Removed
 - Codegen for agents
 

@@ -1,4 +1,4 @@
-sc_node_struct
+sc_node_structure
     -> test_structure_1;
     -> test_structure_2;
     -> test_structure_3;;
@@ -10,14 +10,14 @@ test_structure_2 -> ( class_2 -> node_1 );;
 test_structure_3 -> ( class_3 -> node_1 );;
 
 node_2_outgoing_1
-=> node_3_central
+=> ..node_3_central
 (*
     => node_4_ingoing;;
 *);;
 
 search_template =
 [*
-    node_3_central
+    ..node_3_central
         _=> _var_node_ingoing;
-        _<= _var_node_outgoing;;
+        <=_ _var_node_outgoing;;
 *];;

@@ -55,7 +55,7 @@ void EquivalenceExpressionNode::compute(LogicFormulaResult & result) const
   {
     SC_LOG_DEBUG("Processing formula without constants");
     auto formulaWithoutConstants = formulasWithoutConstants[0];
-    subFormulaResults.push_back(formulaWithoutConstants->find(subFormulaResults[0].replacements));
+    subFormulaResults.push_back(formulaWithoutConstants->search(subFormulaResults[0].replacements));
   }
 
   if (!formulasToGenerate.empty())

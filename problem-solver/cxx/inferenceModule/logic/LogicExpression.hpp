@@ -41,13 +41,13 @@ public:
   std::shared_ptr<LogicExpressionNode> buildConjunctionFormula(ScAddr const & formula);
   std::shared_ptr<LogicExpressionNode> buildDisjunctionFormula(ScAddr const & formula);
   std::shared_ptr<LogicExpressionNode> buildNegationFormula(ScAddr const & formula);
-  std::shared_ptr<LogicExpressionNode> buildImplicationEdgeFormula(ScAddr const & formula);
+  std::shared_ptr<LogicExpressionNode> buildImplicationArcFormula(ScAddr const & formula);
   std::shared_ptr<LogicExpressionNode> buildImplicationTupleFormula(ScAddr const & formula);
   std::shared_ptr<LogicExpressionNode> buildEquivalenceEdgeFormula(ScAddr const & formula);
   std::shared_ptr<LogicExpressionNode> buildEquivalenceTupleFormula(ScAddr const & formula);
 
   OperatorLogicExpressionNode::OperandsVector resolveTupleOperands(ScAddr const & tuple);
-  OperatorLogicExpressionNode::OperandsVector resolveEdgeOperands(ScAddr const & edge);
+  OperatorLogicExpressionNode::OperandsVector resolveConnectorOperands(ScAddr const & connector);
   OperatorLogicExpressionNode::OperandsVector resolveOperandsForImplicationTuple(ScAddr const & tuple);
 
 private:

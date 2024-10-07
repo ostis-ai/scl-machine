@@ -1,8 +1,8 @@
-action_delete_solution
+action_erase_solution
 <- sc_node_class;
 => nrel_main_idtf:
     [действие. удалить решение](* <- lang_ru;; *);
-    [action. delete solution](* <- lang_en;; *);
+    [action. erase solution](* <- lang_en;; *);
 <- actions_class;
 <- atomic_action_class;
 <= nrel_inclusion: information_action;
@@ -14,7 +14,7 @@ action_delete_solution
         {
         rrel_example: [Действие. удалить решение - действие по удалению дерева решения.]
             (* <- lang_ru;;*);
-        rrel_example: [Action. delete solution is an action of deleting solution tree.]
+        rrel_example: [Action. erase solution is an action of erasing solution tree.]
             (* <- lang_en;; *)
         };;
     <= nrel_using_constants:

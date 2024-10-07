@@ -42,7 +42,7 @@ then = [*
 *];;
 @p1 = (conj_link => then);;
 @p1 <- nrel_implication;;
-@p1 => nrel_system_identifier: [impl_edge];;
+@p1 => nrel_system_identifier: [impl_arc];;
 @p2 = (inference_logic_test_rule -> @p1);;
 @p2 <- rrel_main_key_sc_element;;
 inference_logic_test_rule <- statement;;

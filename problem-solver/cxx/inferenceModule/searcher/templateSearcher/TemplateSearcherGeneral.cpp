@@ -27,7 +27,7 @@ void TemplateSearcherGeneral::searchTemplate(
   ScTemplate searchTemplate;
   context->BuildTemplate(searchTemplate, templateAddr, templateParams);
   if (context->CheckConnector(
-          InferenceKeynodes::concept_template_with_links, templateAddr, ScType::EdgeAccessConstPosPerm))
+          InferenceKeynodes::concept_template_with_links, templateAddr, ScType::ConstPermPosArc))
   {
     searchTemplateWithContent(searchTemplate, templateAddr, templateParams, result);
   }
@@ -91,7 +91,7 @@ void TemplateSearcherGeneral::searchTemplateWithContent(
 std::map<std::string, std::string> TemplateSearcherGeneral::getTemplateLinksContent(ScAddr const & templateAddr)
 {
   std::map<std::string, std::string> linksContent;
-  ScIterator3Ptr linksIterator = context->CreateIterator3(templateAddr, ScType::EdgeAccessConstPosPerm, ScType::Link);
+  ScIterator3Ptr linksIterator = context->CreateIterator3(templateAddr, ScType::ConstPermPosArc, ScType::NodeLink);
   while (linksIterator->Next())
   {
     ScAddr const & linkAddr = linksIterator->Get(2);

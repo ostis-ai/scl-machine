@@ -24,10 +24,10 @@ public:
 
   bool addNode(ScAddr const & formula, ScTemplateParams const & templateParams, ScAddrUnorderedSet const & variables);
 
-  ScAddr createSolution(ScAddr const & outputStructure, bool targetAchieved);
+  ScAddr generateSolution(ScAddr const & outputStructure, bool targetAchieved);
 
 private:
-  ScAddr createSolutionNode(
+  ScAddr generateSolutionNode(
       ScAddr const & formula,
       ScTemplateParams const & templateParams,
       ScAddrUnorderedSet const & variables);

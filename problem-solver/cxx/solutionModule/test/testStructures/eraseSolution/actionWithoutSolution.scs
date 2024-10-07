@@ -1,0 +1,5 @@
+sc_node_class
+    -> action_erase_solution;;
+
+test_action_node
+    <- action_erase_solution;;

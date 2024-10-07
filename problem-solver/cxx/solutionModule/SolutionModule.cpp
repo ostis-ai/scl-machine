@@ -6,7 +6,7 @@
 
 #include "SolutionModule.hpp"
 
-#include "agent/DeleteSolutionAgent.hpp"
+#include "agent/EraseSolutionAgent.hpp"
 
 using namespace solutionModule;
-SC_MODULE_REGISTER(SolutionModule)->Agent<DeleteSolutionAgent>();
+SC_MODULE_REGISTER(SolutionModule)->Agent<EraseSolutionAgent>();

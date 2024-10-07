@@ -49,7 +49,7 @@ TEST_F(InferenceComplexFormulasTest, TrueNestedImplicationFormula)
   EXPECT_TRUE(argument.IsValid());
 
   ScIterator3Ptr argumentClassIteratorBefore =
-      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::ConstNodeClass, ScType::ConstPermPosArc, argument);
 
   // There is only one class of argument before agent run
   EXPECT_TRUE(argumentClassIteratorBefore->Next());
@@ -61,7 +61,7 @@ TEST_F(InferenceComplexFormulasTest, TrueNestedImplicationFormula)
   EXPECT_TRUE(action.IsFinishedSuccessfully());
 
   ScIterator3Ptr argumentClassIteratorAfter =
-      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::ConstNodeClass, ScType::ConstPermPosArc, argument);
 
   // There is only two classes of argument: one was before agent run and two was generated
   EXPECT_TRUE(argumentClassIteratorAfter->Next());
@@ -93,7 +93,7 @@ TEST_F(InferenceComplexFormulasTest, TrueDisjunctionImplicationFormula)
   EXPECT_TRUE(argument.IsValid());
 
   ScIterator3Ptr argumentClassIteratorBefore =
-      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::ConstNodeClass, ScType::ConstPermPosArc, argument);
 
   // There is only one class of argument before agent run
   EXPECT_TRUE(argumentClassIteratorBefore->Next());
@@ -105,7 +105,7 @@ TEST_F(InferenceComplexFormulasTest, TrueDisjunctionImplicationFormula)
   EXPECT_TRUE(action.IsFinishedSuccessfully());
 
   ScIterator3Ptr argumentClassIteratorAfter =
-      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::ConstNodeClass, ScType::ConstPermPosArc, argument);
 
   // There is only two classes of argument: one was before agent run and one was generated
   EXPECT_TRUE(argumentClassIteratorAfter->Next());
@@ -136,7 +136,7 @@ TEST_F(InferenceComplexFormulasTest, TrueConjunctionImplicationFormula)
   EXPECT_TRUE(argument.IsValid());
 
   ScIterator3Ptr argumentClassIteratorBefore =
-      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::ConstNodeClass, ScType::ConstPermPosArc, argument);
 
   // There is only two classes of argument before agent run
   EXPECT_TRUE(argumentClassIteratorBefore->Next());
@@ -149,7 +149,7 @@ TEST_F(InferenceComplexFormulasTest, TrueConjunctionImplicationFormula)
   EXPECT_TRUE(action.IsFinishedSuccessfully());
 
   ScIterator3Ptr argumentClassIteratorAfter =
-      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::ConstNodeClass, ScType::ConstPermPosArc, argument);
 
   // There is only three classes of argument: one was before agent run and two were generated
   EXPECT_TRUE(argumentClassIteratorAfter->Next());
@@ -181,7 +181,7 @@ TEST_F(InferenceComplexFormulasTest, DISABLED_TrueNegationImplicationLogicRule)
   EXPECT_TRUE(argument.IsValid());
 
   ScIterator3Ptr argumentClassIteratorBefore =
-      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::ConstNodeClass, ScType::ConstPermPosArc, argument);
 
   // There is only two classes of argument before agent run
   EXPECT_TRUE(argumentClassIteratorBefore->Next());
@@ -194,7 +194,7 @@ TEST_F(InferenceComplexFormulasTest, DISABLED_TrueNegationImplicationLogicRule)
   EXPECT_TRUE(action.IsFinishedSuccessfully());
 
   ScIterator3Ptr argumentClassIteratorAfter =
-      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::ConstNodeClass, ScType::ConstPermPosArc, argument);
 
   // There is only three classes of argument: one was before agent run and two were generated
   EXPECT_TRUE(argumentClassIteratorAfter->Next());
@@ -226,7 +226,7 @@ TEST_F(InferenceComplexFormulasTest, DISABLED_TrueComplexLogicRule)
   EXPECT_TRUE(argument.IsValid());
 
   ScIterator3Ptr argumentClassIteratorBefore =
-      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::ConstNodeClass, ScType::ConstPermPosArc, argument);
 
   // There is only two classes of argument before agent run
   EXPECT_TRUE(argumentClassIteratorBefore->Next());
@@ -239,7 +239,7 @@ TEST_F(InferenceComplexFormulasTest, DISABLED_TrueComplexLogicRule)
   EXPECT_TRUE(action.IsFinishedSuccessfully());
 
   ScIterator3Ptr argumentClassIteratorAfter =
-      context.CreateIterator3(ScType::NodeConstClass, ScType::EdgeAccessConstPosPerm, argument);
+      context.CreateIterator3(ScType::ConstNodeClass, ScType::ConstPermPosArc, argument);
 
   // There is only three classes of argument: one was before agent run and two were generated
   EXPECT_TRUE(argumentClassIteratorAfter->Next());

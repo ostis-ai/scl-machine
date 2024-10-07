@@ -4,24 +4,24 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "DeleteSolutionAgent.hpp"
+#include "EraseSolutionAgent.hpp"
 
 #include "keynodes/SolutionKeynodes.hpp"
 
-#include "manager/DeleteSolutionManager.hpp"
+#include "manager/EraseSolutionManager.hpp"
 
 namespace solutionModule
 {
-ScResult DeleteSolutionAgent::DoProgram(ScActionInitiatedEvent const & event, ScAction & action)
+ScResult EraseSolutionAgent::DoProgram(ScActionInitiatedEvent const & event, ScAction & action)
 {
   ScAddr const & solution = action.GetArgument(1);
   try
   {
     if (!m_context.IsElement(solution))
-      SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, "DeleteSolutionAgent: solution is not valid");
+      SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, GetName() << ": solution is not valid");
 
-    auto manager = std::make_unique<DeleteSolutionManager>(&m_context);
-    manager->deleteSolution(solution);
+    auto manager = std::make_unique<EraseSolutionManager>(&m_context);
+    manager->eraseSolution(solution);
 
     return action.FinishSuccessfully();
   }
@@ -32,8 +32,8 @@ ScResult DeleteSolutionAgent::DoProgram(ScActionInitiatedEvent const & event, Sc
   }
 }
 
-ScAddr DeleteSolutionAgent::GetActionClass() const
+ScAddr EraseSolutionAgent::GetActionClass() const
 {
-  return SolutionKeynodes::action_delete_solution;
+  return SolutionKeynodes::action_erase_solution;
 }
 }  // namespace solutionModule
