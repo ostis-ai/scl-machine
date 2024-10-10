@@ -8,8 +8,7 @@ target_link_libraries(inferenceModule
     LINK_PRIVATE sc-agents-common)
 target_include_directories(inferenceModule
     PUBLIC ${CMAKE_CURRENT_LIST_DIR}
-    PRIVATE ${SC_MEMORY_SRC}
-    PRIVATE ${SC_KPM_SRC})
+    PRIVATE ${SC_MEMORY_SRC})
 
 if (${SC_BUILD_TESTS})
     include(${CMAKE_CURRENT_LIST_DIR}/test/tests.cmake)

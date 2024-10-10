@@ -8,8 +8,8 @@
 
 #include "keynodes/InferenceKeynodes.hpp"
 
-#include <sc_test.hpp>
-#include <scs_loader.hpp>
+#include <sc-memory/test/sc_test.hpp>
+#include <sc-builder/scs_loader.hpp>
 
 using namespace inference;
 

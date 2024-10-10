@@ -6,8 +6,8 @@
 
 #include "agent/EraseSolutionAgent.hpp"
 
-#include <sc_test.hpp>
-#include <scs_loader.hpp>
+#include <sc-memory/test/sc_test.hpp>
+#include <sc-builder/scs_loader.hpp>
 
 #include <sc-agents-common/utils/IteratorUtils.hpp>
 
