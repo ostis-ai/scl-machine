@@ -48,13 +48,11 @@ void TemplateSearcherInStructures::searchTemplate(
         [templateParams, &result, &variables, this](
             ScTemplateSearchResultItem const & item) -> ScTemplateSearchRequest {
           // Add search result item to the answer container
-          SC_LOG_INFO("found item in structure");
           ScAddr argument;
           for (ScAddr const & variable : variables)
           {
             if (item.Has(variable))
             {
-              SC_LOG_INFO("item element is " << context->GetElementSystemIdentifier(item[variable]) << " of type " << std::string(context->GetElementType(item[variable])));
               result[variable].push_back(item[variable]);
             }
             else if (templateParams.Get(variable, argument))
