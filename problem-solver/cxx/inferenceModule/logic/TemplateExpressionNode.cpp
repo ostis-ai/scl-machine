@@ -39,7 +39,7 @@ ScAddr TemplateExpressionNode::getFormula() const
 void TemplateExpressionNode::compute(LogicFormulaResult & result) const
 {
   SC_LOG_DEBUG(
-      "TemplateExpressionNode: compute for " << (argumentVector.empty() ? "empty" : to_string(argumentVector.size()))
+      "TemplateExpressionNode: compute for " << (argumentVector.empty() ? "empty" : std::to_string(argumentVector.size()))
                                              << " arguments");
   ScAddrUnorderedSet variables;
   result.replacements.clear();
@@ -70,7 +70,7 @@ LogicFormulaResult TemplateExpressionNode::search(Replacements & replacements) c
   ScAddrUnorderedSet variables;
   templateSearcher->getVariables(formula, variables);
   SC_LOG_DEBUG(
-      "TemplateExpressionNode: call search for " << (paramsVector.empty() ? "empty" : to_string(paramsVector.size()))
+      "TemplateExpressionNode: call search for " << (paramsVector.empty() ? "empty" : std::to_string(paramsVector.size()))
                                                  << " params");
   templateSearcher->searchTemplate(formula, paramsVector, variables, result.replacements);
   result.value = !result.replacements.empty();
@@ -159,7 +159,7 @@ void TemplateExpressionNode::generateByReplacements(
 }
 
 void TemplateExpressionNode::processTemplateParams(
-    vector<ScTemplateParams> const & paramsVector,
+    std::vector<ScTemplateParams> const & paramsVector,
     ScAddrUnorderedSet const & formulaVariables,
     LogicFormulaResult & result,
     size_t & count,

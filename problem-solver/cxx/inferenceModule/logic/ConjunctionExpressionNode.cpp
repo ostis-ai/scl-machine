@@ -18,8 +18,8 @@ ConjunctionExpressionNode::ConjunctionExpressionNode(
 void ConjunctionExpressionNode::compute(LogicFormulaResult & result) const
 {
   result.value = false;
-  vector<TemplateExpressionNode *> formulasWithoutConstants;
-  vector<TemplateExpressionNode *> formulasToGenerate;
+  std::vector<TemplateExpressionNode *> formulasWithoutConstants;
+  std::vector<TemplateExpressionNode *> formulasToGenerate;
 
   for (auto const & operand : operands)
   {

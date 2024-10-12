@@ -21,7 +21,7 @@ public:
   explicit TemplateSearcherOnlyMembershipArcsInStructures(ScMemoryContext * ms_context);
 
 private:
-  map<std::string, std::string> getTemplateLinksContent(ScAddr const & templateAddr) override;
+  std::map<std::string, std::string> getTemplateLinksContent(ScAddr const & templateAddr) override;
 
   bool isValidElement(ScAddr const & element) const override;
 };

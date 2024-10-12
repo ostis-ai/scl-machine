@@ -7,6 +7,7 @@
 #pragma once
 
 #include "utils/Types.hpp"
+#include <memory>
 
 namespace inference
 {
