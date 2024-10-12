@@ -233,7 +233,7 @@ TEST_P(InferenceManagerBuilderTest, GenerateNotFirst)
   ScAddrVector arguments{argument};
   for (size_t i = 2; i < 6; i++)
   {
-    arguments.push_back(context.ResolveElementSystemIdentifier(ARGUMENT + to_string(i)));
+    arguments.push_back(context.ResolveElementSystemIdentifier(ARGUMENT + std::to_string(i)));
   }
   ScAddr const & rulesSet = context.ResolveElementSystemIdentifier(FORMULAS_SET);
   ScAddr const & outputStructure = context.GenerateNode(ScType::ConstNodeStructure);
@@ -286,7 +286,7 @@ TEST_P(InferenceManagerBuilderTest, GenerateFirst)
   ScAddrVector arguments{argument};
   for (size_t i = 2; i < 6; i++)
   {
-    arguments.push_back(context.ResolveElementSystemIdentifier(ARGUMENT + to_string(i)));
+    arguments.push_back(context.ResolveElementSystemIdentifier(ARGUMENT + std::to_string(i)));
   }
   ScAddr const & rulesSet = context.ResolveElementSystemIdentifier(FORMULAS_SET);
   ScAddr const & outputStructure = context.GenerateNode(ScType::ConstNodeStructure);

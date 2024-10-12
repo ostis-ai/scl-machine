@@ -127,7 +127,7 @@ std::map<std::string, std::string> TemplateSearcherInStructures::getTemplateLink
     if (isValidElement(linkAddr))
     {
       context->GetLinkContent(linkAddr, stringContent);
-      linksContent.emplace(to_string(linkAddr.Hash()), stringContent);
+      linksContent.emplace(std::to_string(linkAddr.Hash()), stringContent);
     }
   }
 

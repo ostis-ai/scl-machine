@@ -37,7 +37,7 @@ public:
 
   virtual void searchTemplate(
       ScAddr const & templateAddr,
-      vector<ScTemplateParams> const & scTemplateParamsVector,
+      std::vector<ScTemplateParams> const & scTemplateParamsVector,
       ScAddrUnorderedSet const & variables,
       Replacements & result);
 
