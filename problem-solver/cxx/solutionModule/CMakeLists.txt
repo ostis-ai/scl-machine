@@ -8,7 +8,9 @@ target_link_libraries(solutionModule
     LINK_PRIVATE sc-agents-common)
 target_include_directories(solutionModule
     PUBLIC ${CMAKE_CURRENT_LIST_DIR}
-    PRIVATE ${SC_MEMORY_SRC})
+    PRIVATE ${SC_MEMORY_SRC}
+    PRIVATE ${SC_CORE_PATH}
+    PRIVATE ${SC_BUILDER_PATH})
 
 if (${SC_BUILD_TESTS})
     include(${CMAKE_CURRENT_LIST_DIR}/test/tests.cmake)
