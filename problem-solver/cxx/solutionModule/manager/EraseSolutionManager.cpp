@@ -28,8 +28,7 @@ void EraseSolutionManager::eraseSolution(ScAddr const & solution) const
 ScAddrList EraseSolutionManager::getListFromSet(ScAddr const & set) const
 {
   ScAddrList setElements;
-  ScIterator3Ptr const & fromSetIterator =
-      context->CreateIterator3(set, ScType::ConstPermPosArc, ScType::ConstNode);
+  ScIterator3Ptr const & fromSetIterator = context->CreateIterator3(set, ScType::ConstPermPosArc, ScType::ConstNode);
   while (fromSetIterator->Next())
     setElements.push_back(fromSetIterator->Get(2));
   return setElements;
@@ -79,7 +78,8 @@ void EraseSolutionManager::eraseSubstitutions(ScAddr const & substitutions) cons
     SC_LOG_WARNING("EraseSolutionManager: solution node does not have substitutions at rrel_2");
 }
 
-void EraseSolutionManager::eraseConnectors(ScAddr const & source, ScType const & connectorType, ScAddr const & target) const
+void EraseSolutionManager::eraseConnectors(ScAddr const & source, ScType const & connectorType, ScAddr const & target)
+    const
 {
   auto const & connectorsIterator = context->CreateIterator3(source, connectorType, target);
   while (connectorsIterator->Next())

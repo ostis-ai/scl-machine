@@ -16,7 +16,8 @@ using namespace inference;
 namespace directInferenceSimpleFormulasTest
 {
 ScsLoader loader;
-std::string const TEST_FILES_DIR_PATH = TEMPLATE_SEARCH_MODULE_TEST_SRC_PATH "/testStructures/LogicModule/SimpleFormulas/";
+std::string const TEST_FILES_DIR_PATH =
+    TEMPLATE_SEARCH_MODULE_TEST_SRC_PATH "/testStructures/LogicModule/SimpleFormulas/";
 std::string const ACTION_IDENTIFIER = "inference_logic_test_action";
 
 using InferenceSimpleFormulasTest = ScMemoryTest;

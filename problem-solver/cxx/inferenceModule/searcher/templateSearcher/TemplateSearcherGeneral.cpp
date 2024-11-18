@@ -26,8 +26,7 @@ void TemplateSearcherGeneral::searchTemplate(
 {
   ScTemplate searchTemplate;
   context->BuildTemplate(searchTemplate, templateAddr, templateParams);
-  if (context->CheckConnector(
-          InferenceKeynodes::concept_template_with_links, templateAddr, ScType::ConstPermPosArc))
+  if (context->CheckConnector(InferenceKeynodes::concept_template_with_links, templateAddr, ScType::ConstPermPosArc))
   {
     searchTemplateWithContent(searchTemplate, templateAddr, templateParams, result);
   }

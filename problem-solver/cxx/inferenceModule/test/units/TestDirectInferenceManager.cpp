@@ -75,8 +75,7 @@ TEST_P(InferenceManagerTest, SuccessApplyInference)
   ScAddr answer = inferenceManager->getSolutionTreeManager()->generateSolution(outputStructure, targetAchieved);
 
   EXPECT_TRUE(answer.IsValid());
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, answer, ScType::ConstPermPosArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, answer, ScType::ConstPermPosArc));
 
   ScAddr argument = context.SearchElementBySystemIdentifier("argument");
   EXPECT_TRUE(argument.IsValid());
@@ -112,8 +111,7 @@ TEST_P(InferenceManagerTest, SuccessGenerateInferenceConclusion)
   ScAddr answer = inferenceManager->getSolutionTreeManager()->generateSolution(outputStructure, targetAchieved);
 
   EXPECT_TRUE(answer.IsValid());
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, answer, ScType::ConstPermPosArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, answer, ScType::ConstPermPosArc));
   ScTemplate conclusionTemplate;
   ScTemplateSearchResult conclusionSearchResult;
   context.BuildTemplate(conclusionTemplate, targetTemplate);
@@ -149,8 +147,7 @@ TEST_P(InferenceManagerTest, RuleNotUsed)
   ScAddr answer = inferenceManager->getSolutionTreeManager()->generateSolution(outputStructure, targetAchieved);
 
   EXPECT_TRUE(answer.IsValid());
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, answer, ScType::ConstPermNegArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, answer, ScType::ConstPermNegArc));
 }
 
 TEST_P(InferenceManagerTest, TargetNotAchieved)
@@ -182,8 +179,7 @@ TEST_P(InferenceManagerTest, TargetNotAchieved)
   ScAddr answer = inferenceManager->getSolutionTreeManager()->generateSolution(outputStructure, targetAchieved);
 
   EXPECT_TRUE(answer.IsValid());
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, answer, ScType::ConstPermNegArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, answer, ScType::ConstPermNegArc));
 }
 
 TEST_P(InferenceManagerTest, ReplacementsTest)
@@ -212,8 +208,7 @@ TEST_P(InferenceManagerTest, ReplacementsTest)
   ScAddr answer = inferenceManager->getSolutionTreeManager()->generateSolution(outputStructure, targetAchieved);
 
   EXPECT_TRUE(answer.IsValid());
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, answer, ScType::ConstPermNegArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, answer, ScType::ConstPermNegArc));
 }
 
 // Add dialog to arguments_set and test will pass
@@ -247,8 +242,7 @@ TEST_P(InferenceManagerTest, DISABLED_ConclusionArgumentsTest)
   ScAddr answer = inferenceManager->getSolutionTreeManager()->generateSolution(outputStructure, targetAchieved);
 
   EXPECT_TRUE(answer.IsValid());
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, answer, ScType::ConstPermPosArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, answer, ScType::ConstPermPosArc));
 
   ScAddr dialog = context.SearchElementBySystemIdentifier("dialog");
   ScAddr dialogClass = context.SearchElementBySystemIdentifier("concept_dialog_class");
@@ -287,8 +281,7 @@ TEST_P(InferenceManagerTest, SolutionOutputStrcuture)
   ScAddr solution = inferenceManager->getSolutionTreeManager()->generateSolution(output, targetAchieved);
 
   EXPECT_TRUE(solution.IsValid());
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
 
   // Check if nrel_output_structure exists
   ScIterator5Ptr solutionOutputIterator = context.CreateIterator5(
@@ -316,11 +309,7 @@ TEST_P(InferenceManagerTest, SolutionOutputStrcuture)
 
   // Check target_node_class element in output structure, expect argument
   ScIterator5Ptr outputStructureClassElementIterator = context.CreateIterator5(
-      outputStructureClass,
-      ScType::ConstPermPosArc,
-      ScType::ConstNode,
-      ScType::ConstPermPosArc,
-      outputStructure);
+      outputStructureClass, ScType::ConstPermPosArc, ScType::ConstNode, ScType::ConstPermPosArc, outputStructure);
   EXPECT_TRUE(outputStructureClassElementIterator->Next());
 
   ScAddr outputStructureClassElement = outputStructureClassElementIterator->Get(2);

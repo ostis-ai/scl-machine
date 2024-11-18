@@ -14,7 +14,8 @@ using namespace inference;
 namespace directInferenceComplexFormulasTest
 {
 ScsLoader loader;
-std::string const TEST_FILES_DIR_PATH = TEMPLATE_SEARCH_MODULE_TEST_SRC_PATH "/testStructures/LogicModule/ComplexFormulas/";
+std::string const TEST_FILES_DIR_PATH =
+    TEMPLATE_SEARCH_MODULE_TEST_SRC_PATH "/testStructures/LogicModule/ComplexFormulas/";
 std::string const ACTION_IDENTIFIER = "inference_logic_test_action";
 std::string const ARGUMENT_IDENTIFIER = "argument";
 

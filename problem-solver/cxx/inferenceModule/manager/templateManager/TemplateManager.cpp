@@ -24,8 +24,7 @@ std::vector<ScTemplateParams> TemplateManager::createTemplateParams(ScAddr const
   std::map<ScAddr, std::set<ScAddr, ScAddrLessFunc>, ScAddrLessFunc> replacementsMultimap;
   std::vector<ScTemplateParams> templateParamsVector;
 
-  ScIterator3Ptr variableNodeIterator =
-      context->CreateIterator3(scTemplate, ScType::ConstPermPosArc, ScType::VarNode);
+  ScIterator3Ptr variableNodeIterator = context->CreateIterator3(scTemplate, ScType::ConstPermPosArc, ScType::VarNode);
   while (variableNodeIterator->Next())
   {
     ScAddr const & variableNode = variableNodeIterator->Get(2);
