@@ -86,8 +86,7 @@ TEST_P(InferenceManagerBuilderTest, SingleSuccessApplyInference)
   EXPECT_TRUE(result);
 
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
 
   ScAddr const & targetClass = context.SearchElementBySystemIdentifier(TARGET_NODE_CLASS);
 
@@ -116,15 +115,13 @@ TEST_P(InferenceManagerBuilderTest, GenerateNotUnique)
   EXPECT_TRUE(result);
 
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
 
   ScAddr const & targetClass = context.SearchElementBySystemIdentifier(TARGET_NODE_CLASS);
   EXPECT_TRUE(context.CheckConnector(targetClass, argument, ScType::ConstPermPosArc));
 
   // Target class is created although it exists. There are 2 target class membership arcs
-  ScIterator3Ptr const & targetClassIterator =
-      context.CreateIterator3(targetClass, ScType::ConstPermPosArc, argument);
+  ScIterator3Ptr const & targetClassIterator = context.CreateIterator3(targetClass, ScType::ConstPermPosArc, argument);
   EXPECT_TRUE(targetClassIterator->Next());
   EXPECT_TRUE(targetClassIterator->Next());
   EXPECT_FALSE(targetClassIterator->Next());
@@ -155,8 +152,7 @@ TEST_P(InferenceManagerBuilderTest, GenerateUnique)
   EXPECT_FALSE(result);
 
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermNegArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermNegArc));
 
   ScAddr const & targetClass = context.SearchElementBySystemIdentifier(TARGET_NODE_CLASS);
   EXPECT_TRUE(context.CheckConnector(targetClass, argument, ScType::ConstPermPosArc));
@@ -200,14 +196,12 @@ TEST_P(InferenceManagerBuilderTest, GenerateUniqueWithOutputStructure)
   EXPECT_FALSE(result);
 
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermNegArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermNegArc));
 
   ScAddr const & targetClass = context.SearchElementBySystemIdentifier(TARGET_NODE_CLASS);
   EXPECT_TRUE(context.CheckConnector(targetClass, argument, ScType::ConstPermPosArc));
 
-  ScIterator3Ptr const & targetClassIterator =
-      context.CreateIterator3(targetClass, ScType::ConstPermPosArc, argument);
+  ScIterator3Ptr const & targetClassIterator = context.CreateIterator3(targetClass, ScType::ConstPermPosArc, argument);
   EXPECT_TRUE(targetClassIterator->Next());
   EXPECT_FALSE(targetClassIterator->Next());
 
@@ -250,8 +244,7 @@ TEST_P(InferenceManagerBuilderTest, GenerateNotFirst)
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
 
   ScAddr const & targetClass = context.SearchElementBySystemIdentifier(TARGET_NODE_CLASS);
   EXPECT_TRUE(targetClass.IsValid());
@@ -303,8 +296,7 @@ TEST_P(InferenceManagerBuilderTest, GenerateFirst)
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
 
   ScAddr const & targetClass = context.SearchElementBySystemIdentifier(TARGET_NODE_CLASS);
   EXPECT_TRUE(targetClass.IsValid());
@@ -340,8 +332,7 @@ TEST_P(InferenceManagerBuilderTest, notGenerateSolutionTree)
   EXPECT_TRUE(result);
 
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
 
   ScAddr const & solutionNode = utils::IteratorUtils::getAnyFromSet(&context, solution);
   EXPECT_FALSE(solutionNode.IsValid());
@@ -375,8 +366,7 @@ TEST_P(InferenceManagerBuilderTest, generateSolutionTree)
   EXPECT_TRUE(result);
 
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
 
   ScAddr const & solutionNode = utils::IteratorUtils::getAnyFromSet(&context, solution);
   EXPECT_TRUE(solutionNode.IsValid());
@@ -410,8 +400,7 @@ TEST_P(InferenceManagerBuilderTest, SingleUnsuccessfulApplyInference)
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermNegArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermNegArc));
 
   ScAddr const & argument = context.SearchElementBySystemIdentifier(ARGUMENT);
   EXPECT_TRUE(argument.IsValid());
@@ -448,8 +437,7 @@ TEST_P(InferenceManagerBuilderTest, SingleSuccessfulApplyInferenceWithMembership
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
 
   ScAddr const & argument = context.SearchElementBySystemIdentifier(ARGUMENT);
   EXPECT_TRUE(argument.IsValid());
@@ -487,8 +475,7 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsGeneratedAndFlagIsGen
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
 
   ScAddr const & targetClass = context.SearchElementBySystemIdentifier(TARGET_NODE_CLASS);
   EXPECT_TRUE(targetClass.IsValid());
@@ -529,8 +516,7 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsGeneratedButFlagIsSea
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
 
   ScAddr const & targetClass = context.SearchElementBySystemIdentifier(TARGET_NODE_CLASS);
   EXPECT_TRUE(targetClass.IsValid());
@@ -570,8 +556,7 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsSearchedAndFlagIsSear
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermNegArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermNegArc));
 
   ScAddr const & targetClass = context.SearchElementBySystemIdentifier(TARGET_NODE_CLASS);
   EXPECT_TRUE(targetClass.IsValid());
@@ -611,8 +596,7 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureDoesNotContainSearchedBecause
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermNegArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermNegArc));
 
   ScIterator3Ptr const & outputStructureIterator =
       context.CreateIterator3(outputStructure, ScType::ConstPermPosArc, ScType::Unknown);
@@ -652,8 +636,7 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsSearchedAndGeneratedA
   ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
 
   ScAddr const & currentClass = context.SearchElementBySystemIdentifier(CURRENT_NODE_CLASS);
   EXPECT_TRUE(currentClass.IsValid());

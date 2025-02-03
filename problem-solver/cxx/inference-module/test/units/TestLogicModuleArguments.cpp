@@ -125,8 +125,7 @@ TEST_F(InferenceLogicTest, EmptyInputStructure)
   ScStructure result = action.GetResult();
   ScAddr solution = utils::IteratorUtils::getAnyFromSet(&context, result);
   EXPECT_TRUE(solution.IsValid());
-  EXPECT_TRUE(
-      context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermNegArc));
+  EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermNegArc));
 
   shutdown(context);
   context.Destroy();
