@@ -53,4 +53,4 @@ Contributions, bug reports and feature requests are welcome! Feel free to check 
 
 ## License
 
-Distributed under the Apache License. Check [LICENSE](LIСENSE) for more information.
+Distributed under the Apache License. Check [LICENSE](LICENSE) for more information.
