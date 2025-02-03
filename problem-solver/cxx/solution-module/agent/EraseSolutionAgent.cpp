@@ -27,7 +27,7 @@ ScResult EraseSolutionAgent::DoProgram(ScActionInitiatedEvent const & event, ScA
   }
   catch (utils::ScException const & exception)
   {
-    SC_AGENT_LOG_ERROR(exception.Message());
+    m_logger.Error(exception.Message());
     return action.FinishWithError();
   }
 }

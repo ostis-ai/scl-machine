@@ -20,16 +20,16 @@ ScResult DirectInferenceAgent::DoProgram(ScActionInitiatedEvent const & event, S
 
   if (!IsSetValidAndNotEmpty(targetStructure))
   {
-    SC_AGENT_LOG_WARNING("Target structure is not valid or empty.");
+    m_logger.Warning("Target structure is not valid or empty.");
   }
   if (!IsSetValidAndNotEmpty(formulasSet))
   {
-    SC_AGENT_LOG_ERROR("Formulas set is not valid or empty.");
+    m_logger.Error("Formulas set is not valid or empty.");
     return action.FinishUnsuccessfully();
   }
   if (!arguments.IsValid())
   {
-    SC_AGENT_LOG_ERROR("Arguments are not valid.");
+    m_logger.Error("Arguments are not valid.");
     return action.FinishUnsuccessfully();
   }
 
@@ -56,7 +56,7 @@ ScResult DirectInferenceAgent::DoProgram(ScActionInitiatedEvent const & event, S
   }
   catch (utils::ScException const & exception)
   {
-    SC_AGENT_LOG_ERROR(exception.Message());
+    m_logger.Error(exception.Message());
     return action.FinishUnsuccessfully();
   }
   ScAddr solutionNode = inferenceManager->getSolutionTreeManager()->generateSolution(outputStructure, targetAchieved);

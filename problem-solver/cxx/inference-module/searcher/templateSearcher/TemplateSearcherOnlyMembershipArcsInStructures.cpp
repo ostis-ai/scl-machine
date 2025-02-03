@@ -18,12 +18,13 @@ TemplateSearcherOnlyMembershipArcsInStructures::TemplateSearcherOnlyMembershipAr
 {
 }
 
-TemplateSearcherOnlyMembershipArcsInStructures::TemplateSearcherOnlyMembershipArcsInStructures(ScMemoryContext * context)
+TemplateSearcherOnlyMembershipArcsInStructures::TemplateSearcherOnlyMembershipArcsInStructures(
+    ScMemoryContext * context)
   : TemplateSearcherOnlyMembershipArcsInStructures(context, {})
 {
 }
 
-map<std::string, std::string> TemplateSearcherOnlyMembershipArcsInStructures::getTemplateLinksContent(
+std::map<std::string, std::string> TemplateSearcherOnlyMembershipArcsInStructures::getTemplateLinksContent(
     ScAddr const & templateAddr)
 {
   // TODO(kilativ-dotcom): need to decide what to return here. Input structures contain only membership arcs so there

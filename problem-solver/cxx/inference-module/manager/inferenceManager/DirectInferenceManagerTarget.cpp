@@ -32,7 +32,8 @@ bool DirectInferenceManagerTarget::applyInference(InferenceParams const & infere
     return false;
   }
 
-  std::vector<ScAddrQueue> formulasQueuesByPriority = createFormulasQueuesListByPriority(inferenceParamsConfig.formulasSet);
+  std::vector<ScAddrQueue> formulasQueuesByPriority =
+      createFormulasQueuesListByPriority(inferenceParamsConfig.formulasSet);
   if (formulasQueuesByPriority.empty())
   {
     SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, "No formulas sets found.");

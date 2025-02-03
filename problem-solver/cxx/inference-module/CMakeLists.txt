@@ -1,6 +1,7 @@
 file(GLOB SOURCES CONFIGURE_DEPENDS
     "*.hpp" "*.cpp"
     "*/*.hpp" "*/*.cpp"
+    "*/*/*.hpp" "*/*/*.cpp"
 )
 
 list(FILTER SOURCES EXCLUDE REGEX ".*/test/.*")
