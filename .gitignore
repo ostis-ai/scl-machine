@@ -3,7 +3,7 @@
 *.scs~
 ostis-web-platform
 bin
-build
+/build
 .cache
 
 __pycache__
