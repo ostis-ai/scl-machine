@@ -19,7 +19,7 @@
 namespace inferenceTest
 {
 ScsLoader loader;
-const std::string TEST_FILES_DIR_PATH = TEMPLATE_SEARCH_MODULE_TEST_SRC_PATH "/testStructures/TemplateSearchModule/";
+const std::string TEST_FILES_DIR_PATH = "/test-structures/template-search-module/";
 const std::string TEST_SEARCH_TEMPLATE_ID = "search_template";
 
 using TemplateSearchManagerTest = ScMemoryTest;

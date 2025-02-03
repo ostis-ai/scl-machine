@@ -16,7 +16,7 @@ using namespace inference;
 namespace formulaClassifierTest
 {
 ScsLoader loader;
-std::string const TEST_FILES_DIR_PATH = TEMPLATE_SEARCH_MODULE_TEST_SRC_PATH "/testStructures/FormulaClassifierModule/";
+std::string const TEST_FILES_DIR_PATH = "../test-structures/formula-classifier-module/";
 
 using FormulaClassifierTest = ScMemoryTest;
 

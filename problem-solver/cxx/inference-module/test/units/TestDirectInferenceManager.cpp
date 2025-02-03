@@ -20,7 +20,7 @@ using namespace inference;
 namespace directInferenceManagerTest
 {
 ScsLoader loader;
-std::string const TEST_FILES_DIR_PATH = TEMPLATE_SEARCH_MODULE_TEST_SRC_PATH "/testStructures/ManagerModule/";
+std::string const TEST_FILES_DIR_PATH = "/test-structures/manager-module/";
 
 std::string const TARGET_TEMPLATE = "target_template";
 std::string const RULES_SET = "rules_set";

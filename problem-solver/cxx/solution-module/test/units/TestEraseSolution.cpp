@@ -14,8 +14,7 @@
 namespace eraseSolutionAgentTest
 {
 ScsLoader loader;
-const std::string ERASE_SOLUTION_MODULE_TEST_FILES_DIR_PATH =
-    SOLUTION_MODULE_TEST_SRC_PATH "/testStructures/eraseSolution/";
+const std::string ERASE_SOLUTION_MODULE_TEST_FILES_DIR_PATH = "/test-structures/erase-solution/";
 const int WAIT_TIME = 5000;
 
 using EraseSolutionAgentTest = ScMemoryTest;

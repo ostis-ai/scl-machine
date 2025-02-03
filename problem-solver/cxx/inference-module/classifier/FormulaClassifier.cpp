@@ -72,8 +72,7 @@ int FormulaClassifier::typeOfFormula(ScMemoryContext * ms_context, ScAddr const 
 
 bool FormulaClassifier::isFormulaWithConst(ScMemoryContext * ms_context, ScAddr const & formula)
 {
-  ScIterator3Ptr constNodesIterator =
-      ms_context->CreateIterator3(formula, ScType::ConstPermPosArc, ScType::ConstNode);
+  ScIterator3Ptr constNodesIterator = ms_context->CreateIterator3(formula, ScType::ConstPermPosArc, ScType::ConstNode);
   if (constNodesIterator->Next())
     return true;
   ScIterator3Ptr constLinksIterator =
@@ -83,12 +82,10 @@ bool FormulaClassifier::isFormulaWithConst(ScMemoryContext * ms_context, ScAddr 
 
 bool FormulaClassifier::isFormulaWithVar(ScMemoryContext * ms_context, ScAddr const & formula)
 {
-  ScIterator3Ptr varNodesIterator =
-      ms_context->CreateIterator3(formula, ScType::ConstPermPosArc, ScType::VarNode);
+  ScIterator3Ptr varNodesIterator = ms_context->CreateIterator3(formula, ScType::ConstPermPosArc, ScType::VarNode);
   if (varNodesIterator->Next())
     return true;
-  ScIterator3Ptr varLinksIterator =
-      ms_context->CreateIterator3(formula, ScType::ConstPermPosArc, ScType::VarNodeLink);
+  ScIterator3Ptr varLinksIterator = ms_context->CreateIterator3(formula, ScType::ConstPermPosArc, ScType::VarNodeLink);
   return varLinksIterator->Next();
 }
 

@@ -41,8 +41,7 @@ bool SolutionTreeGenerator::addNode(
       if (lastSolutionNodeArcIterator->Next())
       {
         ScAddr lastSolutionNodeArc = lastSolutionNodeArcIterator->Get(1);
-        ScAddr newSolutionNodeArc =
-            ms_context->GenerateConnector(ScType::ConstPermPosArc, solution, newSolutionNode);
+        ScAddr newSolutionNodeArc = ms_context->GenerateConnector(ScType::ConstPermPosArc, solution, newSolutionNode);
         GenerationUtils::generateRelationBetween(
             ms_context, lastSolutionNodeArc, newSolutionNodeArc, ScKeynodes::nrel_basic_sequence);
       }

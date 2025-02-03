@@ -20,7 +20,7 @@ namespace inference::inferenceManagerBuilderTest
 {
 ScsLoader loader;
 std::string const TEST_FILES_DIR_PATH =
-    TEMPLATE_SEARCH_MODULE_TEST_SRC_PATH "/testStructures/DirectInferenceManagerAll/";
+    TEMPLATE_SEARCH_MODULE_TEST_SRC_PATH "../test-structures/direct-inference-manager/";
 
 std::string const INPUT_STRUCTURE1 = "input_structure1";
 std::string const INPUT_STRUCTURE2 = "input_structure2";

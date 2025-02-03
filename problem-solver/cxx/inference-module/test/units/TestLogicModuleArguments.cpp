@@ -18,7 +18,7 @@ using namespace inference;
 namespace directInferenceLogicArgumentsTest
 {
 ScsLoader loader;
-const std::string TEST_FILES_DIR_PATH = TEMPLATE_SEARCH_MODULE_TEST_SRC_PATH "/testStructures/LogicModule/";
+const std::string TEST_FILES_DIR_PATH = "../test-structures/logic-module/";
 
 using InferenceLogicTest = ScMemoryTest;
 const int WAIT_TIME = 1500;
