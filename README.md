@@ -7,7 +7,7 @@
 [![Docs](https://img.shields.io/badge/Docs-gray?style=for-the-badge&logo=read-the-docs)](https://ostis-ai.github.io/scl-machine)
 [![Community](https://img.shields.io/badge/-Community-teal?style=for-the-badge&logo=matrix)](https://app.element.io/index.html#/room/#ostis_tech_support:matrix.org)
 
-scl-machine is an inference module designed for the [OSTIS Technology](https://github.com/ostis-ai/ostis-metasystem). scl-machine serves as a crucial inference engine within the OSTIS Technology, leveraging semantic technologies to enhance intelligent systems' capabilities in reasoning and knowledge processing.
+scl-machine is an inference module designed for the [OSTIS Technology](https://github.com/ostis-ai/scl-machine). scl-machine serves as a crucial inference engine within the OSTIS Technology, leveraging semantic technologies to enhance intelligent systems' capabilities in reasoning and knowledge processing.
 
 ## Getting started
 
