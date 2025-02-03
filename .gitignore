@@ -5,6 +5,7 @@ ostis-web-platform
 bin
 /build
 .cache
+/ConanPresets.json
 
 __pycache__
 
