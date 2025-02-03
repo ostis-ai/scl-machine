@@ -16,5 +16,5 @@ Table of contents:
 - **Development** - *guidelines for contributing to development*
     * [Contributing Guide](https://github.com/ostis-ai/scl-machine/blob/main/CONTRIBUTING.md) - *guide for those who wants to make contribution to scl-machine*
     * [Codestyle Guide](https://ostis-ai.github.io/sc-machine/dev/codestyle/) - *guide for those who wants to write code for scl-machine*
-- [License](https://github.com/ostis-ai/scl-machine/blob/main/COPYING.MIT)
+- [License](https://github.com/ostis-ai/scl-machine/blob/main/LICENSE)
 - [Changelog](changelog.md)
