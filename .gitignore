@@ -6,6 +6,7 @@ bin
 /build
 .cache
 /ConanPresets.json
+repo
 
 __pycache__
 
