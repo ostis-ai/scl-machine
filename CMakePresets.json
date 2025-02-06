@@ -46,13 +46,6 @@
       "generators": [
         "TGZ"
       ]
-    },
-    {
-      "name": "release",
-      "configurePreset": "release",
-      "generators": [
-        "TGZ"
-      ]
     }
   ]
 }
