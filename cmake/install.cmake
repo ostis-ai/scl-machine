@@ -52,7 +52,7 @@ install(FILES
 
 set(CPACK_PACKAGE_NAME                  scl-machine)
 set(CPACK_PACKAGE_VENDOR                "OSTIS AI")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY   "Component manager for ostis-systems")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY   "Software implementation of logic inference machine")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY     ${CPACK_PACKAGE_NAME})
 set(CPACK_PACKAGE_VERSION_MAJOR         ${PROJECT_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR         ${PROJECT_VERSION_MINOR})

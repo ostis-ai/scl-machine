@@ -10,7 +10,7 @@ class scl_machineRecipe(ConanFile):
     author = "OSTIS AI"
     license = "https://github.com/ostis-ai/scl-machine/blob/master/LICENSE"
     url = "https://github.com/ostis-ai/scl-machine"
-    description = "Software implementation of semantic memory and its APIs"
+    description = "Software implementation of logic inference machine and its APIs"
     exports = ["LICENSE"]
     exports_sources = "*", "!.venv", "!build", "!.cache", "!kb", "!kb.bin", "!.env", "!ConanPresets.json", "!docs", "!.git"
     settings = "os", "compiler", "build_type", "arch"
