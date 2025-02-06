@@ -4,17 +4,17 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "searcher/templateSearcher/TemplateSearcherGeneral.hpp"
-#include "searcher/templateSearcher/TemplateSearcherOnlyMembershipArcsInStructures.hpp"
-
-#include "utils/ReplacementsUtils.hpp"
-
 #include <algorithm>
 
 #include <sc-memory/test/sc_test.hpp>
 #include <sc-builder/scs_loader.hpp>
 
 #include <sc-agents-common/utils/IteratorUtils.hpp>
+
+#include "searcher/template-searcher/TemplateSearcherGeneral.hpp"
+#include "searcher/template-searcher/TemplateSearcherOnlyMembershipArcsInStructures.hpp"
+
+#include "utils/ReplacementsUtils.hpp"
 
 namespace inferenceTest
 {

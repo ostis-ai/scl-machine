@@ -1,6 +1,6 @@
 #pragma once
 
-#include "inferenceConfig/InferenceConfig.hpp"
+#include "inference/inference_config.hpp"
 
 #include <string>
 

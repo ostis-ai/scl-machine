@@ -6,7 +6,7 @@
 
 #include "classifier/FormulaClassifier.hpp"
 
-#include "keynodes/InferenceKeynodes.hpp"
+#include "inference/inference_keynodes.hpp"
 
 #include <sc-memory/test/sc_test.hpp>
 #include <sc-builder/scs_loader.hpp>

@@ -1,7 +1,28 @@
+install(TARGETS 
+    inference
+    EXPORT scl-machineExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
 install(TARGETS
     inference-module solution-module
     EXPORT privateExport
     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}/extensions"
+)
+
+export(EXPORT scl-machineExport 
+    NAMESPACE scl-machine::  # to simulate a different name and see it works
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/scl-machineTargets.cmake"
+)
+
+install(EXPORT scl-machineExport
+    FILE scl-machineTargets.cmake
+    NAMESPACE scl-machine::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/scl-machine
 )
 
 install(EXPORT privateExport
@@ -17,7 +38,14 @@ write_basic_package_version_file(
     COMPATIBILITY AnyNewerVersion
 )
 
+configure_package_config_file(
+    ${SCL_MACHINE_ROOT}/cmake/scl-machine-config.cmake.in
+    "${CMAKE_CURRENT_BINARY_DIR}/scl-machine-config.cmake"
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/scl-machine
+)
+
 install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/scl-machine-config.cmake"
     "${CMAKE_CURRENT_BINARY_DIR}/scl-machine-config-version.cmake"
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/scl-machine
 )

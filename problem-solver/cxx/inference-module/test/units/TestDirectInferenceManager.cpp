@@ -6,14 +6,13 @@
 
 #include "ConfigGenerators.hpp"
 
-#include "factory/InferenceManagerFactory.hpp"
-
-#include "keynodes/InferenceKeynodes.hpp"
-
 #include <sc-memory/test/sc_test.hpp>
 #include <sc-builder/scs_loader.hpp>
-
 #include <sc-agents-common/utils/IteratorUtils.hpp>
+
+#include <inference/inference_manager_factory.hpp>
+
+#include <inference/inference_keynodes.hpp>
 
 using namespace inference;
 
