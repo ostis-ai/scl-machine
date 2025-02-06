@@ -16,6 +16,10 @@ target_include_directories(inference
     PUBLIC $<INSTALL_INTERFACE:include>
 )
 
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib/include/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
 file(GLOB SOURCES CONFIGURE_DEPENDS
     "module/*.hpp" "module/*.cpp"
     "module/*/*.hpp" "module/*/*.cpp"
