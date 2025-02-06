@@ -11,8 +11,8 @@
 #include "logic/LogicExpressionNode.hpp"
 
 #include "inference/solution_tree_manager_abstract.hpp"
+#include "inference/template_manager_abstract.hpp"
 
-#include "manager/template-manager/TemplateManagerAbstract.hpp"
 #include "searcher/template-searcher/TemplateSearcherAbstract.hpp"
 #include "utils/ReplacementsUtils.hpp"
 

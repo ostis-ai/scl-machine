@@ -10,8 +10,7 @@
 #include <sc-memory/sc_addr.hpp>
 
 #include "inference/inference_manager_abstract.hpp"
-
-#include "manager/template-manager/TemplateManager.hpp"
+#include "inference/template_manager.hpp"
 
 namespace inference
 {

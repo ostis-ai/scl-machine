@@ -4,7 +4,7 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "agent/DirectInferenceAgent.hpp"
+#include <inference/direct_inference_agent.hpp>
 
 #include <sc-memory/test/sc_test.hpp>
 #include <sc-builder/scs_loader.hpp>

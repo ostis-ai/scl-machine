@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "TemplateManagerAbstract.hpp"
+#include "inference/template_manager_abstract.hpp"
 
 #include <vector>
 

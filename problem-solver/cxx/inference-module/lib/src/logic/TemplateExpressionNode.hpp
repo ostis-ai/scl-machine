@@ -9,11 +9,12 @@
 #include <sc-memory/sc_template.hpp>
 
 #include "inference/solution_tree_manager_abstract.hpp"
+#include "inference/template_manager_abstract.hpp"
 
 #include "LogicExpressionNode.hpp"
 
 #include "searcher/template-searcher/TemplateSearcherAbstract.hpp"
-#include "manager/template-manager/TemplateManagerAbstract.hpp"
+
 
 using namespace inference;
 

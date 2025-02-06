@@ -9,13 +9,13 @@
 #include <sc-agents-common/utils/IteratorUtils.hpp>
 
 #include "inference/solution_tree_manager_abstract.hpp"
+#include "inference/template_manager_abstract.hpp"
 
 #include "utils/ContainersUtils.hpp"
 #include "utils/ReplacementsUtils.hpp"
 
 #include "logic/LogicExpressionNode.hpp"
 
-#include "manager/template-manager/TemplateManagerAbstract.hpp"
 #include "searcher/template-searcher/TemplateSearcherAbstract.hpp"
 
 using namespace inference;

@@ -4,7 +4,7 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "TemplateManager.hpp"
+#include "inference/template_manager.hpp"
 
 #include <algorithm>
 

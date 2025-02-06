@@ -4,7 +4,7 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "DirectInferenceAgent.hpp"
+#include "inference/direct_inference_agent.hpp"
 
 #include <inference/inference_manager_abstract.hpp>
 #include <inference/inference_manager_factory.hpp>

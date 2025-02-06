@@ -13,9 +13,9 @@
 #include <sc-agents-common/utils/CommonUtils.hpp>
 
 #include "inference/inference_keynodes.hpp"
+#include "inference/template_manager.hpp"
 
 #include "manager/solution-tree-manager/SolutionTreeManager.hpp"
-#include "manager/template-manager/TemplateManager.hpp"
 
 #include "searcher/template-searcher/TemplateSearcherAbstract.hpp"
 
