@@ -9,7 +9,7 @@
 #include <memory>
 #include <algorithm>
 
-#include "sc-agents-common/utils/CommonUtils.hpp"
+#include <sc-agents-common/utils/CommonUtils.hpp>
 
 #include "inference/inference_keynodes.hpp"
 

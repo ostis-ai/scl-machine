@@ -6,11 +6,11 @@
 
 #pragma once
 
-#include "inference/template_manager_abstract.hpp"
-
 #include <vector>
 
-#include "sc-memory/sc_memory.hpp"
+#include <sc-memory/sc_memory.hpp>
+
+#include "inference/template_manager_abstract.hpp"
 
 namespace inference
 {

@@ -8,7 +8,8 @@
 
 #include <vector>
 
-#include "sc-memory/sc_memory.hpp"
+#include <sc-memory/sc_memory.hpp>
+
 #include "inference/inference_config.hpp"
 
 namespace inference
