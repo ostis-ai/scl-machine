@@ -11,6 +11,7 @@ extra_javascript:
 nav:
   - Home: index.md
   - Quick Start: quick_start.md
+  - Problem Solver: main.pdf
   - Build Instructions:
       - Quick Start for Contributors: build/quick_start.md
       - Build System: build/build_system.md

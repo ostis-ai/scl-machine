@@ -9,6 +9,7 @@ scl-machine is a software package that provides logical reasoning and inference 
 Table of contents:
 
 - [Quick Start](quick_start.md) - *get up and running with scl-machine quickly*
+- [Problem Solver](main.pdf) - *description of agents in scl-machine*
 - **Build Instructions** - *guidelines for building the project, configuring settings*
     * [Quick Start for Contributors](build/quick_start.md) - *get up and start developing scl-machine quickly*
     * [Build System](build/build_system.md) - *how to build the project and use it as a library*
