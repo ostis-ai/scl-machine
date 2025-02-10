@@ -73,6 +73,7 @@ jobs:
         run: |
           conan profile detect
           conan remote add ostis-ai https://conan.ostis.net/artifactory/api/conan/ostis-ai-sc-machine/
+          conan remote login ostis-ai ${{ secrets.CONAN_USERNAME }} -p ${{ secrets.CONAN_API_KEY }}
 
       - name: Install sc-machine
         run: conan install . --build=missing
@@ -82,6 +83,14 @@ jobs:
         run: |
           cmake --preset release-conan
           cmake --build --preset release
+
+      - name: Create Conan package
+        run: |
+          conan export-pkg .
+    
+      - name: Upload to Conan remote
+        run: |
+          conan upload scl-machine/${{ github.ref_name }} -r ostis-ai
 
       - name: Create archive
         run: |
