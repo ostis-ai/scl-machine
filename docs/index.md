@@ -15,7 +15,7 @@ Table of contents:
     * [Build System](build/build_system.md) - *how to build the project and use it as a library*
     * [CMake Flags](build/cmake_flags.md) - *description of CMake flags used to configure scl-machine*
 - **Development** - *guidelines for contributing to development*
-    * [Contributing Guide](https://github.com/ostis-ai/scl-machine/blob/main/CONTRIBUTING.md) - *guide for those who wants to make contribution to scl-machine*
+    * [Contributing Guide](CONTRIBUTING.md) - *guide for those who wants to make contribution to scl-machine*
     * [Codestyle Guide](https://ostis-ai.github.io/sc-machine/dev/codestyle/) - *guide for those who wants to write code for scl-machine*
 - [License](https://github.com/ostis-ai/scl-machine/blob/main/LICENSE)
 - [Changelog](changelog.md)
