@@ -77,4 +77,3 @@ jobs:
       - name: Run scl-machine tests
         id: run_tests
         run: cd build/Release && ctest -V
-      
