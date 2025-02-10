@@ -36,8 +36,8 @@ if(${SC_CLANG_FORMAT_CODE})
 endif()
 
 if(${WIN32})
-    message(SEND_ERROR "scl-machine isn't supported on Windows OS.")
-endif(${WIN32})
+    message(FATAL_ERROR "scl-machine isn't supported on Windows OS.")
+endif()
 
 if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcolor-diagnostics")
