@@ -67,4 +67,4 @@ cmake --preset release-with-tests-conan
 cmake --build --preset release
 ```
 
-We also define `INSTALL` instructions in our CMake. This routine can be launched by appending `--target install` to the `cmake --build --preset <preset>` folder. The result of this command will reside in `build/<Release|Debug>/install` (our default install folder). Install folder is basically a pack of portable executable files and shared libraries required to get scl-machine up and running, this command is intended to create clutter-free archives/folders with our code which you can then use in your own projects.
+We also define `INSTALL` instructions in our CMake. This routine can be launched by appending `--target install` to the `cmake --build --preset <preset>` command. The result of this command will reside in `build/<Release|Debug>/install` (our default install folder). Install folder is basically a pack of portable executable files and shared libraries required to get scl-machine up and running, this command is intended to create clutter-free archives/folders with our code which you can then use in your own projects.

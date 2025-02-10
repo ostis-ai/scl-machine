@@ -16,9 +16,8 @@
 3. Then specify the folder path to `lib/extensions` from extracted scl-machine folder when running the sc-machine binary:
    
     ```sh
-    ./path/to/sc-machine/binary -s path/to/kb.bin \
-        -e "path/to/extracted/scl-machine/lib/extensions;path/to/sc-machine/lib/extensions" \
-        -c path/to/scl-machine.ini
+    ./path/to/extracted/sc-machine/binary -s path/to/kb.bin \
+        -e "path/to/extracted/scl-machine/lib/extensions;path/to/extracted/sc-machine/lib/extensions"
     # if several paths to extensions are provided then they should be separated 
     # by semicolon and wrapped in double quotes
     ```

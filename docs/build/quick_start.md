@@ -66,7 +66,8 @@ cmake --preset debug-conan
 cmake --build --preset debug
 ```
 
-Note: By default, configure preset `debug` enables building scl-machine tests.
+!!! Note
+    By default, configure preset `debug` enables building scl-machine tests.
 
 #### Run scl-machine tests in Debug
 
