@@ -43,33 +43,36 @@ Message text should start from an upper case letter. If commit doesn't fix or im
 
 Examples:
 <pre>
-[solver] Implement DirectInferenceAgent
-[docs] Add docs for DirectInferenceAgent
+[doc] Add documentation for direct inference agent
+[dia][test] Add unit tests
 </pre>
 
 Possible tags:
 
-  * `[kb]` - changes in `knowledge-base` folder;
-  * `[solver]` - changes in `problem-solver` folder;
-  * `[tests]` or `[test]` - changes in tests;
-  * `[config]` - commits with changes in configuration;
+  * `[dia]` - changes in direct inference agent;
+  * `[expr]` - changes in logical expressions (proposition connectives);
+  * `[template]` - changes in template manager;
+  * `[solution]` - changes in solution processing;
+  * `[replacements]` - changes in replacements processing;
+  * `[test]` - changes in tests;
   * `[review]` - commits with review fixes;
   * `[refactor]` - commits with some code refactoring;
   * `[changelog]` - use when you update changelog;
-  * `[docs]` or `[doc]` - use when you update documentation;
-  * `[build]` - updates in build system;
-  * `[cmake]` - updates in cmake files;
-  * `[scripts]` - updates in the `scl-machine/scripts` files;
+  * `[doc]` - use when you update documentation;
+  * `[docker]` - changes in Dockerfile, .dockerignore or Docker image build pipeline
+  * `[scripts]` - updates in the `scl-machine/scripts` files
   * `[ci]` - changes in `ci` configuration or scripts;
-  * `[git]` - changes in `git` configuration.
+  * `[git]` - changes in `git` configuration;
+  * `[cmake]` - changes in `cmake` build system;
+  * `[kb]` - changes in knowledge base.
 
 Each commit in Pull Request should be an atomic. In other words, it should implement or fix one feature. For example:
 
 <pre>
 Last commit
 ...
-[tests] Test DirectInferenceAgent
-[changelog] Add info about DirectInferenceAgent
+[refactor][dia] Format dia according to clang format
+[ci] Add clang format file
 ...
 Init commit
 </pre>
