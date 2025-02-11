@@ -4,7 +4,7 @@ Welcome to the [scl-machine](https://github.com/ostis-ai/scl-machine) documentat
 
 ## What is scl-machine?  
 
-scl-machine is a software package that provides logical reasoning and inference capabilities for systems designed with [OSTIS Technology](https://github.com/ostis-ai). It enables intelligent systems to process and reason about knowledge represented in SC-code and SCL (Semantic Computer Logic).
+scl-machine is a software package that provides logical reasoning and inference capabilities for systems designed with [OSTIS Technology](https://github.com/ostis-ai). It enables intelligent systems to process and reason about knowledge represented in SC-code and SCL (Semantic Code Logic).
 
 Table of contents:
 
