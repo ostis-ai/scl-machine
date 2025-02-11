@@ -49,21 +49,23 @@ Examples:
 
 Possible tags:
 
+  * `[solver]` - changes in `problem-solver` folder;
   * `[dia]` - changes in direct inference agent;
   * `[expr]` - changes in logical expressions (proposition connectives);
   * `[template]` - changes in template manager;
   * `[solution]` - changes in solution processing;
   * `[replacements]` - changes in replacements processing;
-  * `[test]` - changes in tests;
+  * `[tests]` or `[test]` - changes in tests;
   * `[review]` - commits with review fixes;
   * `[refactor]` - commits with some code refactoring;
   * `[changelog]` - use when you update changelog;
-  * `[doc]` - use when you update documentation;
-  * `[docker]` - changes in Dockerfile, .dockerignore or Docker image build pipeline
-  * `[scripts]` - updates in the `scl-machine/scripts` files
+  * `[docs]` or `[doc]` - use when you update documentation;
+  * `[config]` - commits with changes in configuration;
   * `[ci]` - changes in `ci` configuration or scripts;
   * `[git]` - changes in `git` configuration;
-  * `[cmake]` - changes in `cmake` build system;
+  * `[cmake]` - changes in cmake files;
+  * `[build]` - updates in build system;
+  * `[scripts]` - updates in the `scl-machine/scripts` files;
   * `[kb]` - changes in knowledge base.
 
 Each commit in Pull Request should be an atomic. In other words, it should implement or fix one feature. For example:
