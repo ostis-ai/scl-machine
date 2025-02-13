@@ -1,7 +1,7 @@
 # Quick Start
 
 !!! note
-    The sc-machine can't be used on Windows.
+    The scl-machine can't be used on Windows.
 
 ## Use scl-machine as an extension to sc-machine
 
