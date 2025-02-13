@@ -73,6 +73,14 @@ You can use Conan to install scl-machine. To integrate scl-machine into your pro
     find_package(scl-machine REQUIRED)
     ```
 
-8. Go to [problem solver documentation](main.pdf) to learn how to use scl-machine agents.
+8. Link `scl-machine::inference` target to your target:
+
+    ```cmake
+    target_link_libraries(my-module
+        LINK_PUBLIC scl-machine::inference
+    )
+    ```
+
+9.  Go to [problem solver documentation](main.pdf) to learn how to use scl-machine agents.
 
 In case you want to make changes to the project sources, please refer to the [build system docs](build/build_system.md).
