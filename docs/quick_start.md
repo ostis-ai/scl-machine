@@ -58,7 +58,7 @@ You can use Conan to install scl-machine. To integrate scl-machine into your pro
 5. Add the OSTIS-AI remote Conan repository:
 
     ```sh
-    conan remote add ostis-ai https://conan.ostis.net/artifactory/api/conan/ostis-ai-sc-machine
+    conan remote add ostis-ai https://conan.ostis.net/artifactory/api/conan/ostis-ai-library
     ```
 
 6. Install scl-machine and its dependencies:
