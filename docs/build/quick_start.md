@@ -2,6 +2,16 @@
 
 This guide provides short information for developers to start to work with scl-machine quickly. You can always learn more about the scl-machine's [build system](build_system.md).
 
+## Install project
+
+Install scl-machine via git:
+
+```sh
+git clone https://github.com/ostis-ai/scl-machine
+cd scl-machine
+git submodule update --init --recursive
+```
+
 ## Check CMake
 
 Install pipx first using [**pipx installation guide**](https://pipx.pypa.io/stable/installation/) if not already installed.
@@ -44,6 +54,14 @@ pipx install conan
 pipx ensurepath
 # relaunch your shell after installation
 exec $SHELL
+```
+
+### Add Conan remote repository
+
+Add Conan remote repository with the specified URL:
+
+```sh
+conan remote add ostis-ai https://conan.ostis.net/artifactory/api/conan/ostis-ai-library
 ```
 
 ### Use scl-machine in Debug
