@@ -8,11 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Breaking changes
 - Direct inference agent's subscription element is changed to `action_initiated`
+- Build system is changed to build system used by sc-machine 0.10.0
+- The names of the public methods were consistent with the names of the sc-machine methods
 
 ### Fixed
 - Deprecated sc-types are no longer in use
 
 ### Changed
+- Upgrade build system to build system used by sc-machine 0.10.0
 - TemplateSearcherOnlyAccessEdgesInStructures is renamed to TemplateSearcherOnlyMembershipArcsInStructures
 
 ### Removed
