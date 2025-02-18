@@ -8,7 +8,7 @@ rrel_main_key_sc_element
   <- sc_node_role_relation;;
 
 nrel_implication
-  <- sc_node_norole_relation;;
+  <- sc_node_non_role_relation;;
 
 test_direct_inference_target = [*
 	@pair28 = (current_node_class _-> _x);;

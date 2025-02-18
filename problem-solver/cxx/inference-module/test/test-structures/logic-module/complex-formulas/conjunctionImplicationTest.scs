@@ -4,7 +4,7 @@ sc_node_class
 	-> class_1;
 	-> current_class;;
 
-sc_node_norole_relation
+sc_node_non_role_relation
 	-> nrel_implication;
 	-> nrel_disjunction;;
 

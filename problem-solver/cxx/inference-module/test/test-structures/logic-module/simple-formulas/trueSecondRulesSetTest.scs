@@ -13,7 +13,7 @@ sc_node_role_relation
 	-> rrel_main_key_sc_element;;
 
 nrel_implication
-  <- sc_node_norole_relation;;
+  <- sc_node_non_role_relation;;
 
 target_template = [*
 	target_node_class _-> _arg;;

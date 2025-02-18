@@ -5,7 +5,7 @@ sc_node_role_relation
     -> rrel_1;
     -> rrel_main_key_sc_element;;
 
-sc_node_norole_relation
+sc_node_non_role_relation
     -> nrel_inclusion;
     -> nrel_implication;
     -> nrel_subset;;
@@ -18,7 +18,7 @@ if = [*
 
 @arc_from_subset = (nrel_subset _-> @common_arc);;
 then
-    <- sc_node_struct;
+    <- sc_node_structure;
     -> _source;
     -> _target;
     -> @common_arc;

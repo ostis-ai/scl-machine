@@ -5,7 +5,7 @@ sc_node_class
     -> class_2;
     -> class_1;;
 
-sc_node_norole_relation
+sc_node_non_role_relation
     -> nrel_basic_sequence;
     -> nrel_implication;;
 
