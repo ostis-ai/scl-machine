@@ -48,18 +48,18 @@ ScResult DirectInferenceAgent::DoProgram(ScActionInitiatedEvent const & event, S
   InferenceParams const & inferenceParams{
       formulasSet, argumentVector, inputStructures, outputStructure, targetStructure};
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
-      InferenceManagerFactory::constructDirectInferenceManagerTarget(&m_context, inferenceConfig);
+      InferenceManagerFactory::ConstructDirectInferenceManagerTarget(&m_context, inferenceConfig);
   bool targetAchieved;
   try
   {
-    targetAchieved = inferenceManager->applyInference(inferenceParams);
+    targetAchieved = inferenceManager->ApplyInference(inferenceParams);
   }
   catch (utils::ScException const & exception)
   {
     m_logger.Error(exception.Message());
     return action.FinishUnsuccessfully();
   }
-  ScAddr solutionNode = inferenceManager->getSolutionTreeManager()->generateSolution(outputStructure, targetAchieved);
+  ScAddr solutionNode = inferenceManager->GetSolutionTreeManager()->GenerateSolution(outputStructure, targetAchieved);
 
   action.FormResult(solutionNode);
   return action.FinishSuccessfully();

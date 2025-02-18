@@ -15,7 +15,7 @@ TemplateManagerFixedArguments::TemplateManagerFixedArguments(ScMemoryContext * c
 {
 }
 
-std::vector<ScTemplateParams> TemplateManagerFixedArguments::createTemplateParams(ScAddr const & scTemplate)
+std::vector<ScTemplateParams> TemplateManagerFixedArguments::CreateTemplateParams(ScAddr const & scTemplate)
 {
   std::vector<ScTemplateParams> templateParamsVector;
   size_t const size = std::min(arguments.size(), fixedArguments.size());

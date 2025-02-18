@@ -17,7 +17,7 @@ SolutionTreeManager::SolutionTreeManager(ScMemoryContext * context)
 {
 }
 
-bool SolutionTreeManager::addNode(ScAddr const & formula, Replacements const & replacements)
+bool SolutionTreeManager::AddNode(ScAddr const & formula, Replacements const & replacements)
 {
   std::vector<ScTemplateParams> templateParamsVector;
   ReplacementsUtils::GetReplacementsToScTemplateParams(replacements, templateParamsVector);
@@ -25,7 +25,7 @@ bool SolutionTreeManager::addNode(ScAddr const & formula, Replacements const & r
   ReplacementsUtils::GetKeySet(replacements, variables);
   bool result = true;
   for (ScTemplateParams const & templateParams : templateParamsVector)
-    result &= solutionTreeGenerator->addNode(formula, templateParams, variables);
+    result &= solutionTreeGenerator->AddNode(formula, templateParams, variables);
   return result;
 }
 

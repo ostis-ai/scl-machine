@@ -13,11 +13,11 @@ namespace inference
 class InferenceManagerFactory
 {
 public:
-  static std::unique_ptr<InferenceManagerAbstract> constructDirectInferenceManagerAll(
+  static std::unique_ptr<InferenceManagerAbstract> ConstructDirectInferenceManagerAll(
       ScMemoryContext * context,
       InferenceConfig const & inferenceFlowConfig);
 
-  static std::unique_ptr<InferenceManagerAbstract> constructDirectInferenceManagerTarget(
+  static std::unique_ptr<InferenceManagerAbstract> ConstructDirectInferenceManagerTarget(
       ScMemoryContext * context,
       InferenceConfig const & inferenceFlowConfig);
 };

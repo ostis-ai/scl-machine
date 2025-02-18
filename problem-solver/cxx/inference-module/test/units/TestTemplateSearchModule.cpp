@@ -267,7 +267,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutMembershipArcsTest)
   // input structures are empty because search template does not have membership arcs
   templateSearcher->setInputStructures({});
   templateSearcher->setOutputStructureFillingType(inference::SEARCHED_AND_GENERATED);
-  templateSearcher->setReplacementsUsingType(inference::REPLACEMENTS_ALL);
+  templateSearcher->SetReplacementsUsingType(inference::REPLACEMENTS_ALL);
   inference::Replacements searchResults;
   templateSearcher->searchTemplate(
       searchTemplateAddr,

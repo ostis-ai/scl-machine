@@ -19,7 +19,7 @@ TemplateManager::TemplateManager(ScMemoryContext * ms_context)
  * For all classes of the all template variables create map <varName, arguments>
  * Where arguments are elements from argumentList, and each argument class is the same as variable varName class
  */
-std::vector<ScTemplateParams> TemplateManager::createTemplateParams(ScAddr const & scTemplate)
+std::vector<ScTemplateParams> TemplateManager::CreateTemplateParams(ScAddr const & scTemplate)
 {
   std::map<ScAddr, std::set<ScAddr, ScAddrLessFunc>, ScAddrLessFunc> replacementsMultimap;
   std::vector<ScTemplateParams> templateParamsVector;

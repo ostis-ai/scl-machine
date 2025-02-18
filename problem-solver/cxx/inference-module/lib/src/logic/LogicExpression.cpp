@@ -117,9 +117,9 @@ OperatorLogicExpressionNode::OperandsVector LogicExpression::resolveOperandsForI
 std::shared_ptr<LogicExpressionNode> LogicExpression::buildAtomicFormula(ScAddr const & formula)
 {
   SC_LOG_DEBUG(context->GetElementSystemIdentifier(formula) << " is atomic logical formula");
-  if (!templateManager->getArguments().empty())
+  if (!templateManager->GetArguments().empty())
   {
-    std::vector<ScTemplateParams> params = templateManager->createTemplateParams(formula);
+    std::vector<ScTemplateParams> params = templateManager->CreateTemplateParams(formula);
     if (!params.empty() && paramsSet.empty())
     {
       paramsSet = std::move(params);

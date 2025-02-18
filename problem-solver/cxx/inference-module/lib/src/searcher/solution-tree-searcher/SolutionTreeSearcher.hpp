@@ -11,7 +11,7 @@ class SolutionTreeSearcher
 public:
   explicit SolutionTreeSearcher(ScMemoryContext * context);
 
-  bool checkIfSolutionNodeExists(
+  bool CheckIfSolutionNodeExists(
       ScAddr const & formula,
       ScTemplateParams const & templateParams,
       ScAddrUnorderedSet const & variables);

@@ -19,6 +19,6 @@ class TemplateManager : public TemplateManagerAbstract
 public:
   explicit TemplateManager(ScMemoryContext * ms_context);
 
-  std::vector<ScTemplateParams> createTemplateParams(ScAddr const & scTemplate) override;
+  std::vector<ScTemplateParams> CreateTemplateParams(ScAddr const & scTemplate) override;
 };
 }  // namespace inference

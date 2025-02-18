@@ -8,7 +8,7 @@ SolutionTreeSearcher::SolutionTreeSearcher(ScMemoryContext * context)
 {
 }
 
-bool SolutionTreeSearcher::checkIfSolutionNodeExists(
+bool SolutionTreeSearcher::CheckIfSolutionNodeExists(
     ScAddr const & rule,
     ScTemplateParams const & templateParams,
     ScAddrUnorderedSet const & variables)

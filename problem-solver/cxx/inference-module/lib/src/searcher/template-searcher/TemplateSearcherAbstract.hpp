@@ -53,7 +53,7 @@ public:
 
   ScAddrUnorderedSet getInputStructures() const;
 
-  void setReplacementsUsingType(ReplacementsUsingType const otherReplacementsUsingType)
+  void SetReplacementsUsingType(ReplacementsUsingType const otherReplacementsUsingType)
   {
     replacementsUsingType = otherReplacementsUsingType;
   }
@@ -69,7 +69,7 @@ public:
     atomicLogicalFormulaSearchBeforeGenerationType = otherAtomicLogicalFormulaSearchBeforeGenerationType;
   }
 
-  ReplacementsUsingType getReplacementsUsingType() const
+  ReplacementsUsingType GetReplacementsUsingType() const
   {
     return replacementsUsingType;
   }

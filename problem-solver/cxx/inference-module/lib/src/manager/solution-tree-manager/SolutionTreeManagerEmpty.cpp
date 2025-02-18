@@ -13,7 +13,7 @@ SolutionTreeManagerEmpty::SolutionTreeManagerEmpty(ScMemoryContext * context)
 {
 }
 
-bool SolutionTreeManagerEmpty::addNode(ScAddr const & formula, Replacements const & replacements)
+bool SolutionTreeManagerEmpty::AddNode(ScAddr const & formula, Replacements const & replacements)
 {
   return true;
 }

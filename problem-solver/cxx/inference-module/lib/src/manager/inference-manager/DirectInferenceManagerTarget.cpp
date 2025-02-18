@@ -25,13 +25,13 @@ DirectInferenceManagerTarget::DirectInferenceManagerTarget(ScMemoryContext * con
 {
 }
 
-bool DirectInferenceManagerTarget::applyInference(InferenceParams const & inferenceParamsConfig)
+bool DirectInferenceManagerTarget::ApplyInference(InferenceParams const & inferenceParamsConfig)
 {
-  templateManager->setArguments(inferenceParamsConfig.arguments);
+  templateManager->SetArguments(inferenceParamsConfig.arguments);
   templateSearcher->setInputStructures(inferenceParamsConfig.inputStructures);
   setTargetStructure(inferenceParamsConfig.targetStructure);
 
-  std::vector<ScTemplateParams> const templateParamsVector = templateManager->createTemplateParams(targetStructure);
+  std::vector<ScTemplateParams> const templateParamsVector = templateManager->CreateTemplateParams(targetStructure);
   bool targetAchieved = isTargetAchieved(templateParamsVector);
   if (targetAchieved)
   {
@@ -40,7 +40,7 @@ bool DirectInferenceManagerTarget::applyInference(InferenceParams const & infere
   }
 
   std::vector<ScAddrQueue> formulasQueuesByPriority =
-      createFormulasQueuesListByPriority(inferenceParamsConfig.formulasSet);
+      CreateFormulasQueuesListByPriority(inferenceParamsConfig.formulasSet);
   if (formulasQueuesByPriority.empty())
   {
     SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, "No formulas sets found.");
@@ -66,11 +66,11 @@ bool DirectInferenceManagerTarget::applyInference(InferenceParams const & infere
     {
       formula = uncheckedFormulas.front();
       SC_LOG_DEBUG("Trying to generate by formula: " << context->GetElementSystemIdentifier(formula));
-      formulaResult = useFormula(formula, inferenceParamsConfig.outputStructure);
+      formulaResult = UseFormula(formula, inferenceParamsConfig.outputStructure);
       SC_LOG_DEBUG("Logical formula is " << (formulaResult.isGenerated ? "generated" : "not generated"));
       if (formulaResult.isGenerated)
       {
-        solutionTreeManager->addNode(formula, formulaResult.replacements);
+        solutionTreeManager->AddNode(formula, formulaResult.replacements);
         // We need to check target with result generated replacements, not with input
         std::vector<ScTemplateParams> paramsVector;
         ReplacementsUtils::GetReplacementsToScTemplateParams(formulaResult.replacements, paramsVector);

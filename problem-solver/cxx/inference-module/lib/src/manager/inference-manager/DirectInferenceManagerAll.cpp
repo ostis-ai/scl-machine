@@ -23,15 +23,15 @@ DirectInferenceManagerAll::DirectInferenceManagerAll(ScMemoryContext * context)
 {
 }
 
-bool DirectInferenceManagerAll::applyInference(InferenceParams const & inferenceParamsConfig)
+bool DirectInferenceManagerAll::ApplyInference(InferenceParams const & inferenceParamsConfig)
 {
   bool result = false;
 
-  templateManager->setArguments(inferenceParamsConfig.arguments);
+  templateManager->SetArguments(inferenceParamsConfig.arguments);
   templateSearcher->setInputStructures(inferenceParamsConfig.inputStructures);
 
   std::vector<ScAddrQueue> formulasQueuesByPriority =
-      createFormulasQueuesListByPriority(inferenceParamsConfig.formulasSet);
+      CreateFormulasQueuesListByPriority(inferenceParamsConfig.formulasSet);
   if (formulasQueuesByPriority.empty())
   {
     SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, "No formulas sets found.");
@@ -49,12 +49,12 @@ bool DirectInferenceManagerAll::applyInference(InferenceParams const & inference
     {
       formula = uncheckedFormulas.front();
       SC_LOG_DEBUG("Trying to generate by formula: " << context->GetElementSystemIdentifier(formula));
-      formulaResult = useFormula(formula, inferenceParamsConfig.outputStructure);
+      formulaResult = UseFormula(formula, inferenceParamsConfig.outputStructure);
       SC_LOG_DEBUG("Logical formula is " << (formulaResult.isGenerated ? "generated" : "not generated"));
       if (formulaResult.isGenerated)
       {
         result = true;
-        solutionTreeManager->addNode(formula, formulaResult.replacements);
+        solutionTreeManager->AddNode(formula, formulaResult.replacements);
       }
 
       uncheckedFormulas.pop();

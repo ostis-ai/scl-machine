@@ -27,7 +27,7 @@ TemplateExpressionNode::TemplateExpressionNode(
   , formula(formula)
 {
   this->templateSearcherGeneral = std::make_unique<TemplateSearcherGeneral>(context);
-  this->templateSearcherGeneral->setReplacementsUsingType(this->templateSearcher->getReplacementsUsingType());
+  this->templateSearcherGeneral->SetReplacementsUsingType(this->templateSearcher->GetReplacementsUsingType());
   this->templateSearcherGeneral->setOutputStructureFillingType(this->templateSearcher->getOutputStructureFillingType());
 }
 
@@ -47,7 +47,7 @@ void TemplateExpressionNode::compute(LogicFormulaResult & result) const
   // Template params should be created only if argument vector is not empty. Else search with any possible replacements
   if (!argumentVector.empty())
   {
-    std::vector<ScTemplateParams> const & templateParamsVector = templateManager->createTemplateParams(formula);
+    std::vector<ScTemplateParams> const & templateParamsVector = templateManager->CreateTemplateParams(formula);
     templateSearcher->searchTemplate(formula, templateParamsVector, variables, result.replacements);
   }
   else
@@ -104,7 +104,7 @@ void TemplateExpressionNode::generate(Replacements & replacements, LogicFormulaR
   size_t count = 0;
   Replacements searchResult;
   Replacements generatedReplacements;
-  if (templateManager->getGenerationType() == GENERATE_UNIQUE_FORMULAS)
+  if (templateManager->GetGenerationType() == GENERATE_UNIQUE_FORMULAS)
   {
     // replacementsNotInKb stores all replacements from passed to TemplateExpressionNode::generate parameter that don't
     // have corresponding columns in existingFormulaReplacements
@@ -168,12 +168,12 @@ void TemplateExpressionNode::processTemplateParams(
 {
   for (ScTemplateParams const & params : paramsVector)
   {
-    if (templateManager->getReplacementsUsingType() == REPLACEMENTS_FIRST && result.isGenerated)
+    if (templateManager->GetReplacementsUsingType() == REPLACEMENTS_FIRST && result.isGenerated)
       return;
     size_t const previousSearchSize = ReplacementsUtils::GetColumnsAmount(searchResult);
-    if (templateManager->getGenerationType() == GENERATE_UNIQUE_FORMULAS)
+    if (templateManager->GetGenerationType() == GENERATE_UNIQUE_FORMULAS)
       templateSearcherGeneral->searchTemplate(formula, params, formulaVariables, searchResult);
-    if (templateManager->getGenerationType() != GENERATE_UNIQUE_FORMULAS ||
+    if (templateManager->GetGenerationType() != GENERATE_UNIQUE_FORMULAS ||
         ReplacementsUtils::GetColumnsAmount(searchResult) == previousSearchSize)
       generateByParams(params, formulaVariables, generatedReplacements, result, count);
   }
@@ -213,7 +213,7 @@ void TemplateExpressionNode::fillOutputStructure(
     Replacements const & resultWithoutReplacements,
     Replacements const & searchResult)
 {
-  if (outputStructure.IsValid() && templateManager->getFillingType() == SEARCHED_AND_GENERATED)
+  if (outputStructure.IsValid() && templateManager->GetFillingType() == SEARCHED_AND_GENERATED)
   {
     if (ReplacementsUtils::GetColumnsAmount(resultWithoutReplacements) > 0)
     {

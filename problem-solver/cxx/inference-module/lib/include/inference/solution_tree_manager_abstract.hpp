@@ -26,11 +26,11 @@ public:
 
   virtual ~SolutionTreeManagerAbstract();
 
-  virtual bool addNode(ScAddr const & formula, Replacements const & replacements) = 0;
+  virtual bool AddNode(ScAddr const & formula, Replacements const & replacements) = 0;
 
-  ScAddr generateSolution(ScAddr const & outputStructure, bool targetAchieved);
+  ScAddr GenerateSolution(ScAddr const & outputStructure, bool targetAchieved);
 
-  bool checkIfSolutionNodeExists(
+  bool CheckIfSolutionNodeExists(
       ScAddr const & formula,
       ScTemplateParams const & templateParams,
       ScAddrUnorderedSet const & variables);

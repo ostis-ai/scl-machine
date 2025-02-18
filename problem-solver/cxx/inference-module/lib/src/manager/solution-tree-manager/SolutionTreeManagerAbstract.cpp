@@ -19,16 +19,16 @@ SolutionTreeManagerAbstract::SolutionTreeManagerAbstract(ScMemoryContext * conte
 
 SolutionTreeManagerAbstract::~SolutionTreeManagerAbstract() = default;
 
-ScAddr SolutionTreeManagerAbstract::generateSolution(ScAddr const & outputStructure, bool targetAchieved)
+ScAddr SolutionTreeManagerAbstract::GenerateSolution(ScAddr const & outputStructure, bool targetAchieved)
 {
-  return solutionTreeGenerator->generateSolution(outputStructure, targetAchieved);
+  return solutionTreeGenerator->GenerateSolution(outputStructure, targetAchieved);
 }
 
-bool SolutionTreeManagerAbstract::checkIfSolutionNodeExists(
+bool SolutionTreeManagerAbstract::CheckIfSolutionNodeExists(
     ScAddr const & formula,
     ScTemplateParams const & templateParams,
     ScAddrUnorderedSet const & variables)
 {
-  return solutionTreeSearcher->checkIfSolutionNodeExists(formula, templateParams, variables);
+  return solutionTreeSearcher->CheckIfSolutionNodeExists(formula, templateParams, variables);
 }
 }  // namespace inference

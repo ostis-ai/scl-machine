@@ -27,11 +27,11 @@ public:
 
   virtual ~InferenceManagerAbstract();
 
-  void setTemplateSearcher(std::shared_ptr<TemplateSearcherAbstract> searcher);
-  void setTemplateManager(std::shared_ptr<TemplateManagerAbstract> manager);
-  void setSolutionTreeManager(std::shared_ptr<SolutionTreeManagerAbstract> manager);
+  void SetTemplateSearcher(std::shared_ptr<TemplateSearcherAbstract> searcher);
+  void SetTemplateManager(std::shared_ptr<TemplateManagerAbstract> manager);
+  void SetSolutionTreeManager(std::shared_ptr<SolutionTreeManagerAbstract> manager);
 
-  std::shared_ptr<SolutionTreeManagerAbstract> getSolutionTreeManager();
+  std::shared_ptr<SolutionTreeManagerAbstract> GetSolutionTreeManager();
 
   /**
    * @brief Iterate over formulas set and use formulas to generate knowledge
@@ -40,19 +40,19 @@ public:
    * @returns true if something was generated (any rule was applied), otherwise return false
    * @throws utils::ExceptionItemNotFound Thrown if `formulasSet` is an empty set
    */
-  virtual bool applyInference(InferenceParams const & inferenceParamsConfig) = 0;
+  virtual bool ApplyInference(InferenceParams const & inferenceParamsConfig) = 0;
 
   // TODO: Need to implement common logic of inference rules (e.g. modus ponens)
-  LogicFormulaResult useFormula(ScAddr const & formula, ScAddr const & outputStructure);
+  LogicFormulaResult UseFormula(ScAddr const & formula, ScAddr const & outputStructure);
 
-  void fillFormulaFixedArgumentsIdentifiers(ScAddr const & formula, ScAddr const & firstFixedArgument) const;
+  void FillFormulaFixedArgumentsIdentifiers(ScAddr const & formula, ScAddr const & firstFixedArgument) const;
 
-  void formTemplateManagerFixedArguments(ScAddr const & formula, ScAddr const & firstFixedArgument);
-  void resetTemplateManager(std::shared_ptr<TemplateManagerAbstract> otherTemplateManager);
+  void FormTemplateManagerFixedArguments(ScAddr const & formula, ScAddr const & firstFixedArgument);
+  void ResetTemplateManager(std::shared_ptr<TemplateManagerAbstract> otherTemplateManager);
 
-  std::vector<ScAddrQueue> createFormulasQueuesListByPriority(ScAddr const & formulasSet);
+  std::vector<ScAddrQueue> CreateFormulasQueuesListByPriority(ScAddr const & formulasSet);
 
-  ScAddrQueue createQueue(ScAddr const & set);
+  ScAddrQueue CreateQueue(ScAddr const & set);
 
 protected:
   ScMemoryContext * context;

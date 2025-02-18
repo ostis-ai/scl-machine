@@ -29,49 +29,49 @@ public:
 
   virtual ~TemplateManagerAbstract() = default;
 
-  virtual std::vector<ScTemplateParams> createTemplateParams(ScAddr const & scTemplate) = 0;
+  virtual std::vector<ScTemplateParams> CreateTemplateParams(ScAddr const & scTemplate) = 0;
 
-  void addFixedArgument(ScAddr const & fixedArgument)
+  void AddFixedArgument(ScAddr const & fixedArgument)
   {
     fixedArguments.push_back(fixedArgument);
   }
 
-  ReplacementsUsingType getReplacementsUsingType() const
+  ReplacementsUsingType GetReplacementsUsingType() const
   {
     return replacementsUsingType;
   }
 
-  GenerationType getGenerationType() const
+  GenerationType GetGenerationType() const
   {
     return generationType;
   }
 
-  OutputStructureFillingType getFillingType() const
+  OutputStructureFillingType GetFillingType() const
   {
     return fillingType;
   }
 
-  void setReplacementsUsingType(ReplacementsUsingType const otherReplacementsUsingType)
+  void SetReplacementsUsingType(ReplacementsUsingType const otherReplacementsUsingType)
   {
     replacementsUsingType = otherReplacementsUsingType;
   }
 
-  ScAddrVector getArguments() const
+  ScAddrVector GetArguments() const
   {
     return arguments;
   }
 
-  void setArguments(ScAddrVector const & otherArguments)
+  void SetArguments(ScAddrVector const & otherArguments)
   {
     arguments = otherArguments;
   }
 
-  void setGenerationType(GenerationType otherGenType)
+  void SetGenerationType(GenerationType otherGenType)
   {
     generationType = otherGenType;
   }
 
-  void setFillingType(OutputStructureFillingType otherFillingType)
+  void SetFillingType(OutputStructureFillingType otherFillingType)
   {
     fillingType = otherFillingType;
   }

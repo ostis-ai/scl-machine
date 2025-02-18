@@ -19,7 +19,7 @@ class DirectInferenceManagerTarget : public InferenceManagerAbstract
 public:
   explicit DirectInferenceManagerTarget(ScMemoryContext * context);
 
-  bool applyInference(InferenceParams const & inferenceParamsConfig) override;
+  bool ApplyInference(InferenceParams const & inferenceParamsConfig) override;
 
 protected:
   ScAddr targetStructure;

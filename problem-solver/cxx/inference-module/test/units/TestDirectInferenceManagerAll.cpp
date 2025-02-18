@@ -78,13 +78,13 @@ TEST_P(InferenceManagerBuilderTest, SingleSuccessApplyInference)
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES});
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
 
   // Apply inference with configured manager and params config
-  bool result = iterationStrategy->applyInference(inferenceParams);
+  bool result = iterationStrategy->ApplyInference(inferenceParams);
   EXPECT_TRUE(result);
 
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->GetSolutionTreeManager()->GenerateSolution(outputStructure, result);
   EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
 
   ScAddr const & targetClass = context.SearchElementBySystemIdentifier(TARGET_NODE_CLASS);
@@ -108,12 +108,12 @@ TEST_P(InferenceManagerBuilderTest, GenerateNotUnique)
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES});
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
 
-  bool result = iterationStrategy->applyInference(inferenceParams);
+  bool result = iterationStrategy->ApplyInference(inferenceParams);
   EXPECT_TRUE(result);
 
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->GetSolutionTreeManager()->GenerateSolution(outputStructure, result);
   EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
 
   ScAddr const & targetClass = context.SearchElementBySystemIdentifier(TARGET_NODE_CLASS);
@@ -145,12 +145,12 @@ TEST_P(InferenceManagerBuilderTest, GenerateUnique)
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES});
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
 
-  bool result = iterationStrategy->applyInference(inferenceParams);
+  bool result = iterationStrategy->ApplyInference(inferenceParams);
   EXPECT_FALSE(result);
 
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->GetSolutionTreeManager()->GenerateSolution(outputStructure, result);
   EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermNegArc));
 
   ScAddr const & targetClass = context.SearchElementBySystemIdentifier(TARGET_NODE_CLASS);
@@ -189,12 +189,12 @@ TEST_P(InferenceManagerBuilderTest, GenerateUniqueWithOutputStructure)
        SEARCH_IN_STRUCTURES,
        SEARCHED_AND_GENERATED});
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
 
-  bool result = iterationStrategy->applyInference(inferenceParams);
+  bool result = iterationStrategy->ApplyInference(inferenceParams);
   EXPECT_FALSE(result);
 
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->GetSolutionTreeManager()->GenerateSolution(outputStructure, result);
   EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermNegArc));
 
   ScAddr const & targetClass = context.SearchElementBySystemIdentifier(TARGET_NODE_CLASS);
@@ -234,13 +234,13 @@ TEST_P(InferenceManagerBuilderTest, GenerateNotFirst)
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES});
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
 
   InferenceParams const & inferenceParams{rulesSet, arguments, inputStructures, outputStructure};
-  bool result = iterationStrategy->applyInference(inferenceParams);
+  bool result = iterationStrategy->ApplyInference(inferenceParams);
 
   EXPECT_TRUE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->GetSolutionTreeManager()->GenerateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
@@ -286,13 +286,13 @@ TEST_P(InferenceManagerBuilderTest, GenerateFirst)
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_ALL_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES});
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
 
   InferenceParams const & inferenceParams{rulesSet, arguments, inputStructures, outputStructure};
-  bool result = iterationStrategy->applyInference(inferenceParams);
+  bool result = iterationStrategy->ApplyInference(inferenceParams);
 
   EXPECT_TRUE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->GetSolutionTreeManager()->GenerateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
@@ -324,13 +324,13 @@ TEST_P(InferenceManagerBuilderTest, notGenerateSolutionTree)
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES});
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
 
   // Apply inference with configured manager and params config
-  bool result = iterationStrategy->applyInference(inferenceParams);
+  bool result = iterationStrategy->ApplyInference(inferenceParams);
   EXPECT_TRUE(result);
 
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->GetSolutionTreeManager()->GenerateSolution(outputStructure, result);
   EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
 
   ScAddr const & solutionNode = utils::IteratorUtils::getAnyFromSet(&context, solution);
@@ -340,7 +340,7 @@ TEST_P(InferenceManagerBuilderTest, notGenerateSolutionTree)
   EXPECT_TRUE(context.CheckConnector(targetClass, argument, ScType::ConstPermPosArc));
 }
 
-TEST_P(InferenceManagerBuilderTest, generateSolutionTree)
+TEST_P(InferenceManagerBuilderTest, GenerateSolutionTree)
 {
   ScMemoryContext & context = *m_ctx;
 
@@ -358,13 +358,13 @@ TEST_P(InferenceManagerBuilderTest, generateSolutionTree)
   InferenceConfig const & inferenceConfig =
       GetParam()->getInferenceConfig({GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_FULL, SEARCH_IN_STRUCTURES});
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
 
   // Apply inference with configured manager and params config
-  bool result = iterationStrategy->applyInference(inferenceParams);
+  bool result = iterationStrategy->ApplyInference(inferenceParams);
   EXPECT_TRUE(result);
 
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->GetSolutionTreeManager()->GenerateSolution(outputStructure, result);
   EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
 
   ScAddr const & solutionNode = utils::IteratorUtils::getAnyFromSet(&context, solution);
@@ -390,13 +390,13 @@ TEST_P(InferenceManagerBuilderTest, SingleUnsuccessfulApplyInference)
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES});
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
 
   InferenceParams const & inferenceParams{rulesSet, {}, inputStructures, outputStructure};
-  bool result = iterationStrategy->applyInference(inferenceParams);
+  bool result = iterationStrategy->ApplyInference(inferenceParams);
 
   EXPECT_FALSE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->GetSolutionTreeManager()->GenerateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermNegArc));
@@ -427,13 +427,13 @@ TEST_P(InferenceManagerBuilderTest, SingleSuccessfulApplyInferenceWithMembership
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_ONLY_MEMBERSHIP_ARCS_IN_STRUCTURES});
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
 
   InferenceParams const & inferenceParams{rulesSet, {}, inputStructures, outputStructure};
-  bool result = iterationStrategy->applyInference(inferenceParams);
+  bool result = iterationStrategy->ApplyInference(inferenceParams);
 
   EXPECT_TRUE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->GetSolutionTreeManager()->GenerateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
@@ -465,13 +465,13 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsGeneratedAndFlagIsGen
        SEARCH_ONLY_MEMBERSHIP_ARCS_IN_STRUCTURES,
        GENERATED_ONLY});
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
 
   InferenceParams const & inferenceParams{rulesSet, {}, inputStructures, outputStructure};
-  bool result = iterationStrategy->applyInference(inferenceParams);
+  bool result = iterationStrategy->ApplyInference(inferenceParams);
 
   EXPECT_TRUE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->GetSolutionTreeManager()->GenerateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
@@ -506,13 +506,13 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsGeneratedButFlagIsSea
        SEARCH_ONLY_MEMBERSHIP_ARCS_IN_STRUCTURES,
        SEARCHED_AND_GENERATED});
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
 
   InferenceParams const & inferenceParams{rulesSet, {}, inputStructures, outputStructure};
-  bool result = iterationStrategy->applyInference(inferenceParams);
+  bool result = iterationStrategy->ApplyInference(inferenceParams);
 
   EXPECT_TRUE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->GetSolutionTreeManager()->GenerateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
@@ -546,13 +546,13 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsSearchedAndFlagIsSear
        SEARCH_ONLY_MEMBERSHIP_ARCS_IN_STRUCTURES,
        SEARCHED_AND_GENERATED});
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
 
   InferenceParams const & inferenceParams{rulesSet, {}, inputStructures, outputStructure};
-  bool result = iterationStrategy->applyInference(inferenceParams);
+  bool result = iterationStrategy->ApplyInference(inferenceParams);
 
   EXPECT_FALSE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->GetSolutionTreeManager()->GenerateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermNegArc));
@@ -586,13 +586,13 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureDoesNotContainSearchedBecause
        SEARCH_ONLY_MEMBERSHIP_ARCS_IN_STRUCTURES,
        GENERATED_ONLY});
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
 
   InferenceParams const & inferenceParams{rulesSet, {}, inputStructures, outputStructure};
-  bool result = iterationStrategy->applyInference(inferenceParams);
+  bool result = iterationStrategy->ApplyInference(inferenceParams);
 
   EXPECT_FALSE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->GetSolutionTreeManager()->GenerateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermNegArc));
@@ -626,13 +626,13 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsSearchedAndGeneratedA
        SEARCH_ONLY_MEMBERSHIP_ARCS_IN_STRUCTURES,
        SEARCHED_AND_GENERATED});
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
 
   InferenceParams const & inferenceParams{rulesSet, {}, inputStructures, outputStructure};
-  bool result = iterationStrategy->applyInference(inferenceParams);
+  bool result = iterationStrategy->ApplyInference(inferenceParams);
 
   EXPECT_TRUE(result);
-  ScAddr const & solution = iterationStrategy->getSolutionTreeManager()->generateSolution(outputStructure, result);
+  ScAddr const & solution = iterationStrategy->GetSolutionTreeManager()->GenerateSolution(outputStructure, result);
 
   EXPECT_TRUE(solution.IsValid());
   EXPECT_TRUE(context.CheckConnector(InferenceKeynodes::concept_success_solution, solution, ScType::ConstPermPosArc));
@@ -695,10 +695,10 @@ TEST_P(InferenceManagerBuilderTest, conclusionContainsArcReplacementFromPremise)
        SEARCH_ONLY_MEMBERSHIP_ARCS_IN_STRUCTURES,
        SEARCHED_AND_GENERATED});
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::constructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
 
   InferenceParams const & inferenceParams{rulesSet, {}, inputStructures, outputStructure};
-  bool result = iterationStrategy->applyInference(inferenceParams);
+  bool result = iterationStrategy->ApplyInference(inferenceParams);
 
   EXPECT_TRUE(result);
 

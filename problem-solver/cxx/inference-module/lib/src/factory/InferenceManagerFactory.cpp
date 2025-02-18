@@ -17,7 +17,7 @@
 
 using namespace inference;
 
-std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDirectInferenceManagerAll(
+std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::ConstructDirectInferenceManagerAll(
     ScMemoryContext * context,
     InferenceConfig const & inferenceFlowConfig)
 {
@@ -31,13 +31,13 @@ std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDire
   {
     solutionTreeManager = std::make_unique<SolutionTreeManagerEmpty>(context);
   }
-  strategyAll->setSolutionTreeManager(solutionTreeManager);
+  strategyAll->SetSolutionTreeManager(solutionTreeManager);
 
   std::shared_ptr<TemplateManagerAbstract> templateManager = std::make_shared<TemplateManagerFixedArguments>(context);
-  templateManager->setReplacementsUsingType(inferenceFlowConfig.replacementsUsingType);
-  templateManager->setGenerationType(inferenceFlowConfig.generationType);
-  templateManager->setFillingType(inferenceFlowConfig.fillingType);
-  strategyAll->setTemplateManager(templateManager);
+  templateManager->SetReplacementsUsingType(inferenceFlowConfig.replacementsUsingType);
+  templateManager->SetGenerationType(inferenceFlowConfig.generationType);
+  templateManager->SetFillingType(inferenceFlowConfig.fillingType);
+  strategyAll->SetTemplateManager(templateManager);
 
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
   if (inferenceFlowConfig.searchType == SEARCH_IN_ALL_KB)
@@ -52,16 +52,16 @@ std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDire
   {
     templateSearcher = std::make_shared<TemplateSearcherOnlyMembershipArcsInStructures>(context);
   }
-  templateSearcher->setReplacementsUsingType(inferenceFlowConfig.replacementsUsingType);
+  templateSearcher->SetReplacementsUsingType(inferenceFlowConfig.replacementsUsingType);
   templateSearcher->setOutputStructureFillingType(inferenceFlowConfig.fillingType);
   templateSearcher->setAtomicLogicalFormulaSearchBeforeGenerationType(
       inferenceFlowConfig.atomicLogicalFormulaSearchBeforeGenerationType);
-  strategyAll->setTemplateSearcher(templateSearcher);
+  strategyAll->SetTemplateSearcher(templateSearcher);
 
   return strategyAll;
 }
 
-std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDirectInferenceManagerTarget(
+std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::ConstructDirectInferenceManagerTarget(
     ScMemoryContext * context,
     InferenceConfig const & inferenceFlowConfig)
 {
@@ -77,13 +77,13 @@ std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDire
   {
     solutionTreeManager = std::make_unique<SolutionTreeManagerEmpty>(context);
   }
-  strategyTarget->setSolutionTreeManager(solutionTreeManager);
+  strategyTarget->SetSolutionTreeManager(solutionTreeManager);
 
   std::shared_ptr<TemplateManagerAbstract> templateManager = std::make_shared<TemplateManager>(context);
-  templateManager->setReplacementsUsingType(inferenceFlowConfig.replacementsUsingType);
-  templateManager->setGenerationType(inferenceFlowConfig.generationType);
-  templateManager->setFillingType(inferenceFlowConfig.fillingType);
-  strategyTarget->setTemplateManager(templateManager);
+  templateManager->SetReplacementsUsingType(inferenceFlowConfig.replacementsUsingType);
+  templateManager->SetGenerationType(inferenceFlowConfig.generationType);
+  templateManager->SetFillingType(inferenceFlowConfig.fillingType);
+  strategyTarget->SetTemplateManager(templateManager);
 
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
   if (inferenceFlowConfig.searchType == SEARCH_IN_ALL_KB)
@@ -98,11 +98,11 @@ std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::constructDire
   {
     templateSearcher = std::make_shared<TemplateSearcherOnlyMembershipArcsInStructures>(context);
   }
-  templateSearcher->setReplacementsUsingType(inferenceFlowConfig.replacementsUsingType);
+  templateSearcher->SetReplacementsUsingType(inferenceFlowConfig.replacementsUsingType);
   templateSearcher->setOutputStructureFillingType(inferenceFlowConfig.fillingType);
   templateSearcher->setAtomicLogicalFormulaSearchBeforeGenerationType(
       inferenceFlowConfig.atomicLogicalFormulaSearchBeforeGenerationType);
-  strategyTarget->setTemplateSearcher(templateSearcher);
+  strategyTarget->SetTemplateSearcher(templateSearcher);
 
   return strategyTarget;
 }

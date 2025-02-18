@@ -22,12 +22,12 @@ public:
 
   ~SolutionTreeGenerator() = default;
 
-  bool addNode(ScAddr const & formula, ScTemplateParams const & templateParams, ScAddrUnorderedSet const & variables);
+  bool AddNode(ScAddr const & formula, ScTemplateParams const & templateParams, ScAddrUnorderedSet const & variables);
 
-  ScAddr generateSolution(ScAddr const & outputStructure, bool targetAchieved);
+  ScAddr GenerateSolution(ScAddr const & outputStructure, bool targetAchieved);
 
 private:
-  ScAddr generateSolutionNode(
+  ScAddr GenerateSolutionNode(
       ScAddr const & formula,
       ScTemplateParams const & templateParams,
       ScAddrUnorderedSet const & variables);

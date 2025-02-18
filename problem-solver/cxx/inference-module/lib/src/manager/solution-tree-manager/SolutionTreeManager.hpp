@@ -21,7 +21,7 @@ class SolutionTreeManager : public SolutionTreeManagerAbstract
 public:
   explicit SolutionTreeManager(ScMemoryContext * context);
 
-  bool addNode(ScAddr const & formula, Replacements const & replacements) override;
+  bool AddNode(ScAddr const & formula, Replacements const & replacements) override;
 };
 
 }  // namespace inference
