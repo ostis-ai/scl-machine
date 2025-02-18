@@ -12,9 +12,9 @@
 
 #include "inference/solution_tree_manager_abstract.hpp"
 #include "inference/template_manager_abstract.hpp"
+#include "inference/replacements_utils.hpp"
 
 #include "searcher/template-searcher/TemplateSearcherAbstract.hpp"
-#include "utils/ReplacementsUtils.hpp"
 
 using namespace inference;
 

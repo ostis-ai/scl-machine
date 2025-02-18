@@ -14,12 +14,11 @@
 
 #include "inference/inference_keynodes.hpp"
 #include "inference/template_manager.hpp"
+#include "inference/replacements_utils.hpp"
 
 #include "manager/solution-tree-manager/SolutionTreeManager.hpp"
 
 #include "searcher/template-searcher/TemplateSearcherAbstract.hpp"
-
-#include "utils/ReplacementsUtils.hpp"
 
 #include "LogicExpressionNode.hpp"
 

@@ -70,7 +70,7 @@ void EquivalenceExpressionNode::compute(LogicFormulaResult & result) const
   }
   result.value = subFormulaResults[0].value == subFormulaResults[1].value;
   if (result.value)
-    ReplacementsUtils::intersectReplacements(
+    ReplacementsUtils::IntersectReplacements(
         subFormulaResults[0].replacements, subFormulaResults[1].replacements, result.replacements);
   return;
 
@@ -119,7 +119,7 @@ void EquivalenceExpressionNode::compute(LogicFormulaResult & result) const
 
   result.value = leftResult.value == rightResult.value;
   if (rightResult.value)
-    ReplacementsUtils::intersectReplacements(leftResult.replacements, rightResult.replacements, result.replacements);
+    ReplacementsUtils::IntersectReplacements(leftResult.replacements, rightResult.replacements, result.replacements);
 }
 
 void EquivalenceExpressionNode::generate(Replacements & replacements, LogicFormulaResult & result)

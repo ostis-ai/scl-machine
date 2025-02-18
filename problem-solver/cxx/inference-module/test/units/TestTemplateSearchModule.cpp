@@ -14,7 +14,7 @@
 #include "searcher/template-searcher/TemplateSearcherGeneral.hpp"
 #include "searcher/template-searcher/TemplateSearcherOnlyMembershipArcsInStructures.hpp"
 
-#include "utils/ReplacementsUtils.hpp"
+#include "inference/replacements_utils.hpp"
 
 namespace inferenceTest
 {
@@ -250,7 +250,7 @@ TEST_F(TemplateSearchManagerTest, SearchWithExistedConstructionsTest)
       searchResults);
 
   EXPECT_EQ(searchResults.size(), templateVars.size());
-  EXPECT_EQ(inference::ReplacementsUtils::getColumnsAmount(searchResults), 1u);
+  EXPECT_EQ(inference::ReplacementsUtils::GetColumnsAmount(searchResults), 1u);
 }
 
 TEST_F(TemplateSearchManagerTest, SearchWithoutMembershipArcsTest)
@@ -276,6 +276,6 @@ TEST_F(TemplateSearchManagerTest, SearchWithoutMembershipArcsTest)
       searchResults);
 
   EXPECT_EQ(searchResults.size(), templateVars.size());
-  EXPECT_EQ(inference::ReplacementsUtils::getColumnsAmount(searchResults), 1u);
+  EXPECT_EQ(inference::ReplacementsUtils::GetColumnsAmount(searchResults), 1u);
 }
 }  // namespace inferenceTest

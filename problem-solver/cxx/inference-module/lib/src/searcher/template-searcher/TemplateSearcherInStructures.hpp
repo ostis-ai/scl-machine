@@ -12,7 +12,8 @@
 #include <sc-memory/sc_memory.hpp>
 #include <sc-memory/sc_addr.hpp>
 
-#include "utils/ReplacementsUtils.hpp"
+#include "inference/replacements_utils.hpp"
+
 #include "TemplateSearcherAbstract.hpp"
 
 namespace inference

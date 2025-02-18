@@ -10,9 +10,10 @@
 
 #include <sc-agents-common/utils/IteratorUtils.hpp>
 
+#include "inference/containers_utils.hpp"
+
 #include "manager/template-manager/TemplateManagerFixedArguments.hpp"
 
-#include "utils/ContainersUtils.hpp"
 #include "logic/LogicExpression.hpp"
 
 using namespace inference;
@@ -61,7 +62,7 @@ ScAddrQueue InferenceManagerAbstract::createQueue(ScAddr const & set)
   ScAddrQueue queue;
   ScAddrVector elementList = utils::IteratorUtils::getAllWithType(context, set, ScType::Node);
 
-  ContainersUtils::addToQueue(elementList, queue);
+  ContainersUtils::AddToQueue(elementList, queue);
   return queue;
 }
 

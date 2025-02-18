@@ -16,7 +16,7 @@ namespace inference
 class ContainersUtils
 {
 public:
-  static void addToQueue(ScAddrVector const & elementList, std::queue<ScAddr> & targetQueue);
+  static void AddToQueue(ScAddrVector const & elementList, std::queue<ScAddr> & targetQueue);
 };
 
 }  // namespace inference

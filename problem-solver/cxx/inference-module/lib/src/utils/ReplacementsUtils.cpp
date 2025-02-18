@@ -4,25 +4,25 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "ReplacementsUtils.hpp"
+#include "inference/replacements_utils.hpp"
 
 #include <sc-memory/sc_agent.hpp>
 
 namespace inference
 {
 
-void ReplacementsUtils::intersectReplacements(
+void ReplacementsUtils::IntersectReplacements(
     Replacements const & first,
     Replacements const & second,
     Replacements & intersection)
 {
   std::vector<std::pair<size_t, size_t>> firstSecondPairs;
   ScAddrUnorderedSet firstKeys;
-  getKeySet(first, firstKeys);
+  GetKeySet(first, firstKeys);
   ScAddrUnorderedSet secondKeys;
-  getKeySet(second, secondKeys);
-  size_t firstAmountOfColumns = getColumnsAmount(first);
-  size_t secondAmountOfColumns = getColumnsAmount(second);
+  GetKeySet(second, secondKeys);
+  size_t firstAmountOfColumns = GetColumnsAmount(first);
+  size_t secondAmountOfColumns = GetColumnsAmount(second);
 
   if (firstAmountOfColumns == 0)
   {
@@ -36,12 +36,12 @@ void ReplacementsUtils::intersectReplacements(
   }
 
   ScAddrUnorderedSet commonKeysSet;
-  getCommonKeys(firstKeys, secondKeys, commonKeysSet);
+  GetCommonKeys(firstKeys, secondKeys, commonKeysSet);
 
   ReplacementsHashes firstHashes;
-  calculateHashesForCommonKeys(first, commonKeysSet, firstHashes);
+  CalculateHashesForCommonKeys(first, commonKeysSet, firstHashes);
   ReplacementsHashes secondHashes;
-  calculateHashesForCommonKeys(second, commonKeysSet, secondHashes);
+  CalculateHashesForCommonKeys(second, commonKeysSet, secondHashes);
   for (auto const & firstHashPair : firstHashes)
   {
     auto const & secondHashPairIterator = secondHashes.find(firstHashPair.first);
@@ -85,21 +85,21 @@ void ReplacementsUtils::intersectReplacements(
         result.at(secondKey).push_back(second.at(secondKey).at(firstSecondPair.second));
     }
   }
-  removeDuplicateColumns(result);
+  RemoveDuplicateColumns(result);
   intersection = result;
 }
 
-void ReplacementsUtils::subtractReplacements(
+void ReplacementsUtils::SubtractReplacements(
     Replacements const & first,
     Replacements const & second,
     Replacements & difference)
 {
   ScAddrUnorderedSet firstKeys;
-  getKeySet(first, firstKeys);
+  GetKeySet(first, firstKeys);
   ScAddrUnorderedSet secondKeys;
-  getKeySet(second, secondKeys);
-  size_t firstAmountOfColumns = getColumnsAmount(first);
-  size_t secondAmountOfColumns = getColumnsAmount(second);
+  GetKeySet(second, secondKeys);
+  size_t firstAmountOfColumns = GetColumnsAmount(first);
+  size_t secondAmountOfColumns = GetColumnsAmount(second);
   std::vector<size_t> firstColumns;
   firstColumns.reserve(firstAmountOfColumns);
 
@@ -110,7 +110,7 @@ void ReplacementsUtils::subtractReplacements(
   }
 
   ScAddrUnorderedSet commonKeysSet;
-  getCommonKeys(firstKeys, secondKeys, commonKeysSet);
+  GetCommonKeys(firstKeys, secondKeys, commonKeysSet);
 
   if (commonKeysSet.empty())
   {
@@ -119,9 +119,9 @@ void ReplacementsUtils::subtractReplacements(
   }
 
   ReplacementsHashes firstHashes;
-  calculateHashesForCommonKeys(first, commonKeysSet, firstHashes);
+  CalculateHashesForCommonKeys(first, commonKeysSet, firstHashes);
   ReplacementsHashes secondHashes;
-  calculateHashesForCommonKeys(second, commonKeysSet, secondHashes);
+  CalculateHashesForCommonKeys(second, commonKeysSet, secondHashes);
   for (auto const & firstHashPair : firstHashes)
   {
     auto const & secondHashPairIterator = secondHashes.find(firstHashPair.first);
@@ -162,28 +162,28 @@ void ReplacementsUtils::subtractReplacements(
     for (ScAddr const & firstKey : firstKeys)
       result.at(firstKey).push_back(first.at(firstKey).at(firstColumn));
   }
-  removeDuplicateColumns(result);
+  RemoveDuplicateColumns(result);
   difference = result;
 }
 
-void ReplacementsUtils::uniteReplacements(
+void ReplacementsUtils::UniteReplacements(
     Replacements const & first,
     Replacements const & second,
     Replacements & unionResult)
 {
   ScAddrUnorderedSet firstKeys;
-  getKeySet(first, firstKeys);
+  GetKeySet(first, firstKeys);
   ScAddrUnorderedSet secondKeys;
-  getKeySet(second, secondKeys);
+  GetKeySet(second, secondKeys);
   ScAddrUnorderedSet commonKeysSet;
-  getCommonKeys(firstKeys, secondKeys, commonKeysSet);
-  size_t firstAmountOfColumns = getColumnsAmount(first);
+  GetCommonKeys(firstKeys, secondKeys, commonKeysSet);
+  size_t firstAmountOfColumns = GetColumnsAmount(first);
   if (firstAmountOfColumns == 0)
   {
     unionResult = second;
     return;
   }
-  size_t secondAmountOfColumns = getColumnsAmount(second);
+  size_t secondAmountOfColumns = GetColumnsAmount(second);
   if (secondAmountOfColumns == 0)
   {
     unionResult = first;
@@ -191,9 +191,9 @@ void ReplacementsUtils::uniteReplacements(
   }
 
   ReplacementsHashes firstHashes;
-  calculateHashesForCommonKeys(first, commonKeysSet, firstHashes);
+  CalculateHashesForCommonKeys(first, commonKeysSet, firstHashes);
   ReplacementsHashes secondHashes;
-  calculateHashesForCommonKeys(second, commonKeysSet, secondHashes);
+  CalculateHashesForCommonKeys(second, commonKeysSet, secondHashes);
   std::unordered_set<size_t> columnsFromSecondToSkip;
 
   // insert into columnsFromSecondToSkip all column indices from second that are equal to at least one column from first
@@ -269,17 +269,17 @@ void ReplacementsUtils::uniteReplacements(
       }
     }
   }
-  removeDuplicateColumns(result);
+  RemoveDuplicateColumns(result);
   unionResult = result;
 }
 
-void ReplacementsUtils::getKeySet(Replacements const & map, ScAddrUnorderedSet & keySet)
+void ReplacementsUtils::GetKeySet(Replacements const & map, ScAddrUnorderedSet & keySet)
 {
   for (auto const & pair : map)
     keySet.insert(pair.first);
 }
 
-void ReplacementsUtils::getCommonKeys(
+void ReplacementsUtils::GetCommonKeys(
     ScAddrUnorderedSet const & first,
     ScAddrUnorderedSet const & second,
     ScAddrUnorderedSet & commonKeys)
@@ -292,7 +292,7 @@ void ReplacementsUtils::getCommonKeys(
   }
 }
 
-Replacements ReplacementsUtils::copyReplacements(Replacements const & replacements)
+Replacements ReplacementsUtils::CopyReplacements(Replacements const & replacements)
 {
   Replacements result;
   for (auto const & pair : replacements)
@@ -309,12 +309,12 @@ Replacements ReplacementsUtils::copyReplacements(Replacements const & replacemen
  * @param replacements to convert to vector<ScTemplateParams>
  * @param templateParams out param, converted replacements will be placed here
  */
-void ReplacementsUtils::getReplacementsToScTemplateParams(
+void ReplacementsUtils::GetReplacementsToScTemplateParams(
     Replacements const & replacements,
     std::vector<ScTemplateParams> & templateParams)
 {
   ScAddrUnorderedSet keys;
-  getKeySet(replacements, keys);
+  GetKeySet(replacements, keys);
   if (keys.empty())
     return;
 
@@ -328,19 +328,19 @@ void ReplacementsUtils::getReplacementsToScTemplateParams(
   }
 }
 
-size_t ReplacementsUtils::getColumnsAmount(Replacements const & replacements)
+size_t ReplacementsUtils::GetColumnsAmount(Replacements const & replacements)
 {
   return (replacements.empty() ? 0 : replacements.begin()->second.size());
 }
 
-void ReplacementsUtils::removeDuplicateColumns(Replacements & replacements)
+void ReplacementsUtils::RemoveDuplicateColumns(Replacements & replacements)
 {
   ScAddrUnorderedSet keys;
-  getKeySet(replacements, keys);
+  GetKeySet(replacements, keys);
   if (keys.empty())
     return;
   ReplacementsHashes replacementsHashes;
-  calculateHashesForCommonKeys(replacements, keys, replacementsHashes);
+  CalculateHashesForCommonKeys(replacements, keys, replacementsHashes);
   std::unordered_map<ScAddr, ScAddr, ScAddrHashFunc> column;
   std::set<size_t> columnsToRemove;
   for (auto const & replacementsHash : replacementsHashes)
@@ -384,12 +384,12 @@ void ReplacementsUtils::removeDuplicateColumns(Replacements & replacements)
   }
 }
 
-void ReplacementsUtils::calculateHashesForCommonKeys(
+void ReplacementsUtils::CalculateHashesForCommonKeys(
     Replacements const & replacements,
     ScAddrUnorderedSet const & commonKeys,
     ReplacementsHashes & hashes)
 {
-  size_t const columnsAmount = ReplacementsUtils::getColumnsAmount(replacements);
+  size_t const columnsAmount = ReplacementsUtils::GetColumnsAmount(replacements);
   size_t const commonKeysAmount = commonKeys.empty() ? 1 : commonKeys.size();
   std::vector<size_t> primes = {7, 13, 17, 19, 31, 41, 43};
   for (size_t columnNumber = 0; columnNumber < columnsAmount; ++columnNumber)

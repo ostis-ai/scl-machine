@@ -8,12 +8,12 @@
 
 #include "inference/inference_config.hpp"
 
-#include "utils/ReplacementsUtils.hpp"
-
 #include <sc-agents-common/utils/CommonUtils.hpp>
 
 #include <vector>
 #include <algorithm>
+
+#include "inference/replacements_utils.hpp"
 
 namespace inference
 {

@@ -45,7 +45,7 @@ void DisjunctionExpressionNode::compute(LogicFormulaResult & result) const
     LogicFormulaResult lastResult;
     operand->compute(lastResult);
     result.value |= lastResult.value;
-    ReplacementsUtils::uniteReplacements(result.replacements, lastResult.replacements, result.replacements);
+    ReplacementsUtils::UniteReplacements(result.replacements, lastResult.replacements, result.replacements);
   }
   if (result.replacements.empty())
   {
@@ -58,14 +58,14 @@ void DisjunctionExpressionNode::compute(LogicFormulaResult & result) const
   {
     LogicFormulaResult lastResult = atom->search(result.replacements);
     result.value |= lastResult.value;
-    ReplacementsUtils::uniteReplacements(result.replacements, lastResult.replacements, result.replacements);
+    ReplacementsUtils::UniteReplacements(result.replacements, lastResult.replacements, result.replacements);
   }
   for (auto const & formulaToGenerate : formulasToGenerate)
   {
     LogicFormulaResult lastResult;
     formulaToGenerate->generate(result.replacements, lastResult);
     result.value |= lastResult.value;
-    ReplacementsUtils::uniteReplacements(result.replacements, lastResult.replacements, result.replacements);
+    ReplacementsUtils::UniteReplacements(result.replacements, lastResult.replacements, result.replacements);
   }
 }
 

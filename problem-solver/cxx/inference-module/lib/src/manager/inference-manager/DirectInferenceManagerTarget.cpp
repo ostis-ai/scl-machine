@@ -11,8 +11,8 @@
 #include "inference/solution_tree_manager_abstract.hpp"
 #include "inference/template_manager_abstract.hpp"
 
-#include "utils/ContainersUtils.hpp"
-#include "utils/ReplacementsUtils.hpp"
+#include "inference/containers_utils.hpp"
+#include "inference/replacements_utils.hpp"
 
 #include "logic/LogicExpressionNode.hpp"
 
@@ -73,7 +73,7 @@ bool DirectInferenceManagerTarget::applyInference(InferenceParams const & infere
         solutionTreeManager->addNode(formula, formulaResult.replacements);
         // We need to check target with result generated replacements, not with input
         std::vector<ScTemplateParams> paramsVector;
-        ReplacementsUtils::getReplacementsToScTemplateParams(formulaResult.replacements, paramsVector);
+        ReplacementsUtils::GetReplacementsToScTemplateParams(formulaResult.replacements, paramsVector);
         targetAchieved = isTargetAchieved(paramsVector);
         if (targetAchieved)
         {
@@ -82,7 +82,7 @@ bool DirectInferenceManagerTarget::applyInference(InferenceParams const & infere
         }
         else
         {
-          ContainersUtils::addToQueue(checkedFormulas, uncheckedFormulas);
+          ContainersUtils::AddToQueue(checkedFormulas, uncheckedFormulas);
           formulasQueueIndex = 0;
           checkedFormulas.clear();
         }

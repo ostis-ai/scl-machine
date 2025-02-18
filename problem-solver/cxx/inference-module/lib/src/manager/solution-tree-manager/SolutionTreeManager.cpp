@@ -4,7 +4,7 @@
  * (See accompanying file COPYING.MIT or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "utils/ReplacementsUtils.hpp"
+#include "inference/replacements_utils.hpp"
 
 #include "SolutionTreeManager.hpp"
 
@@ -20,9 +20,9 @@ SolutionTreeManager::SolutionTreeManager(ScMemoryContext * context)
 bool SolutionTreeManager::addNode(ScAddr const & formula, Replacements const & replacements)
 {
   std::vector<ScTemplateParams> templateParamsVector;
-  ReplacementsUtils::getReplacementsToScTemplateParams(replacements, templateParamsVector);
+  ReplacementsUtils::GetReplacementsToScTemplateParams(replacements, templateParamsVector);
   ScAddrUnorderedSet variables;
-  ReplacementsUtils::getKeySet(replacements, variables);
+  ReplacementsUtils::GetKeySet(replacements, variables);
   bool result = true;
   for (ScTemplateParams const & templateParams : templateParamsVector)
     result &= solutionTreeGenerator->addNode(formula, templateParams, variables);
