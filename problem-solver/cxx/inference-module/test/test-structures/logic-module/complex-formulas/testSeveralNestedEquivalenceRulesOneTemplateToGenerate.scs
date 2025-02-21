@@ -7,7 +7,7 @@ sc_node_non_role_relation
     -> equivalence;;
 sc_node_class
     -> action_apply_rules_on_the_model;;
-sc_node_structureure
+sc_node_structure
     -> test_output_structure;;
 
 //initial model
