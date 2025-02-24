@@ -1,0 +1,27 @@
+\makeatletter
+\def\input@path{{scn//}}
+\makeatother
+
+\documentclass[table]{scndocument}
+
+\usepackage{import}
+\usepackage{scn}
+\usepackage[english,main=russian]{babel}
+
+\begin{document}
+
+\DeactivateBG
+\title{\centering
+Документация scl-machine}
+\author{}
+\maketitle
+
+\normalsize
+
+\setcounter{page}{3}
+
+\ActivateBG
+\begin{SCn}
+\input{scl-machine.tex}
+\end{SCn}
+\end{document}
