@@ -1,65 +1,56 @@
-# SCL-machine
-Inference module for [OSTIS Metasystem](https://github.com/ostis-ai/ostis-metasystem)
+# scl-machine
 
-# Installation
-```sh
-git clone https://github.com/ostis-ai/scl-machine.git
-cd scl-machine/
-git submodule update --init --recursive
-```
+[![CI](https://github.com/ostis-ai/scl-machine/actions/workflows/test_conan.yml/badge.svg)](https://github.com/ostis-ai/scl-machine/actions/workflows/test_conan.yml)
+[![license](https://img.shields.io/badge/License-Apache-yellow.svg)](LICENSE)
 
-## Build scl-machine
-Before build scl-machine make sure that sc-machine is assembled. Sc-machine and scl-machine must be allocated in the same folder.
+[![Quick Start](https://img.shields.io/badge/-Quick%20Start-black?style=for-the-badge&logo=rocket)](https://ostis-ai.github.io/scl-machine/quick_start)
+[![Docs](https://img.shields.io/badge/Docs-gray?style=for-the-badge&logo=read-the-docs)](https://ostis-ai.github.io/scl-machine)
+[![Community](https://img.shields.io/badge/-Community-teal?style=for-the-badge&logo=matrix)](https://app.element.io/index.html#/room/#ostis_tech_support:matrix.org)
 
-```sh
-cd scl-machine/scripts
-./make_all.sh #You can also pass all CMake generation arguments there
-```
+scl-machine is an inference module designed for the [OSTIS Technology](https://github.com/ostis-ai). scl-machine serves as a crucial inference engine within the OSTIS Technology, leveraging semantic technologies to enhance intelligent systems' capabilities in reasoning and knowledge processing.
 
-Or, alternatively (requires CMake 3.13+)
-```sh
-cd scl-machine
-cmake -B build -DCMAKE_BUILD_TYPE=Release # or Debug type for development
-cmake --build build -j$(nproc) # -j flag for paralleled build process
-```
+## Getting started
 
-To include scl-machine knowledge base add `<path to >/scl-machine/kb` to repo.path file.
+To get started, check out our [quick start guide](https://ostis-ai.github.io/scl-machine/quick_start).
 
 ## Documentation
 
-We document all information about the project development and its components' implementation in sources of its knowledge base
-to provide opportunity to use it in information processing and knowledge generation.
-
-You can access the current version of the documentation in [docs/main.pdf](docs/main.pdf) file of this project.
-
-Documentation is written with the help of LaTeX tools in SCn-code representation.
-To build documentation manually, you'll need a LaTeX distribution installed on your computer. 
-Alternatively, we provide a Docker image to build the documentation in case you can't / don't want to install LaTeX on your PC.
-
-### Download scn-tex-plugin and documentation for subprojects
-
-- ### Build steps (using LaTeX)
+- A brief user manual and developer docs are hosted on our [GitHub Pages](https://ostis-ai.github.io/scl-machine).
+  - <details>
+      <summary>Build documentation locally</summary>
 
     ```sh
-    cd scl-machine/docs
-    TEXINPUTS=./scn: latexmk -pdf -bibtex main.tex
+    pip3 install mkdocs mkdocs-material
+    mkdocs serve
+    # and open http://127.0.0.1:8006/ in your browser
     ```
-- ### Build steps (using Docker)
+    </details>
 
-  ```sh
-  cd scl-machine
-  docker run -v ${PWD}:/workdir --rm -it ostis/scn-latex-plugin:latest "docs/main.tex"
-  ```
+- Documentation about implementation of components is located in [docs/main.pdf](docs/main.pdf) file of this project.
+  - <details>
+       <summary>Build documentation locally</summary>
+      
+    - ### Build steps (using LaTeX)
+      ```sh
+      cd docs
+      TEXINPUTS=./scn: latexmk -pdf -bibtex main.tex
+      ```
 
-After the compilation, the `main.pdf` file should appear at `scl-machine/docs/`.
+    - ### Build steps (using Docker)
+
+      ```sh
+      docker run -v ${PWD}:/workdir --rm -it ostis/scn-latex-plugin:latest "docs/main.tex"
+      ```
+
+    - ### Download scn-tex-plugin and documentation for subprojects
+
+      After the compilation, the `main.pdf` file should appear at `scl-machine/docs/`. You can find more information about [scn-latex-plugin here](https://github.com/ostis-ai/scn-latex-plugin).
+    </details>
 
 ## Feedback
 
-Contributions, bug reports and feature requests are welcome! Feel free to check our 
-[issues page](https://github.com/ostis-ai/scl-machine/issues) and file a new issue (or comment in existing ones).
+Contributions, bug reports and feature requests are welcome! Feel free to check our [issues page](https://github.com/ostis-ai/scl-machine/issues) and file a new issue (or comment in existing ones).
 
 ## License
 
-Distributed under the Apache License. See [LICENSE](LICENSE) for more information.
-
-##### _This repository continues the development of [ostis-apps/ostis-inference](https://github.com/ostis-apps/ostis-inference)_
+Distributed under the Apache License. Check [LICENSE](LICENSE) for more information.

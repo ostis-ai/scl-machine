@@ -1,0 +1,3 @@
+nrel_side <-sc_node_non_role_relation;;
+nrel_angle <-sc_node_non_role_relation;;
+

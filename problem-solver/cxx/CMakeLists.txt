@@ -1,2 +1,2 @@
-add_subdirectory(inferenceModule)
-add_subdirectory(solutionModule)
+add_subdirectory(inference-module)
+add_subdirectory(solution-module)

@@ -1,0 +1,101 @@
+current_class
+  <- sc_node_class;;
+
+_arg
+  <- sc_node;;
+
+class_1
+  <- sc_node_class;;
+
+_arg
+  <- sc_node;;
+
+target_class
+  <- sc_node_class;;
+
+_arg
+  <- sc_node;;
+
+nrel_implication
+  <- sc_node_non_role_relation;;
+
+rrel_then
+  <- sc_node_role_relation;;
+
+rrel_if
+  <- sc_node_role_relation;;
+
+atomic_logical_formula
+  <- sc_node_class;;
+
+lr_inner_tuple
+  <- sc_node_tuple;;
+
+atomic_logical_formula
+  <- sc_node_class;;
+
+lr_complex_tuple
+  <- sc_node_tuple;;
+
+rrel_main_key_sc_element
+  <- sc_node_role_relation;;
+
+lr_complex
+  <- sc_node;;
+
+current_class_if
+	<- atomic_logical_formula;;
+current_class_if = [*
+    @connector_35580624 = (current_class _-> _arg);;
+
+*];;
+
+class_1_then
+	<- atomic_logical_formula;;
+class_1_then = [*
+    @connector_35576464 = (class_1 _-> _arg);;
+*];;
+
+target_class_then
+	<- atomic_logical_formula;;
+target_class_then = [*
+    @connector_35906208 = (target_class _-> _arg);;
+*];;
+
+@connector_35813840 = (lr_complex_tuple -> lr_inner_tuple);;
+@connector_36276512 = (atomic_logical_formula -> current_class_if);;
+@connector_36277552 = (lr_inner_tuple -> current_class_if);;
+@connector_35575424 = (atomic_logical_formula -> class_1_then);;
+@connector_35579584 = (lr_inner_tuple -> class_1_then);;
+@connector_35577504 = (nrel_implication -> lr_inner_tuple);;
+@connector_36317504 = (lr_complex -> lr_complex_tuple);;
+@connector_29054752 = (rrel_if -> @connector_35813840);;
+@connector_140362282735952 = (nrel_implication -> lr_complex_tuple);;
+@connector_33437456 = (lr_complex_tuple -> target_class_then);;
+@connector_35456272 = (atomic_logical_formula -> target_class_then);;
+@connector_35578544 = (rrel_then -> @connector_35579584);;
+@connector_35552688 = (rrel_if -> @connector_36277552);;
+@connector_36454688 = (rrel_main_key_sc_element -> @connector_36317504);;
+@connector_38387424 = (rrel_then -> @connector_33437456);;
+
+concept_template_for_generation
+	-> target_class_then;
+	-> class_1_then;;
+
+target_template = [*
+	target_class _-> _arg;;
+*];;
+
+input_structure = [*
+	argument <- current_class;;
+*];;
+
+rules_set
+    -> rrel_1: { lr_complex };;
+
+inference_logic_test_action
+    <- action_direct_inference;
+    -> rrel_1: target_template;
+    -> rrel_2: rules_set;
+    -> rrel_3: ...;
+    -> rrel_4: input_structure;;

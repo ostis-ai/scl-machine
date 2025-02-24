@@ -1,0 +1,46 @@
+sc_node_class
+    -> atomic_logical_formula;;
+
+sc_node_role_relation
+    -> rrel_1;
+    -> rrel_main_key_sc_element;;
+
+sc_node_non_role_relation
+    -> nrel_inclusion;
+    -> nrel_implication;
+    -> nrel_subset;;
+
+
+if = [*
+    @common_arc = (_source _=> _target);;
+    nrel_inclusion _-> @common_arc;;
+*];;
+
+@arc_from_subset = (nrel_subset _-> @common_arc);;
+then
+    <- sc_node_structure;
+    -> _source;
+    -> _target;
+    -> @common_arc;
+    -> nrel_subset;
+    -> @arc_from_subset;;
+
+@p1 = (if => then);;
+@p1 <- nrel_implication;;
+@p2 = (logic_rule -> @p1);;
+@p2 <- rrel_main_key_sc_element;;
+
+atomic_logical_formula
+    -> if;
+    -> then;;
+
+input_structure1 = [*
+    set1 => nrel_inclusion: set2;;
+*];;
+
+input_structure2 = [*
+    set2 => nrel_inclusion: nrel_subset: set3;;
+*];;
+
+formulas_set
+    -> rrel_1: { logic_rule };;

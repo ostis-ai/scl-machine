@@ -73,12 +73,12 @@
 \scnheader{Программный интерфейс менеджера логического вывода}
 \scnhaselement{Метод применения логического вывода}
 \begin{scnindent}
-    \scntext{заголовок метода}{virtual bool applyInference(InferenceParamsConfig const \& inferenceParamsConfig) = 0;}
+    \scntext{заголовок метода}{virtual bool ApplyInference(InferenceParamsConfig const \& inferenceParamsConfig) = 0;}
     \scntext{примечание}{Главный метод менеджера логического вывода, который определяет порядок обхода и формул.}
 \end{scnindent}
 \scnhaselement{Метод применения логической формулы}
 \begin{scnindent}
-    \scntext{заголовок метода}{LogicFormulaResult useFormula(ScAddr const \& formula, ScAddr const \& outputStructure);}
+    \scntext{заголовок метода}{LogicFormulaResult UseFormula(ScAddr const \& formula, ScAddr const \& outputStructure);}
     \scntext{примечание}{Метод менеджера логического вывода, который анализирует логическую формулу и генерирует атомарные логические формулы по импликации.}
 \end{scnindent}
 
@@ -129,7 +129,7 @@
     \begin{scneqtoset}
         \scnitem{метод создания параметров поиска атомарной логической формулы}
         \begin{scnindent}
-            \scntext{заголовок метода}{virtual std::vector<ScTemplateParams> createTemplateParams(ScAddr const \& scTemplate) = 0;}
+            \scntext{заголовок метода}{virtual std::vector<ScTemplateParams> CreateTemplateParams(ScAddr const \& scTemplate) = 0;}
             \scntext{примечание}{Метод формирует множество параметров атомарной логической формулы.}
         \end{scnindent}
     \end{scneqtoset}
@@ -155,7 +155,7 @@
     \begin{scneqtoset}
         \scnitem{метод создания узла дерева решения}
         \begin{scnindent}
-            \scntext{заголовок метода}{virtual bool addNode(ScAddr const \& formula, Replacements const \& replacements) = 0;}
+            \scntext{заголовок метода}{virtual bool AddNode(ScAddr const \& formula, Replacements const \& replacements) = 0;}
             \scntext{примечание}{Данный метод определяет структуру и создание узлов дерева решения.}
         \end{scnindent}
     \end{scneqtoset}

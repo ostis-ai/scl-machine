@@ -3,8 +3,10 @@
 *.scs~
 ostis-web-platform
 bin
-build
+/build
 .cache
+/ConanPresets.json
+repo
 
 __pycache__
 

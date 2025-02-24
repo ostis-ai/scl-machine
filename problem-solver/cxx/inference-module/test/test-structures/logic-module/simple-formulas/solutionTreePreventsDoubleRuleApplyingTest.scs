@@ -1,0 +1,77 @@
+sc_node_class
+    -> action_direct_inference;
+    -> atomic_logical_formula;
+    -> class_3;
+    -> class_2;
+    -> class_1;;
+
+sc_node_non_role_relation
+    -> nrel_basic_sequence;
+    -> nrel_implication;;
+
+sc_node_role_relation
+    -> rrel_1;
+    -> rrel_main_key_sc_element;;
+
+rule_condition = [*
+    class_1 _-> _element;;
+*];;
+
+rule_result = [*
+    class_2 _-> _element;;
+*];;
+
+reachable_target = [*
+    class_2 _-> _target_element_1;;
+*];;
+
+unreachable_target = [*
+    class_3 _-> _target_element_2;;
+*];;
+
+arguments
+    -> element_1;;
+
+class_1
+    -> element_1;;
+
+atomic_logical_formula
+    -> rule_condition;
+    -> rule_result;;
+
+@implication_arc = (rule_condition => rule_result);;
+@implication_arc
+    <- nrel_implication;
+    <- rrel_main_key_sc_element: rule_node;;
+
+@tuple = { rule_node };;
+@arc = (logic_rules -> @tuple);;
+rrel_1 -> @arc;;
+
+first_inference_logic_test_action
+    -> rrel_1: reachable_target;
+    -> rrel_2: logic_rules;
+    -> rrel_3: arguments;
+    -> rrel_4: input_structure;;
+    
+second_inference_logic_test_action
+    -> rrel_1: unreachable_target;
+    -> rrel_2: logic_rules;
+    -> rrel_3: arguments;
+    -> rrel_4: input_structure;;
+
+
+solution_tree_template = [*
+    concept_solution _-> _solution;;
+    _solution _-> rrel_1:: _solution_node;;
+    _solution_node
+        _-> rrel_1:: rule_node;
+        _-> rrel_2:: _tuples_set;;
+
+    _tuples_set _-> _first_pair;;
+    _first_pair
+        _-> rrel_1:: _first_node;
+        _-> rrel_2:: _second_node;;
+
+    _second_node _~> _first_node;;
+*];;

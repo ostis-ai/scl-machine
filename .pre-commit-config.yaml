@@ -3,7 +3,7 @@ repos:
     hooks:
       - id: clang_format
         name: clang_format
-        entry: ./scripts/clang/check-formatting.sh
+        entry: ./scripts/clang/check_formatting.sh
         language: script
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
