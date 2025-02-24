@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [v0.3.0] - 24.02.2024
+## [0.3.0] - 24.02.2024
 
 ### Breaking changes
 - Direct inference agent's subscription element is changed to `action_initiated`
