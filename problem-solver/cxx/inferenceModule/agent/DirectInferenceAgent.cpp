@@ -62,9 +62,26 @@ ScResult DirectInferenceAgent::DoProgram(ScActionInitiatedEvent const & event, S
   ScAddr solutionNode = inferenceManager->getSolutionTreeManager()->createSolution(outputStructure, targetAchieved);
 
   action.FormResult(solutionNode);
+
+  ScIterator3Ptr successSolutionEdgeIterator =                                          
+      m_context.CreateIterator3(InferenceKeynodes::concept_success_solution, ScType::Unknown, solutionNode);  //searching for successSoclutionEdge Type
+                                                                                                              // type is negative - target wasn't achieved
+                                                                                                              // type is positive - target was achieved
+
+  while (successSolutionEdgeIterator->Next())
+  {
+    ScAddr successSolutionEdge =  successSolutionEdgeIterator->Get(1);
+    ScType const & successSolutionEdgeType = m_context.GetElementType(successSolutionEdge);
+    if (successSolutionEdgeType == ScType::EdgeAccessConstNegPerm)
+    {
+      SC_AGENT_LOG_ERROR("Target wasn't achieved");
+      return action.FinishUnsuccessfully();
+    }
+  }
+  
+  
   return action.FinishSuccessfully();
 }
-
 ScAddr DirectInferenceAgent::GetActionClass() const
 {
   return InferenceKeynodes::action_direct_inference;
