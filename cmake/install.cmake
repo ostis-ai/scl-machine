@@ -1,5 +1,5 @@
 install(TARGETS 
-    inference
+    inference-object inference
     EXPORT scl-machineExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

@@ -5,12 +5,12 @@ file(GLOB SOURCES CONFIGURE_DEPENDS
     "lib/src/*/*/*.hpp" "lib/src/*/*/*.cpp"
 )
 
-add_library(inference SHARED ${SOURCES})
-target_link_libraries(inference
+add_library(inference-object OBJECT ${SOURCES})
+target_link_libraries(inference-object
     LINK_PUBLIC sc-machine::sc-memory
     LINK_PUBLIC sc-machine::sc-agents-common
 )
-target_include_directories(inference
+target_include_directories(inference-object
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/src
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/include>
     PUBLIC $<INSTALL_INTERFACE:include>
@@ -20,13 +20,18 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib/include/
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
+add_library(inference SHARED)
+target_link_libraries(inference 
+    LINK_PUBLIC inference-object
+)
+
 file(GLOB SOURCES CONFIGURE_DEPENDS
     "module/*.hpp" "module/*.cpp"
 )
 
 add_library(inference-module SHARED ${SOURCES})
 target_link_libraries(inference-module
-    LINK_PUBLIC inference
+    LINK_PUBLIC inference-object
 )
 target_include_directories(inference-module
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/module
