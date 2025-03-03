@@ -4,6 +4,10 @@ project(scl-machine VERSION 0.3.0 LANGUAGES C CXX)
 message(STATUS "Current project version: ${CMAKE_PROJECT_VERSION}")
 cmake_policy(SET CMP0048 NEW)
 
+if(${WIN32})
+    message(FATAL_ERROR "scl-machine isn't supported on Windows OS.")
+endif()
+
 set(SCL_MACHINE_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
@@ -33,10 +37,6 @@ endif()
 
 if(${SC_CLANG_FORMAT_CODE})
     include(${CMAKE_MODULE_PATH}/ClangFormat.cmake)
-endif()
-
-if(${WIN32})
-    message(FATAL_ERROR "scl-machine isn't supported on Windows OS.")
 endif()
 
 if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
