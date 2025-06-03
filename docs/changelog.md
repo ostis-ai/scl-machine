@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 03.06.2024
+
 ## Changed
 - Use loggers from agents for all instances
 
