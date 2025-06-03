@@ -10,8 +10,9 @@
 
 ImplicationExpressionNode::ImplicationExpressionNode(
     ScMemoryContext * context,
+    utils::ScLogger * logger,
     OperatorLogicExpressionNode::OperandsVector & operands)
-  : context(context)
+  : context(context), logger(logger)
 {
   for (auto & operand : operands)
     this->operands.emplace_back(std::move(operand));

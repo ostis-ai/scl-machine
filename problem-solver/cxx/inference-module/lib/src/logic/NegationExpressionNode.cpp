@@ -6,7 +6,8 @@
 
 #include "NegationExpressionNode.hpp"
 
-NegationExpressionNode::NegationExpressionNode(std::shared_ptr<LogicExpressionNode> operand)
+NegationExpressionNode::NegationExpressionNode(utils::ScLogger * logger, std::shared_ptr<LogicExpressionNode> operand)
+  : logger(logger)
 {
   operands.emplace_back(std::move(operand));
 }
@@ -14,7 +15,7 @@ NegationExpressionNode::NegationExpressionNode(std::shared_ptr<LogicExpressionNo
 void NegationExpressionNode::compute(LogicFormulaResult & result) const
 {
   operands[0]->compute(result);
-  SC_LOG_DEBUG("Sub formula in negation returned " << (result.value ? "true" : "false"));
+  logger->Debug("Sub formula in negation returned ", (result.value ? "true" : "false"));
   result.value = !result.value;
 }
 

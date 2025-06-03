@@ -13,7 +13,8 @@ namespace solutionModule
 class EraseSolutionAgent : public ScActionInitiatedAgent
 {
 public:
-public:
+  EraseSolutionAgent();
+
   ScAddr GetActionClass() const override;
 
   ScResult DoProgram(ScActionInitiatedEvent const & event, ScAction & action) override;

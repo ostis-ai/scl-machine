@@ -19,9 +19,10 @@ using namespace inference;
 
 std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::ConstructDirectInferenceManagerAll(
     ScMemoryContext * context,
+    utils::ScLogger * logger,
     InferenceConfig const & inferenceFlowConfig)
 {
-  std::unique_ptr<DirectInferenceManagerAll> strategyAll = std::make_unique<DirectInferenceManagerAll>(context);
+  std::unique_ptr<DirectInferenceManagerAll> strategyAll = std::make_unique<DirectInferenceManagerAll>(context, logger);
   std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager;
   if (inferenceFlowConfig.solutionTreeType == TREE_FULL)
   {
@@ -63,10 +64,11 @@ std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::ConstructDire
 
 std::unique_ptr<InferenceManagerAbstract> InferenceManagerFactory::ConstructDirectInferenceManagerTarget(
     ScMemoryContext * context,
+    utils::ScLogger * logger,
     InferenceConfig const & inferenceFlowConfig)
 {
   std::unique_ptr<DirectInferenceManagerTarget> strategyTarget =
-      std::make_unique<DirectInferenceManagerTarget>(context);
+      std::make_unique<DirectInferenceManagerTarget>(context, logger);
 
   std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager;
   if (inferenceFlowConfig.solutionTreeType == TREE_FULL)

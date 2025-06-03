@@ -13,7 +13,7 @@ using namespace inference;
 class EquivalenceExpressionNode : public OperatorLogicExpressionNode
 {
 public:
-  explicit EquivalenceExpressionNode(ScMemoryContext * context, OperandsVector & operands);
+  explicit EquivalenceExpressionNode(ScMemoryContext * context, utils::ScLogger * logger, OperandsVector & operands);
 
   void compute(LogicFormulaResult & result) const override;
 
@@ -23,4 +23,5 @@ public:
 
 private:
   ScMemoryContext * context;
+  utils::ScLogger * logger;
 };

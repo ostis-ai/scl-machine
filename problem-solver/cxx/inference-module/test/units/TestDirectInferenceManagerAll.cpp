@@ -77,8 +77,9 @@ TEST_P(InferenceManagerBuilderTest, SingleSuccessApplyInference)
   // Create inference manager with `strategy all` using director
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES});
+  utils::ScLogger logger;
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, &logger, inferenceConfig);
 
   // Apply inference with configured manager and params config
   bool result = iterationStrategy->ApplyInference(inferenceParams);
@@ -107,8 +108,9 @@ TEST_P(InferenceManagerBuilderTest, GenerateNotUnique)
   // GenerationType = GENERATE_ALL
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES});
+  utils::ScLogger logger;
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, &logger, inferenceConfig);
 
   bool result = iterationStrategy->ApplyInference(inferenceParams);
   EXPECT_TRUE(result);
@@ -144,8 +146,9 @@ TEST_P(InferenceManagerBuilderTest, GenerateUnique)
   // GenerationType = GENERATE_UNIQUE
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_UNIQUE_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES});
+  utils::ScLogger logger;
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, &logger, inferenceConfig);
 
   bool result = iterationStrategy->ApplyInference(inferenceParams);
   EXPECT_FALSE(result);
@@ -188,8 +191,9 @@ TEST_P(InferenceManagerBuilderTest, GenerateUniqueWithOutputStructure)
        TREE_ONLY_OUTPUT_STRUCTURE,
        SEARCH_IN_STRUCTURES,
        SEARCHED_AND_GENERATED});
+  utils::ScLogger logger;
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, &logger, inferenceConfig);
 
   bool result = iterationStrategy->ApplyInference(inferenceParams);
   EXPECT_FALSE(result);
@@ -233,8 +237,9 @@ TEST_P(InferenceManagerBuilderTest, GenerateNotFirst)
 
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES});
+  utils::ScLogger logger;
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, &logger, inferenceConfig);
 
   InferenceParams const & inferenceParams{rulesSet, arguments, inputStructures, outputStructure};
   bool result = iterationStrategy->ApplyInference(inferenceParams);
@@ -285,8 +290,9 @@ TEST_P(InferenceManagerBuilderTest, GenerateFirst)
 
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_ALL_FORMULAS, REPLACEMENTS_FIRST, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES});
+  utils::ScLogger logger;
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, &logger, inferenceConfig);
 
   InferenceParams const & inferenceParams{rulesSet, arguments, inputStructures, outputStructure};
   bool result = iterationStrategy->ApplyInference(inferenceParams);
@@ -323,8 +329,9 @@ TEST_P(InferenceManagerBuilderTest, notGenerateSolutionTree)
   // Create inference manager with `strategy all` using director
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES});
+  utils::ScLogger logger;
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, &logger, inferenceConfig);
 
   // Apply inference with configured manager and params config
   bool result = iterationStrategy->ApplyInference(inferenceParams);
@@ -357,8 +364,9 @@ TEST_P(InferenceManagerBuilderTest, GenerateSolutionTree)
   // Create inference manager with `strategy all` using director
   InferenceConfig const & inferenceConfig =
       GetParam()->getInferenceConfig({GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_FULL, SEARCH_IN_STRUCTURES});
+  utils::ScLogger logger;
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, &logger, inferenceConfig);
 
   // Apply inference with configured manager and params config
   bool result = iterationStrategy->ApplyInference(inferenceParams);
@@ -389,8 +397,9 @@ TEST_P(InferenceManagerBuilderTest, SingleUnsuccessfulApplyInference)
 
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_IN_STRUCTURES});
+  utils::ScLogger logger;
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, &logger, inferenceConfig);
 
   InferenceParams const & inferenceParams{rulesSet, {}, inputStructures, outputStructure};
   bool result = iterationStrategy->ApplyInference(inferenceParams);
@@ -426,8 +435,9 @@ TEST_P(InferenceManagerBuilderTest, SingleSuccessfulApplyInferenceWithMembership
 
   InferenceConfig const & inferenceConfig = GetParam()->getInferenceConfig(
       {GENERATE_ALL_FORMULAS, REPLACEMENTS_ALL, TREE_ONLY_OUTPUT_STRUCTURE, SEARCH_ONLY_MEMBERSHIP_ARCS_IN_STRUCTURES});
+  utils::ScLogger logger;
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, &logger, inferenceConfig);
 
   InferenceParams const & inferenceParams{rulesSet, {}, inputStructures, outputStructure};
   bool result = iterationStrategy->ApplyInference(inferenceParams);
@@ -464,8 +474,9 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsGeneratedAndFlagIsGen
        TREE_ONLY_OUTPUT_STRUCTURE,
        SEARCH_ONLY_MEMBERSHIP_ARCS_IN_STRUCTURES,
        GENERATED_ONLY});
+  utils::ScLogger logger;
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, &logger, inferenceConfig);
 
   InferenceParams const & inferenceParams{rulesSet, {}, inputStructures, outputStructure};
   bool result = iterationStrategy->ApplyInference(inferenceParams);
@@ -505,8 +516,9 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsGeneratedButFlagIsSea
        TREE_ONLY_OUTPUT_STRUCTURE,
        SEARCH_ONLY_MEMBERSHIP_ARCS_IN_STRUCTURES,
        SEARCHED_AND_GENERATED});
+  utils::ScLogger logger;
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, &logger, inferenceConfig);
 
   InferenceParams const & inferenceParams{rulesSet, {}, inputStructures, outputStructure};
   bool result = iterationStrategy->ApplyInference(inferenceParams);
@@ -545,8 +557,9 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsSearchedAndFlagIsSear
        TREE_ONLY_OUTPUT_STRUCTURE,
        SEARCH_ONLY_MEMBERSHIP_ARCS_IN_STRUCTURES,
        SEARCHED_AND_GENERATED});
+  utils::ScLogger logger;
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, &logger, inferenceConfig);
 
   InferenceParams const & inferenceParams{rulesSet, {}, inputStructures, outputStructure};
   bool result = iterationStrategy->ApplyInference(inferenceParams);
@@ -585,8 +598,9 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureDoesNotContainSearchedBecause
        TREE_ONLY_OUTPUT_STRUCTURE,
        SEARCH_ONLY_MEMBERSHIP_ARCS_IN_STRUCTURES,
        GENERATED_ONLY});
+  utils::ScLogger logger;
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, &logger, inferenceConfig);
 
   InferenceParams const & inferenceParams{rulesSet, {}, inputStructures, outputStructure};
   bool result = iterationStrategy->ApplyInference(inferenceParams);
@@ -625,8 +639,9 @@ TEST_P(InferenceManagerBuilderTest, OutputStructureContainsSearchedAndGeneratedA
        TREE_ONLY_OUTPUT_STRUCTURE,
        SEARCH_ONLY_MEMBERSHIP_ARCS_IN_STRUCTURES,
        SEARCHED_AND_GENERATED});
+  utils::ScLogger logger;
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, &logger, inferenceConfig);
 
   InferenceParams const & inferenceParams{rulesSet, {}, inputStructures, outputStructure};
   bool result = iterationStrategy->ApplyInference(inferenceParams);
@@ -694,8 +709,10 @@ TEST_P(InferenceManagerBuilderTest, conclusionContainsArcReplacementFromPremise)
        TREE_ONLY_OUTPUT_STRUCTURE,
        SEARCH_ONLY_MEMBERSHIP_ARCS_IN_STRUCTURES,
        SEARCHED_AND_GENERATED});
+
+  utils::ScLogger logger;
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerAll(&context, &logger, inferenceConfig);
 
   InferenceParams const & inferenceParams{rulesSet, {}, inputStructures, outputStructure};
   bool result = iterationStrategy->ApplyInference(inferenceParams);

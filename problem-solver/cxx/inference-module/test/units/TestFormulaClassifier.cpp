@@ -35,11 +35,12 @@ TEST_F(FormulaClassifierTest, RuleIsImplication)
       ScKeynodes::rrel_main_key_sc_element);
   EXPECT_TRUE(formulaIterator->Next());
 
+  utils::ScLogger logger;
   ScAddr formula = formulaIterator->Get(2);
-  EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, formula), FormulaClassifier::IMPLICATION_ARC);
+  EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, &logger, formula), FormulaClassifier::IMPLICATION_ARC);
   auto const & [begin, end] = context.GetConnectorIncidentElements(formula);
-  EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, begin), FormulaClassifier::CONJUNCTION);
-  EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, end), FormulaClassifier::ATOMIC);
+  EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, &logger, begin), FormulaClassifier::CONJUNCTION);
+  EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, &logger, end), FormulaClassifier::ATOMIC);
 
   context.Destroy();
 }
@@ -50,11 +51,12 @@ TEST_F(FormulaClassifierTest, AtomicLogicalFormulaWithouCLass)
 
   loader.loadScsFile(context, TEST_FILES_DIR_PATH + "atomicLogicalFormulaTestWithoutClass.scs");
 
+  utils::ScLogger logger;
   ScAddr formula = context.ResolveElementSystemIdentifier("formula");
-  EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, formula), FormulaClassifier::ATOMIC);
+  EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, &logger, formula), FormulaClassifier::ATOMIC);
 
   ScAddr formulaWithLink = context.ResolveElementSystemIdentifier("formula_with_link");
-  EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, formulaWithLink), FormulaClassifier::ATOMIC);
+  EXPECT_EQ(FormulaClassifier::typeOfFormula(&context, &logger, formulaWithLink), FormulaClassifier::ATOMIC);
 
   context.Destroy();
 }

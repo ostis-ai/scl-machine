@@ -25,8 +25,11 @@ using ScAddrQueue = std::queue<ScAddr>;
 class DirectInferenceManagerAll : public InferenceManagerAbstract
 {
 public:
-  explicit DirectInferenceManagerAll(ScMemoryContext * context);
+  explicit DirectInferenceManagerAll(ScMemoryContext * context, utils::ScLogger * logger);
 
   bool ApplyInference(InferenceParams const & inferenceParamsConfig) override;
+
+private:
+  utils::ScLogger * logger;
 };
 }  // namespace inference

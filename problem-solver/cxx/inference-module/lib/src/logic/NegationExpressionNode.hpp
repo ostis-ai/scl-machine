@@ -13,11 +13,14 @@ using namespace inference;
 class NegationExpressionNode : public OperatorLogicExpressionNode
 {
 public:
-  explicit NegationExpressionNode(std::shared_ptr<LogicExpressionNode> operand);
+  explicit NegationExpressionNode(utils::ScLogger * logger, std::shared_ptr<LogicExpressionNode> operand);
 
   void compute(LogicFormulaResult & result) const override;
 
   void generate(Replacements & replacements, LogicFormulaResult & result) override;
 
   ScAddr getFormula() const override;
+
+private:
+  utils::ScLogger * logger;
 };

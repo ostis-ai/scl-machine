@@ -18,11 +18,13 @@
 
 LogicExpression::LogicExpression(
     ScMemoryContext * context,
+    utils::ScLogger * logger,
     std::shared_ptr<TemplateSearcherAbstract> templateSearcher,
     std::shared_ptr<TemplateManagerAbstract> templateManager,
     std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager,
     ScAddr const & outputStructure)
   : context(context)
+  , logger(logger)
   , templateSearcher(std::move(templateSearcher))
   , templateManager(std::move(templateManager))
   , solutionTreeManager(std::move(solutionTreeManager))
@@ -32,7 +34,7 @@ LogicExpression::LogicExpression(
 
 std::shared_ptr<LogicExpressionNode> LogicExpression::build(ScAddr const & formula)
 {
-  int formulaType = FormulaClassifier::typeOfFormula(context, formula);
+  int formulaType = FormulaClassifier::typeOfFormula(context, logger, formula);
   switch (formulaType)
   {
   case FormulaClassifier::ATOMIC:
@@ -72,7 +74,7 @@ OperatorLogicExpressionNode::OperandsVector LogicExpression::resolveTupleOperand
     std::shared_ptr<LogicExpressionNode> op = build(operandsIterator->Get(2));
     operandsVector.emplace_back(std::move(op));
   }
-  SC_LOG_DEBUG("Amount of operands in " << context->GetElementSystemIdentifier(tuple) << ": " << operandsVector.size());
+  logger->Debug("Amount of operands in ", context->GetElementSystemIdentifier(tuple), ": ", operandsVector.size());
 
   return operandsVector;
 }
@@ -116,7 +118,7 @@ OperatorLogicExpressionNode::OperandsVector LogicExpression::resolveOperandsForI
 
 std::shared_ptr<LogicExpressionNode> LogicExpression::buildAtomicFormula(ScAddr const & formula)
 {
-  SC_LOG_DEBUG(context->GetElementSystemIdentifier(formula) << " is atomic logical formula");
+  logger->Debug(context->GetElementSystemIdentifier(formula), " is atomic logical formula");
   if (!templateManager->GetArguments().empty())
   {
     std::vector<ScTemplateParams> params = templateManager->CreateTemplateParams(formula);
@@ -127,35 +129,35 @@ std::shared_ptr<LogicExpressionNode> LogicExpression::buildAtomicFormula(ScAddr 
   }
 
   return std::make_shared<TemplateExpressionNode>(
-      context, templateSearcher, templateManager, solutionTreeManager, outputStructure, formula);
+      context, logger, templateSearcher, templateManager, solutionTreeManager, outputStructure, formula);
 }
 
 std::shared_ptr<LogicExpressionNode> LogicExpression::buildConjunctionFormula(ScAddr const & formula)
 {
-  SC_LOG_DEBUG(context->GetElementSystemIdentifier(formula) << " is a conjunction tuple");
+  logger->Debug(context->GetElementSystemIdentifier(formula), " is a conjunction tuple");
   OperatorLogicExpressionNode::OperandsVector operands = resolveTupleOperands(formula);
   if (!operands.empty())
-    return std::make_unique<ConjunctionExpressionNode>(context, operands);
+    return std::make_unique<ConjunctionExpressionNode>(context, logger, operands);
   else
     SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, "Conjunction must have operands");
 }
 
 std::shared_ptr<LogicExpressionNode> LogicExpression::buildDisjunctionFormula(ScAddr const & formula)
 {
-  SC_LOG_DEBUG(context->GetElementSystemIdentifier(formula) << " is a disjunction tuple");
+  logger->Debug(context->GetElementSystemIdentifier(formula), " is a disjunction tuple");
   OperatorLogicExpressionNode::OperandsVector operands = resolveTupleOperands(formula);
   if (!operands.empty())
-    return std::make_unique<DisjunctionExpressionNode>(context, operands);
+    return std::make_unique<DisjunctionExpressionNode>(context, logger, operands);
   else
     SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, "Disjunction must have operands");
 }
 
 std::shared_ptr<LogicExpressionNode> LogicExpression::buildNegationFormula(ScAddr const & formula)
 {
-  SC_LOG_DEBUG(context->GetElementSystemIdentifier(formula) << " is a negation tuple");
+  logger->Debug(context->GetElementSystemIdentifier(formula), " is a negation tuple");
   OperatorLogicExpressionNode::OperandsVector operands = resolveTupleOperands(formula);
   if (operands.size() == 1)
-    return std::make_shared<NegationExpressionNode>(operands[0]);
+    return std::make_shared<NegationExpressionNode>(logger, operands[0]);
   else
     SC_THROW_EXCEPTION(
         utils::ExceptionItemNotFound, "There is " << operands.size() << " operands in negation, but should be one");
@@ -163,10 +165,10 @@ std::shared_ptr<LogicExpressionNode> LogicExpression::buildNegationFormula(ScAdd
 
 std::shared_ptr<LogicExpressionNode> LogicExpression::buildImplicationArcFormula(ScAddr const & formula)
 {
-  SC_LOG_DEBUG(context->GetElementSystemIdentifier(formula) << " is an implication arc");
+  logger->Debug(context->GetElementSystemIdentifier(formula), " is an implication arc");
   OperatorLogicExpressionNode::OperandsVector operands = resolveConnectorOperands(formula);
   if (operands.size() == 2)
-    return std::make_unique<ImplicationExpressionNode>(context, operands);
+    return std::make_unique<ImplicationExpressionNode>(context, logger, operands);
   else
     SC_THROW_EXCEPTION(
         utils::ExceptionItemNotFound,
@@ -175,10 +177,10 @@ std::shared_ptr<LogicExpressionNode> LogicExpression::buildImplicationArcFormula
 
 std::shared_ptr<LogicExpressionNode> LogicExpression::buildImplicationTupleFormula(ScAddr const & formula)
 {
-  SC_LOG_DEBUG(context->GetElementSystemIdentifier(formula) << " is an implication tuple");
+  logger->Debug(context->GetElementSystemIdentifier(formula), " is an implication tuple");
   OperatorLogicExpressionNode::OperandsVector operands = resolveOperandsForImplicationTuple(formula);
   if (operands.size() == 2)
-    return std::make_unique<ImplicationExpressionNode>(context, operands);
+    return std::make_unique<ImplicationExpressionNode>(context, logger, operands);
   else
     SC_THROW_EXCEPTION(
         utils::ExceptionItemNotFound,
@@ -187,10 +189,10 @@ std::shared_ptr<LogicExpressionNode> LogicExpression::buildImplicationTupleFormu
 
 std::shared_ptr<LogicExpressionNode> LogicExpression::buildEquivalenceEdgeFormula(ScAddr const & formula)
 {
-  SC_LOG_DEBUG(context->GetElementSystemIdentifier(formula) << " is an equivalence edge");
+  logger->Debug(context->GetElementSystemIdentifier(formula), " is an equivalence edge");
   OperatorLogicExpressionNode::OperandsVector operands = resolveConnectorOperands(formula);
   if (operands.size() == 2)
-    return std::make_unique<EquivalenceExpressionNode>(context, operands);
+    return std::make_unique<EquivalenceExpressionNode>(context, logger, operands);
   else
     SC_THROW_EXCEPTION(
         utils::ExceptionItemNotFound,
@@ -199,10 +201,10 @@ std::shared_ptr<LogicExpressionNode> LogicExpression::buildEquivalenceEdgeFormul
 
 std::shared_ptr<LogicExpressionNode> LogicExpression::buildEquivalenceTupleFormula(ScAddr const & formula)
 {
-  SC_LOG_DEBUG(context->GetElementSystemIdentifier(formula) << " is an equivalence tuple");
+  logger->Debug(context->GetElementSystemIdentifier(formula), " is an equivalence tuple");
   OperatorLogicExpressionNode::OperandsVector operands = resolveTupleOperands(formula);
   if (operands.size() == 2)
-    return std::make_unique<EquivalenceExpressionNode>(context, operands);
+    return std::make_unique<EquivalenceExpressionNode>(context, logger, operands);
   else
     SC_THROW_EXCEPTION(
         utils::ExceptionItemNotFound,

@@ -10,8 +10,9 @@
 
 DisjunctionExpressionNode::DisjunctionExpressionNode(
     ScMemoryContext * context,
+    utils::ScLogger * logger,
     OperatorLogicExpressionNode::OperandsVector & operands)
-  : context(context)
+  : context(context), logger(logger)
 {
   for (auto & operand : operands)
     this->operands.emplace_back(std::move(operand));
@@ -31,13 +32,13 @@ void DisjunctionExpressionNode::compute(LogicFormulaResult & result) const
     {
       if (!FormulaClassifier::isFormulaWithConst(context, atom->getFormula()))
       {
-        SC_LOG_DEBUG("Found formula without constants in disjunction");
+        logger->Debug("Found formula without constants in disjunction");
         formulasWithoutConstants.push_back(atom);
         continue;
       }
       if (FormulaClassifier::isFormulaToGenerate(context, atom->getFormula()))
       {
-        SC_LOG_DEBUG("Found formula to generate in disjunction");
+        logger->Debug("Found formula to generate in disjunction");
         formulasToGenerate.push_back(atom);
         continue;
       }

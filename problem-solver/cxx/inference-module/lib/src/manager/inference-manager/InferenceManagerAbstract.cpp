@@ -18,8 +18,8 @@
 
 using namespace inference;
 
-InferenceManagerAbstract::InferenceManagerAbstract(ScMemoryContext * context)
-  : context(context)
+InferenceManagerAbstract::InferenceManagerAbstract(ScMemoryContext * context, utils::ScLogger * logger)
+  : context(context), logger(logger)
 {
 }
 
@@ -92,7 +92,7 @@ LogicFormulaResult InferenceManagerAbstract::UseFormula(ScAddr const & formula, 
     ResetTemplateManager(std::make_shared<TemplateManager>(context));
   }
 
-  LogicExpression logicExpression(context, templateSearcher, templateManager, solutionTreeManager, outputStructure);
+  LogicExpression logicExpression(context, logger, templateSearcher, templateManager, solutionTreeManager, outputStructure);
 
   std::shared_ptr<LogicExpressionNode> expressionRoot = logicExpression.build(formulaRoot);
   expressionRoot->setArgumentVector(templateManager->GetArguments());

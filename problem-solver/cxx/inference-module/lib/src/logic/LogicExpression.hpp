@@ -29,6 +29,7 @@ class LogicExpression
 public:
   LogicExpression(
       ScMemoryContext * context,
+      utils::ScLogger * logger,
       std::shared_ptr<TemplateSearcherAbstract> templateSearcher,
       std::shared_ptr<TemplateManagerAbstract> templateManager,
       std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager,
@@ -51,6 +52,7 @@ public:
 
 private:
   ScMemoryContext * context;
+  utils::ScLogger * logger;
   std::vector<ScTemplateParams> paramsSet;
 
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;

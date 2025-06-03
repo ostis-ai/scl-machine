@@ -17,11 +17,12 @@ namespace inference
 class DirectInferenceManagerTarget : public InferenceManagerAbstract
 {
 public:
-  explicit DirectInferenceManagerTarget(ScMemoryContext * context);
+  explicit DirectInferenceManagerTarget(ScMemoryContext * context, utils::ScLogger * logger);
 
   bool ApplyInference(InferenceParams const & inferenceParamsConfig) override;
 
 protected:
+  utils::ScLogger * logger;
   ScAddr targetStructure;
 
   void setTargetStructure(ScAddr const & otherTargetStructure);

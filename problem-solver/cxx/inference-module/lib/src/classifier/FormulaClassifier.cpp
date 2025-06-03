@@ -10,11 +10,11 @@
 
 namespace inference
 {
-int FormulaClassifier::typeOfFormula(ScMemoryContext * ms_context, ScAddr const & formula)
+int FormulaClassifier::typeOfFormula(ScMemoryContext * ms_context, utils::ScLogger * logger, ScAddr const & formula)
 {
   if (!formula.IsValid())
   {
-    SC_LOG_ERROR("Formula is not valid");
+    logger->Error("Formula is not valid");
     return NONE;
   }
 

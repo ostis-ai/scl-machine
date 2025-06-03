@@ -10,8 +10,9 @@
 
 namespace solutionModule
 {
-EraseSolutionManager::EraseSolutionManager(ScMemoryContext * context)
+EraseSolutionManager::EraseSolutionManager(ScMemoryContext * context, utils::ScLogger * logger)
   : context(context)
+  , logger(logger)
 {
 }
 
@@ -20,7 +21,7 @@ void EraseSolutionManager::eraseSolution(ScAddr const & solution) const
   if (context->IsElement(solution) == SC_FALSE)
     SC_THROW_EXCEPTION(utils::ExceptionItemNotFound, "EraseSolutionManager: solution is not valid");
   ScAddrList const & ruleAndSubstitutionPairs = getListFromSet(solution);
-  SC_LOG_DEBUG("EraseSolutionManager: Solution has " << ruleAndSubstitutionPairs.size() << " elements");
+  logger->Debug("EraseSolutionManager: Solution has ", ruleAndSubstitutionPairs.size(), " elements");
   safeEraseElement(solution);
   eraseRuleAndSubstitutionsPairs(ruleAndSubstitutionPairs);
 }
@@ -71,11 +72,11 @@ void EraseSolutionManager::eraseSubstitutions(ScAddr const & substitutions) cons
       if (context->IsElement(replacement) && context->IsElement(variable))
         eraseConnectors(variable, ScType::ConstTempPosArc, replacement);
       else
-        SC_LOG_WARNING("EraseSolutionManager: replacement or variable is invalid");
+        logger->Warning("EraseSolutionManager: replacement or variable is invalid");
     }
   }
   else
-    SC_LOG_WARNING("EraseSolutionManager: solution node does not have substitutions at rrel_2");
+    logger->Warning("EraseSolutionManager: solution node does not have substitutions at rrel_2");
 }
 
 void EraseSolutionManager::eraseConnectors(ScAddr const & source, ScType const & connectorType, ScAddr const & target)

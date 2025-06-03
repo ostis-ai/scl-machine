@@ -13,12 +13,13 @@ namespace solutionModule
 class EraseSolutionManager
 {
 public:
-  explicit EraseSolutionManager(ScMemoryContext * context);
+  explicit EraseSolutionManager(ScMemoryContext * context, utils::ScLogger * logger);
 
   void eraseSolution(ScAddr const & solution) const;
 
 private:
   ScMemoryContext * context;
+  utils::ScLogger * logger;
 
   void safeEraseElement(ScAddr const & element) const;
 
