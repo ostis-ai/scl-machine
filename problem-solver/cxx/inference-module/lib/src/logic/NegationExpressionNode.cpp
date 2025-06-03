@@ -7,6 +7,7 @@
 #include "NegationExpressionNode.hpp"
 
 NegationExpressionNode::NegationExpressionNode(utils::ScLogger * logger, std::shared_ptr<LogicExpressionNode> operand)
+  : logger(logger)
 {
   operands.emplace_back(std::move(operand));
 }
