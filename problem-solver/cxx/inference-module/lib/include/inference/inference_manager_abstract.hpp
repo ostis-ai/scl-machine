@@ -23,7 +23,7 @@ using ScAddrQueue = std::queue<ScAddr>;
 class InferenceManagerAbstract
 {
 public:
-  explicit InferenceManagerAbstract(ScMemoryContext * context);
+  explicit InferenceManagerAbstract(ScMemoryContext * context, utils::ScLogger * logger);
 
   virtual ~InferenceManagerAbstract();
 
@@ -56,6 +56,7 @@ public:
 
 protected:
   ScMemoryContext * context;
+  utils::ScLogger * logger;
 
   std::shared_ptr<TemplateManagerAbstract> templateManager;
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;

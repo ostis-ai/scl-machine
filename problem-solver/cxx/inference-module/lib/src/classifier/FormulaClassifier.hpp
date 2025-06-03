@@ -26,7 +26,7 @@ public:
     EQUIVALENCE_TUPLE = 8
   };
 
-  static int typeOfFormula(ScMemoryContext * ms_context, ScAddr const & formula);
+  static int typeOfFormula(ScMemoryContext * ms_context, utils::ScLogger * logger, ScAddr const & formula);
   static bool isFormulaWithConst(ScMemoryContext * ms_context, ScAddr const & formula);
   static bool isFormulaWithVar(ScMemoryContext * ms_context, ScAddr const & formula);
   static bool isFormulaToGenerate(ScMemoryContext * ms_context, ScAddr const & formula);

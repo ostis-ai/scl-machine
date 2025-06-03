@@ -14,6 +14,13 @@
 
 namespace inference
 {
+
+DirectInferenceAgent::DirectInferenceAgent()
+{
+  m_logger = utils::ScLogger(
+      utils::ScLogger::ScLogType::File, "logs/DirectInferenceAgent.log", utils::ScLogLevel::Debug, true);
+}
+
 ScResult DirectInferenceAgent::DoProgram(ScActionInitiatedEvent const & event, ScAction & action)
 {
   auto const [targetStructure, formulasSet, arguments, inputStructure] = action.GetArguments<4>();
@@ -48,7 +55,7 @@ ScResult DirectInferenceAgent::DoProgram(ScActionInitiatedEvent const & event, S
   InferenceParams const & inferenceParams{
       formulasSet, argumentVector, inputStructures, outputStructure, targetStructure};
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
-      InferenceManagerFactory::ConstructDirectInferenceManagerTarget(&m_context, inferenceConfig);
+      InferenceManagerFactory::ConstructDirectInferenceManagerTarget(&m_context, &m_logger, inferenceConfig);
   bool targetAchieved;
   try
   {
@@ -77,4 +84,5 @@ bool DirectInferenceAgent::IsSetValidAndNotEmpty(ScAddr const & setAddr) const
   ScSet const & scSet = m_context.ConvertToSet(setAddr);
   return !scSet.IsEmpty();
 }
+
 }  // namespace inference

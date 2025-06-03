@@ -14,12 +14,14 @@
 
 TemplateExpressionNode::TemplateExpressionNode(
     ScMemoryContext * context,
+    utils::ScLogger * logger,
     std::shared_ptr<TemplateSearcherAbstract> templateSearcher,
     std::shared_ptr<TemplateManagerAbstract> templateManager,
     std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager,
     ScAddr const & outputStructure,
     ScAddr const & formula)
   : context(context)
+  , logger(logger)
   , templateSearcher(std::move(templateSearcher))
   , templateManager(std::move(templateManager))
   , solutionTreeManager(std::move(solutionTreeManager))
@@ -38,9 +40,8 @@ ScAddr TemplateExpressionNode::getFormula() const
 
 void TemplateExpressionNode::compute(LogicFormulaResult & result) const
 {
-  SC_LOG_DEBUG(
-      "TemplateExpressionNode: compute for "
-      << (argumentVector.empty() ? "empty" : std::to_string(argumentVector.size())) << " arguments");
+  logger->Debug(
+      "TemplateExpressionNode: compute for ", (argumentVector.empty() ? "empty" : std::to_string(argumentVector.size())), " arguments");
   ScAddrUnorderedSet variables;
   result.replacements.clear();
   templateSearcher->getVariables(formula, variables);
@@ -56,9 +57,9 @@ void TemplateExpressionNode::compute(LogicFormulaResult & result) const
   }
 
   result.value = !result.replacements.empty();
-  SC_LOG_DEBUG(
-      "Compute atomic logical formula " << context->GetElementSystemIdentifier(formula)
-                                        << (result.value ? " true" : " false"));
+  logger->Debug(
+      "Compute atomic logical formula ", context->GetElementSystemIdentifier(formula)
+                                        , (result.value ? " true" : " false"));
 }
 
 LogicFormulaResult TemplateExpressionNode::search(Replacements & replacements) const
@@ -69,14 +70,13 @@ LogicFormulaResult TemplateExpressionNode::search(Replacements & replacements) c
   result.replacements.clear();
   ScAddrUnorderedSet variables;
   templateSearcher->getVariables(formula, variables);
-  SC_LOG_DEBUG(
-      "TemplateExpressionNode: call search for "
-      << (paramsVector.empty() ? "empty" : std::to_string(paramsVector.size())) << " params");
+  logger->Debug(
+      "TemplateExpressionNode: call search for ", (paramsVector.empty() ? "empty" : std::to_string(paramsVector.size())), " params");
   templateSearcher->searchTemplate(formula, paramsVector, variables, result.replacements);
   result.value = !result.replacements.empty();
 
   std::string const idtf = context->GetElementSystemIdentifier(formula);
-  SC_LOG_DEBUG("Search Statement " << idtf << (result.value ? " true" : " false"));
+  logger->Debug("Search Statement ", idtf, (result.value ? " true" : " false"));
 
   return result;
 }
@@ -91,7 +91,7 @@ void TemplateExpressionNode::generate(Replacements & replacements, LogicFormulaR
   result = {};
   if (ReplacementsUtils::GetColumnsAmount(replacements) == 0)
   {
-    SC_LOG_DEBUG("Atomic logical formula " << context->GetElementSystemIdentifier(formula) << " is not generated");
+    logger->Debug("Atomic logical formula ", context->GetElementSystemIdentifier(formula), " is not generated");
     return;
   }
 
@@ -123,9 +123,9 @@ void TemplateExpressionNode::generate(Replacements & replacements, LogicFormulaR
   ReplacementsUtils::UniteReplacements(searchResult, existingFormulaReplacements, intermediateUniteResult);
   ReplacementsUtils::UniteReplacements(intermediateUniteResult, generatedReplacements, result.replacements);
 
-  SC_LOG_DEBUG(
-      "Atomic logical formula " << context->GetElementSystemIdentifier(formula) << " is generated " << count
-                                << " times");
+  logger->Debug(
+      "Atomic logical formula ", context->GetElementSystemIdentifier(formula), " is generated ", count
+                                , " times");
 }
 
 /**

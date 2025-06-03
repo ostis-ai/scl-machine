@@ -68,8 +68,9 @@ TEST_P(InferenceManagerTest, SuccessApplyInference)
   ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
   ScAddr const & outputStructure = context.GenerateNode(ScType::ConstNodeStructure);
   InferenceParams const & inferenceParams{ruleSet, argumentVector, {inputStructure}, outputStructure, targetTemplate};
+  utils::ScLogger logger;
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
-      InferenceManagerFactory::ConstructDirectInferenceManagerTarget(&context, inferenceConfig);
+      InferenceManagerFactory::ConstructDirectInferenceManagerTarget(&context, &logger, inferenceConfig);
   bool targetAchieved = inferenceManager->ApplyInference(inferenceParams);
   ScAddr answer = inferenceManager->GetSolutionTreeManager()->GenerateSolution(outputStructure, targetAchieved);
 
@@ -104,8 +105,9 @@ TEST_P(InferenceManagerTest, SuccessGenerateInferenceConclusion)
   ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
   ScAddr const & outputStructure = context.GenerateNode(ScType::ConstNodeStructure);
   InferenceParams const & inferenceParams{ruleSet, argumentVector, {}, outputStructure, targetTemplate};
+  utils::ScLogger logger;
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
-      InferenceManagerFactory::ConstructDirectInferenceManagerTarget(&context, inferenceConfig);
+      InferenceManagerFactory::ConstructDirectInferenceManagerTarget(&context, &logger, inferenceConfig);
   bool targetAchieved = inferenceManager->ApplyInference(inferenceParams);
   ScAddr answer = inferenceManager->GetSolutionTreeManager()->GenerateSolution(outputStructure, targetAchieved);
 
@@ -140,8 +142,9 @@ TEST_P(InferenceManagerTest, RuleNotUsed)
   ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
   ScAddr const & outputStructure = context.GenerateNode(ScType::ConstNodeStructure);
   InferenceParams const & inferenceParams{ruleSet, argumentVector, {inputStructure}, outputStructure, targetTemplate};
+  utils::ScLogger logger;
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
-      InferenceManagerFactory::ConstructDirectInferenceManagerTarget(&context, inferenceConfig);
+      InferenceManagerFactory::ConstructDirectInferenceManagerTarget(&context, &logger, inferenceConfig);
   bool targetAchieved = inferenceManager->ApplyInference(inferenceParams);
   ScAddr answer = inferenceManager->GetSolutionTreeManager()->GenerateSolution(outputStructure, targetAchieved);
 
@@ -172,8 +175,9 @@ TEST_P(InferenceManagerTest, TargetNotAchieved)
   ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
   ScAddr const & outputStructure = context.GenerateNode(ScType::ConstNodeStructure);
   InferenceParams const & inferenceParams{ruleSet, argumentVector, {inputStructure}, outputStructure, targetTemplate};
+  utils::ScLogger logger;
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
-      InferenceManagerFactory::ConstructDirectInferenceManagerTarget(&context, inferenceConfig);
+      InferenceManagerFactory::ConstructDirectInferenceManagerTarget(&context, &logger, inferenceConfig);
   bool targetAchieved = inferenceManager->ApplyInference(inferenceParams);
   ScAddr answer = inferenceManager->GetSolutionTreeManager()->GenerateSolution(outputStructure, targetAchieved);
 
@@ -201,8 +205,9 @@ TEST_P(InferenceManagerTest, ReplacementsTest)
   ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
   ScAddr const & outputStructure = context.GenerateNode(ScType::ConstNodeStructure);
   InferenceParams const & inferenceParams{ruleSet, argumentVector, {}, outputStructure, targetTemplate};
+  utils::ScLogger logger;
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
-      InferenceManagerFactory::ConstructDirectInferenceManagerTarget(&context, inferenceConfig);
+      InferenceManagerFactory::ConstructDirectInferenceManagerTarget(&context, &logger, inferenceConfig);
   bool targetAchieved = inferenceManager->ApplyInference(inferenceParams);
   ScAddr answer = inferenceManager->GetSolutionTreeManager()->GenerateSolution(outputStructure, targetAchieved);
 
@@ -235,8 +240,9 @@ TEST_P(InferenceManagerTest, DISABLED_ConclusionArgumentsTest)
   ScAddr const & outputStructure = context.GenerateNode(ScType::ConstNodeStructure);
   InferenceParams const & inferenceParams{
       formulasSet, argumentVector, {inputStructure}, outputStructure, targetStructure};
+  utils::ScLogger logger;
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
-      InferenceManagerFactory::ConstructDirectInferenceManagerTarget(&context, inferenceConfig);
+      InferenceManagerFactory::ConstructDirectInferenceManagerTarget(&context, &logger, inferenceConfig);
   bool targetAchieved = inferenceManager->ApplyInference(inferenceParams);
   ScAddr answer = inferenceManager->GetSolutionTreeManager()->GenerateSolution(outputStructure, targetAchieved);
 
@@ -274,8 +280,9 @@ TEST_P(InferenceManagerTest, SolutionOutputStrcuture)
   ScAddrVector const & argumentVector = utils::IteratorUtils::getAllWithType(&context, argumentSet, ScType::Node);
   ScAddr const & output = context.GenerateNode(ScType::ConstNodeStructure);
   InferenceParams const & inferenceParams{ruleSet, argumentVector, {inputStructure}, output, targetTemplate};
+  utils::ScLogger logger;
   std::unique_ptr<InferenceManagerAbstract> inferenceManager =
-      InferenceManagerFactory::ConstructDirectInferenceManagerTarget(&context, inferenceConfig);
+      InferenceManagerFactory::ConstructDirectInferenceManagerTarget(&context, &logger, inferenceConfig);
   bool targetAchieved = inferenceManager->ApplyInference(inferenceParams);
   ScAddr solution = inferenceManager->GetSolutionTreeManager()->GenerateSolution(output, targetAchieved);
 
@@ -363,8 +370,9 @@ TEST_P(InferenceManagerTest, conclusionContainsArcReplacementFromPremise)
        TREE_ONLY_OUTPUT_STRUCTURE,
        SEARCH_IN_STRUCTURES,
        SEARCHED_AND_GENERATED});
+  utils::ScLogger logger;
   std::unique_ptr<inference::InferenceManagerAbstract> iterationStrategy =
-      inference::InferenceManagerFactory::ConstructDirectInferenceManagerTarget(&context, inferenceConfig);
+      inference::InferenceManagerFactory::ConstructDirectInferenceManagerTarget(&context, &logger, inferenceConfig);
 
   InferenceParams const & inferenceParams{rulesSet, {}, inputStructures, outputStructure, targetTemplate};
   bool result = iterationStrategy->ApplyInference(inferenceParams);

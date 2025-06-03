@@ -20,8 +20,8 @@
 
 using namespace inference;
 
-DirectInferenceManagerTarget::DirectInferenceManagerTarget(ScMemoryContext * context)
-  : InferenceManagerAbstract(context)
+DirectInferenceManagerTarget::DirectInferenceManagerTarget(ScMemoryContext * context, utils::ScLogger * logger)
+  : InferenceManagerAbstract(context, logger), logger(logger)
 {
 }
 
@@ -35,7 +35,7 @@ bool DirectInferenceManagerTarget::ApplyInference(InferenceParams const & infere
   bool targetAchieved = isTargetAchieved(templateParamsVector);
   if (targetAchieved)
   {
-    SC_LOG_DEBUG("Target is already achieved");
+    logger->Debug("Target is already achieved");
     return false;
   }
 
@@ -56,18 +56,18 @@ bool DirectInferenceManagerTarget::ApplyInference(InferenceParams const & infere
 
   ScAddr formula;
   LogicFormulaResult formulaResult;
-  SC_LOG_DEBUG("Start formulas applying. There is " << formulasQueuesByPriority.size() << " formulas sets");
+  logger->Debug("Start formulas applying. There is ", formulasQueuesByPriority.size(), " formulas sets");
   for (size_t formulasQueueIndex = 0; formulasQueueIndex < formulasQueuesByPriority.size() && !targetAchieved;
        formulasQueueIndex++)
   {
     uncheckedFormulas = formulasQueuesByPriority[formulasQueueIndex];
-    SC_LOG_DEBUG("There is " << uncheckedFormulas.size() << " formulas in " << (formulasQueueIndex + 1) << " set");
+    logger->Debug("There is ", uncheckedFormulas.size(), " formulas in ", (formulasQueueIndex + 1), " set");
     while (!uncheckedFormulas.empty())
     {
       formula = uncheckedFormulas.front();
-      SC_LOG_DEBUG("Trying to generate by formula: " << context->GetElementSystemIdentifier(formula));
+      logger->Debug("Trying to generate by formula: ", context->GetElementSystemIdentifier(formula));
       formulaResult = UseFormula(formula, inferenceParamsConfig.outputStructure);
-      SC_LOG_DEBUG("Logical formula is " << (formulaResult.isGenerated ? "generated" : "not generated"));
+      logger->Debug("Logical formula is ", (formulaResult.isGenerated ? "generated" : "not generated"));
       if (formulaResult.isGenerated)
       {
         solutionTreeManager->AddNode(formula, formulaResult.replacements);
@@ -77,7 +77,7 @@ bool DirectInferenceManagerTarget::ApplyInference(InferenceParams const & infere
         targetAchieved = isTargetAchieved(paramsVector);
         if (targetAchieved)
         {
-          SC_LOG_DEBUG("Target is achieved");
+          logger->Debug("Target is achieved");
           break;
         }
         else

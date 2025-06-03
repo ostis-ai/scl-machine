@@ -10,8 +10,9 @@
 
 ConjunctionExpressionNode::ConjunctionExpressionNode(
     ScMemoryContext * context,
+    utils::ScLogger * logger,
     OperatorLogicExpressionNode::OperandsVector & operands)
-  : context(context)
+  : context(context), logger(logger)
 {
   for (auto & operand : operands)
     this->operands.emplace_back(std::move(operand));
@@ -31,13 +32,13 @@ void ConjunctionExpressionNode::compute(LogicFormulaResult & result) const
     {
       if (!FormulaClassifier::isFormulaWithConst(context, atom->getFormula()))
       {
-        SC_LOG_DEBUG("Found formula without constants in conjunction");
+        logger->Debug("Found formula without constants in conjunction");
         formulasWithoutConstants.push_back(atom);
         continue;
       }
       if (FormulaClassifier::isFormulaToGenerate(context, atom->getFormula()))
       {
-        SC_LOG_DEBUG("Found formula to generate in conjunction");
+        logger->Debug("Found formula to generate in conjunction");
         formulasToGenerate.push_back(atom);
         continue;
       }

@@ -18,8 +18,8 @@
 
 using namespace inference;
 
-DirectInferenceManagerAll::DirectInferenceManagerAll(ScMemoryContext * context)
-  : InferenceManagerAbstract(context)
+DirectInferenceManagerAll::DirectInferenceManagerAll(ScMemoryContext * context, utils::ScLogger * logger)
+  : InferenceManagerAbstract(context, logger), logger(logger)
 {
 }
 
@@ -40,17 +40,17 @@ bool DirectInferenceManagerAll::ApplyInference(InferenceParams const & inference
   ScAddrQueue uncheckedFormulas;
   ScAddr formula;
   LogicFormulaResult formulaResult;
-  SC_LOG_DEBUG("Start formulas applying. There is " << formulasQueuesByPriority.size() << " formulas sets");
+  logger->Debug("Start formulas applying. There is ", formulasQueuesByPriority.size(), " formulas sets");
   for (size_t formulasQueueIndex = 0; formulasQueueIndex < formulasQueuesByPriority.size(); formulasQueueIndex++)
   {
     uncheckedFormulas = formulasQueuesByPriority[formulasQueueIndex];
-    SC_LOG_DEBUG("There is " << uncheckedFormulas.size() << " formulas in " << (formulasQueueIndex + 1) << " set");
+    logger->Debug("There is ", uncheckedFormulas.size(), " formulas in ", (formulasQueueIndex + 1), " set");
     while (!uncheckedFormulas.empty())
     {
       formula = uncheckedFormulas.front();
-      SC_LOG_DEBUG("Trying to generate by formula: " << context->GetElementSystemIdentifier(formula));
+      logger->Debug("Trying to generate by formula: ", context->GetElementSystemIdentifier(formula));
       formulaResult = UseFormula(formula, inferenceParamsConfig.outputStructure);
-      SC_LOG_DEBUG("Logical formula is " << (formulaResult.isGenerated ? "generated" : "not generated"));
+      logger->Debug("Logical formula is ", (formulaResult.isGenerated ? "generated" : "not generated"));
       if (formulaResult.isGenerated)
       {
         result = true;

@@ -23,6 +23,7 @@ class TemplateExpressionNode : public LogicExpressionNode
 public:
   TemplateExpressionNode(
       ScMemoryContext * context,
+      utils::ScLogger * logger,
       std::shared_ptr<TemplateSearcherAbstract> templateSearcher,
       std::shared_ptr<TemplateManagerAbstract> templateManager,
       std::shared_ptr<SolutionTreeManagerAbstract> solutionTreeManager,
@@ -38,6 +39,7 @@ public:
 
 private:
   ScMemoryContext * context;
+  utils::ScLogger * logger;
 
   std::shared_ptr<TemplateSearcherAbstract> templateSearcher;
   std::unique_ptr<TemplateSearcherAbstract> templateSearcherGeneral;
