@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Changed
 - Bump sc-machine version to 0.10.5
 
-## [0.3.1] - 03.06.2024
+## [0.3.1] - 03.06.2025
 
 ## Changed
 - Use loggers from agents for all instances
