@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 set(CMAKE_CXX_STANDARD 17)
-project(scl-machine VERSION 0.3.1 LANGUAGES C CXX)
+project(scl-machine VERSION 0.3.2 LANGUAGES C CXX)
 message(STATUS "Current project version: ${CMAKE_PROJECT_VERSION}")
 cmake_policy(SET CMP0048 NEW)
 

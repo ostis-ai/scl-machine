@@ -7,6 +7,7 @@
       "displayName": "Debug config (Conan)",
       "description": "Debug config with tests (Conan dependencies used)",
       "inherits": "conan-debug",
+      "generator": "Ninja",
       "installDir": "${sourceDir}/build/Debug/install",
       "cacheVariables": {
         "SC_BUILD_TESTS": true
@@ -17,6 +18,7 @@
       "displayName": "Release config (Conan)",
       "description": "Release config (Conan dependencies used)",
       "installDir": "${sourceDir}/build/Release/install",
+      "generator": "Ninja",
       "inherits": "conan-release"
     },
     {
